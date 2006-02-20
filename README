@@ -1,0 +1,47 @@
+$Id$
+
+==============================================================================
+  APACHE XML GRAPHICS COMMONS  -  README
+==============================================================================
+
+Contents of this file:
+ - What is Apache XML Graphics Commons?
+ - Where to get help?
+ - How do I build Apache XML Graphics Commons?
+ - Release Notes
+
+==============================================================================
+
+
+What is Apache XML Graphics Commons?
+---------------------------------------
+
+It is a place where the Apache Batik and Apache FOP share commonly used 
+components. Many components in here are also usable and useful stand-alone.
+    
+Where to get help?
+---------------------    
+
+Please subscribe to the general@xmlgraphics.apache.org mailing list by sending
+an empty mail to general-subscribe@xmlgraphics.apache.org. All you questions
+about XML Graphics Commons will be answered there.    
+
+Please report bugs to bugzilla at http://issues.apache.org/bugzilla/
+
+
+How do I build Apache XML Graphics Commons?
+----------------------------------------------
+
+If you've downloaded a binary distribution of Apache FOP or Apache Batik, 
+you don't need to build XML Graphics Commons. It is distributed with these
+two products.
+
+Otherwise, install Apache Ant (http://ant.apache.org) and run "ant" from the
+command-line in the directory where you find "build.xml".
+
+
+==============================================================================
+  RELEASE NOTES
+==============================================================================
+
+No releases, yet.
