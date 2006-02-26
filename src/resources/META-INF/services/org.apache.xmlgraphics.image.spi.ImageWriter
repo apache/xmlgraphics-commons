@@ -1,0 +1,5 @@
+org.apache.xmlgraphics.image.codec.png.PNGImageWriter
+org.apache.xmlgraphics.image.codec.jpeg.JPEGImageWriter
+#org.apache.xmlgraphics.image.codec.imageio.ImageIOPNGImageWriter
+#org.apache.xmlgraphics.image.codec.imageio.ImageIOTIFFImageWriter
+#org.apache.xmlgraphics.image.codec.imageio.ImageIOJPEGImageWriter
