@@ -266,6 +266,12 @@ NOTE:
         <package name="org.apache.xmlgraphics.java2d"/>
         <package name="org.apache.xmlgraphics.java2d.*"/>
       </group>
+      <group title="PDF, PostScript...">
+        <package name="org.apache.xmlgraphics.ps"/>
+        <package name="org.apache.xmlgraphics.ps.*"/>
+        <package name="org.apache.xmlgraphics.pdf"/>
+        <package name="org.apache.xmlgraphics.pdf.*"/>
+      </group>
       <group title="Utility">
         <package name="org.apache.xmlgraphics.util"/>
         <package name="org.apache.xmlgraphics.util.*"/>
