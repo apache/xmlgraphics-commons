@@ -19,6 +19,8 @@
 package org.apache.xmlgraphics;
 
 import org.apache.xmlgraphics.image.codec.png.PNGEncoderTest;
+import org.apache.xmlgraphics.util.io.ASCII85InputStreamTestCase;
+import org.apache.xmlgraphics.util.io.ASCII85OutputStreamTestCase;
 import org.apache.xmlgraphics.util.io.Base64Test;
 
 import junit.framework.Test;
@@ -38,6 +40,8 @@ public class StandardTestSuite {
             "Basic functionality test suite for XML Graphics Commons");
         //$JUnit-BEGIN$
         suite.addTest(new TestSuite(Base64Test.class));
+        suite.addTest(new TestSuite(ASCII85InputStreamTestCase.class));
+        suite.addTest(new TestSuite(ASCII85OutputStreamTestCase.class));
         suite.addTest(new TestSuite(PNGEncoderTest.class));
         //$JUnit-END$
         return suite;
