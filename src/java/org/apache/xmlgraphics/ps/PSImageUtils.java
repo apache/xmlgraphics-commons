@@ -38,7 +38,19 @@ import org.apache.xmlgraphics.util.io.RunLengthEncodeOutputStream;
  */
 public class PSImageUtils {
 
-    private static void writeImage(byte[] img,
+    /**
+     * Writes a bitmap image to the PostScript stream.
+     * @param img the bitmap image as a byte array
+     * @param imgDim the dimensions of the image
+     * @param imgName the name of the image
+     * @param targetRect the target rectangle to place the image in
+     * @param isJPEG true if "img" contains a DCT-encoded images, false if "img" contains the 
+     *               decoded bitmap
+     * @param colorSpace the color space of the image
+     * @param gen the PostScript generator
+     * @throws IOException In case of an I/O exception
+     */
+    public static void writeImage(byte[] img,
             Dimension imgDim, String imgName,
             Rectangle2D targetRect, 
             boolean isJPEG, ColorSpace colorSpace,
