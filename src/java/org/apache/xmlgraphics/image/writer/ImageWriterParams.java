@@ -15,7 +15,7 @@
    limitations under the License.
 
  */
-package org.apache.xmlgraphics.image.spi;
+package org.apache.xmlgraphics.image.writer;
 
 /**
  * Parameters for the encoder which is accessed through the

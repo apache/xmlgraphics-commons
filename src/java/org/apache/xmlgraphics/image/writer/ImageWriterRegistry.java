@@ -15,7 +15,7 @@
    limitations under the License.
 
  */
-package org.apache.xmlgraphics.image.spi;
+package org.apache.xmlgraphics.image.writer;
 
 import java.util.Iterator;
 import java.util.Map;
