@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2001,2003  The Apache Software Foundation 
+   Copyright 2001,2003,2006  The Apache Software Foundation 
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@
 
  */
 package org.apache.xmlgraphics.image.codec.png;
-
-import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
-import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
-import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -47,6 +43,10 @@ import java.util.TimeZone;
 import java.util.Vector;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
+
+import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
+import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
 
 /**
  */
@@ -161,10 +161,6 @@ class PNGImage extends SimpleRenderedImage {
     public static final int PNG_FILTER_AVERAGE = 3;
     public static final int PNG_FILTER_PAETH = 4;
 
-    private static final int RED_OFFSET = 2;
-    private static final int GREEN_OFFSET = 1;
-    private static final int BLUE_OFFSET = 0;
-
     private int[][] bandOffsets = {
         null,
         { 0 }, // G
@@ -198,8 +194,6 @@ class PNGImage extends SimpleRenderedImage {
     private int maxOpacity;
 
     private int[] significantBits = null;
-
-    private boolean hasBackground = false;
 
     // Parameter information
 
@@ -1001,8 +995,6 @@ class PNGImage extends SimpleRenderedImage {
     }
 
     private void parse_bKGD_chunk(PNGChunk chunk) {
-        hasBackground = true;
-
         switch (colorType) {
         case PNG_COLOR_PALETTE:
             int bkgdIndex = chunk.getByte(0) & 0xff;
