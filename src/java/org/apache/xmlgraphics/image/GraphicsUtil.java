@@ -123,6 +123,21 @@ public class GraphicsUtil {
     }
 
     /**
+     * Constructs a BufferedImage with a linear sRGB colorModel, and alpha.
+     * @param width   The desired width of the BufferedImage
+     * @param height  The desired height of the BufferedImage
+     * @param premult The desired state of alpha premultiplied
+     * @return        The requested BufferedImage.
+     */
+    public static BufferedImage makeLinearBufferedImage(int width,
+                                                        int height,
+                                                        boolean premult) {
+        ColorModel cm = makeLinear_sRGBCM(premult);
+        WritableRaster wr = cm.createCompatibleWritableRaster(width, height);
+        return new BufferedImage(cm, wr, premult, null);
+    }
+
+    /**
      * This method will return a CacheableRed that has it's data in
      * the sRGB colorspace. If <tt>src</tt> is already in
      * sRGB then this method does nothing and returns <tt>src</tt>.

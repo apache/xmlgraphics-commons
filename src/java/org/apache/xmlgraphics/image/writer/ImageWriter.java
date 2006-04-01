@@ -28,13 +28,27 @@ import java.io.OutputStream;
  */
 public interface ImageWriter {
     
+    /**
+     * Encodes an image and writes it to an OutputStream.
+     * @param image the image to be encoded
+     * @param out the OutputStream to write to
+     * @throws IOException In case of an /IO problem
+     */
     public void writeImage(RenderedImage image, OutputStream out) 
             throws IOException;
 
+    /**
+     * Encodes an image and writes it to an OutputStream.
+     * @param image the image to be encoded
+     * @param out the OutputStream to write to
+     * @param params a parameters object to customize the encoding.
+     * @throws IOException In case of an /IO problem
+     */
     public void writeImage(RenderedImage image, OutputStream out, 
             ImageWriterParams params) 
             throws IOException;
 
+    /** @return the target MIME type supported by this ImageWriter */
     public String getMIMEType();
     
 }

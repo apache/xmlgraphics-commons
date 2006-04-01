@@ -17,9 +17,14 @@
  */
 package org.apache.xmlgraphics.image.writer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.apache.xmlgraphics.util.Service;
 
@@ -33,8 +38,40 @@ public class ImageWriterRegistry {
     private static ImageWriterRegistry instance;
     
     private Map imageWriterMap = new HashMap();
+    private Map preferredOrder;
     
-    private ImageWriterRegistry() {
+    /**
+     * Default constructor. The default preferred order for the image writers is loaded from the 
+     * resources.
+     */
+    public ImageWriterRegistry() {
+        Properties props = new Properties();
+        InputStream in = getClass().getResourceAsStream("default-preferred-order.properties");
+        if (in != null) {
+            try {
+                try {
+                    props.load(in);
+                } finally {
+                    in.close();
+                }
+            } catch (IOException ioe) {
+                throw new RuntimeException(
+                        "Could not load default preferred order due to I/O error: " 
+                            + ioe.getMessage());
+            }
+        }
+        this.preferredOrder = props;
+        setup();
+    }
+    
+    /**
+     * Special constructor. The preferred order for the image writers can be specified as a 
+     * Map (for example a Properties file). The entries of the Map consists of fully qualified
+     * class or package names as keys and integer numbers as values. Zero (0) is the default
+     * priority.   
+     */
+    public ImageWriterRegistry(Properties preferredOrder) {
+        this.preferredOrder = preferredOrder;
         setup();
     }
     
@@ -53,6 +90,20 @@ public class ImageWriterRegistry {
             register(writer);
         }
     }
+
+    private int getPriority(ImageWriter writer) {
+        String key = writer.getClass().getName();
+        Object value = preferredOrder.get(key);
+        while (value == null) {
+            int pos = key.lastIndexOf(".");
+            if (pos < 0) {
+                break;
+            }
+            key = key.substring(0, pos);
+            value = preferredOrder.get(key);
+        }
+        return (value != null) ? Integer.parseInt(value.toString()) : 0;
+    }
     
     /**
      * Registers a new ImageWriter implementation in the registry. If an ImageWriter for the same
@@ -60,7 +111,24 @@ public class ImageWriterRegistry {
      * @param writer the ImageWriter instance to register.
      */
     public void register(ImageWriter writer) {
-        imageWriterMap.put(writer.getMIMEType(), writer);
+        List entries = (List)imageWriterMap.get(writer.getMIMEType());
+        if (entries == null) {
+            entries = new java.util.ArrayList();
+            imageWriterMap.put(writer.getMIMEType(), entries);
+        }
+        
+        int priority = getPriority(writer);
+        ListIterator li;
+        li = entries.listIterator();
+        while (li.hasNext()) {
+            ImageWriter w = (ImageWriter)li.next();
+            if (getPriority(w) > priority) {
+                li.previous();
+                li.add(writer);
+                return;
+            }
+        }
+        li.add(writer);
     }
     
     /**
@@ -70,7 +138,12 @@ public class ImageWriterRegistry {
      *         found.
      */
     public ImageWriter getWriterFor(String mime) {
-        return (ImageWriter)imageWriterMap.get(mime);
+        List entries = (List)imageWriterMap.get(mime);
+        if (entries == null) {
+            return null;
+        } else {
+            return (ImageWriter)entries.get(0);
+        }
     }
-    
+
 }
