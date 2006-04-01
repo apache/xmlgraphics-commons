@@ -22,21 +22,6 @@
   <property file="${basedir}/build.properties"/>
   <property environment="env"/>
 
-  <path id="libs-build-classpath">
-    <fileset dir="${basedir}/lib">
-      <include name="*.jar"/>
-    </fileset>
-  </path>
-
-  <path id="libs-run-classpath">
-    <fileset dir="${basedir}/lib">
-      <include name="*.jar"/>
-    </fileset>
-    <fileset dir="${basedir}/build">
-      <include name="xmlgraphics-commons.jar"/>
-    </fileset>
-  </path>
-
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
   <property name="version" value="0.1svn"/>
@@ -61,6 +46,21 @@
   <property name="build.dir" value="${basedir}/build"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
+
+  <path id="libs-build-classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="libs-run-classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${build.dir}">
+      <include name="${name}.jar"/>
+    </fileset>
+  </path>
 
   <!-- =================================================================== -->
   <!-- Initialization target                                               -->
@@ -158,36 +158,17 @@
   <target name="package" depends="jar-main" description="Generates the jar files"/>
 
   <!-- =================================================================== -->
-  <!-- Default Target                                                      -->
-  <!-- =================================================================== -->
-
-  <target name="all" depends="package"/> <!-- "all" target for us Makefile converts ;-) -->
-
-  <!-- =================================================================== -->
-  <!-- Special target for Gump                                             -->
-  <!-- =================================================================== -->
-
-  <target name="gump" depends="all, javadocs"/>
-
-  <!-- =================================================================== -->
   <!-- Testing                                                             -->
   <!-- =================================================================== -->
-  <!--target name="junit-with-xmlunit" depends="init-avail" if="xmlunit.present">
-    <patternset id="test-sources"/>
-  </target>
-  <target name="junit-without-xmlunit" depends="init-avail" unless="xmlunit.present">
-    <patternset id="test-sources">
-      <exclude name="**/intermediate/*"/>
-    </patternset>
-  </target>
-  <target name="junit-compile" depends="package, transcoder-pkg, junit-with-xmlunit, junit-without-xmlunit" description="Runs FOP's JUnit tests" if="junit.present">
+  <target name="junit-compile" depends="package" if="junit.present">
     <mkdir dir="${build.dir}/test-classes"/>
+    <mkdir dir="${build.dir}/test-reports"/>
     <javac destdir="${build.dir}/test-classes" fork="${javac.fork}"
            debug="${javac.debug}" deprecation="${javac.deprecation}"
            optimize="${javac.optimize}" source="${javac.source}"
            target="${javac.target}">
       <src path="${basedir}/test/java"/>
-      <patternset refid="test-sources"/>
+      <!--patternset refid="test-sources"/-->
       <classpath>
         <path refid="libs-build-classpath"/>
         <fileset dir="${build.dir}">
@@ -197,15 +178,30 @@
     </javac>
   </target>
 
-  <target name="junit" depends="junit-basic, junit-transcoder, junit-layout, junit-fotree, junit-intermediate-format" description="Runs all of FOP's JUnit tests" if="junit.present">
+  <target name="junit-basic" depends="junit-compile" description="Runs the standard JUnit test suite" if="junit.present">
+    <echo message="Running basic functionality tests"/>
+    <junit haltonerror="no" fork="${junit.fork}" errorproperty="test.junit.error" failureproperty="test.junit.failure">
+      <sysproperty key="basedir" value="${basedir}"/>
+      <sysproperty key="jawa.awt.headless" value="true"/>
+      <formatter type="brief" usefile="false"/>
+      <formatter type="plain" usefile="true"/>
+      <classpath>
+        <pathelement location="${build.dir}/test-classes"/>
+        <path refid="libs-build-classpath"/>
+        <fileset dir="build">
+          <include name="${name}.jar"/>
+        </fileset>
+      </classpath>
+      <test name="org.apache.xmlgraphics.StandardTestSuite" todir="${build.dir}/test-reports"/>
+    </junit>
+  </target>
+
+  <target name="junit" depends="junit-basic" description="Runs all JUnit tests" if="junit.present">
     <fail>
       <condition>
         <or>
-          <isset property="fop.junit.error"/>
-          <isset property="fop.junit.failure"/>
-          <not>
-            <isset property="hyphenation.present"/>
-          </not>
+          <isset property="test.junit.error"/>
+          <isset property="test.junit.failure"/>
         </or>
       </condition>
 NOTE:
@@ -215,7 +211,7 @@ NOTE:
 **************************************************************************
     </fail>
     <echo>All Junit tests passed!</echo>
-  </target-->
+  </target>
 
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
@@ -255,7 +251,7 @@ NOTE:
       <footer><![CDATA[${name} ${version}]]></footer>
       <classpath>
         <path refid="libs-build-classpath"/>
-        <pathelement path="${java.class.path}"/>
+        <!--pathelement path="${java.class.path}"/-->
       </classpath>
       <sourcepath>
         <pathelement path="${src.java.dir}"/>
@@ -265,6 +261,10 @@ NOTE:
       <group title="Images">
         <package name="org.apache.xmlgraphics.image"/>
         <package name="org.apache.xmlgraphics.image.*"/>
+      </group>
+      <group title="Java2D">
+        <package name="org.apache.xmlgraphics.java2d"/>
+        <package name="org.apache.xmlgraphics.java2d.*"/>
       </group>
       <group title="Utility">
         <package name="org.apache.xmlgraphics.util"/>
@@ -366,4 +366,16 @@ NOTE:
     </delete>
   </target>
   
+  <!-- =================================================================== -->
+  <!-- Default Target                                                      -->
+  <!-- =================================================================== -->
+
+  <target name="all" depends="package, junit"/> <!-- "all" target for us Makefile converts ;-) -->
+
+  <!-- =================================================================== -->
+  <!-- Special target for Gump                                             -->
+  <!-- =================================================================== -->
+
+  <target name="gump" depends="all, javadocs"/>
+
 </project>
