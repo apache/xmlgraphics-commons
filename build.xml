@@ -251,7 +251,7 @@ NOTE:
       <footer><![CDATA[${name} ${version}]]></footer>
       <classpath>
         <path refid="libs-build-classpath"/>
-        <!--pathelement path="${java.class.path}"/-->
+        <pathelement path="${java.class.path}"/>
       </classpath>
       <sourcepath>
         <pathelement path="${src.java.dir}"/>

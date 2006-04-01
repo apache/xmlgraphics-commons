@@ -85,7 +85,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
     /**
      * Create a new Graphics2D that generates PostScript code.
      * @param textAsShapes True if text should be rendered as graphics
-     * @see org.apache.batik.ext.awt.g2d.AbstractGraphics2D#AbstractGraphics2D(boolean)
+     * @see org.apache.xmlgraphics.java2d.AbstractGraphics2D#AbstractGraphics2D(boolean)
      */
     public PSGraphics2D(boolean textAsShapes) {
         super(textAsShapes);
@@ -95,7 +95,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * Create a new Graphics2D that generates PostScript code.
      * @param textAsShapes True if text should be rendered as graphics
      * @param gen PostScript generator to use for output
-     * @see org.apache.batik.ext.awt.g2d.AbstractGraphics2D#AbstractGraphics2D(boolean)
+     * @see org.apache.xmlgraphics.java2d.AbstractGraphics2D#AbstractGraphics2D(boolean)
      */
     public PSGraphics2D(boolean textAsShapes, PSGenerator gen) {
         this(textAsShapes);
