@@ -38,6 +38,7 @@ public class ImageWriterRegistry {
         setup();
     }
     
+    /** @return a singleton instance of the ImageWriterRegistry. */
     public static ImageWriterRegistry getInstance() {
         if (instance == null) {
             instance = new ImageWriterRegistry();
@@ -53,10 +54,21 @@ public class ImageWriterRegistry {
         }
     }
     
+    /**
+     * Registers a new ImageWriter implementation in the registry. If an ImageWriter for the same
+     * target MIME type has already been registered, it is overwritten with the new one.
+     * @param writer the ImageWriter instance to register.
+     */
     public void register(ImageWriter writer) {
         imageWriterMap.put(writer.getMIMEType(), writer);
     }
     
+    /**
+     * Returns an ImageWriter that can be used to encode an image to the requested MIME type.
+     * @param mime the MIME type of the desired output format
+     * @return an ImageWriter instance handling the desired output format or null if none can be
+     *         found.
+     */
     public ImageWriter getWriterFor(String mime) {
         return (ImageWriter)imageWriterMap.get(mime);
     }
