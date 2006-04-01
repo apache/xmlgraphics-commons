@@ -15,7 +15,7 @@
    limitations under the License.
 
  */
-package org.apache.xmlgraphics.image.spi;
+package org.apache.xmlgraphics.image.writer;
 
 import java.awt.image.RenderedImage;
 import java.io.IOException;
