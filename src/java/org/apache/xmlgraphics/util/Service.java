@@ -75,6 +75,7 @@ public class Service {
         }
         // Can always request your own class loader. But it might be 'null'.
         if (cl == null) cl = Service.class.getClassLoader();
+        if (cl == null) cl = ClassLoader.getSystemClassLoader();
 
         // No class loader so we can't find 'serviceFile'.
         if (cl == null) return l.iterator();
