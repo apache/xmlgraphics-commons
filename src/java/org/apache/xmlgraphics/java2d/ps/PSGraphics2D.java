@@ -138,6 +138,26 @@ public class PSGraphics2D extends AbstractGraphics2D {
         //setPrivateHints();
     }
 
+    /** @return the fallback TextHandler implementation */
+    public TextHandler getFallbackTextHandler() {
+        return this.fallbackTextHandler;
+    }
+
+    /** @return the custom TextHandler implementation */
+    public TextHandler getCustomTextHandler() {
+        return this.customTextHandler;
+    }
+
+    /**
+     * Sets a custom TextHandler implementation that is reponsible for painting text. The default
+     * TextHandler paints all text as shapes. A custom implementation can implement text painting
+     * using text painting operators.
+     * @param handler the custom TextHandler implementation
+     */
+    public void setCustomTextHandler(TextHandler handler) {
+        this.customTextHandler = handler;
+    }
+    
     /* TODO Add me back at the right place!!!
     private void setPrivateHints() {
         setRenderingHint(RenderingHintsKeyExt.KEY_AVOID_TILE_PAINTING, 
@@ -158,7 +178,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * Central handler for IOExceptions for this class.
      * @param ioe IOException to handle
      */
-    protected void handleIOException(IOException ioe) {
+    public void handleIOException(IOException ioe) {
         //TODO Surely, there's a better way to do this.
         ioe.printStackTrace();
     }

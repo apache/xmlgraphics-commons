@@ -48,7 +48,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
      * @param textAsShapes set this to true so that text will be rendered
      * using curves and not the font.
      */
-    PSDocumentGraphics2D(boolean textAsShapes) {
+    public PSDocumentGraphics2D(boolean textAsShapes) {
         super(textAsShapes);
     }
 
