@@ -38,6 +38,8 @@
 
   <property name="javadoc.packages" value="org.apache.xmlgraphics.*"/>
   
+  <property name="internal-codecs.disabled" value="false"/>
+  
   <property name="src.dir" value="${basedir}/src"/>
   <property name="src.java.dir" value="${src.dir}/java"/>
   <property name="src.res.dir" value="${src.dir}/resources"/>
@@ -46,6 +48,10 @@
   <property name="build.dir" value="${basedir}/build"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
+
+  <!-- .NET support (using IKVM) -->
+  <property name="ikvm.dir" value="."/>
+  <property name="ikvmc" value="${ikvm.dir}/bin/ikvmc.exe"/>
 
   <path id="libs-build-classpath">
     <fileset dir="${lib.dir}">
@@ -77,6 +83,25 @@
 
   <target name="init-avail">
     <available property="jdk14.present" classname="java.lang.CharSequence"/>
+    
+    <available property="sun.jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec"/>
+    <condition property="sun.jpeg.message" value="Sun-private JPEG Support PRESENT">
+      <equals arg1="${sun.jpeg.present}" arg2="true"/>
+    </condition>
+    <condition property="sun.jpeg.message" value="Sun-private JPEG Support NOT Present">
+      <not>
+        <equals arg1="${sun.jpeg.present}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${sun.jpeg.message}"/>
+    <condition property="internal-codecs.eff.disabled">
+      <or>
+        <not>
+          <equals arg1="${sun.jpeg.present}" arg2="true"/>
+        </not>
+        <equals arg1="${internal-codecs.disabled}" arg2="true"/>
+      </or>
+    </condition>
 
     <available property="junit.present" classname="junit.framework.TestCase"
         classpathref="libs-build-classpath"/>
@@ -89,6 +114,13 @@
       </not>
     </condition>
     <echo message="${junit.message}"/>
+
+    <condition property="IKVM.present">
+      <and>
+        <available file="${ikvmc}"/>
+        <equals arg1="${internal-codecs.eff.disabled}" arg2="true"/>
+      </and>
+    </condition>
   </target>
 
   <target name="init-filters-jdk13" depends="init-avail" unless="jdk14.present">
@@ -115,7 +147,22 @@
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile-java" depends="init" description="Compiles the source code">
+  <target name="compile-pattern-with-codecs" depends="init" unless="internal-codecs.eff.disabled">
+    <echo message="Internal codecs will be compiled."/>
+    <patternset id="compile-pattern">
+      <include name="**/*.java"/>
+    </patternset>
+  </target>
+  <target name="compile-pattern-without-codecs" depends="init" if="internal-codecs.eff.disabled">
+    <echo message="Internal codecs will be skipped."/>
+    <patternset id="compile-pattern">
+      <include name="**/*.java"/>
+      <exclude name="**/image/codec/tiff/**/*.java"/>
+      <exclude name="**/image/writer/internal/JPEGImageWriter.java"/>
+      <exclude name="**/image/writer/internal/TIFFImageWriter.java"/>
+    </patternset>
+  </target>
+  <target name="compile-java" depends="init, compile-pattern-with-codecs, compile-pattern-without-codecs" description="Compiles the source code">
     <!-- create directories -->
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}" fork="${javac.fork}" debug="${javac.debug}"
@@ -123,7 +170,7 @@
            source="${javac.source}" target="${javac.target}">
       <src path="${src.java.dir}"/>
       <src refid="graphics-configuration-adapter"/>
-      <patternset includes="**/*.java"/>
+      <patternset refid="compile-pattern"/>
       <classpath refid="libs-build-classpath"/>
     </javac>
     <copy todir="${build.classes.dir}">
@@ -155,7 +202,25 @@
     </jar>
   </target>
 
-  <target name="package" depends="jar-main" description="Generates the jar files"/>
+  <target name="package.NET" depends="jar-main" if="IKVM.present" description="Generates the .NET DLL using IKVM">
+    <property name="commons-io" value="commons-io-1.1"/>
+    <exec executable="${ikvmc}">
+      <arg value="-reference:${ikvm.dir}/bin/IKVM.GNU.Classpath.dll"/>
+      <arg value="-target:library"/>
+      <arg value="-out:${build.dir}\${commons-io}.dll"/>
+      <arg value="${lib.dir}\${commons-io}.jar"/>
+    </exec>
+    <exec executable="${ikvmc}">
+      <arg value="-reference:${ikvm.dir}/bin/IKVM.GNU.Classpath.dll"/>
+      <arg value="-reference:${build.dir}/${commons-io}.dll"/>
+      <!--arg value="-reference:${ikvm.dir}/bin/IKVM.AWT.WinForms.dll"/-->
+      <arg value="-target:library"/>
+      <arg value="-out:${build.dir}\${name}.dll"/>
+      <arg value="${build.dir}\${name}.jar"/>
+    </exec>
+  </target>
+
+  <target name="package" depends="jar-main, package.NET" description="Generates the jar files"/>
 
   <!-- =================================================================== -->
   <!-- Testing                                                             -->
