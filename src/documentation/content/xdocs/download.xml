@@ -23,8 +23,8 @@
     <section id="release">
       <title>Download a Release</title>
       <p>
-        The first release of Apache XML Graphics Commons will soon be made available. Until then,
-        please get the source code from Subversion.
+        Source ("-src") and binary ("-bin") distributions can be downloaded from a
+        <a href="http://www.apache.org/dyn/closer.cgi/xmlgraphics/commons">Apache XML Graphics Commons Distribution Mirror</a>.
       </p>
     </section>
     <section id="svn">
@@ -39,17 +39,17 @@
         <tr>
           <td>Repository URL</td>
           <td>
-            <link href="http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/">
+            <a href="http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/">
               <code>http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/</code>
-            </link>
+            </a>
           </td>
         </tr>
         <tr>
           <td>Web view</td>
           <td>
-            <link href="http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/">
+            <a href="http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/">
               <code>http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/</code>
-            </link>
+            </a>
           </td>
         </tr>
       </table>
