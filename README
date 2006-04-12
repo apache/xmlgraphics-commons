@@ -44,4 +44,8 @@ command-line in the directory where you find "build.xml".
   RELEASE NOTES
 ==============================================================================
 
-No releases, yet.
+Version 1.0
+--------------
+
+This is the first release of Apache XML Graphics Commons. There are currently
+no known issues with the code.
