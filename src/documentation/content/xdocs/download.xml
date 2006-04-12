@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "document-v20.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
 <document> 
   <header> 
     <title>Download Apache XML Graphics Commons</title> 
@@ -39,17 +39,17 @@
         <tr>
           <td>Repository URL</td>
           <td>
-            <link href="http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/">
+            <a href="http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/">
               <code>http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/</code>
-            </link>
+            </a>
           </td>
         </tr>
         <tr>
           <td>Web view</td>
           <td>
-            <link href="http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/">
+            <a href="http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/">
               <code>http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/</code>
-            </link>
+            </a>
           </td>
         </tr>
       </table>
