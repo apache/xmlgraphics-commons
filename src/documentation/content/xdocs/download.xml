@@ -23,8 +23,9 @@
     <section id="release">
       <title>Download a Release</title>
       <p>
-        The first release of Apache XML Graphics Commons will soon be made available. Until then,
-        please get the source code from Subversion.
+        The first release of Apache XML Graphics Commons will soon be made available.
+        Until then, please get the source code via Subversion (svn) using the 
+        information below.
       </p>
     </section>
     <section id="svn">
