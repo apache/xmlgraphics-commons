@@ -26,7 +26,7 @@
   </todo>
 
   <changes>
-    <release version="1.0" date="[in the next days]">
+    <release version="1.0" date="17 Apr 2006">
       <action context="Code" dev="JM" type="add">
         Initial release with several components from Batik and FOP: 
         Image codecs, Image writer abstraction, I/O classes, Java2D helpers, PostScript library 
