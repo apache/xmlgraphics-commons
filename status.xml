@@ -27,6 +27,10 @@
 
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix: The generation of the PostScript setdash command was assuming that
+        only integer values can be used but that isn't the case.
+      </action>
     </release>
     <release version="1.0" date="17 Apr 2006">
       <action context="Code" dev="JM" type="add">

@@ -485,14 +485,14 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 if (da != null) {
                     gen.write("[");
                     for (int count = 0; count < da.length; count++) {
-                        gen.write("" + ((int)da[count]));
+                        gen.write(gen.formatDouble(da[count]));
                         if (count < da.length - 1) {
                             gen.write(" ");
                         }
                     }
                     gen.write("] ");
                     float offset = bs.getDashPhase();
-                    gen.writeln(((int)offset) + " setdash");
+                    gen.writeln(gen.formatDouble(offset) + " setdash");
                 }
                 int ec = bs.getEndCap();
                 switch (ec) {
