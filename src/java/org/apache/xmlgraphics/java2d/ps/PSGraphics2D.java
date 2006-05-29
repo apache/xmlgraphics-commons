@@ -512,6 +512,8 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 switch (lj) {
                 case BasicStroke.JOIN_MITER:
                     gen.writeln("0 setlinejoin");
+                    float ml = bs.getMiterLimit();
+                    gen.writeln(gen.formatDouble(ml >= -1 ? ml : 1) + " setmiterlimit");
                     break;
                 case BasicStroke.JOIN_ROUND:
                     gen.writeln("1 setlinejoin");
@@ -523,9 +525,6 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 }
                 float lw = bs.getLineWidth();
                 gen.writeln(gen.formatDouble(lw) + " setlinewidth");
-
-                float ml = bs.getMiterLimit();
-                gen.writeln(gen.formatDouble(ml) + " setmiterlimit");
             }
         } catch (IOException ioe) {
             handleIOException(ioe);
