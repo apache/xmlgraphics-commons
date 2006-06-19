@@ -23,14 +23,16 @@ import org.apache.xmlgraphics.xmp.XMPSchemaAdapter;
 import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
 
 /**
- * Schema adapter implementation for the old (deprecated) PDF/A schema. This is still needed to
- * make Adobe Acrobat happy. 
+ * Schema adapter implementation for both the old (deprecated) and the current PDF/A schema. 
+ * The old namespace is still needed to make Adobe Acrobat happy. 
  */
 public class PDFAAdapter extends XMPSchemaAdapter {
 
     /**
-     * Constructs a new adapter for Dublin Core around the given metadata object.
+     * Constructs a new adapter for PDF/A around the given metadata object.
      * @param meta the underlying metadata
+     * @param namespace the namespace to access the schema (must be one of the PDF/A schema 
+     *                  namespaces)
      */
     public PDFAAdapter(Metadata meta, String namespace) {
         super(meta, XMPSchemaRegistry.getInstance().getSchema(namespace));

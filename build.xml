@@ -372,6 +372,10 @@ NOTE:
         <package name="org.apache.xmlgraphics.pdf"/>
         <package name="org.apache.xmlgraphics.pdf.*"/>
       </group>
+      <group title="XMP Metadata">
+        <package name="org.apache.xmlgraphics.xmp"/>
+        <package name="org.apache.xmlgraphics.xmp.*"/>
+      </group>
       <group title="Utility">
         <package name="org.apache.xmlgraphics.util"/>
         <package name="org.apache.xmlgraphics.util.*"/>
