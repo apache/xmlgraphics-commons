@@ -39,6 +39,14 @@
         <asfext:url rdf:resource="http://partners.adobe.com/public/developer/ps/index_specs.html"/>
       </asfext:Standard>
     </asfext:implements>
+    <asfext:implements>
+      <asfext:Standard>
+        <asfext:title>Extensible Metadata Platform (XMP)</asfext:title>
+        <asfext:body>Adobe Systems Incorporated</asfext:body>
+        <asfext:id>XMP</asfext:id>
+        <asfext:url rdf:resource="http://www.adobe.com/products/xmp/index.html"/>
+      </asfext:Standard>
+    </asfext:implements>
     <release>
       <Version>
         <name>First release (stable)</name>
