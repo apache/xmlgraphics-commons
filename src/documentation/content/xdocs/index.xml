@@ -80,6 +80,11 @@
           <td>FOP</td>
         </tr>
         <tr>
+          <td><a href="http://www.adobe.com/products/xmp/index.html">XMP metadata</a> framework</td>
+          <td>org.apache.xmlgraphics.xmp</td>
+          <td>new</td>
+        </tr>
+        <tr>
           <td>Various I/O classes, encoders and decoders for various formats</td>
           <td>org.apache.xmlgraphics.util.io</td>
           <td>Batik/FOP</td>
