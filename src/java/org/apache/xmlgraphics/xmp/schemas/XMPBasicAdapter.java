@@ -58,6 +58,11 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
         setDateValue("CreateDate", creationDate);
     }
 
+    /** @return the date and time the resource was originally created */
+    public Date getCreateDate() {
+        return getDateValue("CreateDate");
+    }
+    
     /**
      * Sets the date and time the resource was last modified.
      * @param modifyDate the modification date
@@ -66,6 +71,11 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
         setDateValue("ModifyDate", modifyDate);
     }
 
+    /** @return the date and time the resource was last modified */
+    public Date getModifyDate() {
+        return getDateValue("ModifyDate");
+    }
+    
     /**
      * Sets the date and time any metadata for this resource was last changed.
      * @param metadataDate the modification date for the metadata
@@ -73,4 +83,10 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
     public void setMetadataDate(Date metadataDate) {
         setDateValue("MetadataDate", metadataDate);
     }
+    
+    /** @return the date and time the resource was originally created */
+    public Date getMetadataDate() {
+        return getDateValue("MetadataDate");
+    }
+
 }

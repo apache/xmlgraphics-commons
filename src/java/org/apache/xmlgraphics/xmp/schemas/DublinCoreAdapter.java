@@ -25,7 +25,10 @@ import org.apache.xmlgraphics.xmp.XMPSchemaAdapter;
 import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
 
 /**
- * Schema adapter implementation for the Dublin Core schema. 
+ * Schema adapter implementation for the Dublin Core schema.
+ * <p>
+ * Note: In Adobe's XMP specification dc:subject is defined as "bag Text", but in PDF/A-1 it is
+ * defined as "Text". Here it is implemented as "bag Text". 
  */
 public class DublinCoreAdapter extends XMPSchemaAdapter {
 

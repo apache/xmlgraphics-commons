@@ -51,7 +51,7 @@ public class DublinCoreSchema extends XMPSchema {
      * @param meta the metadata object
      * @return the newly instantiated adapter
      */
-    public DublinCoreAdapter getAdapter(Metadata meta) {
+    public static DublinCoreAdapter getAdapter(Metadata meta) {
         return new DublinCoreAdapter(meta);
     }
 
