@@ -19,9 +19,11 @@
 package org.apache.xmlgraphics.xmp;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.xmlgraphics.util.QName;
 
@@ -33,6 +35,10 @@ public class XMPSchemaAdapter {
     private static DateFormat pseudoISO8601DateFormat = new SimpleDateFormat(
                                                             "yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
+    static {
+        pseudoISO8601DateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+    
     /** the Metadata object this schema instance operates on */
     protected Metadata meta;
     private XMPSchema schema;
@@ -113,11 +119,15 @@ public class XMPSchemaAdapter {
      */
     public static String formatISO8601Date(Date dt) {
         //ISO 8601 cannot be expressed directly using SimpleDateFormat
-        StringBuffer sb = new StringBuffer(pseudoISO8601DateFormat.format(dt));
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
         int offset = cal.get(Calendar.ZONE_OFFSET);
         offset += cal.get(Calendar.DST_OFFSET);
+        
+        //DateFormat is operating on GMT so adjust for time zone offset
+        Date dt1 = new Date(dt.getTime() + offset);
+        StringBuffer sb = new StringBuffer(pseudoISO8601DateFormat.format(dt1));
+
         offset /= (1000 * 60); //Convert to minutes
         
         if (offset == 0) {
@@ -145,6 +155,45 @@ public class XMPSchemaAdapter {
     }
     
     /**
+     * Parses an ISO 8601 date and time value.
+     * @param dt the date and time value as an ISO 8601 string
+     * @return the parsed date/time
+     * @todo Parse formats other than yyyy-mm-ddThh:mm:ssZ
+     */
+    public static Date parseISO8601Date(final String dt) {
+        int offset = 0;
+        String parsablePart;
+        if (dt.endsWith("Z")) {
+            parsablePart = dt.substring(0, dt.length() - 1);
+        } else {
+            int pos;
+            int neg = 1;
+            pos = dt.lastIndexOf('+');
+            if (pos < 0) {
+                pos = dt.lastIndexOf('-');
+                neg = -1;
+            }
+            if (pos >= 0) {
+                String timeZonePart = dt.substring(pos);
+                parsablePart = dt.substring(0, pos);
+                offset = Integer.parseInt(timeZonePart.substring(1, 3)) * 60;
+                offset += Integer.parseInt(timeZonePart.substring(4, 6));
+                offset *= neg;
+            } else {
+                parsablePart = dt;
+            }
+        }
+        Date d;
+        try {
+            d = pseudoISO8601DateFormat.parse(parsablePart);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid ISO 8601 date format: " + dt);
+        }
+        d.setTime(d.getTime() - offset * 60 * 1000);
+        return d;
+    }
+
+    /**
      * Adds a date value to an ordered array.
      * @param propName the property name
      * @param value the date value
@@ -164,6 +213,20 @@ public class XMPSchemaAdapter {
         setValue(propName, dt);
     }
 
+    /**
+     * Returns a date value.
+     * @param propName the property name
+     * @return the date value or null if the value is not set
+     */
+    protected Date getDateValue(String propName) {
+        String dt = getValue(propName);
+        if (dt == null) {
+            return null;
+        } else {
+            return parseISO8601Date(dt);
+        }
+    }
+    
     /**
      * Sets a language-dependent value.
      * @param propName the property name
@@ -266,10 +329,13 @@ public class XMPSchemaAdapter {
     /**
      * Returns an object array representation of the property's values.
      * @param propName the property name
-     * @return the object array
+     * @return the object array or null if the property isn't set
      */
     protected Object[] getObjectArray(String propName) {
         XMPProperty prop = meta.getProperty(getQName(propName));
+        if (prop == null) {
+            return null;
+        }
         XMPArray array = prop.getArrayValue();
         if (array != null) {
             return array.toObjectArray();
@@ -282,10 +348,13 @@ public class XMPSchemaAdapter {
      * Returns a String array representation of the property's values. Complex values to converted
      * to Strings using the toString() method.
      * @param propName the property name
-     * @return the String array
+     * @return the String array or null if the property isn't set
      */
     protected String[] getStringArray(String propName) {
         Object[] arr = getObjectArray(propName);
+        if (arr == null) {
+            return null;
+        }
         String[] res = new String[arr.length];
         for (int i = 0, c = res.length; i < c; i++) {
             res[i] = arr[i].toString();
