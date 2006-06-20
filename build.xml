@@ -24,7 +24,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="version" value="0.1svn"/>
+  <property name="version" value="1.1svn"/>
   <property name="year" value="1999-2006"/>
 
   <property name="javac.debug" value="on"/>
