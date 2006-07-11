@@ -43,7 +43,8 @@ import java.util.Map;
 public class Service {
 
     // Remember providers we have looked up before.
-    static Map providerMap = new java.util.HashMap();
+    static Map classMap = new java.util.HashMap();
+    static Map instanceMap = new java.util.HashMap();
 
     /**
      * Returns an iterator where each element should implement the
@@ -57,15 +58,32 @@ public class Service {
      * @param cls The class/interface to search for providers of.
      */
     public static synchronized Iterator providers(Class cls) {
+        return providers(cls, true);
+    }
+    
+    /**
+     * Returns an iterator where each element should implement the
+     * interface (or subclass the baseclass) described by cls.  The
+     * Classes are found by searching the classpath for service files
+     * named: 'META-INF/services/&lt;fully qualified classname&gt; that list
+     * fully qualifted classnames of classes that implement the
+     * service files classes interface.  These classes must have
+     * default constructors if returnInstances is true.
+     *
+     * @param cls The class/interface to search for providers of.
+     * @param returnInstances true if the iterator should return instances rather than class names.
+     */
+    public static synchronized Iterator providers(Class cls, boolean returnInstances) {
         String serviceFile = "META-INF/services/" + cls.getName();
+        Map cacheMap = (returnInstances ? instanceMap : classMap);
 
-        List l = (List)providerMap.get(serviceFile);
+        List l = (List)cacheMap.get(serviceFile);
         if (l != null) {
             return l.iterator();
         }
 
         l = new java.util.ArrayList();
-        providerMap.put(serviceFile, l);
+        cacheMap.put(serviceFile, l);
 
         ClassLoader cl = null;
         try {
@@ -112,10 +130,14 @@ public class Service {
                             continue;
                         }
 
-                        // Try and load the class 
-                        Object obj = cl.loadClass(line).newInstance();
-                        // stick it into our vector...
-                        l.add(obj);
+                        if (returnInstances) {
+                            // Try and load the class 
+                            Object obj = cl.loadClass(line).newInstance();
+                            // stick it into our vector...
+                            l.add(obj);
+                        } else {
+                            l.add(line);
+                        }
                     } catch (Exception ex) {
                         // Just try the next line
                     }
