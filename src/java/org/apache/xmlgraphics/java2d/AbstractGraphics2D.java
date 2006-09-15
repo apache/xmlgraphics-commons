@@ -1,21 +1,22 @@
 /*
-
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
+/* $Id$ */
+
 package org.apache.xmlgraphics.java2d;
 
 import java.awt.AlphaComposite;
@@ -32,6 +33,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
@@ -76,6 +78,11 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * Text handling strategy.
      */
     protected boolean textAsShapes = false;
+
+    /**
+     * Protection agains infinite recursion
+     */
+    protected boolean inPossibleRecursion = false;
 
     /**
      * @param textAsShapes if true, all text is turned into shapes in the
@@ -608,6 +615,25 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
         drawString(str, (float)x, (float)y);
     }
 
+    /**
+     * Generic implementation for drawing attributed strings using TextLayout.
+     *
+     * @param iterator the iterator whose text is to be rendered
+     * @param x        the x coordinate where the iterator's text is to be rendered
+     * @param y        the y coordinate where the iterator's text is to be rendered
+     * @see java.awt.Graphics2D#drawString (java.text.AttributedCharacterIterator,
+     *      float, float)
+     */
+    public void drawString(AttributedCharacterIterator iterator, float x, float y) {
+        if (inPossibleRecursion) {
+            System.err.println("Called itself: drawString(AttributedCharacterIterator)");
+        } else {
+            inPossibleRecursion = true;
+            TextLayout layout = new TextLayout(iterator, getFontRenderContext());
+            layout.draw(this, x, y);
+            inPossibleRecursion = false;
+        }
+    }
 
     /**
      * Draws the text given by the specified iterator, using this

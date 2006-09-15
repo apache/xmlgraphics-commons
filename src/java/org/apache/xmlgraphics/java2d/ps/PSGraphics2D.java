@@ -20,7 +20,6 @@
 package org.apache.xmlgraphics.java2d.ps;
 
 //Java
-import java.text.AttributedCharacterIterator;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -675,66 +674,6 @@ public class PSGraphics2D extends AbstractGraphics2D {
         } catch (IOException ioe) {
             handleIOException(ioe);
         }
-    }
-
-    /**
-     * Renders the text of the specified iterator, using the
-     * <code>Graphics2D</code> context's current <code>Paint</code>. The
-     * iterator must specify a font
-     * for each character. The baseline of the
-     * first character is at position (<i>x</i>,&nbsp;<i>y</i>) in the
-     * User Space.
-     * The rendering attributes applied include the <code>Clip</code>,
-     * <code>Transform</code>, <code>Paint</code>, and
-     * <code>Composite</code> attributes.
-     * For characters in script systems such as Hebrew and Arabic,
-     * the glyphs can be rendered from right to left, in which case the
-     * coordinate supplied is the location of the leftmost character
-     * on the baseline.
-     * @param iterator the iterator whose text is to be rendered
-     * @param x the x-coordinate where the iterator's text is to be
-     * rendered
-     * @param y the y-coordinate where the iterator's text is to be
-     * rendered
-     * @see #setPaint
-     * @see java.awt.Graphics#setColor
-     * @see #setTransform
-     * @see #setComposite
-     * @see #setClip
-     */
-    public void drawString(AttributedCharacterIterator iterator, float x,
-                           float y) {
-        preparePainting();
-        System.err.println("NYI: drawString(AttributedCharacterIterator)");
-        /*
-        try {
-            gen.writeln("BT");
-            Shape imclip = getClip();
-            writeClip(imclip);
-            establishColor(getColor());
-
-            AffineTransform trans = getTransform();
-            trans.translate(x, y);
-            double[] vals = new double[6];
-            trans.getMatrix(vals);
-
-            for (char ch = iterator.first(); ch != CharacterIterator.DONE;
-                    ch = iterator.next()) {
-                //Map attr = iterator.getAttributes();
-
-                gen.writeln(gen.formatDouble(vals[0]) + " "
-                          + gen.formatDouble(vals[1]) + " "
-                          + gen.formatDouble(vals[2]) + " "
-                          + gen.formatDouble(vals[3]) + " "
-                          + gen.formatDouble(vals[4]) + " "
-                          + gen.formatDouble(vals[5]) + " "
-                          + gen.formatDouble(vals[6]) + " Tm [" + ch
-                          + "]");
-            }
-            gen.writeln("ET");
-        } catch (IOException ioe) {
-            handleIOException(ioe);
-        }*/
     }
 
     /**
