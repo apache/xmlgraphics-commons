@@ -76,28 +76,33 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
             iiowriter.addIIOWriteWarningListener(this);
             
             ImageOutputStream imgout = ImageIO.createImageOutputStream(out);
-            
-            ImageWriteParam iwParam = getDefaultWriteParam(iiowriter, image, params);
-            
-            ImageTypeSpecifier type;
-            if (iwParam.getDestinationType() != null) {
-                type = iwParam.getDestinationType();
-            } else {
-                type = ImageTypeSpecifier.createFromRenderedImage(image);
+            try {
+                
+                ImageWriteParam iwParam = getDefaultWriteParam(iiowriter, image, params);
+                
+                ImageTypeSpecifier type;
+                if (iwParam.getDestinationType() != null) {
+                    type = iwParam.getDestinationType();
+                } else {
+                    type = ImageTypeSpecifier.createFromRenderedImage(image);
+                }
+                
+                //Handle metadata
+                IIOMetadata meta = iiowriter.getDefaultImageMetadata(
+                        type, iwParam);
+                //meta might be null for some JAI codecs as they don't support metadata
+                if (params != null && meta != null) {
+                    meta = updateMetadata(meta, params); 
+                }
+                
+                //Write image
+                iiowriter.setOutput(imgout);
+                IIOImage iioimg = new IIOImage(image, null, meta);
+                iiowriter.write(null, iioimg, iwParam);
+                
+            } finally {
+                imgout.close();
             }
-            
-            //Handle metadata
-            IIOMetadata meta = iiowriter.getDefaultImageMetadata(
-                    type, iwParam);
-            //meta might be null for some JAI codecs as they don't support metadata
-            if (params != null && meta != null) {
-                meta = updateMetadata(meta, params); 
-            }
-            
-            //Write image
-            iiowriter.setOutput(imgout);
-            IIOImage iioimg = new IIOImage(image, null, meta);
-            iiowriter.write(null, iioimg, iwParam);
         } else {
             throw new UnsupportedOperationException("No ImageIO codec for writing " 
                     + getMIMEType() + " is available!");
@@ -116,7 +121,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
             javax.imageio.ImageWriter iiowriter, RenderedImage image, 
             ImageWriterParams params) {
         ImageWriteParam param = iiowriter.getDefaultWriteParam();
-        System.err.println("Param: " + params);
+        //System.err.println("Param: " + params);
         if ((params != null) && (params.getCompressionMethod() != null)) {
             param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             param.setCompressionType(params.getCompressionMethod());
