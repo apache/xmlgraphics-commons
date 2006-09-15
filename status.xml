@@ -28,6 +28,10 @@
 
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add" due-to="Max Berger">
+        Default implementation for AbstractGraphics2D.drawText(ACI, float, float) so
+        PSGraphics2D supports painting text using the AttributedCharacterIterator.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix: The generation of the PostScript setdash command was assuming that
         only integer values can be used but that isn't the case.
