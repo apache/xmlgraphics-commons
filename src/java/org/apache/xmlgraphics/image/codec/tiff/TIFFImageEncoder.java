@@ -1,21 +1,22 @@
 /*
-
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
+/* $Id$ */
+
 package org.apache.xmlgraphics.image.codec.tiff;
 
 import java.awt.Rectangle;
@@ -90,10 +91,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
     private static final int DEFAULT_ROWS_PER_STRIP = 8;
 
     public TIFFImageEncoder(OutputStream output, ImageEncodeParam param) {
-	super(output, param);
-	if (this.param == null) {
-	    this.param = new TIFFEncodeParam();
-	}
+    	super(output, param);
+    	if (this.param == null) {
+    	    this.param = new TIFFEncodeParam();
+    	}
     }
 
     /**
@@ -107,16 +108,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Get the encoding parameters.
         TIFFEncodeParam encodeParam = (TIFFEncodeParam)param;
 
-	Iterator iter = encodeParam.getExtraImages();
-	if(iter != null) {
+        Iterator iter = encodeParam.getExtraImages();
+        if (iter != null) {
             int ifdOffset = 8;
-	    RenderedImage nextImage = im;
+            RenderedImage nextImage = im;
             TIFFEncodeParam nextParam = encodeParam;
             boolean hasNext;
             do {
                 hasNext = iter.hasNext();
                 ifdOffset = encode(nextImage, nextParam, ifdOffset, !hasNext);
-	        if(hasNext) {
+                if(hasNext) {
                     Object obj = iter.next();
                     if(obj instanceof RenderedImage) {
                         nextImage = (RenderedImage)obj;
@@ -126,20 +127,78 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         nextImage = (RenderedImage)o[0];
                         nextParam = (TIFFEncodeParam)o[1];
                     }
-	        }
+                }
             } while(hasNext);
         } else {
-	    encode(im, encodeParam, 8, true);
+            encode(im, encodeParam, 8, true);
         }
+    }
+    
+    /**
+     * Encodes a RenderedImage as part of a multi-page file and writes the output to the
+     * OutputStream associated with this ImageEncoder.
+     * <p>
+     * When you sent all pages, make sure you call finishMultiple() in the end. Otherwise,
+     * the generated file will be corrupted.
+     * @param context the context object you receive as return value to a previous call to
+     *                encodeMultiple(). Set null for the first image.
+     * @param img the image
+     * @return a context object needed for writing multiple pages for a single image file
+     * @throws IOException In case of an I/O error
+     */
+    public Object encodeMultiple(Object context, RenderedImage img) throws IOException {
+        // Get the encoding parameters.
+        TIFFEncodeParam encodeParam = (TIFFEncodeParam)param;
+        if (encodeParam.getExtraImages() != null) {
+            throw new IllegalStateException(
+                    "Extra images may not be used when calling encodeMultiple!");
+        }
+        
+        Context c = (Context)context;
+        if (c == null) {
+            c = new Context();
+            // Write the file header (8 bytes).
+            writeFileHeader();
+        } else {
+            //write image
+            c.ifdOffset = encode(c.nextImage, encodeParam, c.ifdOffset, false);
+        }
+        c.nextImage = img;
+        return c;
+    }
+    
+    /**
+     * Signals the encoder that you've finished sending pages for a multi-page image files.
+     * @param context the context object you receive as return value to a previous call to
+     *                encodeMultiple()
+     * @throws IOException In case of an I/O error
+     */
+    public void finishMultiple(Object context) throws IOException {
+        if (context == null) {
+            throw new NullPointerException("context must not be null");
+        }
+        Context c = (Context)context;
+        // Get the encoding parameters.
+        TIFFEncodeParam encodeParam = (TIFFEncodeParam)param;
+
+        //write last image
+        c.ifdOffset = encode(c.nextImage, encodeParam, c.ifdOffset, true);
+    }
+    
+    private class Context {
+        //TODO This approach causes always two images to be present at the same time.
+        //The encoder has to be changed a little to avoid that.
+        private RenderedImage nextImage;
+        private int ifdOffset = 8; //Initial offset
     }
 
     private int encode(RenderedImage im, TIFFEncodeParam encodeParam,
                        int ifdOffset, boolean isLast) throws IOException {
-	// Currently all images are stored uncompressed.
-	int compression = encodeParam.getCompression();
-
-	// Get tiled output preference.
-	boolean isTiled = encodeParam.getWriteTiled();
+    	// Currently all images are stored uncompressed.
+    	int compression = encodeParam.getCompression();
+    
+    	// Get tiled output preference.
+    	boolean isTiled = encodeParam.getWriteTiled();
 
         // Set bounds.
         int minX = im.getMinX();
@@ -151,7 +210,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         SampleModel sampleModel = im.getSampleModel();
 
         // Retrieve and verify sample size.
-	int sampleSize[] = sampleModel.getSampleSize();
+        int sampleSize[] = sampleModel.getSampleSize();
         for(int i = 1; i < sampleSize.length; i++) {
             if(sampleSize[i] != sampleSize[0]) {
                 throw new Error("TIFFImageEncoder0");
@@ -159,13 +218,13 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         }
 
         // Check low bit limits.
-	int numBands = sampleModel.getNumBands();
+        int numBands = sampleModel.getNumBands();
         if((sampleSize[0] == 1 || sampleSize[0] == 4) && numBands != 1) {
             throw new Error("TIFFImageEncoder1");
         }
 
         // Retrieve and verify data type.
-	int dataType = sampleModel.getDataType();
+        int dataType = sampleModel.getDataType();
         switch(dataType) {
         case DataBuffer.TYPE_BYTE:
             if(sampleSize[0] != 1 && sampleSize[0] == 4 &&
@@ -1334,7 +1393,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
      */
     private int getDirectorySize(SortedSet fields) {
         // Get the number of entries.
-	int numEntries = fields.size();
+        int numEntries = fields.size();
 
         // Initialize the size excluding that of any values > 4 bytes.
         int dirSize = 2 + numEntries*12 + 4;
@@ -1342,14 +1401,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Loop over fields adding the size of all values > 4 bytes.
         Iterator iter = fields.iterator();
         while(iter.hasNext()) {
-	    // Get the field.	    
-	    TIFFField field = (TIFFField)iter.next();
+            // Get the field.	    
+            TIFFField field = (TIFFField)iter.next();
 
             // Determine the size of the field value.
             int valueSize = field.getCount()*sizeOfType[field.getType()];
 
             // Add any excess size.
-	    if(valueSize > 4) {
+            if(valueSize > 4) {
                 dirSize += valueSize;
             }
         }
@@ -1358,75 +1417,75 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
     }
 
     private void writeFileHeader() throws IOException {
-	// 8 byte image file header
-	
-	// Byte order used within the file - Big Endian
-	output.write('M');
-	output.write('M');
-	
-	// Magic value
-	output.write(0);
-	output.write(42);
-	
-	// Offset in bytes of the first IFD.
-	writeLong(8);
+    	// 8 byte image file header
+    	
+    	// Byte order used within the file - Big Endian
+    	output.write('M');
+    	output.write('M');
+    	
+    	// Magic value
+    	output.write(0);
+    	output.write(42);
+    	
+    	// Offset in bytes of the first IFD.
+    	writeLong(8);
     }
 
     private void writeDirectory(int thisIFDOffset, SortedSet fields,
                                 int nextIFDOffset) 
-	throws IOException {
-
-	// 2 byte count of number of directory entries (fields)
-	int numEntries = fields.size();
-
-	long offsetBeyondIFD = thisIFDOffset + 12 * numEntries + 4 + 2;
-	ArrayList tooBig = new ArrayList();
-
-	// Write number of fields in the IFD
-	writeUnsignedShort(numEntries);
-
+            throws IOException {
+    
+    	// 2 byte count of number of directory entries (fields)
+    	int numEntries = fields.size();
+    
+    	long offsetBeyondIFD = thisIFDOffset + 12 * numEntries + 4 + 2;
+    	ArrayList tooBig = new ArrayList();
+    
+    	// Write number of fields in the IFD
+    	writeUnsignedShort(numEntries);
+    
         Iterator iter = fields.iterator();
-	while(iter.hasNext()) {
-	    
-	    // 12 byte field entry TIFFField	    
-	    TIFFField field = (TIFFField)iter.next();
-
-	    // byte 0-1 Tag that identifies a field
-	    int tag = field.getTag();
-	    writeUnsignedShort(tag);
-
-	    // byte 2-3 The field type
-	    int type = field.getType();
-	    writeUnsignedShort(type);
-	    
-	    // bytes 4-7 the number of values of the indicated type except
-            // ASCII-valued fields which require the total number of bytes.
-	    int count = field.getCount();
+    	while(iter.hasNext()) {
+    	    
+    	    // 12 byte field entry TIFFField	    
+    	    TIFFField field = (TIFFField)iter.next();
+    
+    	    // byte 0-1 Tag that identifies a field
+    	    int tag = field.getTag();
+    	    writeUnsignedShort(tag);
+    
+    	    // byte 2-3 The field type
+    	    int type = field.getType();
+    	    writeUnsignedShort(type);
+    	    
+    	    // bytes 4-7 the number of values of the indicated type except
+                // ASCII-valued fields which require the total number of bytes.
+    	    int count = field.getCount();
             int valueSize = getValueSize(field);
-	    writeLong(type == TIFFField.TIFF_ASCII ? valueSize : count);
-
-	    // bytes 8 - 11 the value or value offset
-	    if (valueSize > 4) {
-
-		// We need an offset as data won't fit into 4 bytes
-		writeLong(offsetBeyondIFD);
-		offsetBeyondIFD += valueSize;
-		tooBig.add(field);
-
-	    } else {
-
-		writeValuesAsFourBytes(field);		
-	    }
-
-	}
-
-	// Address of next IFD
-	writeLong(nextIFDOffset);
-
-	// Write the tag values that did not fit into 4 bytes
-	for (int i = 0; i < tooBig.size(); i++) {
-	    writeValues((TIFFField)tooBig.get(i));
-	} 
+    	    writeLong(type == TIFFField.TIFF_ASCII ? valueSize : count);
+    
+    	    // bytes 8 - 11 the value or value offset
+    	    if (valueSize > 4) {
+    
+        		// We need an offset as data won't fit into 4 bytes
+        		writeLong(offsetBeyondIFD);
+        		offsetBeyondIFD += valueSize;
+        		tooBig.add(field);
+    
+    	    } else {
+    
+    	        writeValuesAsFourBytes(field);		
+    	    }
+    
+    	}
+    
+    	// Address of next IFD
+    	writeLong(nextIFDOffset);
+    
+    	// Write the tag values that did not fit into 4 bytes
+    	for (int i = 0; i < tooBig.size(); i++) {
+    	    writeValues((TIFFField)tooBig.get(i));
+    	} 
     }
 
     /**
