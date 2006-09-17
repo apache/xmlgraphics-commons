@@ -1,21 +1,22 @@
 /*
-
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
+/* $Id$ */
+
 package org.apache.xmlgraphics.image.writer;
 
 import java.awt.image.RenderedImage;
@@ -51,5 +52,17 @@ public interface ImageWriter {
 
     /** @return the target MIME type supported by this ImageWriter */
     public String getMIMEType();
+
+    /** @return true if the implemented format supports multiple pages in a single file */
+    public boolean supportsMultiImageWriter();
+    
+    /**
+     * Creates a MultiImageWriter instance that lets you put multiple pages into a single file
+     * if the format supports it.
+     * @param out the OutputStream to write the image to
+     * @return the requested MultiImageWriter instance
+     * @throws IOException In case of an /IO problem
+     */
+    public MultiImageWriter createMultiImageWriter(OutputStream out) throws IOException;
     
 }
