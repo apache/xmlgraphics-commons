@@ -139,7 +139,9 @@ public class TIFFImageWriter extends AbstractImageWriter {
         }
         
         public void close() throws IOException {
-            encoder.finishMultiple(context);
+            if (encoder != null) {
+                encoder.finishMultiple(context);
+            }
             encoder = null;
             encodeParams = null;
             out.flush();
