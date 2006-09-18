@@ -141,11 +141,14 @@ public class ImageWriterRegistry {
      */
     public ImageWriter getWriterFor(String mime) {
         List entries = (List)imageWriterMap.get(mime);
-        if (entries == null) {
-            return null;
-        } else {
-            return (ImageWriter)entries.get(0);
+        Iterator iter = entries.iterator();
+        while (iter.hasNext()) {
+            ImageWriter writer = (ImageWriter)iter.next();
+            if (writer.isFunctional()) {
+                return writer;
+            }
         }
+        return null;
     }
 
 }

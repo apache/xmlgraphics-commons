@@ -109,13 +109,15 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
     
     private javax.imageio.ImageWriter getIIOImageWriter() {
         Iterator iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
-        javax.imageio.ImageWriter iiowriter = (javax.imageio.ImageWriter)iter.next();
-        if (iiowriter != null) {
-            return iiowriter;
-        } else {
+        javax.imageio.ImageWriter iiowriter = null;
+        if (iter.hasNext()) {
+            iiowriter = (javax.imageio.ImageWriter)iter.next();
+        }
+        if (iiowriter == null) {
             throw new UnsupportedOperationException("No ImageIO codec for writing " 
                     + getMIMEType() + " is available!");
         }
+        return iiowriter;
     }
     
     /**
@@ -194,6 +196,13 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
     /** @see ImageWriter#getMIMEType() */
     public String getMIMEType() {
         return this.targetMIME;
+    }
+
+    /** @see org.apache.xmlgraphics.image.writer.ImageWriter#isFunctional() */
+    public boolean isFunctional() {
+        Iterator iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
+        //Only return true if an IIO ImageWriter is available in the current environment
+        return (iter.hasNext());
     }
 
     /**

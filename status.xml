@@ -28,6 +28,15 @@
 
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Various fixes and improvements in the ImageWriter abstraction.
+      </action>
+      <action context="Code" dev="JM" type="add">
+        ImageWriter abstraction now supports writing multi-page formats like TIFF.
+      </action>
+      <action context="Code" dev="JM" type="add">
+        ImageWriter implementation for TIFF output using Image I/O API.
+      </action>
       <action context="Code" dev="JM" type="add" due-to="Max Berger">
         Default implementation for AbstractGraphics2D.drawText(ACI, float, float) so
         PSGraphics2D supports painting text using the AttributedCharacterIterator.

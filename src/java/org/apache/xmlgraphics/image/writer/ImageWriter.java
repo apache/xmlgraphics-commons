@@ -53,6 +53,9 @@ public interface ImageWriter {
     /** @return the target MIME type supported by this ImageWriter */
     public String getMIMEType();
 
+    /** @return true if the ImageWriter is expected to work properly in the current environment */
+    public boolean isFunctional();
+    
     /** @return true if the implemented format supports multiple pages in a single file */
     public boolean supportsMultiImageWriter();
     
