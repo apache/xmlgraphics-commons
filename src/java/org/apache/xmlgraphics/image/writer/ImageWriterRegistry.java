@@ -124,7 +124,7 @@ public class ImageWriterRegistry {
         li = entries.listIterator();
         while (li.hasNext()) {
             ImageWriter w = (ImageWriter)li.next();
-            if (getPriority(w) > priority) {
+            if (getPriority(w) < priority) {
                 li.previous();
                 li.add(writer);
                 return;
