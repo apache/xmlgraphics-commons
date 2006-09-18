@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+/* $Id$ */
+
 package org.apache.xmlgraphics.image.codec.png;
 
 import java.awt.Color;
