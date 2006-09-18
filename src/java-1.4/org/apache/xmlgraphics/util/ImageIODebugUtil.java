@@ -20,6 +20,8 @@
 package org.apache.xmlgraphics.util;
 
 import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataFormatImpl;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -36,8 +38,13 @@ import org.w3c.dom.Node;
  */
 public class ImageIODebugUtil {
 
-    public static void dumpMetadata(IIOMetadata meta) {
-        String format = meta.getNativeMetadataFormatName();
+    public static void dumpMetadata(IIOMetadata meta, boolean nativeFormat) {
+        String format;
+        if (nativeFormat) {
+            format = meta.getNativeMetadataFormatName();
+        } else {
+            format = IIOMetadataFormatImpl.standardMetadataFormatName;
+        }
         Node node = meta.getAsTree(format);
         dumpNode(node);
     }
@@ -46,6 +53,7 @@ public class ImageIODebugUtil {
         try {
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = tf.newTransformer();
+            t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             Source src = new DOMSource(node);
             Result res = new StreamResult(System.out);
             t.transform(src, res);

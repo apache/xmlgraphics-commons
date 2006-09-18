@@ -48,6 +48,8 @@ import org.apache.xmlgraphics.image.writer.MultiImageWriter;
  */
 public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener {
 
+    private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
+    
     private String targetMIME;
     
     /**
@@ -142,9 +144,8 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
      * @return the updated metadata
      */
     protected IIOMetadata updateMetadata(IIOMetadata meta, ImageWriterParams params) {
-        final String stdmeta = "javax_imageio_1.0";
         if (meta.isStandardMetadataFormatSupported()) {
-            IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(stdmeta);
+            IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(STANDARD_METADATA_FORMAT);
             IIOMetadataNode dim = getChildNode(root, "Dimension");
             IIOMetadataNode child;
             if (params.getResolution() != null) {
@@ -164,7 +165,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
                         Double.toString(params.getResolution().doubleValue() / 25.4));
             }
             try {
-                meta.mergeTree(stdmeta, root);
+                meta.mergeTree(STANDARD_METADATA_FORMAT, root);
             } catch (IIOInvalidTreeException e) {
                 throw new RuntimeException("Cannot update image metadata: " 
                             + e.getMessage());
