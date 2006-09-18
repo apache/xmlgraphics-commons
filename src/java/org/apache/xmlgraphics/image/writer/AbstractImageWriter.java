@@ -39,6 +39,11 @@ public abstract class AbstractImageWriter implements ImageWriter {
                 + " multiple images to a single image file.");
     }
 
+    /** @see org.apache.xmlgraphics.image.writer.ImageWriter#isFunctional() */
+    public boolean isFunctional() {
+        return true;
+    }
+
     /** @see org.apache.xmlgraphics.image.writer.ImageWriter#supportsMultiImageWriter() */
     public boolean supportsMultiImageWriter() {
         return false;
