@@ -141,6 +141,9 @@ public class ImageWriterRegistry {
      */
     public ImageWriter getWriterFor(String mime) {
         List entries = (List)imageWriterMap.get(mime);
+        if (entries == null) {
+            return null;
+        }
         Iterator iter = entries.iterator();
         while (iter.hasNext()) {
             ImageWriter writer = (ImageWriter)iter.next();
