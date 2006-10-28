@@ -59,6 +59,10 @@
   <property name="ikvm.dir" value="."/>
   <property name="ikvmc" value="${ikvm.dir}/bin/ikvmc.exe"/>
 
+  <tstamp>
+    <format property="ts" pattern="yyyyMMdd-HHmmss-z"/>
+  </tstamp>
+
   <path id="libs-build-classpath">
     <fileset dir="${lib.dir}">
       <include name="*.jar"/>
@@ -157,6 +161,20 @@
         <equals arg1="${internal-codecs.eff.disabled}" arg2="true"/>
       </and>
     </condition>
+    <condition property="ikvm.message" value="IKVM Support PRESENT and ENABLED">
+      <equals arg1="${IKVM.present}" arg2="true"/>
+    </condition>
+    <condition property="ikvm.message" value="IKVM Support NOT Present">
+      <not>
+        <available file="${ikvmc}"/>
+      </not>
+    </condition>
+    <condition property="ikvm.message" value="IKVM Support DISABLED">
+      <not>
+        <equals arg1="${IKVM.present}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${ikvm.message}"/>
   </target>
 
   <target name="init-filters-jdk13" depends="init-avail" unless="jdk14.present">
@@ -164,6 +182,7 @@
     <path id="graphics-configuration-adapter">
       <pathelement location="src/java-1.3"/>
     </path>
+    <property name="src.java.version.dir" value="${basedir}/src/java-1.3"/>
   </target>
 
   <target name="init-filters-jdk14" depends="init-avail" if="jdk14.present">
@@ -171,6 +190,7 @@
     <path id="graphics-configuration-adapter">
       <pathelement location="src/java-1.4"/>
     </path>
+    <property name="src.java.version.dir" value="${basedir}/src/java-1.4"/>
   </target>
 
   <!-- =================================================================== -->
@@ -225,10 +245,7 @@
   </target>
 
   <target name="jar-main" depends="compile-java,uptodate-jar-main" description="Generates the main jar file" unless="jar.main.uptodate">
-    <tstamp>
-      <format property="ts" pattern="yyyyMMdd-HHmmss-z"/>
-    </tstamp>
-    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.classes.dir}">
+    <jar jarfile="${build.dir}/${name}-${version}.jar" basedir="${build.classes.dir}">
       <manifest>
         <attribute name="Implementation-Title" value="${Name}"/>
         <attribute name="Implementation-Version" value="${version}"/>
@@ -251,9 +268,37 @@
       <arg value="-reference:${build.dir}/${commons-io}.dll"/>
       <!--arg value="-reference:${ikvm.dir}/bin/IKVM.AWT.WinForms.dll"/-->
       <arg value="-target:library"/>
-      <arg value="-out:${build.dir}\${name}.dll"/>
-      <arg value="${build.dir}\${name}.jar"/>
+      <arg value="-out:${build.dir}\${name}-${version}.dll"/>
+      <arg value="${build.dir}\${name}-${version}.jar"/>
     </exec>
+  </target>
+
+  <target name="uptodate-jar-sources" depends="init">
+    <uptodate property="jar.sources.uptodate" targetfile="${build.dir}/${name}-${version}-sources.jar">
+      <srcfiles dir="${src.java.dir}"/>
+      <srcfiles dir="${src.java.version.dir}"/>
+    </uptodate>
+  </target>
+
+  <target name="jar-sources" depends="uptodate-jar-sources" description="Generates a jar file with all the sources" unless="jar.sources.uptodate">
+    <patternset id="java-only">
+      <include name="**/*.java"/>
+    </patternset>
+    <jar jarfile="${build.dir}/${name}-${version}-sources.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${src.java.dir}">
+        <patternset refid="java-only"/>
+      </fileset>
+      <fileset dir="${src.java.version.dir}">
+        <patternset refid="java-only"/>
+      </fileset>
+      <fileset dir="${basedir}">
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+      </fileset>
+    </jar>
   </target>
 
   <target name="package" depends="jar-main, package.NET" description="Generates the jar files"/>
@@ -273,7 +318,7 @@
       <classpath>
         <path refid="libs-build-classpath"/>
         <fileset dir="${build.dir}">
-          <include name="${name}.jar"/>
+          <include name="${name}-${version}.jar"/>
         </fileset>
       </classpath>
     </javac>
@@ -290,7 +335,7 @@
         <pathelement location="${build.dir}/test-classes"/>
         <path refid="libs-build-classpath"/>
         <fileset dir="build">
-          <include name="${name}.jar"/>
+          <include name="${name}-${version}.jar"/>
         </fileset>
       </classpath>
       <test name="org.apache.xmlgraphics.StandardTestSuite" todir="${build.dir}/test-reports"/>
@@ -382,6 +427,19 @@ NOTE:
         <package name="org.apache.xmlgraphics.util.*"/>
       </group>
     </javadoc>
+  </target>
+
+  <target name="jar-javadocs" depends="javadocs">
+    <jar jarfile="${build.dir}/${name}-${version}-javadoc.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${build.javadocs.dir}"/>
+      <fileset dir="${basedir}">
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+      </fileset>
+    </jar>
   </target>
 
   <!-- =================================================================== -->
@@ -557,6 +615,30 @@ NOTE:
     <delete file="${name}-${version}-src.tar"/>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Maven artifacts                                                     -->
+  <!-- =================================================================== -->
+  <target name="maven-artifacts" depends="jar-main, jar-sources, jar-javadocs" description="Builds a Maven artifact that can be uploaded to a Maven repository">
+    <filter  token="version" value="${version}"/>
+    <mkdir dir="${build.dir}/maven"/>
+    <copy file="${basedir}/xmlgraphics-commons-pom-template.pom" tofile="${build.dir}/maven/pom.xml" filtering="true"/>
+    <jar jarfile="${build.dir}/${name}-${version}-bundle.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${build.dir}">
+        <include name="${name}-${version}.jar"/>
+        <include name="${name}-${version}-sources.jar"/>
+        <include name="${name}-${version}-javadoc.jar"/>
+      </fileset>
+      <fileset dir="${build.dir}/maven"/>
+      <fileset dir="${basedir}">
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+      </fileset>
+    </jar>
+  </target>
+  
   <!-- =================================================================== -->
   <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
