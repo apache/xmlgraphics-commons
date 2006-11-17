@@ -104,6 +104,7 @@
     <include name="README"/>
     <include name="KEYS"/>
     <include name="status.xml"/>
+    <include name="*.pom"/>
     <include name="build.*"/>
     <include name="forrest.*"/>
   </fileset>
@@ -550,7 +551,7 @@ NOTE:
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="dist-src,dist-bin" description="Generates the distribution package"/>
+  <target name="dist" depends="distclean,dist-src,dist-bin,maven-artifacts" description="Generates the distribution package"/>
 
   <!-- IMPORTANT: .NET binaries must not be included in the distribution. License policy! -->
 
@@ -568,7 +569,7 @@ NOTE:
       <fileset dir="${build.javadocs.dir}"/>
     </copy>
     <mkdir dir="${dist.bin.result.dir}/build"/>
-    <copy todir="${dist.bin.result.dir}/build" file="build/${name}.jar"/>
+    <copy todir="${dist.bin.result.dir}/build" file="build/${name}-${version}.jar"/>
     <chmod file="${dist.bin.result.dir}/${name}" perm="ugo+rx"/>
 
     <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
@@ -610,6 +611,56 @@ NOTE:
     <delete file="${name}-${version}-src.tar"/>
   </target>
 
+  <target name="release-dist" depends="dist" description="Generates the distribution package and signs the release">
+    <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
+    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-src.zip"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-src.zip"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.tar.gz"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.tar.gz"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+  </target>
+
+  <target name="md5">
+    <property name="md5.exec" value="md5"/>
+    <property name="md5.options" value="-q"/>
+    <exec executable="${md5.exec}" output="${sign.archive}.md5">
+      <arg line="${md5.options} ${sign.archive}"/>
+    </exec>
+  </target>
+
+  <target name="sign-file">
+    <property name="gpg.exec" value="gpg"/>
+    <property name="gpg.options" value="--armor --detach-sign --force-v3-sigs --batch --verbose --passphrase-fd 0"/>
+    <delete file="${sign.archive}.asc"/>
+    <exec executable="${gpg.exec}" inputstring="${pwd}">
+      <arg line="${gpg.options} ${sign.archive}"/>
+    </exec>
+  </target>
+  
   <!-- =================================================================== -->
   <!-- Maven artifacts                                                     -->
   <!-- =================================================================== -->
@@ -642,8 +693,8 @@ NOTE:
     <delete dir="${dist.src.dir}"/>
     <delete dir="${dist.bin.dir}"/>
     <delete>
-      <fileset dir="${basedir}" includes="${name}-*.tar.gz"/>
-      <fileset dir="${basedir}" includes="${name}-*.zip"/>
+      <fileset dir="${basedir}" includes="${name}-*.tar.gz*"/>
+      <fileset dir="${basedir}" includes="${name}-*.zip*"/>
     </delete>
   </target>
   
