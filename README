@@ -8,6 +8,7 @@ Contents of this file:
  - What is Apache XML Graphics Commons?
  - Where to get help?
  - How do I build Apache XML Graphics Commons?
+ - Legal information
  - Release Notes
 
 ==============================================================================
@@ -39,6 +40,21 @@ two products.
 Otherwise, install Apache Ant (http://ant.apache.org) and run "ant" from the
 command-line in the directory where you find "build.xml".
 
+Legal information
+--------------------
+
+Apache XML Graphics Commons is published under the Apache License 
+version 2.0. For the license text, please see the following files:
+- LICENSE
+- NOTICE
+
+Legal information on libraries used by Apache XML Graphics Commons, i.e. 
+its dependencies, can be found in the "lib/README.txt" file.
+
+License labeling (according to http://www.apache.org/legal/3party.html):
+- Single-License
+- Source Available
+- No Reciprocity Required
 
 ==============================================================================
   RELEASE NOTES
