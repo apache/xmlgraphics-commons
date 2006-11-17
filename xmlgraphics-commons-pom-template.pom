@@ -22,7 +22,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
   <groupId>org.apache.xmlgraphics</groupId>
   <artifactId>xmlgraphics-commons</artifactId>
   <packaging>jar</packaging>
-  <name>xmlgraphics commons</name>
+  <name>Apache XML Graphics Commons</name>
   <version>@version@</version>
   <url>http://xmlgraphics.apache.org/commons/</url>
   <description>
