@@ -570,7 +570,7 @@ NOTE:
     </copy>
     <mkdir dir="${dist.bin.result.dir}/build"/>
     <copy todir="${dist.bin.result.dir}/build" file="build/${name}-${version}.jar"/>
-    <chmod file="${dist.bin.result.dir}/${name}" perm="ugo+rx"/>
+    <chmod file="${dist.bin.result.dir}/build/${name}-${version}.jar" perm="555"/>
 
     <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
     <zip zipfile="${name}-${version}-${bin.suffix}.zip" basedir="${dist.bin.dir}" includes="**"/>
@@ -594,7 +594,8 @@ NOTE:
     <copy todir="${dist.src.result.dir}">
       <fileset refid="dist.src"/>
     </copy>
-    <chmod file="${dist.src.result.dir}/${name}" perm="ugo+rx"/>
+    <chmod dir="${dist.src.result.dir}" type="dir" perm="775" includes="**/"/>
+    <chmod dir="${dist.src.result.dir}" type="file" perm="664" includes="**/"/>
 
     <zip zipfile="${name}-${version}-src.zip" basedir="${dist.src.dir}" includes="**"/>
     <tar longfile="gnu"
