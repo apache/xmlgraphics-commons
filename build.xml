@@ -597,15 +597,15 @@ NOTE:
     <chmod dir="${dist.src.result.dir}" type="dir" perm="775" includes="**/"/>
     <chmod dir="${dist.src.result.dir}" type="file" perm="664" includes="**/"/>
 
-    <zip zipfile="${name}-${version}-src.zip" basedir="${dist.src.dir}" includes="**"/>
+    <zip zipfile="${name}-${version}-src.zip">
+      <zipfileset dir="${dist.src.result.dir}" filemode="664" dirmode="775">
+        <include name="**"/>
+      </zipfileset>
+    </zip>
     <tar longfile="gnu"
          destfile="${name}-${version}-src.tar" >
-      <tarfileset dir="${dist.src.dir}" mode="755">
-        <include name="${name}-${version}/${name}"/>
-      </tarfileset>
-      <tarfileset dir="${dist.src.dir}">
+      <tarfileset dir="${dist.src.result.dir}" mode="664" dirmode="775">
         <include name="**"/>
-        <exclude name="${name}-${version}/${name}"/>
       </tarfileset>
     </tar>
     <gzip zipfile="${name}-${version}-src.tar.gz" src="${name}-${version}-src.tar"/>
