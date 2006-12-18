@@ -60,6 +60,14 @@ License labeling (according to http://www.apache.org/legal/3party.html):
   RELEASE NOTES
 ==============================================================================
 
+Version 1.1
+--------------
+
+This release adds an XMP metadata framework and brings improvements for the
+ImageWriter package plus some minor fixes mainly in the PostScript area.
+For more detailed info about the changes, please see:
+http://xmlgraphics.apache.org/commons/changes.html
+
 Version 1.0
 --------------
 
