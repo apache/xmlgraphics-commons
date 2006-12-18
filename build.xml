@@ -570,18 +570,13 @@ NOTE:
     </copy>
     <mkdir dir="${dist.bin.result.dir}/build"/>
     <copy todir="${dist.bin.result.dir}/build" file="build/${name}-${version}.jar"/>
-    <chmod file="${dist.bin.result.dir}/build/${name}-${version}.jar" perm="555"/>
 
     <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
     <zip zipfile="${name}-${version}-${bin.suffix}.zip" basedir="${dist.bin.dir}" includes="**"/>
     <tar longfile="gnu"
          destfile="${name}-${version}-${bin.suffix}.tar">
-      <tarfileset dir="${dist.bin.dir}" mode="755">
-        <include name="${name}-${version}/${name}"/>
-      </tarfileset>
       <tarfileset dir="${dist.bin.dir}">
         <include name="**"/>
-        <exclude name="${name}-${version}/${name}"/>
       </tarfileset>
     </tar>
     <gzip zipfile="${name}-${version}-${bin.suffix}.tar.gz" src="${name}-${version}-${bin.suffix}.tar"/>
@@ -594,17 +589,15 @@ NOTE:
     <copy todir="${dist.src.result.dir}">
       <fileset refid="dist.src"/>
     </copy>
-    <chmod dir="${dist.src.result.dir}" type="dir" perm="775" includes="**/"/>
-    <chmod dir="${dist.src.result.dir}" type="file" perm="664" includes="**/"/>
 
     <zip zipfile="${name}-${version}-src.zip">
-      <zipfileset dir="${dist.src.result.dir}" filemode="664" dirmode="775">
+      <zipfileset dir="${dist.src.dir}" filemode="644" dirmode="755">
         <include name="**"/>
       </zipfileset>
     </zip>
     <tar longfile="gnu"
          destfile="${name}-${version}-src.tar" >
-      <tarfileset dir="${dist.src.result.dir}" mode="664" dirmode="775">
+      <tarfileset dir="${dist.src.dir}" mode="644" dirmode="755">
         <include name="**"/>
       </tarfileset>
     </tar>
