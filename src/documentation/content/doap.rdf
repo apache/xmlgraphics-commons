@@ -50,7 +50,12 @@
     </asfext:implements>
     <release>
       <Version>
-        <name>First release (stable)</name>
+        <name>Latest release (stable)</name>
+        <created>2006-12-22</created>
+        <revision>1.1</revision>
+      </Version>
+      <Version>
+        <name>Previous release (stable)</name>
         <created>2006-04-17</created>
         <revision>1.0</revision>
       </Version>
