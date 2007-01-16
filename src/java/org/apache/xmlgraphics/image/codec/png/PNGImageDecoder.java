@@ -42,7 +42,9 @@ import java.io.SequenceInputStream;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
@@ -51,6 +53,7 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
 
 /**
+ * @version $Id$
  */
 public class PNGImageDecoder extends ImageDecoderImpl {
 
@@ -81,7 +84,7 @@ class PNGChunk {
         this.data = data;
         this.crc = crc;
 
-        typeString = new String();
+        typeString = "";
         typeString += (char)(type >> 24);
         typeString += (char)((type >> 16) & 0xff);
         typeString += (char)((type >> 8) & 0xff);
@@ -125,12 +128,11 @@ class PNGChunk {
     }
 
     public String getString4(int offset) {
-        String s = new String();
-        s += (char)data[offset];
-        s += (char)data[offset + 1];
-        s += (char)data[offset + 2];
-        s += (char)data[offset + 3];
-        return s;
+        return  ""
+            + (char)data[offset]
+            + (char)data[offset + 1]
+            + (char)data[offset + 2]
+            + (char)data[offset + 3];
     }
 
     public boolean isType(String typeName) {
@@ -177,7 +179,7 @@ class PNGImage extends SimpleRenderedImage {
     private int compressionMethod;
     private int filterMethod;
     private int interlaceMethod;
-    
+
     private int paletteEntries;
     private byte[] redPalette;
     private byte[] greenPalette;
@@ -204,7 +206,7 @@ class PNGImage extends SimpleRenderedImage {
 
     // If true, perform palette lookup internally
     private boolean expandPalette = false;
-    
+
     // If true, output < 8 bit gray images in 8 bit components format
     private boolean output8BitGray = false;
 
@@ -265,13 +267,13 @@ class PNGImage extends SimpleRenderedImage {
     private static final int POST_ADD_GRAY_TRANS = 6;
 
     // Add transparency to a given RGB value (w/ optional gamma)
-    private static final int POST_ADD_RGB_TRANS = 7; 
+    private static final int POST_ADD_RGB_TRANS = 7;
 
     // Remove the alpha channel from a gray image (w/ optional gamma)
     private static final int POST_REMOVE_GRAY_TRANS = 8;
 
     // Remove the alpha channel from an RGB image (w/optional gamma)
-    private static final int POST_REMOVE_RGB_TRANS = 9; 
+    private static final int POST_REMOVE_RGB_TRANS = 9;
 
     // Mask to add expansion of GA -> GGGA
     private static final int POST_EXP_MASK = 16;
@@ -289,10 +291,10 @@ class PNGImage extends SimpleRenderedImage {
         POST_GRAY_LUT_ADD_TRANS | POST_EXP_MASK;
 
     // Add transparency to a given gray value, expand
-    private static final int POST_ADD_GRAY_TRANS_EXP = 
+    private static final int POST_ADD_GRAY_TRANS_EXP =
         POST_ADD_GRAY_TRANS | POST_EXP_MASK;
 
-    private Vector streamVec = new Vector();
+    private List streamVec = new ArrayList();
     private DataInputStream dataStream;
 
     private int bytesPerPixel; // number of bytes per input pixel
@@ -302,11 +304,11 @@ class PNGImage extends SimpleRenderedImage {
     // Number of private chunks
     private int chunkIndex = 0;
 
-    private Vector textKeys = new Vector();
-    private Vector textStrings = new Vector();
+    private List textKeys = new ArrayList();
+    private List textStrings = new ArrayList();
 
-    private Vector ztextKeys = new Vector();
-    private Vector ztextStrings = new Vector();
+    private List ztextKeys = new ArrayList();
+    private List ztextStrings = new ArrayList();
 
     private WritableRaster theTile;
 
@@ -347,9 +349,7 @@ class PNGImage extends SimpleRenderedImage {
         grayLut = new int[len];
 
         if (performGammaCorrection) {
-            for (int i = 0; i < len; i++) {
-                grayLut[i] = gammaLut[i];
-            }
+            System.arraycopy( gammaLut, 0, grayLut, 0, len );
         } else {
             for (int i = 0; i < len; i++) {
                 grayLut[i] = expandBits[bits][i];
@@ -382,7 +382,7 @@ class PNGImage extends SimpleRenderedImage {
             output8BitGray = true;
         }
         this.generateEncodeParam = decodeParam.getGenerateEncodeParam();
-        
+
         if (emitProperties) {
             properties.put("file_type", "PNG v. 1.0");
         }
@@ -398,11 +398,11 @@ class PNGImage extends SimpleRenderedImage {
             String msg = PropertyUtil.getString("PNGImageDecoder1");
             throw new RuntimeException(msg);
         }
-            
+
         do {
             try {
                 PNGChunk chunk;
-                
+
                 String chunkType = getChunkType(distream);
                 if (chunkType.equals("IHDR")) {
                     chunk = readChunk(distream);
@@ -463,7 +463,7 @@ class PNGImage extends SimpleRenderedImage {
                         encodeParam.addPrivateChunk(type, data);
                     }
                     if (emitProperties) {
-                        String key = "chunk_" + chunkIndex++ + ":" + type;
+                        String key = "chunk_" + chunkIndex++ + ':' + type;
                         properties.put(key.toLowerCase(), data);
                     }
                 }
@@ -495,7 +495,7 @@ class PNGImage extends SimpleRenderedImage {
             int type      =    distream.readInt();
             distream.reset();
 
-            String typeString = new String();
+            String typeString = "";        // todo simplify this
             typeString += (char)(type >> 24);
             typeString += (char)((type >> 16) & 0xff);
             typeString += (char)((type >> 8) & 0xff);
@@ -514,7 +514,7 @@ class PNGImage extends SimpleRenderedImage {
             byte[] data = new byte[length];
             distream.readFully(data);
             int crc = distream.readInt();
-            
+
             return new PNGChunk(length, type, data, crc);
         } catch (Exception e) {
             e.printStackTrace();
@@ -527,7 +527,7 @@ class PNGImage extends SimpleRenderedImage {
         tileHeight = height = chunk.getInt4(4);
 
         bitDepth = chunk.getInt1(8);
-        
+
         if ((bitDepth != 1) && (bitDepth != 2) && (bitDepth != 4) &&
             (bitDepth != 8) && (bitDepth != 16)) {
             // Error -- bad bit depth
@@ -603,7 +603,7 @@ class PNGImage extends SimpleRenderedImage {
             }
         }
 
-        compressionMethod = chunk.getInt1(10); 
+        compressionMethod = chunk.getInt1(10);
         if (compressionMethod != 0) {
             // Error -- only know about compression method 0
             String msg = PropertyUtil.getString("PNGImageDecoder9");
@@ -637,7 +637,7 @@ class PNGImage extends SimpleRenderedImage {
             String msg = PropertyUtil.getString("PNGImageDecoder11");
             throw new RuntimeException(msg);
         }
-        
+
         bytesPerPixel = (bitDepth == 16) ? 2 : 1;
 
         switch (colorType) {
@@ -721,12 +721,12 @@ class PNGImage extends SimpleRenderedImage {
         int textLen = textKeys.size();
         String[] textArray = new String[2*textLen];
         for (int i = 0; i < textLen; i++) {
-            String key = (String)textKeys.elementAt(i);
-            String val = (String)textStrings.elementAt(i);
+            String key = (String)textKeys.get(i);
+            String val = (String)textStrings.get(i);
             textArray[2*i] = key;
             textArray[2*i + 1] = val;
             if (emitProperties) {
-                String uniqueKey = "text_" + i + ":" + key;
+                String uniqueKey = "text_" + i + ':' + key;
                 properties.put(uniqueKey.toLowerCase(), val);
             }
         }
@@ -738,12 +738,12 @@ class PNGImage extends SimpleRenderedImage {
         int ztextLen = ztextKeys.size();
         String[] ztextArray = new String[2*ztextLen];
         for (int i = 0; i < ztextLen; i++) {
-            String key = (String)ztextKeys.elementAt(i);
-            String val = (String)ztextStrings.elementAt(i);
+            String key = (String)ztextKeys.get(i);
+            String val = (String)ztextStrings.get(i);
             ztextArray[2*i] = key;
             ztextArray[2*i + 1] = val;
             if (emitProperties) {
-                String uniqueKey = "ztext_" + i + ":" + key;
+                String uniqueKey = "ztext_" + i + ':' + key;
                 properties.put(uniqueKey.toLowerCase(), val);
             }
         }
@@ -752,15 +752,15 @@ class PNGImage extends SimpleRenderedImage {
         }
 
         // Parse prior IDAT chunks
-        InputStream seqStream = 
-            new SequenceInputStream(streamVec.elements());
+        InputStream seqStream =
+            new SequenceInputStream( Collections.enumeration( streamVec ) );
         InputStream infStream =
             new InflaterInputStream(seqStream, new Inflater());
         dataStream = new DataInputStream(infStream);
-        
+
         // Create an empty WritableRaster
         int depth = bitDepth;
-        if ((colorType == PNG_COLOR_GRAY) && 
+        if ((colorType == PNG_COLOR_GRAY) &&
             (bitDepth < 8) && output8BitGray) {
             depth = 8;
         }
@@ -802,7 +802,7 @@ class PNGImage extends SimpleRenderedImage {
                                                  greenPalette,
                                                  bluePalette);
             }
-        } else if ((colorType == PNG_COLOR_GRAY) && 
+        } else if ((colorType == PNG_COLOR_GRAY) &&
                    (bitDepth < 8) && !output8BitGray) {
             byte[] palette = expandBits[bitDepth];
             colorModel = new IndexColorModel(bitDepth,
@@ -972,12 +972,12 @@ class PNGImage extends SimpleRenderedImage {
 
         int pltIndex = 0;
 
-        // gAMA chunk must precede PLTE chunk 
+        // gAMA chunk must precede PLTE chunk
         if (performGammaCorrection) {
             if (gammaLut == null) {
                 initGammaLut(bitDepth == 16 ? 16 : 8);
             }
-            
+
             for (int i = 0; i < paletteEntries; i++) {
                 byte r = chunk.getByte(pltIndex++);
                 byte g = chunk.getByte(pltIndex++);
@@ -1102,7 +1102,7 @@ class PNGImage extends SimpleRenderedImage {
             properties.put("gamma", new Float(fileGamma*exp));
         }
     }
-    
+
     private void parse_hIST_chunk(PNGChunk chunk) {
         if (redPalette == null) {
             String msg = PropertyUtil.getString("PNGImageDecoder18");
@@ -1114,14 +1114,14 @@ class PNGImage extends SimpleRenderedImage {
         for (int i = 0; i < length; i++) {
             hist[i] = chunk.getInt2(2*i);
         }
-        
+
         if (encodeParam != null) {
             encodeParam.setPaletteHistogram(hist);
         }
     }
 
     private void parse_iCCP_chunk(PNGChunk chunk) {
-        String name = new String();
+        String name = "";  // todo simplify this
         byte b;
 
         int textIndex = 0;
@@ -1143,7 +1143,7 @@ class PNGImage extends SimpleRenderedImage {
         if (emitProperties) {
             properties.put("x_pixels_per_unit", new Integer(xPixelsPerUnit));
             properties.put("y_pixels_per_unit", new Integer(yPixelsPerUnit));
-            properties.put("pixel_aspect_ratio", 
+            properties.put("pixel_aspect_ratio",
                            new Float((float)xPixelsPerUnit/yPixelsPerUnit));
             if (unitSpecifier == 1) {
                 properties.put("pixel_units", "Meters");
@@ -1220,10 +1220,10 @@ class PNGImage extends SimpleRenderedImage {
     }
 
     private void parse_tEXt_chunk(PNGChunk chunk) {
-        String key = new String();
-        String value = new String();
+        String key = "";   // todo simplify this
+        String value = ""; // todo simplify this
         byte b;
-        
+
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
             key += (char)b;
@@ -1244,14 +1244,14 @@ class PNGImage extends SimpleRenderedImage {
         int hour = chunk.getInt1(4);
         int minute = chunk.getInt1(5);
         int second = chunk.getInt1(6);
-        
+
         TimeZone gmt = TimeZone.getTimeZone("GMT");
-        
+
         GregorianCalendar cal = new GregorianCalendar(gmt);
         cal.set(year, month, day,
                 hour, minute, second);
         Date date = cal.getTime();
-        
+
         if (encodeParam != null) {
             encodeParam.setModificationTime(date);
         }
@@ -1274,7 +1274,7 @@ class PNGImage extends SimpleRenderedImage {
             for (int i = 0; i < entries; i++) {
                 alphaPalette[i] = chunk.getByte(i);
             }
-            
+
             // Fill rest of palette with 255
             for (int i = entries; i < paletteEntries; i++) {
                 alphaPalette[i] = (byte)255;
@@ -1290,7 +1290,7 @@ class PNGImage extends SimpleRenderedImage {
             }
         } else if (colorType == PNG_COLOR_GRAY) {
             grayTransparentAlpha = chunk.getInt2(0);
-            
+
             if (!suppressAlpha) {
                 if (bitDepth < 8) {
                     output8BitGray = true;
@@ -1306,7 +1306,7 @@ class PNGImage extends SimpleRenderedImage {
                 } else {
                     outputBands = 2;
                 }
-                
+
                 if (encodeParam != null) {
                     ((PNGEncodeParam.Gray)encodeParam).
                         setTransparentGray(grayTransparentAlpha);
@@ -1320,7 +1320,7 @@ class PNGImage extends SimpleRenderedImage {
             if (!suppressAlpha) {
                 outputBands = 4;
                 postProcess = POST_ADD_RGB_TRANS;
-                
+
                 if (encodeParam != null) {
                     int[] rgbTrans = new int[3];
                     rgbTrans[0] = redTransparentAlpha;
@@ -1339,10 +1339,10 @@ class PNGImage extends SimpleRenderedImage {
     }
 
     private void parse_zTXt_chunk(PNGChunk chunk) {
-        String key = new String();
-        String value = new String();
+        String key = "";    // todo simplify this
+        String value = "";  // todo simplify this
         byte b;
-        
+
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
             key += (char)b;
@@ -1355,12 +1355,12 @@ class PNGImage extends SimpleRenderedImage {
             InputStream cis =
                 new ByteArrayInputStream(data, textIndex, length);
             InputStream iis = new InflaterInputStream(cis);
-            
+
             int c;
             while ((c = iis.read()) != -1) {
                 value += (char)c;
             }
-            
+
             ztextKeys.add(key);
             ztextStrings.add(value);
         } catch (Exception e) {
@@ -1432,7 +1432,7 @@ class PNGImage extends SimpleRenderedImage {
         for (int i = 0; i < bpp; i++) {
             raw = curr[i] & 0xff;
             priorRow = prev[i] & 0xff;
-            
+
             curr[i] = (byte)(raw + priorRow/2);
         }
 
@@ -1440,7 +1440,7 @@ class PNGImage extends SimpleRenderedImage {
             raw = curr[i] & 0xff;
             priorPixel = curr[i - bpp] & 0xff;
             priorRow = prev[i] & 0xff;
-            
+
             curr[i] = (byte)(raw + (priorPixel + priorRow)/2);
         }
     }
@@ -1458,7 +1458,7 @@ class PNGImage extends SimpleRenderedImage {
         } else {
             return c;
         }
-    } 
+    }
 
     private static void decodePaethFilter(byte[] curr, byte[] prev,
                                           int count, int bpp) {
@@ -1505,12 +1505,12 @@ class PNGImage extends SimpleRenderedImage {
         case POST_GAMMA:
             for (srcX = 0; srcX < width; srcX++) {
                 src.getPixel(srcX, 0, ps);
-                    
+
                 for (int i = 0; i < inputBands; i++) {
                     int x = ps[i];
                     ps[i] = gammaLut[x];
                 }
-                    
+
                 dst.setPixel(dstX, y, ps);
                 dstX += step;
             }
@@ -1538,7 +1538,7 @@ class PNGImage extends SimpleRenderedImage {
                 } else {
                     pd[1] = maxOpacity;
                 }
-                
+
                 dst.setPixel(dstX, y, pd);
                 dstX += step;
             }
@@ -1547,12 +1547,12 @@ class PNGImage extends SimpleRenderedImage {
         case POST_PALETTE_TO_RGB:
             for (srcX = 0; srcX < width; srcX++) {
                 src.getPixel(srcX, 0, ps);
-                
+
                 int val = ps[0];
                 pd[0] = redPalette[val];
                 pd[1] = greenPalette[val];
                 pd[2] = bluePalette[val];
-                
+
                 dst.setPixel(dstX, y, pd);
                 dstX += step;
             }
@@ -1663,7 +1663,7 @@ class PNGImage extends SimpleRenderedImage {
         case POST_GAMMA_EXP:
             for (srcX = 0; srcX < width; srcX++) {
                 src.getPixel(srcX, 0, ps);
-                    
+
                 int val = ps[0];
                 int alpha = ps[1];
                 int gamma = gammaLut[val];
@@ -1671,7 +1671,7 @@ class PNGImage extends SimpleRenderedImage {
                 pd[1] = gamma;
                 pd[2] = gamma;
                 pd[3] = alpha;
-                    
+
                 dst.setPixel(dstX, y, pd);
                 dstX += step;
             }
@@ -1680,14 +1680,14 @@ class PNGImage extends SimpleRenderedImage {
         case POST_GRAY_ALPHA_EXP:
             for (srcX = 0; srcX < width; srcX++) {
                 src.getPixel(srcX, 0, ps);
-                    
+
                 int val = ps[0];
                 int alpha = ps[1];
                 pd[0] = val;
                 pd[1] = val;
                 pd[2] = val;
                 pd[3] = alpha;
-                    
+
                 dst.setPixel(dstX, y, pd);
                 dstX += step;
             }
@@ -1729,7 +1729,7 @@ class PNGImage extends SimpleRenderedImage {
                 } else {
                     pd[3] = maxOpacity;
                 }
-                
+
                 dst.setPixel(dstX, y, pd);
                 dstX += step;
             }
@@ -1738,7 +1738,7 @@ class PNGImage extends SimpleRenderedImage {
     }
 
     /**
-     * Reads in an image of a given size and returns it as a 
+     * Reads in an image of a given size and returns it as a
      * WritableRaster.
      */
     private void decodePass(WritableRaster imRas,

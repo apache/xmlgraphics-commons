@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,12 +26,12 @@ package org.apache.xmlgraphics.image.writer;
  * @version $Id$
  */
 public class ImageWriterParams {
-    
+
     private Integer resolution;
     private Float jpegQuality;
     private Boolean jpegForceBaseline;
     private String compressionMethod;
-    
+
     /**
      * Default constructor.
      */
@@ -45,28 +45,28 @@ public class ImageWriterParams {
     public Integer getResolution() {
         return this.resolution;
     }
-    
+
     /**
-     * @return the quality value for encoding a JPEG image 
+     * @return the quality value for encoding a JPEG image
      *          (0.0-1.0), or null if undefined
      */
     public Float getJPEGQuality() {
         return this.jpegQuality;
     }
-    
+
     /**
-     * @return true if the baseline quantization table is forced, 
+     * @return true if the baseline quantization table is forced,
      *          or null if undefined.
      */
     public Boolean getJPEGForceBaseline() {
         return this.jpegForceBaseline;
     }
-    
+
     /** @return the compression method for encoding the image */
     public String getCompressionMethod() {
         return this.compressionMethod;
     }
-    
+
     /**
      * Sets the target resolution of the bitmap image to be written.
      * @param dpi the resolution in dpi
@@ -74,7 +74,7 @@ public class ImageWriterParams {
     public void setResolution(int dpi) {
         this.resolution = new Integer(dpi);
     }
-    
+
     /**
      * Sets the quality setting for encoding JPEG images.
      * @param quality the quality setting (0.0-1.0)
@@ -84,7 +84,7 @@ public class ImageWriterParams {
         this.jpegQuality = new Float(quality);
         this.jpegForceBaseline = forceBaseline ? Boolean.TRUE : Boolean.FALSE;
     }
-    
+
     /**
      * Set the compression method that shall be used to encode the image.
      * @param method the compression method

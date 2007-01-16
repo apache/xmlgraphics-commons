@@ -36,7 +36,7 @@ public interface CachableRed extends RenderedImage {
      * Returns the bounds of the current image.
      * This should be 'in sync' with getMinX, getMinY, getWidth, getHeight
      */
-    public Rectangle getBounds();
+    Rectangle getBounds();
 
     /**
      * Returns the region of input data is is required to generate
@@ -48,7 +48,7 @@ public interface CachableRed extends RenderedImage {
      * @return The region of input required.  This is in the output pixel
      * coordinate system for the source indicated by srcIndex.
      */
-    public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn);
+    Shape getDependencyRegion(int srcIndex, Rectangle outputRgn);
 
     /**
      * This calculates the region of output that is affected by a change
@@ -61,6 +61,6 @@ public interface CachableRed extends RenderedImage {
      *  a change to inputRgn of the source selected by srcIndex.
      *  this is in the output pixel coordinate system of this node.
      */
-    public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn);
+    Shape getDirtyRegion(int srcIndex, Rectangle inputRgn);
 }
 

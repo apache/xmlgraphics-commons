@@ -32,7 +32,7 @@ public class LocaleGroup {
     /**
      * The default group.
      */
-    public final static LocaleGroup DEFAULT = new LocaleGroup();
+    public static final LocaleGroup DEFAULT = new LocaleGroup();
 
     /**
      * The shared Locale.
@@ -41,7 +41,7 @@ public class LocaleGroup {
 
     /**
      * Sets the default locale for all the instances of ExtendedLocalizable
-     * in this group. 
+     * in this group.
      */
     public void setLocale(Locale l) {
         locale = l;
