@@ -259,7 +259,7 @@ public class TIFFDirectory extends Object implements Serializable {
 
                     count = v.size();
                     String[] strings = new String[count];
-                    v.toArray( strings );
+                    v.toArray(strings);
                     obj = strings;
                 } else {
                     obj = bvalues;

@@ -639,7 +639,7 @@ class TIFFFaxDecoder {
                 break;
             }
 
-            while ( ! isWhite ) {
+            while (!isWhite) {
                 // Black run
                 current = nextLesserThan8Bits(4);
                 entry = initBlack[current];

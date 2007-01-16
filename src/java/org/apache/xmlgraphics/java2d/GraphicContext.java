@@ -159,7 +159,7 @@ public class GraphicContext implements Cloneable{
         copyGc.transform = new AffineTransform(this.transform);
 
         // Transform stack
-        copyGc.transformStack = new ArrayList( transformStack.size() );
+        copyGc.transformStack = new ArrayList(transformStack.size());
         for(int i=0; i<this.transformStack.size(); i++){
             TransformStackElement stackElement =
                 (TransformStackElement)this.transformStack.get(i);
@@ -404,7 +404,7 @@ public class GraphicContext implements Cloneable{
      * @see java.awt.GradientPaint
      * @see java.awt.TexturePaint
      */
-    public void setPaint( Paint paint ){
+    public void setPaint(Paint paint) {
         if(paint == null)
             return;
 
@@ -704,7 +704,7 @@ public class GraphicContext implements Cloneable{
      */
     public TransformStackElement[] getTransformStack(){
         TransformStackElement[] stack = new TransformStackElement[transformStack.size()];
-        transformStack.toArray( stack );
+        transformStack.toArray(stack);
         return stack;
     }
 

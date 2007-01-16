@@ -118,8 +118,7 @@ public class GraphicsUtil {
      *                the alpha channel set in accordance with
      *                <tt>premult</tt>
      */
-    public static ColorModel makeLinear_sRGBCM( boolean premult ) {
-
+    public static ColorModel makeLinear_sRGBCM(boolean premult) {
          return premult ? Linear_sRGB_Pre : Linear_sRGB_Unpre;
     }
 
@@ -484,7 +483,7 @@ public class GraphicsUtil {
 
         // System.out.println("CoerceData: " + cm.isAlphaPremultiplied() +
         //                    " Out: " + newAlphaPreMult);
-        if ( ! cm.hasAlpha() )
+        if (!cm.hasAlpha())
             // Nothing to do no alpha channel
             return cm;
 
@@ -605,8 +604,8 @@ public class GraphicsUtil {
         //                    " is: " + dst.isAlphaPremultiplied());
 
         if (srcAlpha == dstAlpha)
-            if (( ! srcAlpha ) ||
-                (src.isAlphaPremultiplied() == dst.isAlphaPremultiplied())) {
+            if (!srcAlpha ||
+                    src.isAlphaPremultiplied() == dst.isAlphaPremultiplied()) {
                 // They match one another so just copy everything...
                 copyData(src.getRaster(), dst.getRaster());
                 return;
@@ -944,11 +943,11 @@ public class GraphicsUtil {
             while (sp < end) {
               int a = pixels[sp+aOff]&0xFF;
               if (a==0) {
-                for ( int b=0; b<bands; b++)
+                for (int b = 0; b < bands; b++)
                   pixels[sp+bandOff[b]] = (byte)0xFF;
               } else if (a<255) {         // this does NOT include a == 255 (0xff) !
                 int aFP = (0x00FF0000/a);
-                for ( int b=0; b<bands; b++) {
+                for (int b = 0; b < bands; b++) {
                   int i = sp+bandOff[b];
                   pixels[i] = (byte)(((pixels[i]&0xFF)*aFP)>>>16);
                 }
@@ -988,7 +987,7 @@ public class GraphicsUtil {
             while (sp < end) {
               int a = pixels[sp+aOff]&0xFF;
               if (a!=0xFF)
-                for ( int b=0; b<bands; b++) {
+                for (int b = 0; b < bands; b++) {
                   int i = sp+bandOff[b];
                   pixels[i] = (byte)(((pixels[i]&0xFF)*a)>>8);
                 }

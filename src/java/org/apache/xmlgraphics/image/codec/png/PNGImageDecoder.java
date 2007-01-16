@@ -349,7 +349,7 @@ class PNGImage extends SimpleRenderedImage {
         grayLut = new int[len];
 
         if (performGammaCorrection) {
-            System.arraycopy( gammaLut, 0, grayLut, 0, len );
+            System.arraycopy(gammaLut, 0, grayLut, 0, len);
         } else {
             for (int i = 0; i < len; i++) {
                 grayLut[i] = expandBits[bits][i];
@@ -753,7 +753,7 @@ class PNGImage extends SimpleRenderedImage {
 
         // Parse prior IDAT chunks
         InputStream seqStream =
-            new SequenceInputStream( Collections.enumeration( streamVec ) );
+            new SequenceInputStream(Collections.enumeration(streamVec));
         InputStream infStream =
             new InflaterInputStream(seqStream, new Inflater());
         dataStream = new DataInputStream(infStream);

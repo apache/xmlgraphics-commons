@@ -243,14 +243,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      */
     public String[] getPropertyNames() {
         String[] names = new String[properties.size()];
-//        int index = 0;
-//
-//        Enumeration e = properties.keys();
-//        while (e.hasMoreElements()) {
-//            String name = (String)e.nextElement();
-//            names[index++] = name;
-//        }
-        properties.keySet().toArray( names );
+        properties.keySet().toArray(names);
         return names;
     }
 
@@ -288,13 +281,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
 
         // Copy the strings from the Vector over to a String array.
         String[] prefixNames = new String[names.size()];
-
-//        int count = 0;
-//        for (Iterator it = names.iterator(); it.hasNext(); ) { // todo xx.toArray()
-//            prefixNames[count++] = (String)it.next();
-//        }
-        names.toArray( prefixNames );
-
+        names.toArray(prefixNames);
         return prefixNames;
     }
 
