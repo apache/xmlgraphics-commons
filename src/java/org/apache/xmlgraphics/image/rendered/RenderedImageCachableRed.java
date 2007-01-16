@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.image.rendered;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
@@ -38,6 +39,14 @@ import java.util.Vector;
  * @version $Id$
  */
 public class RenderedImageCachableRed implements CachableRed {
+
+    public static CachableRed wrap(RenderedImage ri) {
+        if (ri instanceof CachableRed)
+            return (CachableRed) ri;
+        if (ri instanceof BufferedImage)
+            return new BufferedImageCachableRed((BufferedImage)ri);
+        return new RenderedImageCachableRed(ri);
+    }
 
     private RenderedImage src;
     private Vector srcs = new Vector(0);
