@@ -338,7 +338,7 @@ public class PNGRed extends AbstractRed {
         grayLut = new int[len];
 
         if (performGammaCorrection) {
-            System.arraycopy( gammaLut, 0, grayLut, 0, len );
+            System.arraycopy(gammaLut, 0, grayLut, 0, len);
         } else {
             for (int i = 0; i < len; i++) {
                 grayLut[i] = expandBits[bits][i];
@@ -523,8 +523,8 @@ public class PNGRed extends AbstractRed {
 
         bitDepth = chunk.getInt1(8);
 
-        int validMask = (1 << 1) | ( 1 << 2 ) | ( 1 << 4 ) | ( 1 << 8 ) | ( 1 << 16 );
-        if (( ( 1 << bitDepth ) & validMask ) == 0 ) {
+        int validMask = (1 << 1) | (1 << 2) | (1 << 4) | (1 << 8) | (1 << 16);
+        if (((1 << bitDepth) & validMask) == 0) {
             // bitDepth is not one of { 1, 2, 4, 8, 16 }: Error -- bad bit depth
             String msg = PropertyUtil.getString("PNGImageDecoder3");
             throw new RuntimeException(msg);
@@ -1227,11 +1227,11 @@ public class PNGRed extends AbstractRed {
 
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
 
         for (int i = textIndex; i < chunk.getLength(); i++) {
-            value.append( (char)chunk.getByte(i) );
+            value.append((char)chunk.getByte(i));
         }
 
         textKeys.add(key.toString());
@@ -1346,7 +1346,7 @@ public class PNGRed extends AbstractRed {
 
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
         /* int method = */ chunk.getByte(textIndex++);
 
@@ -1359,7 +1359,7 @@ public class PNGRed extends AbstractRed {
 
             int c;
             while ((c = iis.read()) != -1) {
-                value.append( (char)c );
+                value.append((char)c);
             }
 
             ztextKeys.add(key.toString() );

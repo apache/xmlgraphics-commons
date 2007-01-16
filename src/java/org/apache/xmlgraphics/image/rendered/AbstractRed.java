@@ -441,23 +441,16 @@ public abstract class AbstractRed implements CachableRed {
     public String [] getPropertyNames() {
         Set keys = props.keySet();
         String[] ret  = new String[keys.size()];
-        keys.toArray( ret );
-
-//        Iterator iter = keys.iterator();
-//        int i=0;
-//        while (iter.hasNext()) {
-//            ret[i++] = (String)iter.next();
-//        }
+        keys.toArray(ret);
 
         Iterator iter = srcs.iterator();
         while (iter.hasNext()) {
             RenderedImage ri = (RenderedImage)iter.next();
-            String [] srcProps = ri.getPropertyNames();
+            String[] srcProps = ri.getPropertyNames();
             if (srcProps.length != 0) {
-                String [] tmp = new String[ret.length+srcProps.length];
-                System.arraycopy(ret,0,tmp,0,ret.length);
-                /// ??? System.arraycopy((tmp,ret.length,srcProps,0,srcProps.length);
-                System.arraycopy( srcProps, 0, tmp, ret.length, srcProps.length);
+                String[] tmp = new String[ret.length+srcProps.length];
+                System.arraycopy(ret, 0, tmp, 0, ret.length);
+                System.arraycopy(srcProps, 0, tmp, ret.length, srcProps.length);
                 ret = tmp;
             }
         }
@@ -468,10 +461,10 @@ public abstract class AbstractRed implements CachableRed {
     public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn) {
         if ((srcIndex < 0) || (srcIndex > srcs.size()))
             throw new IndexOutOfBoundsException
-                ("Nonexistant source requested.");
+                ("Nonexistent source requested.");
 
         // Return empty rect if they don't intersect.
-        if ( ! outputRgn.intersects(bounds) )
+        if (!outputRgn.intersects(bounds))
             return new Rectangle();
 
         // We only depend on our source for stuff that is inside
@@ -482,10 +475,10 @@ public abstract class AbstractRed implements CachableRed {
     public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn) {
         if (srcIndex != 0)
             throw new IndexOutOfBoundsException
-                ("Nonexistant source requested.");
+                ("Nonexistent source requested.");
 
         // Return empty rect if they don't intersect.
-        if ( ! inputRgn.intersects(bounds) )
+        if (!inputRgn.intersects(bounds))
             return new Rectangle();
 
         // Changes in the input region don't propogate outside our

@@ -95,7 +95,7 @@ public class BufferedImageCachableRed extends AbstractRed {
     public Raster getData(Rectangle rect) {
         Rectangle r = (Rectangle)rect.clone();
 
-        if ( ! r.intersects(getBounds()) )
+        if (!r.intersects(getBounds()))
             return null;
         r = r.intersection(getBounds());
         r.translate(-getMinX(), - getMinY());

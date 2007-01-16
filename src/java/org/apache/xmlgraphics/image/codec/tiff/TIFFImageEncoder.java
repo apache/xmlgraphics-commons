@@ -416,11 +416,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             colormap = new char[sizeOfColormap * 3];
             for (int i=0; i<sizeOfColormap; i++) {
                 int tmp = 0xff & r[i];   // beware of sign extended bytes
-                colormap[redIndex++]   = (char)(( tmp << 8) | tmp );
+                colormap[redIndex++]   = (char)((tmp << 8) | tmp);
                 tmp = 0xff & g[i];
-                colormap[greenIndex++] = (char)(( tmp << 8) | tmp );
+                colormap[greenIndex++] = (char)((tmp << 8) | tmp);
                 tmp = 0xff & b[i];
-                colormap[blueIndex++]  = (char)(( tmp << 8) | tmp );
+                colormap[blueIndex++]  = (char)((tmp << 8) | tmp);
             }
 
             sizeOfColormap *= 3;
@@ -858,7 +858,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             // If compressing, the cannot be written yet as the size of the
             // data segments is unknown.
 
-            if( output instanceof SeekableOutputStream ) {
+            if (output instanceof SeekableOutputStream) {
                 // Simply seek to the first data segment position.
                 ((SeekableOutputStream)output).seek(tileOffsets[0]);
             } else {
@@ -1502,7 +1502,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             for(int i = 0; i < count; i++) {
                 byte[] stringBytes = field.getAsString(i).getBytes();   // note: default encoding @work here!
                 valueSize += stringBytes.length;
-                if( stringBytes[stringBytes.length-1] != 0 ) {
+                if (stringBytes[stringBytes.length - 1] != 0) {
                     valueSize++;
                 }
             }
@@ -1665,10 +1665,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
      * @throws IOException
      */
     private void writeLong(long l) throws IOException {
-        output.write( (int)((l & 0xff000000) >>> 24));
-        output.write( (int)((l & 0x00ff0000) >>> 16));
-        output.write( (int)((l & 0x0000ff00) >>> 8));
-        output.write( (int) (l & 0x000000ff) );
+        output.write((int)((l & 0xff000000) >>> 24));
+        output.write((int)((l & 0x00ff0000) >>> 16));
+        output.write((int)((l & 0x0000ff00) >>> 8));
+        output.write((int) (l & 0x000000ff));
     }
 
     /**
