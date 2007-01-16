@@ -24,7 +24,7 @@ import java.util.MissingResourceException;
 import org.apache.xmlgraphics.util.i18n.LocalizableSupport;
 
 public class PropertyUtil {
-    protected final static String RESOURCES =
+    protected static final String RESOURCES =
         "org.apache.xmlgraphics.image.codec.resources.Messages";
 
 

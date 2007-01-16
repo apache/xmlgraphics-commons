@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * ImageWriter implementation that uses the sun.com.image.codec.jpeg
  * intefaces to write JPEG files.
  * <p>
- * Note: This class depends on a Sun runtime environment and is therefore not compatible with 
+ * Note: This class depends on a Sun runtime environment and is therefore not compatible with
  * non-Sun VMs (such as Harmony or GNU Classpath based VMs).
  *
  * @version $Id$

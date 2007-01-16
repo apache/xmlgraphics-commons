@@ -40,18 +40,18 @@ public abstract class TransformStackElement implements Cloneable{
     /**
      * Value
      */
-    private double transformParameters[];
+    private double[] transformParameters;
 
     /**
      * @param type transform type
      * @param transformParameters parameters for transform
      */
     protected TransformStackElement(TransformType type,
-                                    double transformParameters[]){
+                                    double[] transformParameters){
         this.type = type;
         this.transformParameters = transformParameters;
     }
-    
+
     /**
      * @return an object which is a deep copy of this one
      */
@@ -64,7 +64,7 @@ public abstract class TransformStackElement implements Cloneable{
         } catch(java.lang.CloneNotSupportedException ex) {}
 
         // now deep copy the parameter array
-        double transformParameters[] = new double[this.transformParameters.length];
+        double[] transformParameters = new double[this.transformParameters.length];
         System.arraycopy(this.transformParameters, 0, transformParameters, 0, transformParameters.length);
         newElement.transformParameters = transformParameters;
         return newElement;
@@ -74,9 +74,9 @@ public abstract class TransformStackElement implements Cloneable{
      * Factory methods
      */
 
-    public static TransformStackElement createTranslateElement(double tx, 
+    public static TransformStackElement createTranslateElement(double tx,
                                                                double ty){
-        return new TransformStackElement(TransformType.TRANSLATE, 
+        return new TransformStackElement(TransformType.TRANSLATE,
                                          new double[]{ tx, ty }) {
                 boolean isIdentity(double[] parameters) {
                     return parameters[0] == 0 && parameters[1] == 0;
@@ -85,7 +85,7 @@ public abstract class TransformStackElement implements Cloneable{
     }
 
     public static TransformStackElement createRotateElement(double theta){
-        return new TransformStackElement(TransformType.ROTATE, 
+        return new TransformStackElement(TransformType.ROTATE,
                                          new double[]{ theta }) {
                 boolean isIdentity(double[] parameters) {
                     return Math.cos(parameters[0]) == 1;
@@ -93,19 +93,19 @@ public abstract class TransformStackElement implements Cloneable{
             };
     }
 
-    public static TransformStackElement createScaleElement(double scaleX, 
+    public static TransformStackElement createScaleElement(double scaleX,
                                                            double scaleY){
-        return new TransformStackElement(TransformType.SCALE, 
+        return new TransformStackElement(TransformType.SCALE,
                                          new double[]{ scaleX, scaleY }) {
                 boolean isIdentity(double[] parameters) {
                     return parameters[0] == 1 && parameters[1] == 1;
                 }
             };
     }
-    
-    public static TransformStackElement createShearElement(double shearX, 
+
+    public static TransformStackElement createShearElement(double shearX,
                                                            double shearY){
-        return new TransformStackElement(TransformType.SHEAR, 
+        return new TransformStackElement(TransformType.SHEAR,
                                          new double[]{ shearX, shearY }) {
                 boolean isIdentity(double[] parameters) {
                     return parameters[0] == 0 && parameters[1] == 0;
@@ -115,7 +115,7 @@ public abstract class TransformStackElement implements Cloneable{
 
     public static TransformStackElement createGeneralTransformElement
         (AffineTransform txf){
-        double matrix[] = new double[6];
+        double[] matrix = new double[6];
         txf.getMatrix(matrix);
         return new TransformStackElement(TransformType.GENERAL, matrix) {
                 boolean isIdentity(double[] m) {
@@ -124,13 +124,13 @@ public abstract class TransformStackElement implements Cloneable{
                 }
             };
     }
-    
+
     /**
      * Implementation should determine if the parameter list represents
      * an identity transform, for the instance transform type.
      */
     abstract boolean isIdentity(double[] parameters);
-    
+
     /**
      * @return true iff this transform is the identity transform
      */
@@ -181,8 +181,8 @@ public abstract class TransformStackElement implements Cloneable{
                 transformParameters[1] *= stackElement.transformParameters[1];
                 break;
             case TransformType.TRANSFORM_GENERAL:
-                transformParameters 
-                    = matrixMultiply(transformParameters, 
+                transformParameters
+                    = matrixMultiply(transformParameters,
                                      stackElement.transformParameters);
                 break;
             default:

@@ -19,7 +19,6 @@
 
 package org.apache.xmlgraphics.image.rendered;
 
-
 import java.awt.color.ColorSpace;
 import java.awt.image.BandCombineOp;
 import java.awt.image.BufferedImage;
@@ -51,7 +50,7 @@ public class Any2sRGBRed extends AbstractRed {
      * @param src The image to convert to a luminance image
      */
     public Any2sRGBRed(CachableRed src) {
-        super(src,src.getBounds(), 
+        super(src,src.getBounds(),
               fixColorModel(src),
               fixSampleModel(src),
               src.getTileGridXOffset(),
@@ -81,7 +80,7 @@ public class Any2sRGBRed extends AbstractRed {
         if(masks[2] != 0x000000ff) return false;
         if ((masks.length == 4) &&
             (masks[3] != 0xff000000)) return false;
- 
+
         return true;
    }
 
@@ -96,7 +95,7 @@ public class Any2sRGBRed extends AbstractRed {
      * linearToLinear table is used when the values are considered to
      * be on the sRGB scale to begin with.
      */
-    private static final int linearToSRGBLut[] = new int[256];
+    private static final int[] linearToSRGBLut = new int[256];
     static {
         final double scale = 1.0/255;
         final double exp   = 1.0/GAMMA;
@@ -107,25 +106,25 @@ public class Any2sRGBRed extends AbstractRed {
                 value *= 12.92;
             else
                 value = 1.055 * Math.pow(value, exp) - 0.055;
-            
+
             linearToSRGBLut[i] = (int)Math.round(value*255.);
             // System.out.print(linearToSRGBLut[i] + ",");
         }
         // System.out.println("");
     }
-     
+
     public static WritableRaster applyLut_INT(WritableRaster wr,
                                               final int []lut) {
         SinglePixelPackedSampleModel sm =
             (SinglePixelPackedSampleModel)wr.getSampleModel();
         DataBufferInt db = (DataBufferInt)wr.getDataBuffer();
 
-        final int     srcBase 
-            = (db.getOffset() + 
-               sm.getOffset(wr.getMinX()-wr.getSampleModelTranslateX(), 
+        final int     srcBase
+            = (db.getOffset() +
+               sm.getOffset(wr.getMinX()-wr.getSampleModelTranslateX(),
                             wr.getMinY()-wr.getSampleModelTranslateY()));
         // Access the pixel data array
-        final int pixels[]   = db.getBankData()[0];
+        final int[] pixels   = db.getBankData()[0];
         final int width      = wr.getWidth();
         final int height     = wr.getHeight();
         final int scanStride = sm.getScanlineStride();
@@ -139,7 +138,7 @@ public class Any2sRGBRed extends AbstractRed {
 
             while (sp<end) {
                 pix = pixels[sp];
-                pixels[sp] = 
+                pixels[sp] =
                     ((     pix      &0xFF000000)|
                      (lut[(pix>>>16)&0xFF]<<16) |
                      (lut[(pix>>> 8)&0xFF]<< 8) |
@@ -160,7 +159,7 @@ public class Any2sRGBRed extends AbstractRed {
 
 
         // Fast case, Linear SRGB source, INT Pack writable raster...
-        if (srcIsLsRGB && 
+        if (srcIsLsRGB &&
             is_INT_PACK_COMP(wr.getSampleModel())) {
             src.copyData(wr);
             if (srcCM.hasAlpha())
@@ -176,17 +175,17 @@ public class Any2sRGBRed extends AbstractRed {
             float [][] matrix = null;
             switch (srcSM.getNumBands()) {
             case 1:
-                matrix = new float[1][3];
+                matrix = new float[3][1];
                 matrix[0][0] = 1; // Red
-                matrix[0][1] = 1; // Grn
-                matrix[0][2] = 1; // Blu
+                matrix[1][0] = 1; // Grn
+                matrix[2][0] = 1; // Blu
                 break;
             case 2:
-                matrix = new float[2][4];
+                matrix = new float[4][2];
                 matrix[0][0] = 1; // Red
-                matrix[0][1] = 1; // Grn
-                matrix[0][2] = 1; // Blu
-                matrix[1][3] = 1; // Alpha
+                matrix[1][0] = 1; // Grn
+                matrix[3][0] = 1; // Blu
+                matrix[3][1] = 1; // Alpha
                 break;
             case 3:
                 matrix = new float[3][3];
@@ -195,7 +194,7 @@ public class Any2sRGBRed extends AbstractRed {
                 matrix[2][2] = 1; // Blu
                 break;
             default:
-                matrix = new float[srcSM.getNumBands()][4];
+                matrix = new float[4][srcSM.getNumBands()];
                 matrix[0][0] = 1; // Red
                 matrix[1][1] = 1; // Grn
                 matrix[2][2] = 1; // Blu
@@ -205,53 +204,88 @@ public class Any2sRGBRed extends AbstractRed {
             Raster srcRas = src.getData(wr.getBounds());
             BandCombineOp op = new BandCombineOp(matrix, null);
             op.filter(srcRas, wr);
-        } else {
-            ColorModel dstCM = getColorModel();
-            if (srcCM.getColorSpace() == dstCM.getColorSpace()) {
-                // No transform needed, just reformat data...
-                // System.out.println("Bypassing");
-
-                if (is_INT_PACK_COMP(srcSM))
-                    src.copyData(wr);
-                else
-                    GraphicsUtil.copyData(src.getData(wr.getBounds()), wr);
-
-                return wr;
-            }
-
-            Raster srcRas = src.getData(wr.getBounds());
-            WritableRaster srcWr  = (WritableRaster)srcRas;
-
-            // Divide out alpha if we have it.  We need to do this since
-            // the color convert may not be a linear operation which may 
-            // lead to out of range values.
-            ColorModel srcBICM = srcCM;
-            if (srcCM.hasAlpha())
-                srcBICM = GraphicsUtil.coerceData(srcWr, srcCM, false);
-
-            BufferedImage srcBI, dstBI;
-            srcBI = new BufferedImage(srcBICM, 
-                                      srcWr.createWritableTranslatedChild(0,0),
-                                      false, 
-                                      null);
-
-            // System.out.println("src: " + srcBI.getWidth() + "x" + 
-            //                    srcBI.getHeight());
-
-            ColorConvertOp op = new ColorConvertOp(dstCM.getColorSpace(), 
-                                                   null);
-            dstBI = op.filter(srcBI, null);
-
-            // System.out.println("After filter:");
-            
-            WritableRaster wr00 = wr.createWritableTranslatedChild(0,0);
-            for (int i=0; i<dstCM.getColorSpace().getNumComponents(); i++)
-                copyBand(dstBI.getRaster(), i, wr00,    i);
-
-            if (dstCM.hasAlpha())
-                copyBand(srcWr, srcSM.getNumBands()-1,
-                         wr,    getSampleModel().getNumBands()-1);
+            return wr;
         }
+
+        if (srcCM.getColorSpace() ==
+            ColorSpace.getInstance(ColorSpace.CS_GRAY)) {
+
+            // This is a little bit of a hack.  There is only
+            // a linear grayscale ICC profile in the JDK so
+            // many things use this when the data _really_
+            // has sRGB gamma applied.
+            try {
+            float [][] matrix = null;
+            switch (srcSM.getNumBands()) {
+            case 1:
+                matrix = new float[3][1];
+                matrix[0][0] = 1; // Red
+                matrix[1][0] = 1; // Grn
+                matrix[2][0] = 1; // Blu
+                break;
+            case 2:
+            default:
+                matrix = new float[4][2];
+                matrix[0][0] = 1; // Red
+                matrix[1][0] = 1; // Grn
+                matrix[3][0] = 1; // Blu
+                matrix[4][1] = 1; // Alpha
+                break;
+            }
+            Raster srcRas = src.getData(wr.getBounds());
+            BandCombineOp op = new BandCombineOp(matrix, null);
+            op.filter(srcRas, wr);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            return wr;
+        }
+
+        ColorModel dstCM = getColorModel();
+        if (srcCM.getColorSpace() == dstCM.getColorSpace()) {
+            // No transform needed, just reformat data...
+            // System.out.println("Bypassing");
+
+            if (is_INT_PACK_COMP(srcSM))
+                src.copyData(wr);
+            else
+                GraphicsUtil.copyData(src.getData(wr.getBounds()), wr);
+
+            return wr;
+        }
+
+        Raster srcRas = src.getData(wr.getBounds());
+        WritableRaster srcWr  = (WritableRaster)srcRas;
+
+        // Divide out alpha if we have it.  We need to do this since
+        // the color convert may not be a linear operation which may
+        // lead to out of range values.
+        ColorModel srcBICM = srcCM;
+        if (srcCM.hasAlpha())
+            srcBICM = GraphicsUtil.coerceData(srcWr, srcCM, false);
+
+        BufferedImage srcBI, dstBI;
+        srcBI = new BufferedImage(srcBICM,
+                                  srcWr.createWritableTranslatedChild(0,0),
+                                  false,
+                                  null);
+
+        // System.out.println("src: " + srcBI.getWidth() + "x" +
+        //                    srcBI.getHeight());
+
+        ColorConvertOp op = new ColorConvertOp(dstCM.getColorSpace(),
+                                               null);
+        dstBI = op.filter(srcBI, null);
+
+        // System.out.println("After filter:");
+
+        WritableRaster wr00 = wr.createWritableTranslatedChild(0,0);
+        for (int i=0; i<dstCM.getColorSpace().getNumComponents(); i++)
+            copyBand(dstBI.getRaster(), i, wr00,    i);
+
+        if (dstCM.hasAlpha())
+            copyBand(srcWr, srcSM.getNumBands()-1,
+                     wr,    getSampleModel().getNumBands()-1);
         return wr;
     }
 
