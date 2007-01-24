@@ -38,6 +38,7 @@ import java.awt.image.SampleModel;
 import java.awt.image.SinglePixelPackedSampleModel;
 import java.awt.image.WritableRaster;
 
+import org.apache.xmlgraphics.image.rendered.Any2LsRGBRed;
 import org.apache.xmlgraphics.image.rendered.Any2sRGBRed;
 import org.apache.xmlgraphics.image.rendered.BufferedImageCachableRed;
 import org.apache.xmlgraphics.image.rendered.CachableRed;
@@ -135,6 +136,26 @@ public class GraphicsUtil {
         ColorModel cm = makeLinear_sRGBCM(premult);
         WritableRaster wr = cm.createCompatibleWritableRaster(width, height);
         return new BufferedImage(cm, wr, premult, null);
+    }
+
+    /**
+     * This method will return a CacheableRed that has it's data in
+     * the linear sRGB colorspace. If <tt>src</tt> is already in
+     * linear sRGB then this method does nothing and returns <tt>src</tt>.
+     * Otherwise it creates a transform that will convert
+     * <tt>src</tt>'s output to linear sRGB and returns that CacheableRed.
+     *
+     * @param src The image to convert to linear sRGB.
+     * @return    An equivilant image to <tt>src</tt> who's data is in
+     *            linear sRGB.
+     */
+    public static CachableRed convertToLsRGB(CachableRed src) {
+        ColorModel cm = src.getColorModel();
+        ColorSpace cs = cm.getColorSpace();
+        if (cs == ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB))
+            return src;
+
+        return new Any2LsRGBRed(src);
     }
 
     /**
