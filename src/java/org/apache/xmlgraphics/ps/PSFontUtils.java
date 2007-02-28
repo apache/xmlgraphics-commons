@@ -112,5 +112,23 @@ public class PSFontUtils {
         gen.writeln("] def");
     }
 
+    /**
+     * Redefines the encoding of a font.
+     * @param gen the PostScript generator
+     * @param fontName the font name
+     * @param encoding the new encoding (must be predefined in the PS file)
+     * @throws IOException In case of an I/O problem
+     */
+    public static void redefineFontEncoding(PSGenerator gen, String fontName, String encoding) 
+                throws IOException {
+        gen.writeln("/" + fontName + " findfont");
+        gen.writeln("dup length dict begin");
+        gen.writeln("  {1 index /FID ne {def} {pop pop} ifelse} forall");
+        gen.writeln("  /Encoding " + encoding + " def");
+        gen.writeln("  currentdict");
+        gen.writeln("end");
+        gen.writeln("/" + fontName + " exch definefont pop");
+    }
+
     
 }

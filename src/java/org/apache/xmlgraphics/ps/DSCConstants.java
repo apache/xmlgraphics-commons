@@ -46,7 +46,7 @@ public class DSCConstants {
     public static final String CREATION_DATE     = "CreationDate";
     /** Type of data */
     public static final String DOCUMENT_DATA     = "BoundingBox";
-    /** Use for inidicating an emulator being invoked in the document */
+    /** Use for indicating an emulator being invoked in the document */
     public static final String EMULATION         = "Emulation";
     /** Explicit end of comments */
     public static final String END_COMMENTS      = "EndComments";
@@ -135,7 +135,10 @@ public class DSCConstants {
     public static final String PAGE_TRAILER     = "PageTrailer";
     /** Indicates the start of the document trailer */    
     public static final String TRAILER          = "Trailer";
-    /** Indicates the end of a page (NON-STANDARD!) */    
+    /**
+     * Indicates the end of a page (NON-STANDARD!)
+     * @deprecated Shouldn't really use that. Bad idea. "Page" and "Trailer" end a page.
+     */    
     public static final String END_PAGE         = "EndPage";
     /** Indicates the end of the document */    
     public static final String EOF              = "EOF";
@@ -216,4 +219,25 @@ public class DSCConstants {
      */
     public static final String PAGE_RESOURCES    = "PageResources";
 
+    // ----==== (atend) indicator ====----
+    
+    /** 
+     * Indicator for the PostScript interpreter that the value is provided 
+     * later in the document (mostly in the %%Trailer section).
+     */
+    public static final Object ATEND = new AtendIndicator();
+
+    /** Used for the ATEND constant. See there. */
+    private static final class AtendIndicator extends Object {
+        
+        private AtendIndicator() {
+            super();
+        }
+        
+        public String toString() {
+            return "(atend)";
+        }
+    }
+
+    
 }

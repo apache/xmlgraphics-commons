@@ -22,33 +22,34 @@ package org.apache.xmlgraphics.ps;
 import java.io.IOException;
 
 /**
- * This class defines the basic resources (procsets) used by FOP's PostScript
- * renderer and SVG transcoder.
+ * This class defines the basic resources (procsets) used by the Apache XML Graphics project.
  * 
- * @author <a href="mailto:fop-dev@xmlgraphics.apache.org">Apache FOP Development Team</a>
  * @version $Id$
  */
 public final class PSProcSets {
 
-    /** the standard FOP procset */
+    /** the standard procset for the XML Graphics project */
     public static final PSResource STD_PROCSET = new StdProcSet();
-    /** the EPS FOP procset */
+    /** the EPS procset for the XML Graphics project */
     public static final PSResource EPS_PROCSET = new EPSProcSet();
     
-    private static class StdProcSet extends PSResource {
+    private static class StdProcSet extends PSProcSet {
         
         public StdProcSet() {
-            super("procset", "Apache FOP Std ProcSet");
+            super("Apache XML Graphics Std ProcSet", 1.0f, 0);
         }
         
         public void writeTo(PSGenerator gen) throws IOException {
             gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, 
-                    new Object[] {"procset", getName(), "1.0", "0"});
+                    new Object[] {TYPE_PROCSET, getName(), 
+                        Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.VERSION, 
-                    new Object[] {"1.0", "0"});
+                    new Object[] {Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2001-2003 "
-                        + "The Apache Software Foundation. All rights reserved.");
-            gen.writeDSCComment(DSCConstants.TITLE, "Basic set of procedures used by FOP");
+                        + "The Apache Software Foundation. "
+                        + "License terms: http://www.apache.org/licenses/LICENSE-2.0");
+            gen.writeDSCComment(DSCConstants.TITLE, 
+                    "Basic set of procedures used by the XML Graphics project (Batik and FOP)");
 
             gen.writeln("/bd{bind def}bind def");
             gen.writeln("/ld{load def}bd");
@@ -140,24 +141,28 @@ public final class PSProcSets {
             gen.writeln("} bd");
             
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
+            gen.getResourceTracker().registerSuppliedResource(this);
         }
         
     }
 
-    private static class EPSProcSet extends PSResource {
+    private static class EPSProcSet extends PSProcSet {
         
         public EPSProcSet() {
-            super("procset", "Apache FOP EPS ProcSet");
+            super("Apache XML Graphics EPS ProcSet", 1.0f, 0);
         }
         
         public void writeTo(PSGenerator gen) throws IOException {
             gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, 
-                    new Object[] {"procset", getName(), "1.0", "0"});
+                    new Object[] {TYPE_PROCSET, getName(), 
+                        Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.VERSION, 
-                    new Object[] {"1.0", "0"});
+                    new Object[] {Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2002-2003 "
-                        + "The Apache Software Foundation. All rights reserved.");
-            gen.writeDSCComment(DSCConstants.TITLE, "EPS procedures used by FOP");
+                    + "The Apache Software Foundation. "
+                    + "License terms: http://www.apache.org/licenses/LICENSE-2.0");
+            gen.writeDSCComment(DSCConstants.TITLE, 
+                    "EPS procedures used by the Apache XML Graphics project (Batik and FOP)");
 
             gen.writeln("/BeginEPSF { %def");
             gen.writeln("/b4_Inc_state save def         % Save state for cleanup");
@@ -183,6 +188,7 @@ public final class PSProcSets {
             gen.writeln("} bd");
             
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
+            gen.getResourceTracker().registerSuppliedResource(this);
         }
         
     }
@@ -192,7 +198,7 @@ public final class PSProcSets {
      * @param gen PSGenerator to use for output
      * @throws IOException In case of an I/O problem
      */
-    public static void writeFOPStdProcSet(PSGenerator gen) throws IOException {
+    public static void writeStdProcSet(PSGenerator gen) throws IOException {
         ((StdProcSet)STD_PROCSET).writeTo(gen);
     }
 
@@ -202,7 +208,7 @@ public final class PSProcSets {
      * @param gen PSGenerator to use for output
      * @throws IOException In case of an I/O problem
      */
-    public static void writeFOPEPSProcSet(PSGenerator gen) throws IOException {
+    public static void writeEPSProcSet(PSGenerator gen) throws IOException {
         ((EPSProcSet)EPS_PROCSET).writeTo(gen);
     }
 

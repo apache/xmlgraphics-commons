@@ -43,7 +43,7 @@ public class PSImageUtils {
      * Writes a bitmap image to the PostScript stream.
      * @param img the bitmap image as a byte array
      * @param imgDim the dimensions of the image
-     * @param imgName the name of the image
+     * @param imgDescription the name of the image
      * @param targetRect the target rectangle to place the image in
      * @param isJPEG true if "img" contains a DCT-encoded images, false if "img" contains the 
      *               decoded bitmap
@@ -52,26 +52,17 @@ public class PSImageUtils {
      * @throws IOException In case of an I/O exception
      */
     public static void writeImage(byte[] img,
-            Dimension imgDim, String imgName,
+            Dimension imgDim, String imgDescription,
             Rectangle2D targetRect, 
             boolean isJPEG, ColorSpace colorSpace,
             PSGenerator gen) throws IOException {
-        boolean iscolor = colorSpace.getType() != ColorSpace.CS_GRAY;
-
         gen.saveGraphicsState();
         gen.writeln(gen.formatDouble(targetRect.getX()) + " " 
                 + gen.formatDouble(targetRect.getY()) + " translate");
         gen.writeln(gen.formatDouble(targetRect.getWidth()) + " " 
                 + gen.formatDouble(targetRect.getHeight()) + " scale");
 
-        gen.commentln("%FOPBeginBitmap: " + imgName);
-        if (colorSpace.getType() == ColorSpace.TYPE_CMYK) {
-            gen.writeln("/DeviceCMYK setcolorspace");
-        } else if (colorSpace.getType() == ColorSpace.CS_GRAY) {
-            gen.writeln("/DeviceGray setcolorspace");
-        } else {
-            gen.writeln("/DeviceRGB setcolorspace");
-        }
+        gen.commentln("%AXGBeginBitmap: " + imgDescription);
 
         gen.writeln("{{");
         // Template: (RawData is used for the EOF signal only)
@@ -89,8 +80,27 @@ public class PSImageUtils {
                 gen.writeln("/Data RawData /RunLengthDecode filter def");
             }
         }
-        gen.writeln("<<");
-        gen.writeln("  /ImageType 1");
+        writeImageCommand(imgDim, colorSpace, gen, "Data");
+        /* the following two lines could be enabled if something still goes wrong
+         * gen.write("Data closefile");
+         * gen.write("RawData flushfile");
+         */
+        gen.writeln("} stopped {handleerror} if");
+        gen.writeln("  RawData flushfile");
+        gen.writeln("} exec");
+
+        encodeBitmap(img, isJPEG, gen);
+
+        gen.writeln("");
+        gen.commentln("%AXGEndBitmap");
+        gen.restoreGraphicsState();
+    }
+
+    private static void writeImageCommand(Dimension imgDim, ColorSpace colorSpace, 
+            PSGenerator gen, String dataSource) throws IOException {
+        boolean iscolor = colorSpace.getType() != ColorSpace.CS_GRAY;
+        prepareColorspace(colorSpace, gen);
+        gen.writeln("<< /ImageType 1");
         gen.writeln("  /Width " + imgDim.width);
         gen.writeln("  /Height " + imgDim.height);
         gen.writeln("  /BitsPerComponent 8");
@@ -109,17 +119,138 @@ public class PSImageUtils {
         gen.writeln("  /ImageMatrix [" + imgDim.width + " 0 0 "
               + imgDim.height + " 0 0]");
 
-        gen.writeln("  /DataSource Data");
-        gen.writeln(">>");
-        gen.writeln("image");
-        /* the following two lines could be enabled if something still goes wrong
-         * gen.write("Data closefile");
-         * gen.write("RawData flushfile");
-         */
-        gen.writeln("} stopped {handleerror} if");
-        gen.writeln("  RawData flushfile");
-        gen.writeln("} exec");
+        gen.writeln("  /DataSource " + dataSource);
+        gen.writeln(">> image");
+    }
 
+    /**
+     * Writes a bitmap image as a PostScript form enclosed by DSC resource wrappers to the
+     * PostScript file.
+     * @param img the raw bitmap data
+     * @param imgDim the dimensions of the image
+     * @param formName the name of the PostScript form to use
+     * @param imageDescription a description of the image added as a DSC Title comment
+     * @param isJPEG true if "img" contains a DCT-encoded images, false if "img" contains the 
+     *               decoded bitmap
+     * @param colorSpace the color space of the image
+     * @param gen the PostScript generator
+     * @return a PSResource representing the form for resource tracking
+     * @throws IOException In case of an I/O exception
+     */
+    public static PSResource writeReusableImage(byte[] img,
+            Dimension imgDim, String formName, String imageDescription,
+            boolean isJPEG, ColorSpace colorSpace,
+            PSGenerator gen) throws IOException {
+        if (gen.getPSLevel() < 2) {
+            throw new UnsupportedOperationException(
+                    "Reusable images requires at least Level 2 PostScript");
+        }
+        String dataName = formName + ":Data";
+        gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, formName);
+        if (imageDescription != null) {
+            gen.writeDSCComment(DSCConstants.TITLE, imageDescription);
+        }
+        
+        String additionalFilters;
+        if (isJPEG) {
+            additionalFilters = "/ASCII85Decode filter /DCTDecode filter";
+        } else {
+            if (gen.getPSLevel() >= 3) {
+                additionalFilters = "/ASCII85Decode filter /FlateDecode filter";
+            } else {
+                additionalFilters = "/ASCII85Decode filter /RunLengthDecode filter";
+            }
+        }
+
+        gen.writeln("/" + formName);
+        gen.writeln("<< /FormType 1");
+        gen.writeln("  /BBox [0 0 " + imgDim.width + " " + imgDim.height + "]");
+        gen.writeln("  /Matrix [1 0 0 1 0 0]");
+        gen.writeln("  /PaintProc {");
+        gen.writeln("    pop");
+        gen.writeln("    gsave");
+        if (gen.getPSLevel() == 2) {
+            gen.writeln("    userdict /i 0 put"); //rewind image data
+        } else {
+            gen.writeln("    " + dataName + " 0 setfileposition"); //rewind image data
+        }
+        String dataSource;
+        if (gen.getPSLevel() == 2) {
+            dataSource = "{ " + dataName + " i get /i i 1 add store } bind";
+        } else {
+            dataSource = dataName;
+        }
+        writeImageCommand(imgDim, colorSpace, gen, dataSource); 
+        gen.writeln("    grestore");
+        gen.writeln("  } bind");
+        gen.writeln(">> def");
+        gen.writeln("/" + dataName + " currentfile");
+        gen.writeln(additionalFilters);
+        if (gen.getPSLevel() == 2) {
+            //Creates a data array from the inline file
+            gen.writeln("{ /temp exch def ["
+                    + " { temp 16384 string readstring not {exit } if } loop ] } exec");
+        } else {
+            gen.writeln("/ReusableStreamDecode filter");
+        }
+        encodeBitmap(img, isJPEG, gen);
+        gen.writeln("def");
+        gen.writeDSCComment(DSCConstants.END_RESOURCE);
+        PSResource res = new PSResource(PSResource.TYPE_FORM, formName); 
+        gen.getResourceTracker().registerSuppliedResource(res);
+        return res;
+    }
+    
+    /**
+     * Paints a reusable image (previously added as a PostScript form).
+     * @param formName the name of the PostScript form implementing the image
+     * @param targetRect the target rectangle to place the image in
+     * @param gen the PostScript generator
+     * @throws IOException In case of an I/O exception
+     */
+    public static void paintReusableImage(
+            String formName,
+            Rectangle2D targetRect, 
+            PSGenerator gen) throws IOException {
+        PSResource form = new PSResource(PSResource.TYPE_FORM, formName);
+        paintForm(form, targetRect, gen);
+    }
+    
+    /**
+     * Paints a reusable image (previously added as a PostScript form).
+     * @param form the PostScript form resource implementing the image
+     * @param targetRect the target rectangle to place the image in
+     * @param gen the PostScript generator
+     * @throws IOException In case of an I/O exception
+     */
+    public static void paintForm(
+            PSResource form,
+            Rectangle2D targetRect, 
+            PSGenerator gen) throws IOException {
+        gen.saveGraphicsState();
+        gen.writeln(gen.formatDouble(targetRect.getX()) + " " 
+                + gen.formatDouble(targetRect.getY()) + " translate");
+        gen.writeln(gen.formatDouble(targetRect.getWidth()) + " " 
+                + gen.formatDouble(targetRect.getHeight()) + " scale");
+        gen.writeln(form.getName() + " execform");
+        
+        gen.getResourceTracker().notifyResourceUsageOnPage(form);
+        gen.restoreGraphicsState();
+    }
+    
+    private static void prepareColorspace(ColorSpace colorSpace, PSGenerator gen)
+                throws IOException {
+        if (colorSpace.getType() == ColorSpace.TYPE_CMYK) {
+            gen.writeln("/DeviceCMYK setcolorspace");
+        } else if (colorSpace.getType() == ColorSpace.CS_GRAY) {
+            gen.writeln("/DeviceGray setcolorspace");
+        } else {
+            gen.writeln("/DeviceRGB setcolorspace");
+        }
+    }
+
+    private static void encodeBitmap(byte[] img, boolean isJPEG, PSGenerator gen)
+                throws IOException {
         OutputStream out = gen.getOutputStream();
         out = new ASCII85OutputStream(out);
         if (isJPEG) {
@@ -137,10 +268,7 @@ public class PSImageUtils {
         } else {
             out.flush();
         }
-
-        gen.writeln("");
-        gen.commentln("%FOPEndBitmap");
-        gen.restoreGraphicsState();
+        gen.newLine();
     }
 
     /**
@@ -184,11 +312,24 @@ public class PSImageUtils {
         return bitmaps;
     }
     
+    /**
+     * Extracts a packed RGB integer array of a RenderedImage.
+     * @param img the image
+     * @param startX the starting X coordinate
+     * @param startY the starting Y coordinate
+     * @param w the width of the cropped image
+     * @param h the height of the cropped image
+     * @param rgbArray the prepared integer array to write to
+     * @param offset offset in the target array
+     * @param scansize width of a row in the target array
+     * @return the populated integer array previously passed in as rgbArray parameter
+     */
     public static int[] getRGB(RenderedImage img,
-                int startX, int startY, int w, int h,
+                int startX, int startY,
+                int w, int h,
                 int[] rgbArray, int offset, int scansize) {
         Raster raster = img.getData();
-        int yoff  = offset;
+        int yoff = offset;
         int off;
         Object data;
         int nbands = raster.getNumBands();
@@ -215,21 +356,18 @@ public class PSImageUtils {
         }
         
         if (rgbArray == null) {
-            rgbArray = new int[offset+h*scansize];
+            rgbArray = new int[offset + h * scansize];
         }
         
         ColorModel colorModel = img.getColorModel();
-        for (int y = startY; y < startY+h; y++, yoff+=scansize) {
+        for (int y = startY; y < startY + h; y++, yoff += scansize) {
             off = yoff;
-            for (int x = startX; x < startX+w; x++) {
-                rgbArray[off++] = colorModel.getRGB(raster.getDataElements(x,
-                                    y,
-                                    data));
+            for (int x = startX; x < startX + w; x++) {
+                rgbArray[off++] = colorModel.getRGB(raster.getDataElements(x, y, data));
             }
         }
         
         return rgbArray;
-
     }
     
     /**
@@ -251,8 +389,8 @@ public class PSImageUtils {
                     float x, float y, float w, float h,
                     float bboxx, float bboxy, float bboxw, float bboxh,
                     PSGenerator gen) throws IOException {
-        gen.notifyResourceUsage(PSProcSets.EPS_PROCSET, false);
-        gen.writeln("%FOPBeginEPS: " + name);
+        gen.getResourceTracker().notifyResourceUsageOnPage(PSProcSets.EPS_PROCSET);
+        gen.writeln("%AXGBeginEPS: " + name);
         gen.writeln("BeginEPSF");
 
         gen.writeln(gen.formatDouble(x) + " " + gen.formatDouble(y) + " translate");
@@ -271,12 +409,12 @@ public class PSImageUtils {
         gen.writeln("newpath");
         
         PSResource res = new PSResource(PSResource.TYPE_FILE, name);
-        gen.notifyResourceUsage(res, false);
+        gen.getResourceTracker().notifyResourceUsageOnPage(res);
         gen.writeDSCComment(DSCConstants.BEGIN_DOCUMENT, res.getName());
         gen.writeByteArr(rawEPS);
         gen.writeDSCComment(DSCConstants.END_DOCUMENT);
         gen.writeln("EndEPSF");
-        gen.writeln("%FOPEndEPS");
+        gen.writeln("%AXGEndEPS");
     }
 
 }

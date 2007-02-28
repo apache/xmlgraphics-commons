@@ -35,6 +35,9 @@ See http://forrest.apache.org/docs/linking.html for more info
   <about label="XML Graphics Commons">
     <index label="Overview" href="index.html" description="Overview"/>
     <download label="Download" href="download.html" description="Download"/>
+    <documentation label="Documentation">
+      <postscript label="Tools for Adobe PostScript" href="postscript.html" description="Tools for Adobe PostScript"/>
+    </documentation>
     <information label="Information">
       <mail label="Mailing Lists" href="http://xmlgraphics.apache.org/mail.html" description="Information on Mailing Lists"/>
       <repo label="Code Repositories" href="http://xmlgraphics.apache.org/repo.html" description="Information on Code Repositories"/>
