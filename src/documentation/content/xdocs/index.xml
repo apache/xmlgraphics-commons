@@ -81,6 +81,13 @@
           <td>FOP</td>
         </tr>
         <tr>
+          <td>Parser/Processor for DSC-compliant PostScript files (DSC = 
+            <a href="http://partners.adobe.com/public/developer/en/ps/5001.DSC_Spec.pdf">Document Structuring Conventions</a>)
+          </td>
+          <td>org.apache.xmlgraphics.ps.dsc</td>
+          <td>new</td>
+        </tr>
+        <tr>
           <td><a href="http://www.adobe.com/products/xmp/index.html">XMP metadata</a> framework</td>
           <td>org.apache.xmlgraphics.xmp</td>
           <td>new</td>

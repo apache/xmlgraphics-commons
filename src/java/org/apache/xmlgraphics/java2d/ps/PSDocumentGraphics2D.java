@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import java.io.IOException;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
-import org.apache.xmlgraphics.ps.PSGenerator;
 import org.apache.xmlgraphics.ps.PSProcSets;
 
 /**
@@ -88,7 +87,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
                         + ": PostScript Generator for Java2D"});
         gen.writeDSCComment(DSCConstants.CREATION_DATE,
                     new Object[] {new java.util.Date()});
-        gen.writeDSCComment(DSCConstants.PAGES, PSGenerator.ATEND);
+        gen.writeDSCComment(DSCConstants.PAGES, DSCConstants.ATEND);
         gen.writeDSCComment(DSCConstants.BBOX, new Object[]
                 {ZERO, ZERO, pagewidth, pageheight});
         gen.writeDSCComment(DSCConstants.END_COMMENTS);
@@ -103,8 +102,8 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         
         //Setup
         gen.writeDSCComment(DSCConstants.BEGIN_SETUP);
-        PSProcSets.writeFOPStdProcSet(gen);
-        PSProcSets.writeFOPEPSProcSet(gen);
+        PSProcSets.writeStdProcSet(gen);
+        PSProcSets.writeEPSProcSet(gen);
         if (customTextHandler != null) {
             customTextHandler.writeSetup();
         }
@@ -129,8 +128,6 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
     
     protected void writePageTrailer() throws IOException {
         gen.writeln("showpage");        
-        gen.writeDSCComment(DSCConstants.PAGE_TRAILER);
-        gen.writeDSCComment(DSCConstants.END_PAGE);
     }
     
     /**

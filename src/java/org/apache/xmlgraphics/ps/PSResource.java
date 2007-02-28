@@ -30,6 +30,12 @@ public class PSResource {
     public static final String TYPE_FONT = "font";
     /** a procset resource */
     public static final String TYPE_PROCSET = "procset";
+    /** a procset resource */
+    public static final String TYPE_PATTERN = "pattern";
+    /** a procset resource */
+    public static final String TYPE_FORM = "form";
+    /** a procset resource */
+    public static final String TYPE_ENCODING = "encoding";
     
     private String type;
     private String name;
@@ -61,4 +67,26 @@ public class PSResource {
         return sb.toString();
     }
     
+    
+    /** @see java.lang.Object#equals(java.lang.Object) */
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj instanceof PSResource) {
+            PSResource other = (PSResource)obj;
+            return other.toString().equals(toString());
+        } else {
+            return false;
+        }
+    }
+
+    /** @see java.lang.Object#hashCode() */
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    /** @see java.lang.Object#toString() */
+    public String toString() {
+        return getResourceSpecification();
+    }
 }

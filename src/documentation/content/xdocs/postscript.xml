@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+<document> 
+  <header> 
+    <title>Tools for Adobe PostScript</title> 
+  </header>
+  <body> 
+    <section id="overview">
+      <title>Overview</title>
+      <p>
+        Apache XML Graphics Commons contains various tools for writing and processing Adobe 
+        PostScript files. This includes:
+      </p>
+      <ul>
+        <li>A PostScript generator class which helps writing PostScript files from scratch.</li>
+        <li>Two Graphics2D implementations, one for plain PostScript and one for writing 
+          Encapsulated PostScript (EPS).</li>
+        <li>A DSC-parser/processor: Parse, post-process and change DSC-compliant PostScript files.</li>
+      </ul>
+      <note>
+        We don't currently include a PostScript interpreter though we would love to have one. A
+        Java-based PostScript interpreter to keep an eye on is the one from the
+        <a href="http://foray.sourceforge.net">FOray project</a>.
+      </note>
+    </section>
+    <section id="generator">
+      <title>The PostScript generator</title>
+      <p>
+        The "PSGenerator" class can help writing PostScript files. It deals with things like
+        escaping, saving/tracking/restoring graphics state, writing DSC comments and tracking of
+        DSC resources.        
+      </p>
+      <p>
+        You will rarely interact with the PS generator itself, as it is probably more interesting
+        to generate a PostScript file using Java2D which is described in the following section.
+      </p>
+    </section>
+    <section id="java2d">
+      <title>Java2D: Graphics2D implementation for generating PostScript and EPS</title>
+      <p>
+        We provide two classes (PSDocumentGraphics2D and EPSDocumentGraphics2D) which you can use
+        to generated complete PostScript files using normal Java2D means. The difference between
+        the two classes is that the EPS variant creates a fully compliant Encapsulated
+        PostScript file while the PS variant simply creates a normal DSC-compliant level 2 
+        PostScript file. It depends on your requirement which variant you choose. The PS variant
+        is mostly for printing purposes while the EPS variant is better suited for inclusion in
+        other documents.
+      </p>
+      <section id="creating-eps">
+        <title>Creating an EPS file</title>
+        <p>
+          Creating an EPS file using the Graphics2D implementation is easy. Instantiate
+          EPSDocumentGraphics2D, set a GraphicContext and set up the output document. Here's an
+          example:
+        </p>
+        <source><![CDATA[
+import org.apache.xmlgraphics.java2d.ps.EPSDocumentGraphics2D;
+
+[..]
+
+EPSDocumentGraphics2D g2d = new EPSDocumentGraphics2D(false);
+g2d.setGraphicContext(new org.apache.xmlgraphics.java2d.GraphicContext());
+
+//Set up the document size
+g2d.setupDocument(out, 400, 200); //400pt x 200pt
+//out is the OutputStream to write the EPS to
+          
+g2d.drawRect(10, 10, 50, 50); //paint a rectangle using normal Java2D calls
+          
+g2d.finish(); //Wrap up and finalize the EPS file
+        ]]></source>
+        <p>
+          A complete example for generating an EPS files can be found in the 
+          <a href="http://svn.apache.org/viewvc/xmlgraphics/commons/trunk/examples/java/java2d/ps/">"examples" directory</a>
+          in the distribution.
+        </p>
+      </section>
+    </section>
+    <section id="dsc">
+      <title>DSC parser/processor</title>
+      <p>
+        Many PostScript files use special comments to structure a document. This allows manipulation
+        of PostScript files without interpreting them. These special comments are defined in the
+        <a href="http://partners.adobe.com/public/developer/en/ps/5001.DSC_Spec.pdf">Document Structuring Conventions</a>.
+        The code in Commons is designed to work with DSC 3.0. For details on how DSC is used,
+        please take a look at the DSC specification.
+      </p>
+      <p>
+        The DSC support in Commons was primarily developed to implement resource optimization
+        features in <a href="ext:fop">Apache FOP</a>'s PostScript output support. Resources like
+        images which are used repeatedly in a document should not be written to the PostScript
+        file each time it is used. Instead it is written once at the beginning of the file as a 
+        PostScript form. The form is then called whenever the image needs painting. 
+      </p>
+      <p>
+        But the DSC parser could potentially be used for other purposes. The most obvious is
+        extracting a subset of pages from a DSC-compliant file. Assume you want to print only
+        page 45 to 57 of a particular document. There's an example that demonstrates exactly this.
+        Check out the "examples" directory in the distribution. Other potential use cases for the 
+        DSC parser are:
+      </p>
+      <ul>
+        <li>Patching PostScript files, for example, adding OMR marks for automatic packaging</li>
+        <li><a href="http://en.wikipedia.org/wiki/Imposition">Imposition</a> (2-up, n-up, rotation, etc.)</li>
+        <li>EPS graphic extraction</li>
+        <li>Inspecting the page count</li>
+        <li>etc. etc.</li>
+      </ul>
+      <p>
+        The DSC parser (DSCParser) was designed as a pull parser, i.e. you fetch new events from 
+        the parser inspecting them and acting on them as they are found. If you prefer to work 
+        with a push parser, you can pass the DSCParser a DSCHandler implementation and the parser
+        will send you all the events.
+      </p>
+      <p>
+        The best example to understand how to use the DSC parser is the PageExtractor class
+        that implements the page extraction functionality mentioned above.
+      </p>
+      <note>
+        The DSC parser is not considered feature-complete. The basic infrastructure is there but,
+        for example, not all DSC comments are available as concrete Java classes. If you need
+        to extend the DSC parser for your own use cases, please send us your patches.
+      </note>
+    </section>
+  </body>
+</document>

@@ -27,12 +27,12 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Set;
 import java.util.Stack;
 
 import javax.xml.transform.Source;
+
+import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 
 /**
  * This class is used to output PostScript code to an OutputStream.
@@ -41,17 +41,20 @@ import javax.xml.transform.Source;
  */
 public class PSGenerator {
 
+    public static final int DEFAULT_LANGUAGE_LEVEL = 3;
+    
     /** 
      * Indicator for the PostScript interpreter that the value is provided 
      * later in the document (mostly in the %%Trailer section).
+     * @deprecated Please use DSCConstants.ATEND. This constant was in the wrong place.
      */
-    public static final AtendIndicator ATEND = new AtendIndicator() {
-    };
+    public static final Object ATEND = DSCConstants.ATEND;
 
     /** Line feed used by PostScript */
     public static final char LF = '\n';
     
     private OutputStream out;
+    private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean commentsEnabled = true;
     
     private Stack graphicsStateStack = new Stack();
@@ -62,7 +65,10 @@ public class PSGenerator {
 
     private StringBuffer tempBuffer = new StringBuffer(256);
 
-    /** @see java.io.FilterOutputStream **/
+    /**
+     * Creates a new instance.
+     * @param out the OutputStream to write the generated PostScript code to
+     */
     public PSGenerator(OutputStream out) {
         this.out = out;
         this.currentState = new PSState();
@@ -79,11 +85,18 @@ public class PSGenerator {
 
     /**
      * Returns the selected PostScript level. 
-     * (Hardcoded to level 2 for the moment.)
      * @return the PostScript level
      */
     public int getPSLevel() {
-        return 2; 
+        return this.psLevel; 
+    }
+    
+    /**
+     * Sets the PostScript level that is used to generate the current document.
+     * @param level the PostScript level (currently 1, 2 and 3 are known)
+     */
+    public void setPSLevel(int level) {
+        this.psLevel = level;
     }
     
     /**
@@ -238,6 +251,14 @@ public class PSGenerator {
         return convertStringToDSC(text, false);
     }
 
+    /**
+     * Converts a <real> value for use in DSC comments.
+     * @param value the value to convert
+     * @return String The resulting String
+     */
+    public static final String convertRealToDSC(float value) {
+        return Float.toString(value);
+    }
 
     /**
      * Converts text by applying escaping rules established in the DSC specs.
@@ -319,8 +340,8 @@ public class PSGenerator {
                 
                 if (params[i] instanceof String) {
                     tempBuffer.append(convertStringToDSC((String)params[i]));
-                } else if (params[i] instanceof AtendIndicator) {
-                    tempBuffer.append("(atend)");
+                } else if (params[i] == DSCConstants.ATEND) {
+                    tempBuffer.append(DSCConstants.ATEND);
                 } else if (params[i] instanceof Double) {
                     tempBuffer.append(df3.format(params[i]));
                 } else if (params[i] instanceof Number) {
@@ -505,96 +526,22 @@ public class PSGenerator {
         }
     }
     
-    private Set documentSuppliedResources;
-    private Set documentNeededResources;
-    private Set pageResources;
+    private ResourceTracker resTracker = new ResourceTracker();
     
     /**
-     * Notifies the generator that a new page has been started and that the page resource
-     * set can be cleared.
+     * Resturns the ResourceTracker instance associated with this PSGenerator.
+     * @return the ResourceTracker instance or null if none is assigned
      */
-    public void notifyStartNewPage() {
-        if (pageResources != null) {
-            pageResources.clear();
-        }
+    public ResourceTracker getResourceTracker() {
+        return this.resTracker;
     }
     
     /**
-     * Notifies the generator about the usage of a resource on the current page.
-     * @param res the resource being used
-     * @param needed true if this is a needed resource, false for a supplied resource
+     * Sets the ResourceTracker instance to be associated with this PSGenerator.
+     * @param resTracker the ResourceTracker instance
      */
-    public void notifyResourceUsage(PSResource res, boolean needed) {
-        if (pageResources == null) {
-            pageResources = new java.util.HashSet();
-        }
-        pageResources.add(res);
-        if (needed) {
-            if (documentNeededResources == null) {
-                documentNeededResources = new java.util.HashSet();
-            }
-            documentNeededResources.add(res);
-        } else {
-            if (documentSuppliedResources == null) {
-                documentSuppliedResources = new java.util.HashSet();
-            }
-            documentSuppliedResources.add(res);
-        }
-    }
-
-    /**
-     * Indicates whether a particular resource is supplied, rather than needed.
-     * @param res the resource
-     * @return true if the resource is registered as being supplied.
-     */
-    public boolean isResourceSupplied(PSResource res) {
-        return documentSuppliedResources.contains(res);
-    }
-
-    /**
-     * Writes a DSC comment for the accumulated used resources, either at page level or
-     * at document level.
-     * @param pageLevel true if the DSC comment for the page level should be generated, 
-     *                  false for the document level (in the trailer)
-     * @exception IOException In case of an I/O problem
-     */
-    public void writeResources(boolean pageLevel) throws IOException {
-        if (pageLevel) {
-            writeResourceComment(DSCConstants.PAGE_RESOURCES, pageResources);
-        } else {
-            writeResourceComment(DSCConstants.DOCUMENT_NEEDED_RESOURCES, 
-                    documentNeededResources);
-            writeResourceComment(DSCConstants.DOCUMENT_SUPPLIED_RESOURCES, 
-                    documentSuppliedResources);
-        }
+    public void setResourceTracker(ResourceTracker resTracker) {
+        this.resTracker = resTracker;
     }
     
-    private void writeResourceComment(String name, Set resources) throws IOException {
-        if (resources == null || resources.size() == 0) {
-            return;
-        }
-        tempBuffer.setLength(0);
-        tempBuffer.append("%%");
-        tempBuffer.append(name);
-        tempBuffer.append(" ");
-        boolean first = true;
-        Iterator i = resources.iterator();
-        while (i.hasNext()) {
-            if (!first) {
-                writeln(tempBuffer.toString());
-                tempBuffer.setLength(0);
-                tempBuffer.append("%%+ ");
-            }
-            PSResource res = (PSResource)i.next();
-            tempBuffer.append(res.getResourceSpecification());
-            first = false;
-        }
-        writeln(tempBuffer.toString());
-    }
-    
-    /** Used for the ATEND constant. See there. */
-    private static interface AtendIndicator {
-    }
-
-
 }
