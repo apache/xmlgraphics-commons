@@ -544,4 +544,45 @@ public class PSGenerator {
         this.resTracker = resTracker;
     }
     
+    /**      
+     * Notifies the generator that a new page has been started and that the page resource    
+     * set can be cleared.
+     * @deprecated Use the notifyStartNewPage() on ResourceTracker instead.
+     */      
+    public void notifyStartNewPage() {
+        getResourceTracker().notifyStartNewPage();
+    }
+
+    /**      
+     * Notifies the generator about the usage of a resource on the current page.     
+     * @param res the resource being used    
+     * @param needed true if this is a needed resource, false for a supplied resource    
+     * @deprecated Use the notifyResourceUsageOnPage() on ResourceTracker instead
+     */      
+    public void notifyResourceUsage(PSResource res, boolean needed) {
+        getResourceTracker().notifyResourceUsageOnPage(res);
+    }
+    
+    /**
+     * Writes a DSC comment for the accumulated used resources, either at page level or
+     * at document level.
+     * @param pageLevel true if the DSC comment for the page level should be generated, 
+     *                  false for the document level (in the trailer)
+     * @exception IOException In case of an I/O problem
+     * @deprecated Use the writeResources() on ResourceTracker instead.
+     */
+    public void writeResources(boolean pageLevel) throws IOException {
+        getResourceTracker().writeResources(pageLevel, this);
+    }
+    
+    /**
+     * Indicates whether a particular resource is supplied, rather than needed.
+     * @param res the resource
+     * @return true if the resource is registered as being supplied.
+     * @deprecated Use the isResourceSupplied() on ResourceTracker instead.
+     */
+    public boolean isResourceSupplied(PSResource res) {
+        return getResourceTracker().isResourceSupplied(res);
+    }
+    
 }
