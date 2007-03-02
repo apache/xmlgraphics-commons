@@ -194,12 +194,24 @@ public final class PSProcSets {
     }
     
     /**
-     * Generates a resource defining standard procset for FOP.
+     * Generates a resource defining standard procset with operations used by the XML Graphics
+     * project.
      * @param gen PSGenerator to use for output
      * @throws IOException In case of an I/O problem
      */
     public static void writeStdProcSet(PSGenerator gen) throws IOException {
         ((StdProcSet)STD_PROCSET).writeTo(gen);
+    }
+
+    /**
+     * Generates a resource defining standard procset with operations used by the XML Graphics
+     * project.
+     * @param gen PSGenerator to use for output
+     * @throws IOException In case of an I/O problem
+     * @deprecated Use writeStdProcSet() instead.
+     */
+    public static void writeFOPStdProcSet(PSGenerator gen) throws IOException {
+        writeStdProcSet(gen);
     }
 
 
@@ -211,5 +223,16 @@ public final class PSProcSets {
     public static void writeEPSProcSet(PSGenerator gen) throws IOException {
         ((EPSProcSet)EPS_PROCSET).writeTo(gen);
     }
+
+    /**
+     * Generates a resource defining a procset for including EPS graphics.
+     * @param gen PSGenerator to use for output
+     * @throws IOException In case of an I/O problem
+     * @deprecated Use writeEPSProcSet() instead.
+     */
+    public static void writeFOPEPSProcSet(PSGenerator gen) throws IOException {
+        writeEPSProcSet(gen);
+    }
+
 
 }
