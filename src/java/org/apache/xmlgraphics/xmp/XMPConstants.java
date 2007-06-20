@@ -42,12 +42,17 @@ public interface XMPConstants {
     /** Namespace URI for the Adobe PDF Schema */
     String ADOBE_PDF_NAMESPACE = "http://ns.adobe.com/pdf/1.3/";
 
-    /** Namespace URI for the PDF/A Identification Schema */
-    String PDF_A_IDENTIFICATION = "http://www.aiim.org/pdfa/ns/id";
+    /**
+     * Namespace URI for the PDF/A Identification Schema
+     * (from the technical corrigendum 1 of ISO 19005-1:2005, note that the trailing slash
+     * was missing in the original ISO 19005-1:2005 specification)
+     */
+    String PDF_A_IDENTIFICATION = "http://www.aiim.org/pdfa/ns/id/";
     
     /**
      * Namespace URI for the PDF/A Identification Schema
      * (from an older draft of ISO 19005-1, used by Adobe Acrobat)
+     * @deprecated Outdated, please use PDF_A_IDENTIFICATION instead.
      */
     String PDF_A_IDENTIFICATION_OLD = "http://www.aiim.org/pdfa/ns/id.html";
 
