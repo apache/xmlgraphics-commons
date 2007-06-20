@@ -20,6 +20,12 @@ What is Apache XML Graphics Commons?
 It is a place where the Apache Batik and Apache FOP share commonly used 
 components. Many components in here are also usable and useful stand-alone.
     
+Documentation
+---------------------    
+
+The documentation can be found under:
+http://xmlgraphics.apache.org/commons/
+
 Where to get help?
 ---------------------    
 
