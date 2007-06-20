@@ -108,4 +108,27 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         return getLangAlt(lang, "title");
     }
     
+    /**
+     * Sets the description of the content of the resource.
+     * @param lang the language of the value ("x-default" or null for the default language)
+     * @param value the new value
+     */
+    public void setDescription(String lang, String value) {
+        setLangAlt("description", lang, value);
+    }
+    
+    /** @return the description of the content of the resource (in the default language) */
+    public String getDescription() {
+        return getDescription(null);
+    }
+    
+    /**
+     * Returns the description of the content of the resource in a language-dependant way.
+     * @param lang the language ("x-default" or null for the default language)
+     * @return the language-dependent value.
+     */
+    public String getDescription(String lang) {
+        return getLangAlt(lang, "description");
+    }
+    
 }

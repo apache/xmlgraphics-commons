@@ -28,6 +28,10 @@
 
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Fixed the PDF/A namespace according to ISO-19005-1:2005/Cor.1:2007 and deprecated the
+        use of the draft PDF/A namespace used by Adobe Acrobat 7.x.
+      </action>
     </release>
     <release version="1.1" date="22 Dec 2006">
       <action context="Code" dev="JM" type="add">

@@ -27,6 +27,7 @@ import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
 /**
  * XMP Schema for PDF/A (ISO 19005-1). This schema uses a namespace URI used in a draft version
  * of the ISO standard which is still necessary because of a bug in Adobe Acrobat.
+ * @deprecated Outdated, please use PDFAXMPSchema instead
  */
 public class PDFAOldXMPSchema extends XMPSchema {
 
