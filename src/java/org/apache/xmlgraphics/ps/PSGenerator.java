@@ -202,7 +202,6 @@ public class PSGenerator {
         out.flush();
     }
 
-
     /**
      * Escapes a character conforming to the rules established in the PostScript
      * Language Reference (Search for "Literal Text Strings").
@@ -210,38 +209,45 @@ public class PSGenerator {
      * @param target target StringBuffer to write the escaped character to
      */
     public static final void escapeChar(char c, StringBuffer target) {
-        if (c > 127) {
-            target.append("\\");
-            target.append(Integer.toOctalString(c));
-        } else {
-            switch (c) {
-                case '\n':
-                    target.append("\\n");
-                    break;
-                case '\r':
-                    target.append("\\r");
-                    break;
-                case '\t':
-                    target.append("\\t");
-                    break;
-                case '\b':
-                    target.append("\\b");
-                    break;
-                case '\f':
-                    target.append("\\f");
-                    break;
-                case '\\':
-                    target.append("\\\\");
-                    break;
-                case '(':
-                    target.append("\\(");
-                    break;
-                case ')':
-                    target.append("\\)");
-                    break;
-                default:
+        switch (c) {
+            case '\n':
+                target.append("\\n");
+                break;
+            case '\r':
+                target.append("\\r");
+                break;
+            case '\t':
+                target.append("\\t");
+                break;
+            case '\b':
+                target.append("\\b");
+                break;
+            case '\f':
+                target.append("\\f");
+                break;
+            case '\\':
+                target.append("\\\\");
+                break;
+            case '(':
+                target.append("\\(");
+                break;
+            case ')':
+                target.append("\\)");
+                break;
+            default:
+                if (c > 255) {
+                    //Ignoring non Latin-1 characters
+                    target.append('?');
+                } else if (c < 32 || c > 127) {
+                    target.append('\\');
+                   
+                    target.append((char)('0' + (c >> 6)));
+                    target.append((char)('0' + ((c >> 3) % 8)));
+                    target.append((char)('0' + (c % 8)));
+                    //Integer.toOctalString(i)
+                } else {
                     target.append(c);
-            }
+                }
         }
     }
 
@@ -278,10 +284,7 @@ public class PSGenerator {
             int initialSize = text.length();
             initialSize += initialSize / 2;
             StringBuffer sb = new StringBuffer(initialSize);
-            if ((Long.getLong(text) != null) 
-                    || (text.indexOf(' ') >= 0) 
-                    || forceParentheses) {
-                        
+            if ((text.indexOf(' ') >= 0) || forceParentheses) {
                 sb.append('(');
                 for (int i = 0; i < text.length(); i++) {
                     final char c = text.charAt(i);
@@ -290,7 +293,11 @@ public class PSGenerator {
                 sb.append(')');
                 return sb.toString();
             } else {
-                return text;
+                for (int i = 0; i < text.length(); i++) {
+                    final char c = text.charAt(i);
+                    escapeChar(c, sb);
+                }
+                return sb.toString();
             }
         }
     }
