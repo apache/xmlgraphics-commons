@@ -28,6 +28,10 @@
 
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Fixed literal text string escaping in PSGenerator. Some characters were not properly
+        escaped.
+      </action>
       <action context="Code" dev="JM" type="add" fixes-bug="42507" due-to="Adrian Cumiskey">
         Added support for CMYK and GRAY color spaces for PSGenerator
         (moved there from PSGraphics2D).
