@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.ps;
 
 import java.awt.Color;
+import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.io.OutputStream;
 import java.io.IOException;
@@ -41,6 +42,9 @@ import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
  */
 public class PSGenerator {
 
+    /**
+     * Default postscript language level
+     */
     public static final int DEFAULT_LANGUAGE_LEVEL = 3;
     
     /** 
@@ -495,23 +499,69 @@ public class PSGenerator {
             writeln(pattern + " setdash");
         }
     }
-                                
+
     /**
      * Establishes the specified color (RGB).
      * @param col the color as defined by the setrgbcolor command.
      * @exception IOException In case of an I/O problem
+     * @deprecated use useColor method instead
      */
     public void useRGBColor(Color col) throws IOException {
-        if (col == null) {
-            col = PSState.DEFAULT_RGB_COLOR;
-        }
+        useColor(col);
+    }        
+
+    /**
+     * Establishes the specified color.
+     * @param col the color.
+     * @exception IOException In case of an I/O problem
+     */
+    public void useColor(Color col) throws IOException {
         if (getCurrentState().useColor(col)) {
-            float[] comps = col.getColorComponents(null);
-            writeln(formatDouble(comps[0])
-                    + " " + formatDouble(comps[1])
-                    + " " + formatDouble(comps[2])
-                    + " setrgbcolor");
+            writeln(convertColorToPS(col));
         }
+    }
+    
+    private String convertColorToPS(Color col) {
+        StringBuffer p = new StringBuffer();
+        float[] comps = col.getColorComponents(null);
+        
+        if (col.getColorSpace().getType() == ColorSpace.TYPE_RGB) {
+            // according to pdfspec 12.1 p.399
+            // if the colors are the same then just use the g or G operator
+            boolean same = (comps[0] == comps[1] 
+                        && comps[0] == comps[2]);
+            // output RGB
+            if (same) {
+                p.append(formatDouble(comps[0]));
+            } else {
+                for (int i = 0; i < col.getColorSpace().getNumComponents(); i++) {
+                    if (i > 0) {
+                        p.append(" ");
+                    }
+                    p.append(formatDouble(comps[i]));
+                }
+            }
+            if (same) {
+                p.append(" setgray");
+            } else {
+                p.append(" setrgbcolor");
+            }
+        } else if (col.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
+            // colorspace is CMYK
+            for (int i = 0; i < col.getColorSpace().getNumComponents(); i++) {
+                if (i > 0) {
+                    p.append(" ");
+                }
+                p.append(formatDouble(comps[i]));
+            }
+            p.append(" setcmykcolor");
+        } else {
+            // means we're in DeviceGray or Unknown.
+            // assume we're in DeviceGray, because otherwise we're screwed.
+            p.append(formatDouble(comps[0]));
+            p.append(" setgray");
+        }
+        return p.toString();
     }
     
     /**

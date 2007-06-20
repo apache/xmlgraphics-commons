@@ -43,7 +43,7 @@ public class PSState implements Serializable {
     private int linecap = 0;
     private double linewidth = 1.0f;
     private String dashpattern = DEFAULT_DASH;
-    private Color rgbColor = DEFAULT_RGB_COLOR;
+    private Color color = DEFAULT_RGB_COLOR;
     
     //Font state
     private String fontname;
@@ -69,7 +69,7 @@ public class PSState implements Serializable {
         this.linecap = org.linecap;
         this.linewidth = org.linewidth;
         this.dashpattern = org.dashpattern;
-        this.rgbColor = org.rgbColor;
+        this.color = org.color;
         this.fontname = org.fontname;
         this.fontsize = org.fontsize;
     }
@@ -152,8 +152,8 @@ public class PSState implements Serializable {
      * @return true if the color changed compared to the previous setting
      */
     public boolean useColor(Color value) {
-        if (!rgbColor.equals(value)) {
-            rgbColor = value;
+        if (!color.equals(value)) {
+            color = value;
             return true;
         } else {
             return false;
@@ -192,7 +192,7 @@ public class PSState implements Serializable {
         gen.useLineCap(linecap);
         gen.useLineWidth(linewidth);
         gen.useDash(dashpattern);
-        gen.useRGBColor(rgbColor);
+        gen.useColor(color);
         if (fontname != null) {
             gen.useFont(fontname, fontsize);
         }

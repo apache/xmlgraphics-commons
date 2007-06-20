@@ -598,46 +598,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @throws IOException In case of an I/O problem
      */
     public void establishColor(Color c) throws IOException {
-        StringBuffer p = new StringBuffer();
-        float[] comps = c.getColorComponents(null);
-        
-        if (c.getColorSpace().getType() == ColorSpace.TYPE_RGB) {
-            // according to pdfspec 12.1 p.399
-            // if the colors are the same then just use the g or G operator
-            boolean same = (comps[0] == comps[1] 
-                        && comps[0] == comps[2]);
-            // output RGB
-            if (same) {
-                p.append(gen.formatDouble(comps[0]));
-            } else {
-                for (int i = 0; i < c.getColorSpace().getNumComponents(); i++) {
-                    if (i > 0) {
-                        p.append(" ");
-                    }
-                    p.append(gen.formatDouble(comps[i]));
-                }
-            }
-            if (same) {
-                p.append(" setgray");
-            } else {
-                p.append(" setrgbcolor");
-            }
-        } else if (c.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
-            // colorspace is CMYK
-            for (int i = 0; i < c.getColorSpace().getNumComponents(); i++) {
-                if (i > 0) {
-                    p.append(" ");
-                }
-                p.append(gen.formatDouble(comps[i]));
-            }
-            p.append(" setcmykcolor");
-        } else {
-            // means we're in DeviceGray or Unknown.
-            // assume we're in DeviceGray, because otherwise we're screwed.
-            p.append(gen.formatDouble(comps[0]));
-            p.append(" setgray");
-        }
-        gen.writeln(p.toString());
+        gen.useColor(c);
     }
 
     /**
