@@ -66,6 +66,11 @@ License labeling (according to http://www.apache.org/legal/3party.html):
   RELEASE NOTES
 ==============================================================================
 
+Version 1.2
+--------------
+
+This release mainly adds support for CMYK and GRAY color spaces for PSGenerator.
+
 Version 1.1
 --------------
 
