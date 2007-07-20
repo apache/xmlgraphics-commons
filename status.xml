@@ -29,7 +29,7 @@
   <changes>
     <release version="Trunk" date="n/a">
     </release>
-    <release version="1.2" date="July 2007">
+    <release version="1.2" date="21 July 2007">
       <action context="Code" dev="JM" type="fix">
         Fixed literal text string escaping in PSGenerator. Some characters were not properly
         escaped.
