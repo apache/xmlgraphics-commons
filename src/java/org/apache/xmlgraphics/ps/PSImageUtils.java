@@ -98,7 +98,7 @@ public class PSImageUtils {
 
     private static void writeImageCommand(Dimension imgDim, ColorSpace colorSpace, 
             PSGenerator gen, String dataSource) throws IOException {
-        boolean iscolor = colorSpace.getType() != ColorSpace.CS_GRAY;
+        boolean iscolor = colorSpace.getType() != ColorSpace.TYPE_GRAY;
         prepareColorspace(colorSpace, gen);
         gen.writeln("<< /ImageType 1");
         gen.writeln("  /Width " + imgDim.width);
@@ -242,7 +242,7 @@ public class PSImageUtils {
                 throws IOException {
         if (colorSpace.getType() == ColorSpace.TYPE_CMYK) {
             gen.writeln("/DeviceCMYK setcolorspace");
-        } else if (colorSpace.getType() == ColorSpace.CS_GRAY) {
+        } else if (colorSpace.getType() == ColorSpace.TYPE_GRAY) {
             gen.writeln("/DeviceGray setcolorspace");
         } else {
             gen.writeln("/DeviceRGB setcolorspace");
