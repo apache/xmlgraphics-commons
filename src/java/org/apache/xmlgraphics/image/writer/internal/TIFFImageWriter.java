@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.image.writer.internal;
 
+import java.awt.color.ColorSpace;
+import java.awt.image.ColorModel;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,6 +33,9 @@ import org.apache.xmlgraphics.image.writer.AbstractImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.MultiImageWriter;
+
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
 
 /**
  * ImageWriter implementation that uses the internal TIFF codec to 
@@ -54,8 +59,61 @@ public class TIFFImageWriter extends AbstractImageWriter {
     public void writeImage(RenderedImage image, OutputStream out,
             ImageWriterParams params) throws IOException {
         TIFFEncodeParam encodeParams = createTIFFEncodeParams(params);
+        updateParams(encodeParams, params, image);
         TIFFImageEncoder encoder = new TIFFImageEncoder(out, encodeParams);
         encoder.encode(image);
+    }
+
+    /**
+     * This method updates the encode parameters based on the image to be encoded. One thing done
+     * here is to initialize the JPEG encoding parameters if JPEG compression is selected.
+     * @param encodeParams the TIFF encoding parameters
+     * @param image the image to be encoded
+     */
+    private void updateParams(TIFFEncodeParam encodeParams, ImageWriterParams params, 
+            RenderedImage image) {
+        if (encodeParams.getCompression() == TIFFEncodeParam.COMPRESSION_JPEG_TTN2) {
+            ColorModel cm = image.getColorModel();
+            int imageType = cm.getColorSpace().getType();
+            int colorID;
+            //The following translation table is taken from the Javadoc for JPEGEncodeParam.
+            switch (imageType) {
+            case ColorSpace.TYPE_GRAY:
+                colorID = JPEGEncodeParam.COLOR_ID_GRAY;
+                break;
+            case ColorSpace.TYPE_RGB:
+                if (cm.hasAlpha()) {
+                    colorID = JPEGEncodeParam.COLOR_ID_YCbCrA;
+                } else {
+                    colorID = JPEGEncodeParam.COLOR_ID_YCbCr;
+                }
+                break;
+            case ColorSpace.TYPE_YCbCr:
+                if (cm.hasAlpha()) {
+                    colorID = JPEGEncodeParam.COLOR_ID_YCbCrA;
+                } else {
+                    colorID = JPEGEncodeParam.COLOR_ID_YCbCr;
+                }
+                break;
+            case ColorSpace.TYPE_CMYK:
+                colorID = JPEGEncodeParam.COLOR_ID_CMYK;
+                break;
+            default:
+                //TODO Don't know how to determine whether image is PYCC or not 
+                //(see JPEGEncodeParam)
+                colorID = JPEGEncodeParam.COLOR_ID_UNKNOWN;
+            }
+            JPEGEncodeParam jpegParam = JPEGCodec.getDefaultJPEGEncodeParam(
+                    image.getData(), colorID);
+            if (params.getJPEGQuality() != null || params.getJPEGForceBaseline() != null) {
+                float qual = (params.getJPEGQuality() != null 
+                        ? params.getJPEGQuality().floatValue() : 0.75f);
+                boolean force = (params.getJPEGForceBaseline() != null
+                        ? params.getJPEGForceBaseline().booleanValue() : false);
+                jpegParam.setQuality(qual, force); 
+            }
+            encodeParams.setJPEGEncodeParam(jpegParam);
+        }
     }
 
     private TIFFEncodeParam createTIFFEncodeParams(ImageWriterParams params) {
@@ -133,6 +191,7 @@ public class TIFFImageWriter extends AbstractImageWriter {
         public void writeImage(RenderedImage image, ImageWriterParams params) throws IOException {
             if (encoder == null) {
                 encodeParams = createTIFFEncodeParams(params);
+                updateParams(encodeParams, params, image);
                 encoder = new TIFFImageEncoder(out, encodeParams);
             }
             context = encoder.encodeMultiple(context, image);
