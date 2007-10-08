@@ -321,6 +321,9 @@
         </fileset>
       </classpath>
     </javac>
+    <copy todir="${build.dir}/test-classes">
+      <fileset dir="${basedir}/test/resources"/>
+    </copy>
   </target>
 
   <target name="junit-basic" depends="junit-compile" description="Runs the standard JUnit test suite" if="junit.present">

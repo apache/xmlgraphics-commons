@@ -25,7 +25,11 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
-			<action context="Code" dev="CB" type="add" fixes-bug="43069" due-to="Adrian Cumiskey">
+		  <action context="Code" dev="JM" type="add" fixes-bug="42980" due-to="Max Berger">
+		    Added support for classpath resources (find files in JAR files in the classpath
+		    using their MIME type)
+		  </action>
+		  <action context="Code" dev="CB" type="add" fixes-bug="43069" due-to="Adrian Cumiskey">
         Application of the patch in Bugzilla 43069:
         New Macro safe-set-page-device which guards
 against the possibility of invalid/unsupported postscript key/values being

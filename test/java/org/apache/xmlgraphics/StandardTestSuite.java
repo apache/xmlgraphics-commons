@@ -23,6 +23,7 @@ import org.apache.xmlgraphics.image.codec.png.PNGEncoderTest;
 import org.apache.xmlgraphics.ps.PSEscapeTestCase;
 import org.apache.xmlgraphics.ps.dsc.events.DSCValueParserTestCase;
 import org.apache.xmlgraphics.ps.dsc.tools.DSCToolsTestCase;
+import org.apache.xmlgraphics.util.ClasspathResourceTest;
 import org.apache.xmlgraphics.util.ServiceTest;
 import org.apache.xmlgraphics.util.io.ASCII85InputStreamTestCase;
 import org.apache.xmlgraphics.util.io.ASCII85OutputStreamTestCase;
@@ -49,6 +50,7 @@ public class StandardTestSuite {
         suite.addTest(new TestSuite(ASCII85OutputStreamTestCase.class));
         suite.addTest(new TestSuite(PNGEncoderTest.class));
         suite.addTest(new TestSuite(ServiceTest.class));
+        suite.addTest(new TestSuite(ClasspathResourceTest.class));
         suite.addTest(new TestSuite(PSEscapeTestCase.class));
         suite.addTest(new TestSuite(DSCValueParserTestCase.class));
         suite.addTest(new TestSuite(DSCToolsTestCase.class));
