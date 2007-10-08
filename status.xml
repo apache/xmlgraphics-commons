@@ -25,6 +25,9 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="add" fixes-bug="43120" due-to="Sergey Orlov">
+		    Fixed a possible NPE in the TIFF codec (in the TIFFImage constructor).
+		  </action>
 		  <action context="Code" dev="JM" type="add" fixes-bug="42980" due-to="Max Berger">
 		    Added support for classpath resources (find files in JAR files in the classpath
 		    using their MIME type)

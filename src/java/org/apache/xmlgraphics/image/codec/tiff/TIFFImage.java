@@ -327,9 +327,15 @@ public class TIFFImage extends AbstractRed {
             compression = compField == null ? COMP_NONE : compField.getAsInt(0);
 
             // Get the photometric interpretation.
-            int photometricType = (int)dir.getFieldAsLong(
-                                                          TIFFImageDecoder.TIFF_PHOTOMETRIC_INTERPRETATION);
-
+            int photometricType;
+            TIFFField photometricTypeField = dir.getField(
+                    TIFFImageDecoder.TIFF_PHOTOMETRIC_INTERPRETATION);
+            if (photometricTypeField == null) {
+                photometricType = 0; // White is zero
+            } else {
+                photometricType = photometricTypeField.getAsInt(0);
+            }
+            
             // Determine which kind of image we are dealing with.
             imageType = TYPE_UNSUPPORTED;
             switch(photometricType) {
