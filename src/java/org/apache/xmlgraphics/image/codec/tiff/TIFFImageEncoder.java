@@ -40,9 +40,9 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.List;
 import java.util.zip.Deflater;
 
 import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
@@ -671,12 +671,18 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_GRAY;
                 break;
             case TIFF_RGB:
-                jpegColorID =
-                    com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_RGB;
+                if (colorModel.hasAlpha()) {
+                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_RGBA;
+                } else {
+                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_RGB;
+                }
                 break;
             case TIFF_YCBCR:
-                jpegColorID =
-                    com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_YCbCr;
+                if (colorModel.hasAlpha()) {
+                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_YCbCrA;
+                } else {
+                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_YCbCr;
+                }
                 break;
             }
 
