@@ -19,9 +19,8 @@
 
 package org.apache.xmlgraphics.java2d.ps;
 
-import java.awt.Graphics;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.PSProcSets;
@@ -90,6 +89,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.PAGES, DSCConstants.ATEND);
         gen.writeDSCComment(DSCConstants.BBOX, new Object[]
                 {ZERO, ZERO, pagewidth, pageheight});
+        gen.writeDSCComment(DSCConstants.LANGUAGE_LEVEL, new Integer(gen.getPSLevel()));
         gen.writeDSCComment(DSCConstants.END_COMMENTS);
         
         //Defaults
@@ -136,16 +136,6 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
      */
     public PSDocumentGraphics2D(PSDocumentGraphics2D g) {
         super(g);
-    }
-
-    /**
-     * Creates a new <code>Graphics</code> object that is
-     * a copy of this <code>Graphics</code> object.
-     * @return     a new graphics context that is a copy of
-     * this graphics context.
-     */
-    public Graphics create() {
-        return new PSDocumentGraphics2D(this);
     }
 
 }
