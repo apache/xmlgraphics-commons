@@ -35,6 +35,8 @@ See http://forrest.apache.org/docs/linking.html for more info
   <about label="XML Graphics Commons">
     <index label="Overview" href="index.html" description="Overview"/>
     <download label="Download" href="download.html" description="Download"/>
+    <asf-sponsorship label="ASF Sponsorship Program" href="http://www.apache.org/foundation/sponsorship.html"/>"
+    <asf-thanks label="ASF Thanks" href="http://www.apache.org/foundation/thanks.html"/>"
     <documentation label="Documentation">
       <postscript label="Tools for Adobe PostScript" href="postscript.html" description="Tools for Adobe PostScript"/>
     </documentation>
