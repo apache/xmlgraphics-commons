@@ -22,8 +22,8 @@ package org.apache.xmlgraphics.java2d.ps;
 import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.PSGenerator;
@@ -251,7 +251,6 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
     public AbstractPSDocumentGraphics2D(AbstractPSDocumentGraphics2D g) {
         super(g);
     }
-    
 
 }
 

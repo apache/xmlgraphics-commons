@@ -37,7 +37,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.TexturePaint;
-import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
@@ -65,6 +64,8 @@ public class PSGraphics2D extends AbstractGraphics2D {
     private static final AffineTransform IDENTITY_TRANSFORM = new AffineTransform();
     
     private static final boolean DEBUG = false;
+    
+    protected PSGraphics2D rootG2D;
     
     /** the PostScript generator being created */
     protected PSGenerator gen;
@@ -109,6 +110,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
     public PSGraphics2D(PSGraphics2D g) {
         super(g);
 
+        this.rootG2D = (g.rootG2D != null ? g.rootG2D : g);
         setPSGenerator(g.gen);
         this.clippingDisabled = g.clippingDisabled;
         this.fallbackTextHandler = g.fallbackTextHandler;
@@ -171,6 +173,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * this graphics context.
      */
     public Graphics create() {
+        preparePainting();
         return new PSGraphics2D(this);
     }
 
@@ -189,6 +192,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
      */
     public void preparePainting() {
         //nop, used by AbstractPSDocumentGraphics2D
+        if (rootG2D != null) {
+            rootG2D.preparePainting();
+        }
     }
 
     /**
