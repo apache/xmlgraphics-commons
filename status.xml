@@ -25,7 +25,10 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
-		  <action context="Code" dev="JM" type="add" fixes-bug="43120" due-to="Sergey Orlov">
+		  <action context="Code" dev="JM" type="add">
+		    PostScript: Added classes for "BoundingBox" DSC comments.
+		  </action>
+		  <action context="Code" dev="JM" type="fix" fixes-bug="43120" due-to="Sergey Orlov">
 		    Fixed a possible NPE in the TIFF codec (in the TIFFImage constructor).
 		  </action>
 		  <action context="Code" dev="JM" type="add" fixes-bug="42980" due-to="Max Berger">

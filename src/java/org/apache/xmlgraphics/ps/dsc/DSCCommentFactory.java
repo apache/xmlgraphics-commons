@@ -24,14 +24,18 @@ import java.util.Map;
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.dsc.events.DSCComment;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentBeginResource;
+import org.apache.xmlgraphics.ps.dsc.events.DSCCommentBoundingBox;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentDocumentNeededResources;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentDocumentSuppliedResources;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentEndComments;
+import org.apache.xmlgraphics.ps.dsc.events.DSCCommentEndOfFile;
+import org.apache.xmlgraphics.ps.dsc.events.DSCCommentHiResBoundingBox;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentLanguageLevel;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPage;
+import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPageBoundingBox;
+import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPageHiResBoundingBox;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPageResources;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPages;
-import org.apache.xmlgraphics.ps.dsc.events.DSCCommentEndOfFile;
 
 /**
  * Factory for DSCComment subclasses.
@@ -51,6 +55,14 @@ public class DSCCommentFactory {
                 DSCCommentPage.class);
         DSC_FACTORIES.put(DSCConstants.PAGES, 
                 DSCCommentPages.class);
+        DSC_FACTORIES.put(DSCConstants.BBOX, 
+                DSCCommentBoundingBox.class);
+        DSC_FACTORIES.put(DSCConstants.HIRES_BBOX, 
+                DSCCommentHiResBoundingBox.class);
+        DSC_FACTORIES.put(DSCConstants.PAGE_BBOX, 
+                DSCCommentPageBoundingBox.class);
+        DSC_FACTORIES.put(DSCConstants.PAGE_HIRES_BBOX, 
+                DSCCommentPageHiResBoundingBox.class);
         DSC_FACTORIES.put(DSCConstants.LANGUAGE_LEVEL, 
                 DSCCommentLanguageLevel.class);
         DSC_FACTORIES.put(DSCConstants.DOCUMENT_NEEDED_RESOURCES, 
