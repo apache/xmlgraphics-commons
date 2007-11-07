@@ -118,41 +118,45 @@ public class TIFFImageWriter extends AbstractImageWriter {
 
     private TIFFEncodeParam createTIFFEncodeParams(ImageWriterParams params) {
         TIFFEncodeParam encodeParams = new TIFFEncodeParam();
-        if (params.getCompressionMethod() == null) {
-            //PackBits as default
-            encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
-        } else if ("PackBits".equalsIgnoreCase(params.getCompressionMethod())) {
-            encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
-        } else if ("NONE".equalsIgnoreCase(params.getCompressionMethod())) {
+        if (params == null) {
             encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_NONE);
-        } else if ("JPEG".equalsIgnoreCase(params.getCompressionMethod())) {
-            encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_JPEG_TTN2);
-        } else if ("Deflate".equalsIgnoreCase(params.getCompressionMethod())) {
-            encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_DEFLATE);
         } else {
-            throw new UnsupportedOperationException("Compression method not supported: "
-                    + params.getCompressionMethod());
-        }
-        
-        if (params.getResolution() != null) {
-            // Set target resolution
-            float pixSzMM = 25.4f / params.getResolution().floatValue();
-            // num Pixs in 100 Meters
-            int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5); 
-            int denom = 100 * 100;  // Centimeters per 100 Meters;
-            long [] rational = {numPix, denom};
-            TIFFField [] fields = {
-                new TIFFField(TIFFImageDecoder.TIFF_RESOLUTION_UNIT, 
-                              TIFFField.TIFF_SHORT, 1, 
-                              new char[] {(char)3}),
-                new TIFFField(TIFFImageDecoder.TIFF_X_RESOLUTION, 
-                              TIFFField.TIFF_RATIONAL, 1, 
-                              new long[][] {rational}),
-                new TIFFField(TIFFImageDecoder.TIFF_Y_RESOLUTION, 
-                              TIFFField.TIFF_RATIONAL, 1, 
-                              new long[][] {rational}) 
-                    };
-            encodeParams.setExtraFields(fields);
+            if (params.getCompressionMethod() == null) {
+                //PackBits as default
+                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
+            } else if ("PackBits".equalsIgnoreCase(params.getCompressionMethod())) {
+                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
+            } else if ("NONE".equalsIgnoreCase(params.getCompressionMethod())) {
+                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_NONE);
+            } else if ("JPEG".equalsIgnoreCase(params.getCompressionMethod())) {
+                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_JPEG_TTN2);
+            } else if ("Deflate".equalsIgnoreCase(params.getCompressionMethod())) {
+                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_DEFLATE);
+            } else {
+                throw new UnsupportedOperationException("Compression method not supported: "
+                        + params.getCompressionMethod());
+            }
+            
+            if (params.getResolution() != null) {
+                // Set target resolution
+                float pixSzMM = 25.4f / params.getResolution().floatValue();
+                // num Pixs in 100 Meters
+                int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5); 
+                int denom = 100 * 100;  // Centimeters per 100 Meters;
+                long [] rational = {numPix, denom};
+                TIFFField [] fields = {
+                    new TIFFField(TIFFImageDecoder.TIFF_RESOLUTION_UNIT, 
+                                  TIFFField.TIFF_SHORT, 1, 
+                                  new char[] {(char)3}),
+                    new TIFFField(TIFFImageDecoder.TIFF_X_RESOLUTION, 
+                                  TIFFField.TIFF_RATIONAL, 1, 
+                                  new long[][] {rational}),
+                    new TIFFField(TIFFImageDecoder.TIFF_Y_RESOLUTION, 
+                                  TIFFField.TIFF_RATIONAL, 1, 
+                                  new long[][] {rational}) 
+                        };
+                encodeParams.setExtraFields(fields);
+            }
         }
         return encodeParams;
     }
