@@ -31,6 +31,14 @@ import org.apache.xmlgraphics.image.writer.MultiImageWriter;
 public class TIFFImageWriterTest extends TestCase {
 
     public void testJPEGWritingWithoutParams() throws Exception {
+        //This used to generate a NPE when no ImageWriterParams were not set
+        OutputStream out = new NullOutputStream();
+        org.apache.xmlgraphics.image.writer.ImageWriter imageWriter = new TIFFImageWriter();
+        BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_BYTE_GRAY);
+        imageWriter.writeImage(image, out);
+    }
+    
+    public void testJPEGWritingWithoutJPEGParams() throws Exception {
         //This used to generate a NPE because the JPEG encoding params were not set
         OutputStream out = new NullOutputStream();
         org.apache.xmlgraphics.image.writer.ImageWriter imageWriter = new TIFFImageWriter();
