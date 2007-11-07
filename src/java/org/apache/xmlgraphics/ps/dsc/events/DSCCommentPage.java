@@ -59,7 +59,7 @@ public class DSCCommentPage extends AbstractDSCComment {
     }
 
     /**
-     * Resturns the name of the page.
+     * Returns the name of the page.
      * @return the page name
      */
     public String getPageName() {
