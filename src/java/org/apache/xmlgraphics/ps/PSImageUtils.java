@@ -494,7 +494,6 @@ public class PSImageUtils {
         }
         CountingOutputStream cout = new CountingOutputStream(out);
         encoder.writeTo(cout);
-        System.out.println("Bitmap size in bytes: " + cout.getByteCount());
         if (out instanceof Finalizable) {
             ((Finalizable)out).finalizeStream();
         } else {
