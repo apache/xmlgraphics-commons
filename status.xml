@@ -25,6 +25,13 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="fix">
+		    PostScript: Fixed %%EOF checking for nested documents.
+		  </action>
+		  <action context="Code" dev="JM" type="fix">
+		    PostScript: Improved robustness of DSC parsing (multi-line comments with no value
+		    on the first line don't cause crashes anymore, fallback for unparsable DSC comments).
+		  </action>
 		  <action context="Code" dev="JM" type="add">
 		    PostScript: Added classes for "BoundingBox" DSC comments.
 		  </action>

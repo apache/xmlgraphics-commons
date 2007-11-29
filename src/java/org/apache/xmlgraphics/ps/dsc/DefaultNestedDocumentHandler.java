@@ -50,21 +50,25 @@ public class DefaultNestedDocumentHandler implements DSCParserConstants, NestedD
             DSCComment comment = event.asDSCComment();
             if (DSCConstants.BEGIN_DOCUMENT.equals(comment.getName())) {
                 comment.generate(gen);
+                parser.setCheckEOF(false);
                 comment = parser.nextDSCComment(DSCConstants.END_DOCUMENT, gen);
                 if (comment == null) {
                     throw new DSCException("File is not DSC-compliant: Didn't find an " 
                             + DSCConstants.END_DOCUMENT);
                 }
                 comment.generate(gen);
+                parser.setCheckEOF(true);
                 parser.next();
             } else if (DSCConstants.BEGIN_DATA.equals(comment.getName())) {
                 comment.generate(gen);
+                parser.setCheckEOF(false);
                 comment = parser.nextDSCComment(DSCConstants.END_DATA, gen);
                 if (comment == null) {
                     throw new DSCException("File is not DSC-compliant: Didn't find an " 
                             + DSCConstants.END_DATA);
                 }
                 comment.generate(gen);
+                parser.setCheckEOF(true);
                 parser.next();
             } 
         }
