@@ -25,6 +25,11 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="update">
+		    PostScript: Improved PSImageUtils by introducing the ImageEncoder interface and
+		    allowing for streams instead of byte arrays for data transfer which can lower
+		    memory consumption.
+		  </action>
 		  <action context="Code" dev="JM" type="fix">
 		    PostScript: Fixed %%EOF checking for nested documents.
 		  </action>
