@@ -46,6 +46,7 @@ public class DSCParser implements DSCParserConstants {
     private InputStream in;
     private BufferedReader reader;
     private boolean eofFound = false;
+    private boolean checkEOF = true;
     private DSCEvent currentEvent;
     private DSCEvent nextEvent;
     private DSCFilter filter;
@@ -122,16 +123,19 @@ public class DSCParser implements DSCParserConstants {
     
     private DSCComment parseDSCLine(String line) throws IOException, DSCException {
         int colon = line.indexOf(':');
-        String name, value;
+        String name;
+        String value = "";
         if (colon > 0) {
             name = line.substring(2, colon);
             int startOfValue = colon + 1;
-            if (isWhitespace(line.charAt(startOfValue))) {
-                startOfValue++;
-            }
-            value = line.substring(startOfValue).trim();
-            if (value.equals(DSCConstants.ATEND.toString())) {
-                return new DSCAtend(name);
+            if (startOfValue < line.length()) {
+                if (isWhitespace(line.charAt(startOfValue))) {
+                    startOfValue++;
+                }
+                value = line.substring(startOfValue).trim();
+                if (value.equals(DSCConstants.ATEND.toString())) {
+                    return new DSCAtend(name);
+                }
             }
             String nextLine;
             while (true) {
@@ -155,13 +159,16 @@ public class DSCParser implements DSCParserConstants {
     private DSCComment parseDSCComment(String name, String value) {
         DSCComment parsed = DSCCommentFactory.createDSCCommentFor(name);
         if (parsed != null) {
-            parsed.parseValue(value);
-            return parsed;
-        } else {
-            UnparsedDSCComment unparsed = new UnparsedDSCComment(name);
-            unparsed.parseValue(value);
-            return unparsed;
+            try {
+                parsed.parseValue(value);
+                return parsed;
+            } catch (Exception e) {
+                //ignore and fall back to unparsed DSC comment
+            }
         }
+        UnparsedDSCComment unparsed = new UnparsedDSCComment(name);
+        unparsed.parseValue(value);
+        return unparsed;
     }
 
     /**
@@ -190,7 +197,9 @@ public class DSCParser implements DSCParserConstants {
                 handler.line(getLine());
                 break;
             case EOF:
-                this.eofFound = true;
+                if (isCheckEOF()) {
+                    this.eofFound = true;
+                }
                 handler.endDocument();
                 break;
             default:
@@ -267,7 +276,7 @@ public class DSCParser implements DSCParserConstants {
             }
             if (line.startsWith("%%")) {
                 DSCComment comment = parseDSCLine(line);
-                if (comment.getEventType() == EOF) {
+                if (comment.getEventType() == EOF && isCheckEOF()) {
                     this.eofFound = true;
                 }
                 this.nextEvent = comment;
@@ -380,6 +389,23 @@ public class DSCParser implements DSCParserConstants {
      */
     public void setNestedDocumentHandler(NestedDocumentHandler handler) {
         this.nestedDocumentHandler = handler;
+    }
+
+    /**
+     * Tells the parser whether to check for content after the EOF comment.
+     * This can be disabled to skip nested documents.
+     * @param value true if the check is enabled
+     */
+    public void setCheckEOF(boolean value) {
+        this.checkEOF = value;
+    }
+    
+    /**
+     * Indicates whether the parser is configured to check for content after the EOF comment.
+     * @return true if the check is enabled.
+     */
+    public boolean isCheckEOF() {
+        return this.checkEOF;
     }
 
 }
