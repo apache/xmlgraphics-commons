@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
@@ -519,14 +520,40 @@ public class PSImageUtils {
         }
         
         private void writeRGBTo(OutputStream out) throws IOException {
-            int[] tmpMap = getRGB(img, 0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-            // Should take care of the ColorSpace and bitsPerPixel
-            for (int y = 0, my = img.getHeight(); y < my; y++) {
-                for (int x = 0, mx = img.getWidth(); x < mx; x++) {
-                    int p = tmpMap[y * mx + x];
-                    int r = (p >> 16) & 0xFF;
-                    int g = (p >> 8) & 0xFF;
-                    int b = (p) & 0xFF;
+            Raster raster = img.getData();
+            Object data;
+            int nbands = raster.getNumBands();
+            int dataType = raster.getDataBuffer().getDataType();
+            switch (dataType) {
+            case DataBuffer.TYPE_BYTE:
+                data = new byte[nbands];
+                break;
+            case DataBuffer.TYPE_USHORT:
+                data = new short[nbands];
+                break;
+            case DataBuffer.TYPE_INT:
+                data = new int[nbands];
+                break;
+            case DataBuffer.TYPE_FLOAT:
+                data = new float[nbands];
+                break;
+            case DataBuffer.TYPE_DOUBLE:
+                data = new double[nbands];
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown data buffer type: "+
+                                                   dataType);
+            }
+            
+            ColorModel colorModel = img.getColorModel();
+            int w = img.getWidth();
+            int h = img.getHeight();
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    int rgb = colorModel.getRGB(raster.getDataElements(x, y, data));
+                    int r = (rgb >> 16) & 0xFF;
+                    int g = (rgb >> 8) & 0xFF;
+                    int b = (rgb) & 0xFF;
                     out.write(r);
                     out.write(g);
                     out.write(b);
@@ -539,9 +566,10 @@ public class PSImageUtils {
             ColorSpace cs = cm.getColorSpace();
             int tilesX = img.getNumXTiles();
             int tilesY = img.getNumYTiles();
+            int colorComponents = cm.getNumColorComponents();
+            int components = cm.getNumComponents();
             boolean multiTile = (tilesX != 1 || tilesY != 1); 
-            if (cm.getNumComponents() == 1 && cs.getType() == ColorSpace.TYPE_GRAY && !multiTile) {
-                System.out.println("gray");
+            if (components == 1 && cs.getType() == ColorSpace.TYPE_GRAY && !multiTile) {
                 Raster raster = img.getTile(0, 0);
                 DataBuffer buffer = raster.getDataBuffer();
                 if (buffer instanceof DataBufferByte) {
@@ -555,6 +583,19 @@ public class PSImageUtils {
                 Raster raster = img.getTile(0, 0);
                 DataBuffer buffer = raster.getDataBuffer();
                 if (buffer instanceof DataBufferByte) {
+                    DataBufferByte byteBuffer = (DataBufferByte)buffer;
+                    out.write(byteBuffer.getData());
+                    return true;
+                }
+            }
+            if (!multiTile && cm instanceof ComponentColorModel
+                    && components == 3 && colorComponents == 3) {
+                ComponentColorModel ccm = (ComponentColorModel)cm;
+                Raster raster = img.getTile(0, 0);
+                DataBuffer buffer = raster.getDataBuffer();
+                if (buffer instanceof DataBufferByte
+                        && buffer.getOffset() == 0
+                        && buffer.getNumBanks() == 1) {
                     DataBufferByte byteBuffer = (DataBufferByte)buffer;
                     out.write(byteBuffer.getData());
                     return true;
@@ -575,24 +616,6 @@ public class PSImageUtils {
             return null; //No implicit filters with RenderedImage instances
         }
         
-    }
-    
-    private static byte[] getBitmapBytes(RenderedImage img) {
-        int[] tmpMap = getRGB(img, 0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth());
-        // Should take care of the ColorSpace and bitsPerPixel
-        byte[] bitmaps = new byte[img.getWidth() * img.getHeight() * 3];
-        for (int y = 0, my = img.getHeight(); y < my; y++) {
-            for (int x = 0, mx = img.getWidth(); x < mx; x++) {
-                int p = tmpMap[y * mx + x];
-                int r = (p >> 16) & 0xFF;
-                int g = (p >> 8) & 0xFF;
-                int b = (p) & 0xFF;
-                bitmaps[3 * (y * mx + x)] = (byte)(r & 0xFF);
-                bitmaps[3 * (y * mx + x) + 1] = (byte)(g & 0xFF);
-                bitmaps[3 * (y * mx + x) + 2] = (byte)(b & 0xFF);
-            }
-        }
-        return bitmaps;
     }
     
     /**
