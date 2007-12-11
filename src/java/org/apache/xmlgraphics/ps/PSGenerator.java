@@ -22,8 +22,9 @@ package org.apache.xmlgraphics.ps;
 import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
-import java.io.OutputStream;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -436,24 +437,45 @@ public class PSGenerator {
                      matrix[2], matrix[3], 
                      matrix[4], matrix[5]);
     }
-                                
+
+    /**
+     * Formats a transformation matrix.
+     * @param at the AffineTransform with the matrix
+     * @return the formatted transformation matrix (example: "[1 0 0 1 0 0]")
+     */
+    public String formatMatrix(AffineTransform at) {
+        double[] matrix = new double[6];
+        at.getMatrix(matrix);
+        return "[" + formatDouble5(matrix[0]) + " "
+            + formatDouble5(matrix[1]) + " "
+            + formatDouble5(matrix[2]) + " "
+            + formatDouble5(matrix[3]) + " "
+            + formatDouble5(matrix[4]) + " "
+            + formatDouble5(matrix[5]) + "]";
+    }
+    
     /**
      * Concats the transformations matric.
      * @param at the AffineTransform whose matrix to use
      * @exception IOException In case of an I/O problem
      */
     public void concatMatrix(AffineTransform at) throws IOException {
-        double[] matrix = new double[6];
-        at.getMatrix(matrix);
         getCurrentState().concatMatrix(at);
-        writeln("[" + formatDouble5(matrix[0]) + " "
-                + formatDouble5(matrix[1]) + " "
-                + formatDouble5(matrix[2]) + " "
-                + formatDouble5(matrix[3]) + " "
-                + formatDouble5(matrix[4]) + " "
-                + formatDouble5(matrix[5]) + "] concat");
+        writeln(formatMatrix(at) + " concat");
     }
                
+    /**
+     * Formats a Rectangle2D to an array.
+     * @param rect the rectangle
+     * @return the formatted array
+     */
+    public String formatRectangleToArray(Rectangle2D rect) {
+        return "[" + formatDouble(rect.getX()) + " "
+        + formatDouble(rect.getY()) + " "
+        + formatDouble(rect.getWidth()) + " "
+        + formatDouble(rect.getHeight()) + "]";
+    }
+    
     /**
      * Adds a rectangle to the current path.
      * @param x upper left corner
@@ -641,5 +663,5 @@ public class PSGenerator {
     public boolean isResourceSupplied(PSResource res) {
         return getResourceTracker().isResourceSupplied(res);
     }
-    
+
 }
