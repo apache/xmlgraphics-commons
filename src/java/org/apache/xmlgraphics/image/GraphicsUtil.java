@@ -1084,4 +1084,28 @@ public class GraphicsUtil {
             }
 */
 
+    /**
+     * Extracts an alpha raster from a RenderedImage. The method tries to avoid copying data
+     * unnecessarily by checking if the RenderedImage is a BufferedImage which offers suitable
+     * direct methods.
+     * @param image the image
+     * @return the alpha raster
+     */
+    public static Raster getAlphaRaster(RenderedImage image) {
+        ColorModel cm = image.getColorModel();
+        if (!cm.hasAlpha() || cm.getTransparency() != ColorModel.TRANSLUCENT) {
+            throw new IllegalStateException("Image doesn't have an alpha channel");
+        }
+        Raster alpha;
+        if (image instanceof BufferedImage) {
+            //Optimization possible with BufferedImage (No copying)
+            alpha = ((BufferedImage)image).getAlphaRaster();
+        } else {
+            WritableRaster wraster = GraphicsUtil.makeRasterWritable(image.getData());
+            alpha = image.getColorModel().getAlphaRaster(wraster);
+        }
+        return alpha;
+    }
+    
+    
 }
