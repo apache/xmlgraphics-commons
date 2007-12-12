@@ -22,31 +22,20 @@ package org.apache.xmlgraphics.java2d.ps;
 import java.io.IOException;
 
 /**
- * Interface which the PSGraphics2D class delegates text painting to.
+ * Interface which the Graphics2D class delegates text painting to for Postscript.
  */
-public interface TextHandler {
-
-    /**
-     * Draw some text.
-     * @param text the text to paint
-     * @param x the x-coordinate where the <code>String</code> should be rendered
-     * @param y the y-coordinate where the <code>String</code> should be rendered
-     * @throws IOException In case of an I/O error
-     */
-    public void drawString(String text, float x, float y) throws IOException;
-
+public interface PSTextHandler extends org.apache.xmlgraphics.java2d.TextHandler {
     /**
      * Is called by when the "Setup" or "Prolog" of the PostScript document is generated. 
      * Subclasses can do font registration, for example.
      * @throws IOException In case of an I/O error
      */
-    public void writeSetup() throws IOException;
+    void writeSetup() throws IOException;
 
     /**
      * Is called by when a "PageSetup" section of the PostScript document is generated. 
      * Subclasses can do some font initialization if necessary.
      * @throws IOException In case of an I/O error
      */
-    public void writePageSetup() throws IOException;
-    
+    void writePageSetup() throws IOException;
 }
