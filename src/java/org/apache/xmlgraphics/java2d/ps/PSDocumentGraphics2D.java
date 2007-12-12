@@ -104,8 +104,8 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.BEGIN_SETUP);
         PSProcSets.writeStdProcSet(gen);
         PSProcSets.writeEPSProcSet(gen);
-        if (customTextHandler != null) {
-            customTextHandler.writeSetup();
+        if (customTextHandler instanceof PSTextHandler) {
+            ((PSTextHandler)customTextHandler).writeSetup();
         }
         gen.writeDSCComment(DSCConstants.END_SETUP);
     }
@@ -121,8 +121,8 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeln("/PageSize [" + width + " " + height + "]");
         gen.writeln("/ImagingBBox null");
         gen.writeln(">> setpagedevice");
-        if (customTextHandler != null) {
-            customTextHandler.writePageSetup();
+        if (customTextHandler instanceof PSTextHandler) {
+            ((PSTextHandler)customTextHandler).writePageSetup();
         }
     }
     

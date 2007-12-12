@@ -15,37 +15,30 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: $ */
 
-package org.apache.xmlgraphics.java2d.ps;
+package org.apache.xmlgraphics.java2d;
 
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
-import java.io.IOException;
 
 /**
  * Default TextHandler implementation which paints text using graphics primitives (shapes). 
  */
 public class StrokingTextHandler implements TextHandler {
 
-    private PSGraphics2D g2d;
+    private AbstractGraphics2D g2d;
     
-    public StrokingTextHandler(PSGraphics2D g2d) {
+    /**
+     * Main constructor
+     * @param g2d a graphics 2d implementation
+     */
+    public StrokingTextHandler(AbstractGraphics2D g2d) {
         this.g2d = g2d;
     }
     
-    /** @see org.apache.xmlgraphics.java2d.ps.TextHandler#writeSetup() */
-    public void writeSetup() throws IOException {
-        //nop
-    }
-
-    /** @see org.apache.xmlgraphics.java2d.ps.TextHandler#writePageSetup() */
-    public void writePageSetup() throws IOException {
-        //nop
-    }
-
-    /** @see TextHandler#drawString(java.lang.String, float, float) */
+    /** {@inheritDoc} */
     public void drawString(String text, float x, float y) {
         java.awt.Font awtFont = g2d.getFont();
         FontRenderContext frc = g2d.getFontRenderContext();
@@ -53,5 +46,4 @@ public class StrokingTextHandler implements TextHandler {
         Shape glyphOutline = gv.getOutline(x, y);
         g2d.fill(glyphOutline);
     }
-
 }

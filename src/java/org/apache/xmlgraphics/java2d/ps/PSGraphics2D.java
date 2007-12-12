@@ -47,6 +47,8 @@ import java.io.IOException;
 
 import org.apache.xmlgraphics.java2d.AbstractGraphics2D;
 import org.apache.xmlgraphics.java2d.GraphicContext;
+import org.apache.xmlgraphics.java2d.StrokingTextHandler;
+import org.apache.xmlgraphics.java2d.TextHandler;
 import org.apache.xmlgraphics.ps.PSGenerator;
 import org.apache.xmlgraphics.ps.PSImageUtils;
 
@@ -151,7 +153,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
     }
 
     /**
-     * Sets a custom TextHandler implementation that is reponsible for painting text. The default
+     * Sets a custom TextHandler implementation that is responsible for painting text. The default
      * TextHandler paints all text as shapes. A custom implementation can implement text painting
      * using text painting operators.
      * @param handler the custom TextHandler implementation

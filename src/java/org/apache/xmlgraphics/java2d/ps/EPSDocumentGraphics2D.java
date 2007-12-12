@@ -70,8 +70,8 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.BEGIN_PROLOG);
         PSProcSets.writeStdProcSet(gen);
         PSProcSets.writeEPSProcSet(gen);
-        if (customTextHandler != null) {
-            customTextHandler.writeSetup();
+        if (customTextHandler instanceof PSTextHandler) {
+            ((PSTextHandler)customTextHandler).writeSetup();
         }
         gen.writeDSCComment(DSCConstants.END_PROLOG);
     }
@@ -83,8 +83,8 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.PAGE_BBOX, new Object[]
                 {ZERO, ZERO, new Integer(width), new Integer(height)});
         gen.writeDSCComment(DSCConstants.BEGIN_PAGE_SETUP);
-        if (customTextHandler != null) {
-            customTextHandler.writePageSetup();
+        if (customTextHandler instanceof PSTextHandler) {
+            ((PSTextHandler)customTextHandler).writePageSetup();
         }
     }
     
