@@ -914,7 +914,7 @@ public abstract class SeekableStream extends InputStream implements DataInput {
      * @exception  EOFException            if this stream reaches the end before
      *               reading all the bytes.
      * @exception  IOException             if an I/O error occurs.
-     * @exception  UTFDataFormatException  if the bytes do not represent 
+     * @exception  java.io.UTFDataFormatException  if the bytes do not represent 
      *               valid UTF-8 encoding of a Unicode string.
      */
     public final String readUTF() throws IOException {
