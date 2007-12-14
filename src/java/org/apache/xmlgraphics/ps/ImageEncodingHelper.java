@@ -97,6 +97,17 @@ public class ImageEncodingHelper {
     }
     
     private void writeRGBTo(OutputStream out) throws IOException {
+        encodeRenderedImageAsRGB(image, out);
+    }
+    
+    /**
+     * Writes a RenderedImage to an OutputStream by converting it to RGB.
+     * @param image the image
+     * @param out the OutputStream to write the pixels to
+     * @throws IOException if an I/O error occurs
+     */
+    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out)
+                throws IOException {
         Raster raster = image.getData();
         Object data;
         int nbands = raster.getNumBands();
