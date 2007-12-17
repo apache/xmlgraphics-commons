@@ -33,25 +33,44 @@ import java.io.InputStream;
  */
 public class SubInputStream extends FilterInputStream {
 
-    /** Indicates the number of bytes remaning to be read from the underlying InputStream. */
+    /** Indicates the number of bytes remaining to be read from the underlying InputStream. */
     private long bytesToRead;
+    
+    /**
+     * Indicates whether the underlying stream should be closed when the {@link #close()} method
+     * is called.
+     */ 
+    private boolean closeUnderlying = false;
     
     /**
      * Creates a new SubInputStream.
      * @param in the InputStream to read from
      * @param maxLen the maximum number of bytes to read from the underlying InputStream until
      *               the end-of-file is signalled.
+     * @param closeUnderlying true if the underlying stream should be closed when the
+     *               {@link #close()} method is called.
      */
-    public SubInputStream(InputStream in, long maxLen) {
+    public SubInputStream(InputStream in, long maxLen, boolean closeUnderlying) {
         super(in);
         this.bytesToRead = maxLen;
+        this.closeUnderlying = closeUnderlying;
     }
 
-    /** @see java.io.InputStream#read() */
+    /**
+     * Creates a new SubInputStream. The underlying stream is not closed, when close() is called.
+     * @param in the InputStream to read from
+     * @param maxLen the maximum number of bytes to read from the underlying InputStream until
+     *               the end-of-file is signalled.
+     */
+    public SubInputStream(InputStream in, long maxLen) {
+        this(in, maxLen, false);
+    }
+
+    /** {@inheritDoc} */
     public int read() throws IOException {
         if (bytesToRead > 0) {
             int result = super.read();
-            if (result <= 0) {
+            if (result >= 0) {
                 bytesToRead--;
                 return result;
             } else {
@@ -62,7 +81,7 @@ public class SubInputStream extends FilterInputStream {
         }
     }
     
-    /** @see java.io.InputStream#read(byte[], int, int) */
+    /** {@inheritDoc} */
     public int read(byte[] b, int off, int len) throws IOException {
         if (bytesToRead == 0) {
             return -1;
@@ -77,7 +96,7 @@ public class SubInputStream extends FilterInputStream {
         return result;
     }
     
-    /** @see java.io.InputStream#skip(long) */
+    /** {@inheritDoc} */
     public long skip(long n) throws IOException {
         long effRead = Math.min(bytesToRead, n);
         long result = super.skip(effRead);
@@ -85,9 +104,11 @@ public class SubInputStream extends FilterInputStream {
         return result;
     }
 
-    /** @see java.io.InputStream#close() */
+    /** {@inheritDoc} */
     public void close() throws IOException {
-        //Don't close the underlying InputStream!!!
         this.bytesToRead = 0;
+        if (this.closeUnderlying) {
+            super.close();
+        }
     }
 }
