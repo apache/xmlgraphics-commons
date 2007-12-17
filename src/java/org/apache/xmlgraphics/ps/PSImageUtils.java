@@ -74,7 +74,7 @@ public class PSImageUtils {
                 }
             }
         };
-        writeImage(encoder, imgDim, imgDescription, targetRect, colorSpace, false, gen);
+        writeImage(encoder, imgDim, imgDescription, targetRect, colorSpace, 8, false, gen);
     }
     
     /**
@@ -84,6 +84,7 @@ public class PSImageUtils {
      * @param imgDescription the name of the image
      * @param targetRect the target rectangle to place the image in
      * @param colorSpace the color space of the image
+     * @param bitsPerComponent the number of bits per component
      * @param invertImage true if the image shall be inverted
      * @param gen the PostScript generator
      * @throws IOException In case of an I/O exception
@@ -91,7 +92,7 @@ public class PSImageUtils {
     public static void writeImage(ImageEncoder encoder,
             Dimension imgDim, String imgDescription,
             Rectangle2D targetRect, 
-            ColorSpace colorSpace, boolean invertImage,
+            ColorSpace colorSpace, int bitsPerComponent, boolean invertImage,
             PSGenerator gen) throws IOException {
         gen.saveGraphicsState();
         translateAndScale(gen, null, targetRect);
@@ -117,7 +118,7 @@ public class PSImageUtils {
         }
         PSDictionary imageDict = new PSDictionary();
         imageDict.put("/DataSource", "Data");
-        imageDict.put("/BitsPerComponent", Integer.toString(8));
+        imageDict.put("/BitsPerComponent", Integer.toString(bitsPerComponent));
         writeImageCommand(imageDict, imgDim, colorSpace, invertImage, gen);
         /* the following two lines could be enabled if something still goes wrong
          * gen.write("Data closefile");

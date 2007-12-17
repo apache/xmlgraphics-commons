@@ -37,6 +37,7 @@ public class ImageFormGenerator extends FormGenerator {
     //Mode 2 (ImageEncoder)
     private ImageEncoder encoder;
     private ColorSpace colorSpace;
+    private int bitsPerComponent = 8;
     
     private boolean invertImage;
     private Dimension pixelDimensions;
@@ -67,16 +68,36 @@ public class ImageFormGenerator extends FormGenerator {
      * @param dimensionsPx the form's dimensions in pixels
      * @param encoder the image encoder
      * @param colorSpace the target color space
+     * @param bitsPerComponent the bits per component
      * @param invertImage true if the image shall be inverted
      */
     public ImageFormGenerator(String formName, String title,
             Dimension2D dimensions, Dimension dimensionsPx,
-            ImageEncoder encoder, ColorSpace colorSpace, boolean invertImage) {
+            ImageEncoder encoder,
+            ColorSpace colorSpace, int bitsPerComponent, boolean invertImage) {
         super(formName, title, dimensions);
+        this.pixelDimensions = dimensionsPx;
         this.encoder = encoder;
         this.colorSpace = colorSpace;
+        this.bitsPerComponent = bitsPerComponent;
         this.invertImage = invertImage;
-        this.pixelDimensions = dimensionsPx;
+    }
+    
+    /**
+     * Main constructor.
+     * @param formName the form's name
+     * @param title the form's title or null
+     * @param dimensions the form's dimensions in units (usually points)
+     * @param dimensionsPx the form's dimensions in pixels
+     * @param encoder the image encoder
+     * @param colorSpace the target color space
+     * @param invertImage true if the image shall be inverted
+     */
+    public ImageFormGenerator(String formName, String title,
+            Dimension2D dimensions, Dimension dimensionsPx,
+            ImageEncoder encoder,
+            ColorSpace colorSpace, boolean invertImage) {
+        this(formName, title, dimensions, dimensionsPx, encoder, colorSpace, 8, invertImage);
     }
     
     /**
@@ -121,13 +142,13 @@ public class ImageFormGenerator extends FormGenerator {
         if (this.image != null) {
             PSImageUtils.writeImageCommand(this.image, imageDict, gen);
         } else {
-            imageDict.put("/BitsPerComponent", Integer.toString(8));
+            imageDict.put("/BitsPerComponent", Integer.toString(this.bitsPerComponent));
             PSImageUtils.writeImageCommand(imageDict,
                     this.pixelDimensions, this.colorSpace, this.invertImage,
                     gen);
         }
     }
-
+    
     /** {@inheritDoc} */
     protected void generateAdditionalDataStream(PSGenerator gen) throws IOException {
         gen.writeln("/" + getDataName() + " currentfile");
