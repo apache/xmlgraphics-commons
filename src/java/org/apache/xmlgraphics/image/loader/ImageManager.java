@@ -72,6 +72,14 @@ public class ImageManager {
     }
     
     /**
+     * Returns the ImageContext in use by the ImageManager.
+     * @return the ImageContext
+     */
+    public ImageContext getImageContext() {
+        return this.imageContext;
+    }
+    
+    /**
      * Returns the ImageCache in use by the ImageManager.
      * @return the ImageCache
      */
