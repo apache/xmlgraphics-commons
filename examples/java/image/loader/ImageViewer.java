@@ -46,7 +46,7 @@ public class ImageViewer {
     private ImageManager imageManager;
     
     public ImageViewer() {
-        //These two are set up for the whole application
+        //The ImageManager is set up for the whole application
         this.imageManager = new ImageManager(new DefaultImageContext());
     }
     
