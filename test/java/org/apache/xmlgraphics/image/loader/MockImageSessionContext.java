@@ -20,46 +20,18 @@
 package org.apache.xmlgraphics.image.loader;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext;
+import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
 
 /**
  * Mock implementation for testing.
  */
-public class MockImageSessionContext extends AbstractImageSessionContext {
+public class MockImageSessionContext extends DefaultImageSessionContext {
 
-    /** {@inheritDoc} */
-    public ImageContext getParentContext() {
-        return MockImageContext.getInstance();
+    public MockImageSessionContext() {
+        super(MockImageContext.getInstance(), new File("./test/images/"));
     }
-
-    /** {@inheritDoc} */
-    protected Source resolveURI(String uri) {
-        try {
-            URL url = new URL(uri);
-            return new StreamSource(url.openStream(), url.toExternalForm());
-        } catch (MalformedURLException e) {
-            File baseDir = new File("./test/images/");
-            if (!baseDir.isDirectory()) {
-                throw new IllegalStateException("Base directory for test was not found.");
-            }
-            File f = new File(baseDir, uri);
-            if (f.isFile()) {
-                return new StreamSource(f);
-            } else {
-                return null;
-            }
-        } catch (IOException ioe) {
-            return null;
-        }
-    }
-
+    
     /** {@inheritDoc} */
     public float getTargetResolution() {
         return 300;
