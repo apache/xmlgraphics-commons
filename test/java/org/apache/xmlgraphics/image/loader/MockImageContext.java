@@ -19,7 +19,6 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-
 /**
  * Mock implementation for testing.
  */
