@@ -22,13 +22,12 @@ package org.apache.xmlgraphics.image.loader.impl;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.RenderedImage;
 import java.util.Map;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
-import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
 
 /**
@@ -48,25 +47,20 @@ public class ImageConverterBitmap2G2D extends AbstractImageConverter {
             }
 
             public void paint(Graphics2D g2d, Rectangle2D area) {
-                ImageSize imageSize = rendImage.getSize();
+                RenderedImage ri = rendImage.getRenderedImage();
                 double w = area.getWidth();
                 double h = area.getHeight();
 
                 AffineTransform at = new AffineTransform();
-                //Fit in paint area
-                Dimension2D sizePt = imageSize.getDimensionPt();
-                double sx = w / sizePt.getWidth();
-                double sy = h / sizePt.getHeight();
-                if (sx != 1.0 || sy != 1.0) {
-                    at.scale(sx, sy);
-                }
+                at.translate(area.getX(), area.getY());
                 //Scale image to fit
-                sx = w / imageSize.getWidthPx();
-                sy = h / imageSize.getHeightPx();
+                double sx, sy;
+                sx = w / ri.getWidth();
+                sy = h / ri.getHeight();
                 if (sx != 1.0 || sy != 1.0) {
                     at.scale(sx, sy);
                 }
-                g2d.drawRenderedImage(rendImage.getRenderedImage(), at);
+                g2d.drawRenderedImage(ri, at);
             }
             
         };
