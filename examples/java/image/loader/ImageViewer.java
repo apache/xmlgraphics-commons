@@ -27,7 +27,6 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.xmlgraphics.image.loader.ImageContext;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
@@ -44,19 +43,17 @@ import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
  */
 public class ImageViewer {
 
-    private ImageContext imageContext;
     private ImageManager imageManager;
     
     public ImageViewer() {
         //These two are set up for the whole application
-        this.imageContext = new DefaultImageContext();
-        this.imageManager = new ImageManager(this.imageContext);
+        this.imageManager = new ImageManager(new DefaultImageContext());
     }
     
     public void display(File f) throws IOException {
         //The ImageSessionContext might for each processing run
         ImageSessionContext sessionContext = new DefaultImageSessionContext(
-                this.imageContext, null);
+                this.imageManager.getImageContext(), null);
         
         //Construct URI from filename
         String uri = f.toURI().toASCIIString();
@@ -114,7 +111,7 @@ public class ImageViewer {
         
         ImageSize size = new ImageSize();
         size.setSizeInMillipoints(dim.width, dim.height);
-        size.setResolution(imageContext.getSourceResolution());
+        size.setResolution(imageManager.getImageContext().getSourceResolution());
         size.calcPixelsFromSize();
         
         ImageInfo info = new ImageInfo(null, null);
