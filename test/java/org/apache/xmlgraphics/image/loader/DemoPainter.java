@@ -35,6 +35,7 @@ public class DemoPainter implements Graphics2DImagePainter {
     }
 
     public void paint(Graphics2D g2d, Rectangle2D area) {
+        g2d.translate(area.getX(), area.getY());
         double w = area.getWidth();
         double h = area.getHeight();
 
