@@ -16,11 +16,11 @@
   limitations under the License.
 -->
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
-<document> 
-  <header> 
-    <title>Image Loader Framework</title> 
+<document>
+  <header>
+    <title>Image Loader Framework</title>
   </header>
-  <body> 
+  <body>
     <section id="overview">
       <title>Overview</title>
       <p>
@@ -209,6 +209,19 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
           the flavor array.
         </note>
       </section>
+    </section>
+    <section id="tipsntricks">
+      <title>Tips &amp; Tricks</title>
+      <p>
+        If you are loading bitmap images and you get an error like
+        <code>"Cannot load image (no suitable loader/converter combination available) for
+        myimage.tif (image/tiff)</code>,
+        you maybe be missing the necessary ImageIO codec to decode the image. A number of
+        well-written codecs can be found in
+        <a href="https://jai-imageio.dev.java.net/">JAI Image I/O Tools Project</a>. Just download
+        the distribution and add the JAR to the classpath. ImageIO will automatically pick up
+        the new codecs and they will subsequently be available to the image framework.
+      </p>
     </section>
     <section id="spi">
       <title>Service Provider Interface (SPI, Plug-ins)</title>
