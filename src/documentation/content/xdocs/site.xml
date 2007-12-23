@@ -39,6 +39,7 @@ See http://forrest.apache.org/docs/linking.html for more info
     <asf-thanks label="ASF Thanks" href="http://www.apache.org/foundation/thanks.html"/>"
     <documentation label="Documentation">
       <postscript label="Tools for Adobe PostScript" href="postscript.html" description="Tools for Adobe PostScript"/>
+      <image-loader label="Image Loader Framework" href="image-loader.html" description="Image Loader Framework"/>
     </documentation>
     <information label="Information">
       <mail label="Mailing Lists" href="http://xmlgraphics.apache.org/mail.html" description="Information on Mailing Lists"/>
