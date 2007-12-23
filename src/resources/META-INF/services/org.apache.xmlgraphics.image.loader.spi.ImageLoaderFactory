@@ -1,0 +1,4 @@
+org.apache.xmlgraphics.image.loader.impl.imageio.ImageLoaderFactoryImageIO
+org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryRaw
+org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryRawCCITTFax
+org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryEPS

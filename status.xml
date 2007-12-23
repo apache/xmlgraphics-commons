@@ -26,6 +26,10 @@
 	<changes>
 		<release version="Trunk" date="n/a">
 		  <action context="Code" dev="JM" type="add">
+		    The package org.apache.xmlgraphics.image.loader was added. It contains a general
+		    image loading framework for various image formats (bitmap &amp; vector).
+		  </action>
+		  <action context="Code" dev="JM" type="add">
 		    XMP: Added support for structured properties.
 		  </action>
 		  <action context="Code" dev="JM" type="fix">

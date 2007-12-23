@@ -321,8 +321,12 @@
         </fileset>
       </classpath>
     </javac>
-    <copy todir="${build.dir}/test-classes">
+    <copy todir="${build.dir}/test-classes" includeEmptyDirs="false">
       <fileset dir="${basedir}/test/resources"/>
+      <fileset dir="${basedir}/test/java">
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.html"/>
+      </fileset>
     </copy>
   </target>
 
@@ -340,7 +344,15 @@
           <include name="${name}-${version}.jar"/>
         </fileset>
       </classpath>
+      <!--
       <test name="org.apache.xmlgraphics.StandardTestSuite" todir="${build.dir}/test-reports"/>
+      -->
+      <batchtest fork="${junit.fork}" todir="${build.dir}/test-reports">
+        <fileset dir="${basedir}/test/java">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/*TestSuite.java"/>
+        </fileset>
+      </batchtest>
     </junit>
   </target>
 
