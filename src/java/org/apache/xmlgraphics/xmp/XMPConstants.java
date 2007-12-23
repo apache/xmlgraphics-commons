@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import org.apache.xmlgraphics.util.QName;
+
 /**
  * Constants used in XMP metadata.
  */
@@ -27,6 +29,9 @@ public interface XMPConstants {
     /** Namespace URI for the xml: prefix */
     String XML_NS = "http://www.w3.org/XML/1998/namespace";
     
+    /** Namespace URI for the xmlns: prefix */
+    String XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/";
+
     /** Namespace URI for XMP */
     String XMP_NAMESPACE = "adobe:ns:meta/";
     
@@ -58,5 +63,8 @@ public interface XMPConstants {
 
     /** Default language for the xml:lang property */
     String DEFAULT_LANGUAGE = "x-default";
+    
+    /** QName for rdf:value */
+    QName RDF_VALUE = new QName(RDF_NAMESPACE, "value");
     
 }

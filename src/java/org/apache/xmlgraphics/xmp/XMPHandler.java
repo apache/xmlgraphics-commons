@@ -21,11 +21,12 @@ package org.apache.xmlgraphics.xmp;
 
 import java.util.Stack;
 
-import org.apache.xmlgraphics.util.QName;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
+
+import org.apache.xmlgraphics.util.QName;
 
 /**
  * Passive XMP parser implemented as a SAX DefaultHandler. After the XML document has been parsed
@@ -38,15 +39,85 @@ public class XMPHandler extends DefaultHandler {
     private StringBuffer content = new StringBuffer();
     //private Attributes lastAttributes;
     private Stack attributesStack = new Stack();
-    //private Stack contextStack = new Stack();
+    private Stack nestingInfoStack = new Stack();
+    private Stack contextStack = new Stack();
     
-    private QName currentPropertyName;
-    private XMPProperty currentProperty;
-    private XMPComplexValue currentComplexValue;
+    //private QName currentPropertyName;
+    //private XMPProperty currentProperty;
+    //private XMPComplexValue currentComplexValue;
+    //private PropertyAccess currentProperties;
     
     /** @return the parsed metadata, available after the parsing. */
     public Metadata getMetadata() {
         return this.meta;
+    }
+
+    private boolean hasComplexContent() {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof QName) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    private PropertyAccess getCurrentProperties() {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof PropertyAccess) {
+            return (PropertyAccess)obj;
+        } else {
+            return null;
+        }
+    }
+    
+    private QName getCurrentPropName() {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof QName) {
+            return (QName)obj;
+        } else {
+            return null;
+        }
+    }
+    
+    private QName popCurrentPropName() throws SAXException {
+        Object obj = this.contextStack.pop();
+        this.nestingInfoStack.pop();
+        if (obj instanceof QName) {
+            return (QName)obj;
+        } else {
+            throw new SAXException("Invalid XMP structure. Property name expected");
+        }
+    }
+    
+    private XMPComplexValue getCurrentComplexValue() {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof XMPComplexValue) {
+            return (XMPComplexValue)obj;
+        } else {
+            return null;
+        }
+    }
+    
+    private XMPStructure getCurrentStructure() {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof XMPStructure) {
+            return (XMPStructure)obj;
+        } else {
+            return null;
+        }
+    }
+    
+    private XMPArray getCurrentArray(boolean required) throws SAXException {
+        Object obj = this.contextStack.peek();
+        if (obj instanceof XMPArray) {
+            return (XMPArray)obj;
+        } else {
+            if (required) {
+                throw new SAXException("Invalid XMP structure. Not in array");
+            } else {
+                return null;
+            }
+        }
     }
 
     // --- Overrides ---
@@ -69,28 +140,61 @@ public class XMPHandler extends DefaultHandler {
                 throw new SAXException("Invalid XMP document. Root already received earlier.");
             }
             this.meta = new Metadata();
+            //this.currentProperties = this.meta;
+            this.contextStack.push(this.meta);
+            this.nestingInfoStack.push("metadata");
         } else if (XMPConstants.RDF_NAMESPACE.equals(uri)) {
             if ("RDF".equals(localName)) {
                 if (this.meta == null) {
                     this.meta = new Metadata();
+                    //this.currentProperties = this.meta;
+                    this.contextStack.push(this.meta);
+                    this.nestingInfoStack.push("metadata");
                 }
             } else if ("Description".equals(localName)) {
-                if (currentPropertyName == null) {
+                String about = attributes.getValue(XMPConstants.RDF_NAMESPACE, "about");
+                if (this.contextStack.peek().equals(this.meta)) {
                     //rdf:RDF is the parent
-                    String about = attributes.getValue(XMPConstants.RDF_NAMESPACE, "about");
                 } else {
+                    if (about != null) {
+                        throw new SAXException(
+                                "Nested rdf:Description elements may not have an about property");
+                    }
                     //a structured property is the parent
+                    XMPStructure struct = new XMPStructure();
+                    //this.currentComplexValue = struct;
+                    this.contextStack.push(struct);
+                    //this.currentProperties = struct;
+                    this.nestingInfoStack.push("struct");
                 }
             } else if ("Seq".equals(localName)) {
-                this.currentComplexValue = new XMPArray(XMPArrayType.SEQ);
+                XMPArray array = new XMPArray(XMPArrayType.SEQ);
+                //this.currentComplexValue = array;
+                this.contextStack.push(array);
+                this.nestingInfoStack.push("Seq");
             } else if ("Bag".equals(localName)) {
-                this.currentComplexValue = new XMPArray(XMPArrayType.BAG);
+                XMPArray array = new XMPArray(XMPArrayType.BAG);
+                //this.currentComplexValue = array;
+                this.contextStack.push(array);
+                this.nestingInfoStack.push("Bag");
             } else if ("Alt".equals(localName)) {
-                this.currentComplexValue = new XMPArray(XMPArrayType.ALT);
+                XMPArray array = new XMPArray(XMPArrayType.ALT);
+                //this.currentComplexValue = array;
+                this.contextStack.push(array);
+                this.nestingInfoStack.push("Alt");
             } else if ("li".equals(localName)) {
+                //nop, handle in endElement()
+            } else if ("value".equals(localName)) {
+                QName name = new QName(uri, qName);
+                this.contextStack.push(name);
+                this.nestingInfoStack.push("prop:" + name);
+            } else {
+                throw new SAXException("Unexpected element in the RDF namespace: " + localName);
             }
         } else {
-            this.currentPropertyName = new QName(uri, qName);
+            QName name = new QName(uri, qName);
+            this.contextStack.push(name);
+            this.nestingInfoStack.push("prop:" + name);
         }
     }
     
@@ -102,39 +206,81 @@ public class XMPHandler extends DefaultHandler {
         Attributes atts = (Attributes)attributesStack.pop();
         if (XMPConstants.XMP_NAMESPACE.equals(uri)) {
             //nop
-        } else if (XMPConstants.RDF_NAMESPACE.equals(uri)) {
+        } else if (XMPConstants.RDF_NAMESPACE.equals(uri) && !"value".equals(localName)) {
             if ("li".equals(localName)) {
-                String s = content.toString().trim();
-                if (s.length() > 0) {
-                    getCurrentArray().add(s);
+                XMPStructure struct = getCurrentStructure();
+                if (struct != null) {
+                    //Pop the structure
+                    Object obj = this.contextStack.pop();
+                    this.nestingInfoStack.pop();
+                    getCurrentArray(true).add(struct);
+                } else {
+                    String s = content.toString().trim();
+                    if (s.length() > 0) {
+                        String lang = atts.getValue(XMPConstants.XML_NS, "lang");
+                        if (lang != null) {
+                            getCurrentArray(true).add(s, lang);
+                        } else {
+                            getCurrentArray(true).add(s);
+                        }
+                    }
                 }
+            } else if ("Description".equals(localName)) {
+                /*
+                if (isInStructure()) {
+                    //Description is indicating a structure
+                    //this.currentProperties = (PropertyAccess)propertiesStack.pop();
+                    this.nestingInfoStack.pop();
+                }*/
             } else {
-                //nop
+                //nop, don't pop stack so the parent element has access
+                //this.contextStack.pop();
+                //this.nestingInfoStack.pop();
             }
         } else {
-            if (this.currentComplexValue != null) {
-                this.currentProperty = new XMPProperty(this.currentPropertyName, 
-                                this.currentComplexValue);
-                this.currentComplexValue = null;
+            XMPProperty prop;
+            QName name;
+            if (hasComplexContent()) {
+                //Pop content of property
+                Object obj = this.contextStack.pop();
+                this.nestingInfoStack.pop();
+                
+                name = popCurrentPropName();
+                
+                if (obj instanceof XMPComplexValue) {
+                    XMPComplexValue complexValue = (XMPComplexValue)obj;
+                    prop = new XMPProperty(name, complexValue);
+                } else {
+                    throw new UnsupportedOperationException("NYI");
+                }
             } else {
+                name = popCurrentPropName();
+
                 String s = content.toString().trim();
-                this.currentProperty = new XMPProperty(this.currentPropertyName, s);
+                prop = new XMPProperty(name, s);
                 String lang = atts.getValue(XMPConstants.XML_NS, "lang");
                 if (lang != null) {
-                    this.currentProperty.setXMLLang(lang);
+                    prop.setXMLLang(lang);
                 }
             }
-            this.meta.setProperty(this.currentProperty);
-            this.currentProperty = null;
-            this.currentPropertyName = null;
+            if (prop.getName() == null) {
+                throw new IllegalStateException("No content in XMP property");
+            }
+            getCurrentProperties().setProperty(prop);
+            //this.currentProperties.setProperty(this.currentProperty);
+            //this.currentProperty = null;
+            //this.currentPropertyName = null;
         }
+
         content.setLength(0); //Reset text buffer (see characters())
         super.endElement(uri, localName, qName);
     }
 
-    private XMPArray getCurrentArray() {
-        return (XMPArray)this.currentComplexValue;
+    /*
+    private boolean isInStructure() {
+        return !propertiesStack.isEmpty();
     }
+    */
 
     /** @see org.xml.sax.ContentHandler#characters(char[], int, int) */
     public void characters(char[] ch, int start, int length) throws SAXException {

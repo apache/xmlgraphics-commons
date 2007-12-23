@@ -19,11 +19,15 @@
 
 package org.apache.xmlgraphics.xmp;
 
-import org.apache.xmlgraphics.util.QName;
-import org.apache.xmlgraphics.util.XMLizable;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import org.apache.xmlgraphics.util.QName;
+import org.apache.xmlgraphics.util.XMLizable;
 
 /**
  * This class is the base class for all XMP properties.
@@ -33,6 +37,7 @@ public class XMPProperty implements XMLizable {
     private QName name;
     private Object value;
     private String xmllang;
+    private Map qualifiers;
 
     /**
      * Creates a new XMP property.
@@ -108,6 +113,61 @@ public class XMPProperty implements XMLizable {
         }
     }
     
+    /** @return the XMPStructure for a structure or null if the value is not a structure. */
+    public PropertyAccess getStructureValue() {
+        return (value instanceof XMPStructure ? (XMPStructure)value : null);
+    }
+    
+    private boolean hasPropertyQualifiers() {
+        return (this.qualifiers == null) || (this.qualifiers.size() == 0);
+    }
+
+    /**
+     * Indicates whether this property is actually not a structure, but a normal property with
+     * property qualifiers. If this method returns true, this structure can be converted to
+     * an simple XMPProperty using the simplify() method.
+     * @return true if this property is a structure property with property qualifiers
+     */
+    public boolean isQualifiedProperty() {
+        PropertyAccess props = getStructureValue();
+        if (props != null) {
+            XMPProperty rdfValue = props.getProperty(XMPConstants.RDF_VALUE);
+            return (rdfValue != null);
+        } else {
+            return hasPropertyQualifiers();
+        }
+    }
+    
+    public void simplify() {
+        PropertyAccess props = getStructureValue();
+        if (props != null) {
+            XMPProperty rdfValue = props.getProperty(XMPConstants.RDF_VALUE);
+            if (rdfValue != null) {
+                if (hasPropertyQualifiers()) {
+                    throw new IllegalStateException("Illegal internal state"
+                            + " (qualifiers present on non-simplified property)");
+                }
+                Object value = props.getProperty(XMPConstants.RDF_VALUE);
+                XMPProperty prop = new XMPProperty(getName(), value);
+                Iterator iter = props.iterator();
+                while (iter.hasNext()) {
+                    QName name = (QName)iter.next();
+                    if (!XMPConstants.RDF_VALUE.equals(name)) {
+                        prop.setPropertyQualifier(name, props.getProperty(name));
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    private void setPropertyQualifier(QName name, XMPProperty property) {
+        if (this.qualifiers == null) {
+            this.qualifiers = new java.util.HashMap();
+        }
+        this.qualifiers.put(name, property);
+    }
+
     private String getEffectiveQName() {
         String prefix = getName().getPrefix();
         if (prefix == null || "".equals(prefix)) {
@@ -125,13 +185,7 @@ public class XMPProperty implements XMLizable {
                 getName().getLocalName(), qName, atts);
         if (value instanceof XMPComplexValue) {
             XMPComplexValue cv = ((XMPComplexValue)value);
-            Object obj = cv.getSimpleValue();
-            if (obj != null) {
-                char[] chars = obj.toString().toCharArray();
-                handler.characters(chars, 0, chars.length);
-            } else {
-                cv.toSAX(handler);
-            }
+            cv.toSAX(handler);
         } else {
             char[] chars = value.toString().toCharArray();
             handler.characters(chars, 0, chars.length);
@@ -139,4 +193,13 @@ public class XMPProperty implements XMLizable {
         handler.endElement(getName().getNamespaceURI(), 
                 getName().getLocalName(), qName);
     }
+
+    /** @see java.lang.Object#toString() */
+    public String toString() {
+        StringBuffer sb = new StringBuffer("XMP Property ");
+        sb.append(getName()).append(": ");
+        sb.append(getValue());
+        return sb.toString();
+    }
+    
 }

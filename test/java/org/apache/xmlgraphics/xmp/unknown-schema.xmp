@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/" rdf:about="">
+      <dc:title>Unknown Schema</dc:title>
+    </rdf:Description>
+    <rdf:Description xmlns:some="http://unknown.org/something" rdf:about="">
+      <some:dummy>Dummy!</some:dummy>
+    </rdf:Description>
+  </rdf:RDF>
+</x:xmpmeta>

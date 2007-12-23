@@ -23,53 +23,52 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
 import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.util.XMLizable;
 import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
 import org.apache.xmlgraphics.xmp.merge.PropertyMerger;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * This class represents the root of an XMP metadata tree. It's more or less equivalent to the
  * x:xmpmeta element together with its nested rdf:RDF element.
  */
-public class Metadata implements XMLizable {
+public class Metadata implements XMLizable, PropertyAccess {
 
     private Map properties = new java.util.HashMap();
 
-    /**
-     * Sets a property.
-     * @param prop the property
-     */
+    /** {@inheritDoc} */
     public void setProperty(XMPProperty prop) {
         properties.put(prop.getName(), prop);
     }
     
-    /**
-     * Returns a property
-     * @param uri the namespace URI of the property
-     * @param localName the local name of the property
-     * @return the requested property or null if it's not available
-     */
+    /** {@inheritDoc} */
     public XMPProperty getProperty(String uri, String localName) {
         return getProperty(new QName(uri, localName));
     }
     
-    /**
-     * Returns a property.
-     * @param name the name of the property
-     * @return the requested property or null if it's not available
-     */
+    /** {@inheritDoc} */
     public XMPProperty getProperty(QName name) {
         XMPProperty prop = (XMPProperty)properties.get(name);
         return prop;
     }
     
-    /** @return the number of properties in this metadata object. */
+    /** {@inheritDoc} */
+    public XMPProperty getValueProperty() {
+        return getProperty(XMPConstants.RDF_VALUE);
+    }
+    
+    /** {@inheritDoc} */
     public int getPropertyCount() {
         return this.properties.size();
+    }
+    
+    /** {@inheritDoc} */
+    public Iterator iterator() {
+        return this.properties.keySet().iterator();
     }
     
     /**
@@ -89,7 +88,7 @@ public class Metadata implements XMLizable {
         }
     }
     
-    /** @see org.apache.xmlgraphics.util.XMLizable#toSAX(org.xml.sax.ContentHandler) */
+    /** {@inheritDoc} */
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         handler.startElement(XMPConstants.XMP_NAMESPACE, "xmpmeta", "x:xmpmeta", atts);
@@ -98,7 +97,8 @@ public class Metadata implements XMLizable {
         Set namespaces = new java.util.HashSet();
         Iterator iter = properties.keySet().iterator();
         while (iter.hasNext()) {
-            namespaces.add(((QName)iter.next()).getNamespaceURI());
+            QName n = ((QName)iter.next());
+            namespaces.add(n.getNamespaceURI());
         }
         //One Description element per namespace
         iter = namespaces.iterator();
@@ -106,28 +106,42 @@ public class Metadata implements XMLizable {
             String ns = (String)iter.next();
             XMPSchema schema = XMPSchemaRegistry.getInstance().getSchema(ns);
             String prefix = (schema != null ? schema.getPreferredPrefix() : null);
-            if (prefix != null) {
-                handler.startPrefixMapping(prefix, ns);
-            }
-            
-            atts.clear();
-            atts.addAttribute(XMPConstants.RDF_NAMESPACE, "about", "rdf:about", "CDATA", "");
-            handler.startElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description", atts);
+
+            boolean first = true;
+            boolean empty = true;
             
             Iterator props = properties.values().iterator();
             while (props.hasNext()) {
                 XMPProperty prop = (XMPProperty)props.next();
                 if (prop.getName().getNamespaceURI().equals(ns)) {
+                    if (first) {
+                        if (prefix == null) {
+                            prefix = prop.getName().getPrefix();
+                        }
+                        atts.clear();
+                        atts.addAttribute(XMPConstants.RDF_NAMESPACE,
+                                "about", "rdf:about", "CDATA", "");
+                        if (prefix != null) {
+                            handler.startPrefixMapping(prefix, ns);
+                        }
+                        handler.startElement(XMPConstants.RDF_NAMESPACE,
+                                "RDF", "rdf:Description", atts);
+                        empty = false;
+                        first = false;
+                    }
                     prop.toSAX(handler);
                 }
             }
-            handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description");
-            if (prefix != null) {
-                handler.endPrefixMapping(prefix);
+            if (!empty) {
+                handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description");
+                if (prefix != null) {
+                    handler.endPrefixMapping(prefix);
+                }
             }
         }
         
         handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:RDF");
         handler.endElement(XMPConstants.XMP_NAMESPACE, "xmpmeta", "x:xmpmeta");
     }
+
 }
