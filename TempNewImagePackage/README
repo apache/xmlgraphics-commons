@@ -1,0 +1,86 @@
+$Id$
+
+==============================================================================
+  APACHE XML GRAPHICS COMMONS  -  README
+==============================================================================
+
+Contents of this file:
+ - What is Apache XML Graphics Commons?
+ - Where to get help?
+ - How do I build Apache XML Graphics Commons?
+ - Legal information
+ - Release Notes
+
+==============================================================================
+
+
+What is Apache XML Graphics Commons?
+---------------------------------------
+
+It is a place where the Apache Batik and Apache FOP share commonly used 
+components. Many components in here are also usable and useful stand-alone.
+    
+Documentation
+---------------------    
+
+The documentation can be found under:
+http://xmlgraphics.apache.org/commons/
+
+Where to get help?
+---------------------    
+
+Please subscribe to the general@xmlgraphics.apache.org mailing list by sending
+an empty mail to general-subscribe@xmlgraphics.apache.org. All you questions
+about XML Graphics Commons will be answered there.    
+
+Please report bugs to bugzilla at http://issues.apache.org/bugzilla/
+
+
+How do I build Apache XML Graphics Commons?
+----------------------------------------------
+
+If you've downloaded a binary distribution of Apache FOP or Apache Batik, 
+you don't need to build XML Graphics Commons. It is distributed with these
+two products.
+
+Otherwise, install Apache Ant (http://ant.apache.org) and run "ant" from the
+command-line in the directory where you find "build.xml".
+
+Legal information
+--------------------
+
+Apache XML Graphics Commons is published under the Apache License 
+version 2.0. For the license text, please see the following files:
+- LICENSE
+- NOTICE
+
+Legal information on libraries used by Apache XML Graphics Commons, i.e. 
+its dependencies, can be found in the "lib/README.txt" file.
+
+License labeling (according to http://www.apache.org/legal/3party.html):
+- Single-License
+- Source Available
+- No Reciprocity Required
+
+==============================================================================
+  RELEASE NOTES
+==============================================================================
+
+Version 1.2
+--------------
+
+This release mainly adds support for CMYK and GRAY color spaces for PSGenerator.
+
+Version 1.1
+--------------
+
+This release adds an XMP metadata framework and brings improvements for the
+ImageWriter package plus some minor fixes mainly in the PostScript area.
+For more detailed info about the changes, please see:
+http://xmlgraphics.apache.org/commons/changes.html
+
+Version 1.0
+--------------
+
+This is the first release of Apache XML Graphics Commons. There are currently
+no known issues with the code.

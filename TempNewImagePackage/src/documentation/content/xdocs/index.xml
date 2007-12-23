@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
+<document> 
+  <header> 
+    <title>Apache XML Graphics Commons</title>
+  </header> 
+  <body> 
+    <section>
+      <title>Overview</title>
+      <p>
+        Apache XML Graphics Commons is a library that consists of several reusable components 
+        used by <a href="ext:batik">Apache Batik</a> and <a href="ext:fop">Apache FOP</a>. 
+        Many of these components can easily be used separately outside the domains of SVG 
+        and XSL-FO. You will find components such as a PDF library, an RTF library, Graphics2D 
+        implementations that let you generate PDF &amp; PostScript files, and much more.
+      </p>
+      <p>
+        Apache XML Graphics Commons has only just begun. It's in the process of being
+        populated with components coming from <a href="ext:batik">Apache Batik</a>
+        and <a href="ext:fop">Apache FOP</a>. Stay tuned for exciting treasures made
+        available.
+      </p>
+      <p>
+        In the Wiki, we have a 
+        <a href="http://wiki.apache.org/xmlgraphics/XmlGraphicsCommonComponents">plan for building Apache XML Graphics Commons</a>.
+        The plan provides an idea of what you can expect to find here when we're finished 
+        migrating components.
+      </p>
+    </section>
+    <section id="features">
+      <title>Features</title>
+      <p>
+        Components which have been ported from <a href="ext:batik">Apache Batik</a> and
+        <a href="ext:fop">Apache FOP</a> include:
+      </p>
+      <table>
+        <tr>
+          <th>Description</th>
+          <th>Package</th>
+          <th>Provenance</th>
+        </tr>
+        <tr>
+          <td>Image codecs for PNG and TIFF</td>
+          <td>org.apache.xmlgraphics.image.codec</td>
+          <td>Batik</td>
+        </tr>
+        <tr>
+          <td>Bitmap image writer abstraction with implementation for the above codecs and for the Image I/O API.</td>
+          <td>org.apache.xmlgraphics.image.writer</td>
+          <td>Batik</td>
+        </tr>
+        <tr>
+          <td>Java2D helper classes</td>
+          <td>org.apache.xmlgraphics.image.rendered and org.apache.xmlgraphics.java2d</td>
+          <td>Batik</td>
+        </tr>
+        <tr>
+          <td>Graphics2D implementation that produces PostScript and EPS</td>
+          <td>org.apache.xmlgraphics.java2d.ps</td>
+          <td>FOP</td>
+        </tr>
+        <tr>
+          <td>Helper classes for PostScript code production</td>
+          <td>org.apache.xmlgraphics.ps</td>
+          <td>FOP</td>
+        </tr>
+        <tr>
+          <td>Parser/Processor for DSC-compliant PostScript files (DSC = 
+            <a href="http://partners.adobe.com/public/developer/en/ps/5001.DSC_Spec.pdf">Document Structuring Conventions</a>)
+          </td>
+          <td>org.apache.xmlgraphics.ps.dsc</td>
+          <td>new</td>
+        </tr>
+        <tr>
+          <td><a href="http://www.adobe.com/products/xmp/index.html">XMP metadata</a> framework</td>
+          <td>org.apache.xmlgraphics.xmp</td>
+          <td>new</td>
+        </tr>
+        <tr>
+          <td>Various I/O classes, encoders and decoders for various formats</td>
+          <td>org.apache.xmlgraphics.util.io</td>
+          <td>Batik/FOP</td>
+        </tr>
+      </table>
+    </section>
+    <section>
+      <title>News</title>
+      <section>
+        <title>21 July 2007: Version 1.2 Released</title>
+        <p>This release mainly adds support for CMYK and GRAY color spaces for
+          PSGenerator. For details about other fixes, please see the <a
+            href="changes.html">Changes</a> page.</p>
+      </section>
+      <section>
+        <title>22 December 2006: Version 1.1 Released</title>
+        <p>
+          This release adds an XMP metadata framework and brings improvements for the
+          ImageWriter package plus some minor fixes mainly in the PostScript area.
+        </p>
+      </section>
+      <section>
+        <title>17 April 2006: Version 1.0 Released</title>
+        <p>
+          This is the first release of Apache XML Graphics Commons. There are currently no
+          known issues with the code.
+        </p>
+      </section>
+    </section>
+  </body>
+</document>

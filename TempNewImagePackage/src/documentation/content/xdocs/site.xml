@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://cocoon.apache.org/ 
+
+See http://forrest.apache.org/docs/linking.html for more info
+-->
+
+<site label="XMLGraphicsCommons" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+
+  <about label="XML Graphics Commons">
+    <index label="Overview" href="index.html" description="Overview"/>
+    <download label="Download" href="download.html" description="Download"/>
+    <asf-sponsorship label="ASF Sponsorship Program" href="http://www.apache.org/foundation/sponsorship.html"/>"
+    <asf-thanks label="ASF Thanks" href="http://www.apache.org/foundation/thanks.html"/>"
+    <documentation label="Documentation">
+      <postscript label="Tools for Adobe PostScript" href="postscript.html" description="Tools for Adobe PostScript"/>
+      <image-loader label="Image Loader Framework" href="image-loader.html" description="Image Loader Framework"/>
+    </documentation>
+    <information label="Information">
+      <mail label="Mailing Lists" href="http://xmlgraphics.apache.org/mail.html" description="Information on Mailing Lists"/>
+      <repo label="Code Repositories" href="http://xmlgraphics.apache.org/repo.html" description="Information on Code Repositories"/>
+      <changes label="Changes" href="changes.html"/>
+    </information>
+  </about>
+
+  <external-refs>
+    <xmlgraphics.apache.org href="http://xmlgraphics.apache.org/">
+      <fop href="fop/"/>
+      <batik href="batik/"/>
+      <commons href="commons/"/>
+    </xmlgraphics.apache.org>
+    <xml.apache.org href="http://xml.apache.org/"/>
+    <www.apache.org href="http://www.apache.org/"/>
+  </external-refs>
+
+</site>

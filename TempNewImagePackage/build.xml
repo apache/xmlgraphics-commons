@@ -1,0 +1,710 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="all" basedir="." name="xmlgraphics-commons">
+
+  <!-- See build.properties and build-local.properties for overriding build settings. -->
+  <!-- build-local.properties is not stored in SVN and overrides values from build.properties -->
+  <property file="${basedir}/build-local.properties"/>
+  <property file="${basedir}/build.properties"/>
+  <property environment="env"/>
+
+  <property name="Name" value="Apache XML Graphics Commons"/>
+  <property name="name" value="xmlgraphics-commons"/>
+  <property name="version" value="1.3svn"/>
+  <property name="year" value="1999-2007"/>
+
+  <property name="javac.debug" value="on"/>
+  <property name="javac.optimize" value="off"/>
+  <property name="javac.deprecation" value="on"/>
+  <property name="javac.source" value="1.3"/>
+  <property name="javac.target" value="1.3"/>
+  <property name="javac.fork" value="no"/>
+
+  <property name="junit.fork" value="on"/>
+
+  <property name="javadoc.packages" value="org.apache.xmlgraphics.*"/>
+  
+  <property name="internal-codecs.disabled" value="false"/>
+  
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="src.java.dir" value="${src.dir}/java"/>
+  <property name="src.res.dir" value="${src.dir}/resources"/>
+  <property name="lib.dir" value="${basedir}/lib"/>
+
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+  <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
+  
+  <property name="dist.bin.dir" value="${basedir}/dist-bin"/>
+  <property name="dist.src.dir" value="${basedir}/dist-src"/>
+  <property name="dist.bin.result.dir" value="${dist.bin.dir}/${name}-${version}"/>
+  <property name="dist.src.result.dir" value="${dist.src.dir}/${name}-${version}"/>
+
+  <!-- .NET support (using IKVM) -->
+  <property name="ikvm.dir" value="."/>
+  <property name="ikvmc" value="${ikvm.dir}/bin/ikvmc.exe"/>
+
+  <tstamp>
+    <format property="ts" pattern="yyyyMMdd-HHmmss-z"/>
+  </tstamp>
+
+  <path id="libs-build-classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="libs-run-classpath">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${build.dir}">
+      <include name="${name}.jar"/>
+    </fileset>
+  </path>
+
+  <fileset dir="${basedir}" id="dist.bin">
+    <include name="examples/**"/>
+    <include name="LICENSE"/>
+    <include name="NOTICE"/>
+    <include name="README"/>
+    <include name="KEYS"/>
+    <include name="status.xml"/>
+  </fileset>
+
+  <fileset dir="${basedir}" id="dist.bin.lib">
+    <patternset id="dist.lib">
+      <include name="lib/commons-io*"/>
+      <include name="lib/README*"/>
+    </patternset>
+  </fileset>
+
+  <fileset dir="${basedir}" id="dist.src">
+    <include name="src/**"/>
+    <patternset refid="dist.lib"/>
+    <include name="test/**"/>
+    <include name="examples/**"/>
+    <include name="LICENSE"/>
+    <include name="NOTICE"/>
+    <include name="README"/>
+    <include name="KEYS"/>
+    <include name="status.xml"/>
+    <include name="*.pom"/>
+    <include name="build.*"/>
+    <include name="forrest.*"/>
+  </fileset>
+
+  <!-- =================================================================== -->
+  <!-- Initialization target                                               -->
+  <!-- =================================================================== -->
+  <target name="info">
+    <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
+    <echo message="See build.properties and build-local.properties for additional build settings"/>
+    <echo message="${ant.version}"/>
+    <echo message="VM: ${java.vm.version}, ${java.vm.vendor}"/>
+    <echo message="JAVA_HOME: ${env.JAVA_HOME}"/>
+  </target>
+  
+  <target name="init" depends="info, init-avail, init-filters-jdk14, init-filters-jdk13"/>
+
+  <target name="init-avail">
+    <available property="jdk14.present" classname="java.lang.CharSequence"/>
+    
+    <available property="sun.jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec"/>
+    <condition property="sun.jpeg.message" value="Sun-private JPEG Support PRESENT">
+      <equals arg1="${sun.jpeg.present}" arg2="true"/>
+    </condition>
+    <condition property="sun.jpeg.message" value="Sun-private JPEG Support NOT Present">
+      <not>
+        <equals arg1="${sun.jpeg.present}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${sun.jpeg.message}"/>
+    <condition property="internal-codecs.eff.disabled">
+      <or>
+        <not>
+          <equals arg1="${sun.jpeg.present}" arg2="true"/>
+        </not>
+        <equals arg1="${internal-codecs.disabled}" arg2="true"/>
+      </or>
+    </condition>
+
+    <available property="junit.present" classname="junit.framework.TestCase"
+        classpathref="libs-build-classpath"/>
+    <condition property="junit.message" value="JUnit Support PRESENT">
+      <equals arg1="${junit.present}" arg2="true"/>
+    </condition>
+    <condition property="junit.message" value="JUnit Support NOT Present - Committers are required to have JUnit working">
+      <not>
+        <equals arg1="${junit.present}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${junit.message}"/>
+
+    <condition property="IKVM.present">
+      <and>
+        <available file="${ikvmc}"/>
+        <equals arg1="${internal-codecs.eff.disabled}" arg2="true"/>
+      </and>
+    </condition>
+    <condition property="ikvm.message" value="IKVM Support PRESENT and ENABLED">
+      <equals arg1="${IKVM.present}" arg2="true"/>
+    </condition>
+    <condition property="ikvm.message" value="IKVM Support NOT Present">
+      <not>
+        <available file="${ikvmc}"/>
+      </not>
+    </condition>
+    <condition property="ikvm.message" value="IKVM Support DISABLED">
+      <not>
+        <equals arg1="${IKVM.present}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${ikvm.message}"/>
+  </target>
+
+  <target name="init-filters-jdk13" depends="init-avail" unless="jdk14.present">
+    <echo message="Use GraphicsConfiguration adapter for JDK 1.3 or earlier."/>
+    <path id="graphics-configuration-adapter">
+      <pathelement location="src/java-1.3"/>
+    </path>
+    <property name="src.java.version.dir" value="${basedir}/src/java-1.3"/>
+  </target>
+
+  <target name="init-filters-jdk14" depends="init-avail" if="jdk14.present">
+    <echo message="Use GraphicsConfiguration adapter for JDK 1.4."/>
+    <path id="graphics-configuration-adapter">
+      <pathelement location="src/java-1.4"/>
+    </path>
+    <property name="src.java.version.dir" value="${basedir}/src/java-1.4"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Help on usage                                                       -->
+  <!-- =================================================================== -->
+  <target name="usage">
+    <echo message="Use the -projecthelp option instead"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile-pattern-with-codecs" depends="init" unless="internal-codecs.eff.disabled">
+    <echo message="Internal codecs will be compiled."/>
+    <patternset id="compile-pattern">
+      <include name="**/*.java"/>
+    </patternset>
+  </target>
+  <target name="compile-pattern-without-codecs" depends="init" if="internal-codecs.eff.disabled">
+    <echo message="Internal codecs will be skipped."/>
+    <patternset id="compile-pattern">
+      <include name="**/*.java"/>
+      <exclude name="**/image/codec/tiff/**/*.java"/>
+      <exclude name="**/image/writer/internal/JPEGImageWriter.java"/>
+      <exclude name="**/image/writer/internal/TIFFImageWriter.java"/>
+    </patternset>
+  </target>
+  <target name="compile-java" depends="init, compile-pattern-with-codecs, compile-pattern-without-codecs" description="Compiles the source code">
+    <!-- create directories -->
+    <mkdir dir="${build.classes.dir}"/>
+    <javac destdir="${build.classes.dir}" fork="${javac.fork}" debug="${javac.debug}"
+           deprecation="${javac.deprecation}" optimize="${javac.optimize}"
+           source="${javac.source}" target="${javac.target}">
+      <src path="${src.java.dir}"/>
+      <src refid="graphics-configuration-adapter"/>
+      <patternset refid="compile-pattern"/>
+      <classpath refid="libs-build-classpath"/>
+    </javac>
+    <copy todir="${build.classes.dir}">
+      <fileset dir="${src.res.dir}"/>
+    </copy>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates JAR files                                                   -->
+  <!-- =================================================================== -->
+
+  <target name="uptodate-jar-main" depends="compile-java">
+    <uptodate property="jar.main.uptodate" targetfile="${build.dir}/${name}.jar">
+      <srcfiles dir= "${build.classes.dir}"/>
+    </uptodate>
+  </target>
+
+  <target name="jar-main" depends="compile-java,uptodate-jar-main" description="Generates the main jar file" unless="jar.main.uptodate">
+    <jar jarfile="${build.dir}/${name}-${version}.jar" basedir="${build.classes.dir}">
+      <manifest>
+        <attribute name="Implementation-Title" value="${Name}"/>
+        <attribute name="Implementation-Version" value="${version}"/>
+        <attribute name="Implementation-Vendor" value="The Apache Software Foundation (http://xmlgraphics.apache.org/)"/>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
+    </jar>
+  </target>
+
+  <target name="package.NET" depends="jar-main" if="IKVM.present" description="Generates the .NET DLL using IKVM">
+    <property name="commons-io" value="commons-io-1.1"/>
+    <exec executable="${ikvmc}">
+      <arg value="-reference:${ikvm.dir}/bin/IKVM.GNU.Classpath.dll"/>
+      <arg value="-target:library"/>
+      <arg value="-out:${build.dir}\${commons-io}.dll"/>
+      <arg value="${lib.dir}\${commons-io}.jar"/>
+    </exec>
+    <exec executable="${ikvmc}">
+      <arg value="-reference:${ikvm.dir}/bin/IKVM.GNU.Classpath.dll"/>
+      <arg value="-reference:${build.dir}/${commons-io}.dll"/>
+      <!--arg value="-reference:${ikvm.dir}/bin/IKVM.AWT.WinForms.dll"/-->
+      <arg value="-target:library"/>
+      <arg value="-out:${build.dir}\${name}-${version}.dll"/>
+      <arg value="${build.dir}\${name}-${version}.jar"/>
+    </exec>
+  </target>
+
+  <target name="uptodate-jar-sources" depends="init">
+    <uptodate property="jar.sources.uptodate" targetfile="${build.dir}/${name}-${version}-sources.jar">
+      <srcfiles dir="${src.java.dir}"/>
+      <srcfiles dir="${src.java.version.dir}"/>
+    </uptodate>
+  </target>
+
+  <target name="jar-sources" depends="uptodate-jar-sources" description="Generates a jar file with all the sources" unless="jar.sources.uptodate">
+    <patternset id="java-only">
+      <include name="**/*.java"/>
+    </patternset>
+    <jar jarfile="${build.dir}/${name}-${version}-sources.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${src.java.dir}">
+        <patternset refid="java-only"/>
+      </fileset>
+      <fileset dir="${src.java.version.dir}">
+        <patternset refid="java-only"/>
+      </fileset>
+      <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
+    </jar>
+  </target>
+
+  <target name="package" depends="jar-main, package.NET" description="Generates the jar files"/>
+
+  <!-- =================================================================== -->
+  <!-- Testing                                                             -->
+  <!-- =================================================================== -->
+  <target name="junit-compile" depends="package" if="junit.present">
+    <mkdir dir="${build.dir}/test-classes"/>
+    <mkdir dir="${build.dir}/test-reports"/>
+    <javac destdir="${build.dir}/test-classes" fork="${javac.fork}"
+           debug="${javac.debug}" deprecation="${javac.deprecation}"
+           optimize="${javac.optimize}" source="${javac.source}"
+           target="${javac.target}">
+      <src path="${basedir}/test/java"/>
+      <!--patternset refid="test-sources"/-->
+      <classpath>
+        <path refid="libs-build-classpath"/>
+        <fileset dir="${build.dir}">
+          <include name="${name}-${version}.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+    <copy todir="${build.dir}/test-classes">
+      <fileset dir="${basedir}/test/resources"/>
+    </copy>
+  </target>
+
+  <target name="junit-basic" depends="junit-compile" description="Runs the standard JUnit test suite" if="junit.present">
+    <echo message="Running basic functionality tests"/>
+    <junit haltonerror="no" fork="${junit.fork}" errorproperty="test.junit.error" failureproperty="test.junit.failure">
+      <sysproperty key="basedir" value="${basedir}"/>
+      <sysproperty key="jawa.awt.headless" value="true"/>
+      <formatter type="brief" usefile="false"/>
+      <formatter type="plain" usefile="true"/>
+      <classpath>
+        <pathelement location="${build.dir}/test-classes"/>
+        <path refid="libs-build-classpath"/>
+        <fileset dir="build">
+          <include name="${name}-${version}.jar"/>
+        </fileset>
+      </classpath>
+      <test name="org.apache.xmlgraphics.StandardTestSuite" todir="${build.dir}/test-reports"/>
+    </junit>
+  </target>
+
+  <target name="junit" depends="junit-basic" description="Runs all JUnit tests" if="junit.present">
+    <fail>
+      <condition>
+        <or>
+          <isset property="test.junit.error"/>
+          <isset property="test.junit.failure"/>
+        </or>
+      </condition>
+NOTE:
+**************************************************************************
+* One or more of the Junit tests had Failures or Errors or were skipped! *
+*         Please check the output above for relevant messages.           *
+**************************************************************************
+    </fail>
+    <echo>All Junit tests passed!</echo>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates the API documentation                                       -->
+  <!-- =================================================================== -->
+  <target name="javadocs" depends="init" description="Generates javadocs">
+    <property name="javadoc.public"  value="false"/>
+    <property name="javadoc.package" value="false"/>
+    <property name="javadoc.private" value="false"/>
+    <condition property="javadoc.level" value=" (level: private)">
+      <equals arg1="${javadoc.private}" arg2="true"/>
+    </condition>
+    <condition property="javadoc.level" value=" (level: package)">
+      <equals arg1="${javadoc.package}" arg2="true"/>
+    </condition>
+    <condition property="javadoc.level" value=" (level: public)">
+      <equals arg1="${javadoc.public}" arg2="true"/>
+    </condition>
+    <property name="javadoc.level" value=""/>
+    <echo message="Producing the javadoc files${javadoc.level}"/>
+    <mkdir dir="${build.javadocs.dir}"/>
+
+    <javadoc
+        packagenames="${javadoc.packages}"
+        destdir="${build.javadocs.dir}"
+        author="true"
+        version="true"
+        windowtitle="${Name} ${version} API"
+        doctitle="Apache XML Graphics Commons"
+        bottom="Copyright ${year} The Apache Software Foundation. All Rights Reserved."
+        overview="${src.dir}/java/org/apache/xmlgraphics/overview.html"
+        use="true"
+        failonerror="true"
+        public="${javadoc.public}"
+        package="${javadoc.package}"
+        private="${javadoc.private}">
+      <header><![CDATA[${name} ${version}]]></header>
+      <footer><![CDATA[${name} ${version}]]></footer>
+      <classpath>
+        <path refid="libs-build-classpath"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+      <sourcepath>
+        <pathelement path="${src.java.dir}"/>
+        <path refid="graphics-configuration-adapter"/>
+      </sourcepath>
+      <tag name="todo" scope="all" description="To do:"/>
+      <group title="Images">
+        <package name="org.apache.xmlgraphics.image"/>
+        <package name="org.apache.xmlgraphics.image.*"/>
+      </group>
+      <group title="Java2D">
+        <package name="org.apache.xmlgraphics.java2d"/>
+        <package name="org.apache.xmlgraphics.java2d.*"/>
+      </group>
+      <group title="PDF, PostScript...">
+        <package name="org.apache.xmlgraphics.ps"/>
+        <package name="org.apache.xmlgraphics.ps.*"/>
+        <package name="org.apache.xmlgraphics.pdf"/>
+        <package name="org.apache.xmlgraphics.pdf.*"/>
+      </group>
+      <group title="XMP Metadata">
+        <package name="org.apache.xmlgraphics.xmp"/>
+        <package name="org.apache.xmlgraphics.xmp.*"/>
+      </group>
+      <group title="Utility">
+        <package name="org.apache.xmlgraphics.util"/>
+        <package name="org.apache.xmlgraphics.util.*"/>
+      </group>
+    </javadoc>
+  </target>
+
+  <target name="jar-javadocs" depends="javadocs">
+    <jar jarfile="${build.dir}/${name}-${version}-javadoc.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${build.javadocs.dir}"/>
+      <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
+    </jar>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Checkstyle                                                          -->
+  <!-- =================================================================== -->
+  <property name="checkstyle.home.dir" value="${optional.lib.dir}"/>
+  <property name="checkstyle.noframes.xslt" value="${checkstyle.home.dir}/contrib/checkstyle-noframes.xsl"/>
+
+  <path id="checkstyle-path">
+    <fileset dir="${checkstyle.home.dir}">
+      <include name="checkstyle-all-*.jar"/>
+      <include name="checkstyle-*.jar"/>
+      <include name="antlr*.jar"/>
+      <include name="commons-beanutils*.jar"/>
+      <include name="commons-collections*.jar"/>
+      <include name="commons-logging*.jar"/>
+      <include name="jakarta-regexp*.jar"/>      
+    </fileset>
+  </path>
+
+  <path id="checkstyle-runpath">
+    <path refid="checkstyle-path"/>
+  </path>
+
+  <target name="checkstyle-avail" depends="init">
+    <available property="checkstyle.available" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle-path"/>
+    <available property="checkstyle.4.x" classname="com.puppycrawl.tools.checkstyle.checks.coding.ModifiedControlVariableCheck" classpathref="checkstyle-path"/>
+    <available property="checkstyle.noframes.xslt.available" file="${checkstyle.noframes.xslt}"/>
+    <condition property="checkstyle.message" value="Checkstyle 4.x Support PRESENT">
+      <and>
+        <equals arg1="${checkstyle.available}" arg2="true"/>
+        <equals arg1="${checkstyle.4.x}" arg2="true"/>
+      </and>
+    </condition>
+    <condition property="checkstyle.message" value="Checkstyle 3.x Support PRESENT">
+      <equals arg1="${checkstyle.available}" arg2="true"/>
+    </condition>
+    <condition property="checkstyle.message" value="Checkstyle Support NOT Present">
+      <not>
+        <equals arg1="${checkstyle.available}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${checkstyle.message}"/>
+    <condition property="checkstyle.config" value="checkstyle-4.0.xml">
+      <equals arg1="${checkstyle.4.x}" arg2="true"/>
+    </condition>
+    <condition property="checkstyle.config" value="checkstyle-3.5-fop-head.xml">
+      <not>
+        <equals arg1="${checkstyle.4.x}" arg2="true"/>
+      </not>
+    </condition>
+    <condition property="checkstyle.noframes.xslt.message" value="Checkstyle HTML style sheet support PRESENT">
+      <equals arg1="${checkstyle.noframes.xslt.available}" arg2="true"/>
+    </condition>
+    <condition property="checkstyle.noframes.xslt.message" value="Checkstyle HTML style sheet support NOT Present">
+      <not>
+        <equals arg1="${checkstyle.noframes.xslt.available}" arg2="true"/>
+      </not>
+    </condition>
+    <echo message="${checkstyle.noframes.xslt.message}"/>
+  </target>
+
+  <target name="checkstyle-check" depends="checkstyle-avail, init" if="checkstyle.available">
+    
+    <taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle-runpath"/>
+    <checkstyle config="${checkstyle.config}" failonviolation="false"
+                classpathref="checkstyle-runpath">
+      <fileset dir="${src.java.dir}" includes="**/*.java"/>
+      <formatter type="plain" toFile="${build.dir}/checkstyle_report.txt"/>
+      <formatter type="xml" toFile="${build.dir}/checkstyle_report.xml"/>
+    </checkstyle>
+  </target>
+
+  <target name="checkstyle-html" depends="checkstyle-avail, checkstyle-check" if="checkstyle.noframes.xslt.available">
+    <style in="${build.dir}/checkstyle_report.xml" out="${build.dir}/checkstyle_report.html" style="${checkstyle.noframes.xslt}"/>
+  </target>
+
+  <target name="checkstyle" depends="checkstyle-avail, checkstyle-check, checkstyle-html" description="Runs Checkstyle for a code quality report"/>
+
+  <!-- =================================================================== -->
+  <!-- Creates the documentation                                           -->
+  <!-- =================================================================== -->
+  <target name="docs" description="Generates documentation">
+    <echo message="Building documentation with Forrest..."/>
+    <!--
+    <echo message="Make sure that you have installed Apache Forrest and"/>
+    <echo message="the FORREST_HOME environment variable is set (see http://forrest.apache.org/)"/>
+    <echo message="FORREST_HOME = ${forrest.home}"/>
+    -->
+    <echo message="Make sure you have a proper Forrest installation (see http://forrest.apache.org/)"/>
+
+    <!--<antcall target="site"/>-->
+    
+    <!-- You can provide a JDK 1.4 for a JDK 1.3 build by adding "javahome.jdk14" to build-local.properties -->
+    <condition property="javahome.jdk14.override" value="${javahome.jdk14}">
+      <isset property="javahome.jdk14"/>
+    </condition>
+    <echo message="java home: ${javahome.jdk14.override}"/>
+    <condition property="javahome.jdk14.override" value="${env.JAVA_HOME}">
+      <not>
+        <isset property="javahome.jdk14.override"/>
+      </not>
+    </condition>
+    <echo message="java home: ${javahome.jdk14.override}"/>
+    <condition property="forrest.call" value="forrest.bat" else="forrest">
+      <os family="windows"/>
+    </condition>
+    <exec executable="${forrest.call}">
+      <env key="JAVA_HOME" value="${javahome.jdk14.override}"/>
+    </exec>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Creates the distribution                                            -->
+  <!-- =================================================================== -->
+  <target name="dist" depends="distclean,dist-src,dist-bin,maven-artifacts" description="Generates the distribution package"/>
+
+  <!-- IMPORTANT: .NET binaries must not be included in the distribution. License policy! -->
+
+  <target name="dist-bin" depends="all,javadocs,docs">
+    <echo message="Building the binary distribution files (zip,tar)"/>
+    <mkdir dir="${dist.bin.result.dir}"/>
+    <copy todir="${dist.bin.result.dir}">
+      <fileset refid="dist.bin"/>
+      <fileset refid="dist.bin.lib"/>
+    </copy>
+    <copy todir="${dist.bin.result.dir}/docs">
+      <fileset dir="${build.dir}/site"/>
+    </copy>
+    <copy todir="${dist.bin.result.dir}/javadocs">
+      <fileset dir="${build.javadocs.dir}"/>
+    </copy>
+    <mkdir dir="${dist.bin.result.dir}/build"/>
+    <copy todir="${dist.bin.result.dir}/build" file="build/${name}-${version}.jar"/>
+
+    <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
+    <zip zipfile="${name}-${version}-${bin.suffix}.zip" basedir="${dist.bin.dir}" includes="**"/>
+    <tar longfile="gnu"
+         destfile="${name}-${version}-${bin.suffix}.tar">
+      <tarfileset dir="${dist.bin.dir}">
+        <include name="**"/>
+      </tarfileset>
+    </tar>
+    <gzip zipfile="${name}-${version}-${bin.suffix}.tar.gz" src="${name}-${version}-${bin.suffix}.tar"/>
+    <delete file="${name}-${version}-${bin.suffix}.tar"/>
+  </target>
+
+  <target name="dist-src" depends="all">
+    <echo message="Building the source distribution files (zip,tar)"/>
+    <mkdir dir="${dist.src.result.dir}"/>
+    <copy todir="${dist.src.result.dir}">
+      <fileset refid="dist.src"/>
+    </copy>
+
+    <zip zipfile="${name}-${version}-src.zip">
+      <zipfileset dir="${dist.src.dir}" filemode="644" dirmode="755">
+        <include name="**"/>
+      </zipfileset>
+    </zip>
+    <tar longfile="gnu"
+         destfile="${name}-${version}-src.tar" >
+      <tarfileset dir="${dist.src.dir}" mode="644" dirmode="755">
+        <include name="**"/>
+      </tarfileset>
+    </tar>
+    <gzip zipfile="${name}-${version}-src.tar.gz" src="${name}-${version}-src.tar"/>
+    <delete file="${name}-${version}-src.tar"/>
+  </target>
+
+  <target name="release-dist" depends="dist" description="Generates the distribution package and signs the release">
+    <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
+    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-src.zip"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-src.zip"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="md5">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.tar.gz"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${name}-${version}-${bin.suffix}.tar.gz"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+  </target>
+
+  <target name="md5">
+    <property name="md5.exec" value="md5"/>
+    <property name="md5.options" value="-q"/>
+    <exec executable="${md5.exec}" output="${sign.archive}.md5">
+      <arg line="${md5.options} ${sign.archive}"/>
+    </exec>
+  </target>
+
+  <target name="sign-file">
+    <property name="gpg.exec" value="gpg"/>
+    <property name="gpg.options" value="--armor --detach-sign --force-v3-sigs --batch --verbose --passphrase-fd 0"/>
+    <delete file="${sign.archive}.asc"/>
+    <exec executable="${gpg.exec}" inputstring="${pwd}">
+      <arg line="${gpg.options} ${sign.archive}"/>
+    </exec>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Maven artifacts                                                     -->
+  <!-- =================================================================== -->
+  <target name="maven-artifacts" depends="jar-main, jar-sources, jar-javadocs" description="Builds a Maven artifact that can be uploaded to a Maven repository">
+    <filter  token="version" value="${version}"/>
+    <mkdir dir="${build.dir}/maven"/>
+    <copy file="${basedir}/xmlgraphics-commons-pom-template.pom" tofile="${build.dir}/maven/pom.xml" filtering="true"/>
+    <jar jarfile="${build.dir}/${name}-${version}-bundle.jar">
+      <manifest>
+        <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
+      </manifest>
+      <fileset dir="${build.dir}">
+        <include name="${name}-${version}.jar"/>
+        <include name="${name}-${version}-sources.jar"/>
+        <include name="${name}-${version}-javadoc.jar"/>
+      </fileset>
+      <fileset dir="${build.dir}/maven"/>
+      <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
+    </jar>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Clean targets                                                       -->
+  <!-- =================================================================== -->
+  <target name="clean" description="Cleans the build directory">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="distclean" depends="clean" description="Cleans the distribution target directories">
+    <delete dir="${dist.src.dir}"/>
+    <delete dir="${dist.bin.dir}"/>
+    <delete>
+      <fileset dir="${basedir}" includes="${name}-*.tar.gz*"/>
+      <fileset dir="${basedir}" includes="${name}-*.zip*"/>
+    </delete>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Default Target                                                      -->
+  <!-- =================================================================== -->
+
+  <target name="all" depends="package, junit"/> <!-- "all" target for us Makefile converts ;-) -->
+
+  <!-- =================================================================== -->
+  <!-- Special target for Gump                                             -->
+  <!-- =================================================================== -->
+
+  <target name="gump" depends="all, javadocs"/>
+
+</project>
