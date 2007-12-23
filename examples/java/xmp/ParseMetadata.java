@@ -24,13 +24,16 @@ import java.net.URL;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 
+import org.xml.sax.SAXException;
+
 import org.apache.xmlgraphics.xmp.Metadata;
 import org.apache.xmlgraphics.xmp.XMPArray;
 import org.apache.xmlgraphics.xmp.XMPConstants;
 import org.apache.xmlgraphics.xmp.XMPParser;
 import org.apache.xmlgraphics.xmp.XMPProperty;
 import org.apache.xmlgraphics.xmp.XMPSerializer;
-import org.xml.sax.SAXException;
+import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
+import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
 
 /**
  * This example shows how to parse an XMP metadata file.
@@ -48,7 +51,9 @@ public class ParseMetadata {
             System.out.println("Creator: " + array.getValue(i));
         }
         prop = meta.getProperty(XMPConstants.DUBLIN_CORE_NAMESPACE, "title");
-        System.out.println("Title: " + prop.getValue());
+        array = prop.getArrayValue();
+        System.out.println("Default Title: " + array.getSimpleValue());
+        System.out.println("German Title: " + array.getLangValue("de"));
         prop = meta.getProperty(XMPConstants.XMP_BASIC_NAMESPACE, "CreateDate");
         System.out.println("Creation Date: " + prop.getValue());
         prop = meta.getProperty(XMPConstants.XMP_BASIC_NAMESPACE, "CreatorTool");
@@ -57,6 +62,10 @@ public class ParseMetadata {
         System.out.println("Producer: " + prop.getValue());
         prop = meta.getProperty(XMPConstants.ADOBE_PDF_NAMESPACE, "PDFVersion");
         System.out.println("PDF version: " + prop.getValue());
+        
+        DublinCoreAdapter dc = DublinCoreSchema.getAdapter(meta);
+        System.out.println("Default title: " + dc.getTitle());
+        System.out.println("German title: " + dc.getTitle("de"));
         
         StreamResult res = new StreamResult(System.out);
         XMPSerializer.writeXML(meta, res);
