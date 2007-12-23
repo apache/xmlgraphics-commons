@@ -49,7 +49,7 @@ public class XMPArray extends XMPComplexValue {
     }
     
     /**
-     * Returns the value at a given position
+     * Returns the value at a given position.
      * @param idx the index of the requested value
      * @return the value at the given position
      */
@@ -57,28 +57,64 @@ public class XMPArray extends XMPComplexValue {
         return this.values.get(idx);
     }
 
-    /** @see org.apache.xmlgraphics.xmp.XMPComplexValue#getSimpleValue() */
+    /**
+     * Returns the structure at a given position. If the value is not a structure a
+     * ClassCastException is thrown.
+     * @param idx the index of the requested value
+     * @return the structure at the given position
+     */
+    public XMPStructure getStructure(int idx) {
+        return (XMPStructure)this.values.get(idx);
+    }
+
+    /** {@inheritDoc} */
     public Object getSimpleValue() {
         if (values.size() == 1) {
             return getValue(0);
+        } else if (values.size() > 1) {
+            return getLangValue(XMPConstants.DEFAULT_LANGUAGE);
         } else {
             return null;
         }
     }
 
+    private String getParentLanguage(String lang) {
+        if (lang == null) {
+            return null;
+        }
+        int pos = lang.indexOf('-');
+        if (pos > 0) {
+            String parent = lang.substring(0, pos);
+            return parent;
+        }
+        return null;
+    }
+    
     /**
-     * Returns a language-dependant values (available for alternative arrays).
+     * Returns a language-dependent values (available for alternative arrays).
      * @param lang the language ("x-default" for the default value)
      * @return the requested value
      */
     public String getLangValue(String lang) {
         String v = null;
+        String valueForParentLanguage = null;
         for (int i = 0, c = values.size(); i < c; i++) {
             String l = (String)xmllang.get(i);
             if ((l == null && lang == null) || (l != null && l.equals(lang))) {
                 v = values.get(i).toString();
                 break;
             }
+            if (l != null && lang != null) {
+                //Check for "parent" language, too ("en" matches "en-GB")
+                String parent = getParentLanguage(l);
+                if (parent != null && parent.equals(lang)) {
+                    valueForParentLanguage = values.get(i).toString();
+                }
+            }
+        }
+        if (lang != null & v == null && valueForParentLanguage != null) {
+            //Use value found for parent language
+            v = valueForParentLanguage;
         }
         if (lang == null && v == null) {
             v = getLangValue(XMPConstants.DEFAULT_LANGUAGE);
@@ -90,7 +126,7 @@ public class XMPArray extends XMPComplexValue {
     }
     
     /**
-     * Removes a language-dependant value
+     * Removes a language-dependent value
      * @param lang the language ("x-default" for the default value)
      */
     public void removeLangValue(String lang) {
@@ -117,7 +153,7 @@ public class XMPArray extends XMPComplexValue {
     }
 
     /**
-     * Adds a language-dependant value to the array. Make sure not to add the same language twice.
+     * Adds a language-dependent value to the array. Make sure not to add the same language twice.
      * @param value the value
      * @param lang the language ("x-default" for the default value)
      */
@@ -143,13 +179,12 @@ public class XMPArray extends XMPComplexValue {
         return res;
     }
 
-    /** @see org.apache.xmlgraphics.util.XMLizable#toSAX(org.xml.sax.ContentHandler) */
+    /** {@inheritDoc} */
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         handler.startElement(XMPConstants.RDF_NAMESPACE, 
                 type.getName(), "rdf:" + type.getName(), atts);
         for (int i = 0, c = values.size(); i < c; i++) {
-            String value = (String)values.get(i);
             String lang = (String)xmllang.get(i);
             atts.clear();
             if (lang != null) {
@@ -157,8 +192,14 @@ public class XMPArray extends XMPComplexValue {
             }
             handler.startElement(XMPConstants.RDF_NAMESPACE, 
                     "li", "rdf:li", atts);
-            char[] chars = value.toCharArray();
-            handler.characters(chars, 0, chars.length);
+            Object v = values.get(i);
+            if (v instanceof XMPComplexValue) {
+                ((XMPComplexValue)v).toSAX(handler);
+            } else {
+                String value = (String)values.get(i);
+                char[] chars = value.toCharArray();
+                handler.characters(chars, 0, chars.length);
+            }
             handler.endElement(XMPConstants.RDF_NAMESPACE, 
                     "li", "rdf:li");
         }
@@ -166,7 +207,7 @@ public class XMPArray extends XMPComplexValue {
                 type.getName(), "rdf:" + type.getName());
     }
 
-    /** @see java.lang.Object#toString() */
+    /** {@inheritDoc} */
     public String toString() {
         return "XMP array: " + type + ", " + getSize();
     }

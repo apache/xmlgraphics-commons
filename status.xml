@@ -25,6 +25,13 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="add">
+		    XMP: Added support for structured properties.
+		  </action>
+		  <action context="Code" dev="JM" type="fix">
+		    Bugfix for XMP serialization: arrays with only one entry were serialized as
+		    simple property which could lead to information loss for merge operations.
+		  </action>
 		  <action context="Code" dev="JM" type="update">
 		    PostScript: Improved PSImageUtils by introducing the ImageEncoder interface and
 		    allowing for streams instead of byte arrays for data transfer which can lower
