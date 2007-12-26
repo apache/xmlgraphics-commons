@@ -20,7 +20,6 @@
 package org.apache.xmlgraphics.image.loader;
 
 import java.awt.Dimension;
-import java.io.File;
 
 import junit.framework.TestCase;
 
@@ -81,8 +80,6 @@ public class ImagePipelineTestCase extends TestCase {
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_PNG, img.getFlavor());
         assertTrue(img instanceof ImageRawStream);
-        
-        ((ImageRawStream)img).writeTo(new File("D:/out.png"));
     }
     
     private Image createG2DImage() {
