@@ -21,11 +21,11 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 
@@ -123,6 +123,10 @@ public class TIFFDirectory extends Object implements Serializable {
             stream.skip(12*entries);
 
             ifd_offset = readUnsignedInt(stream);
+        }
+        if (ifd_offset == 0L) {
+            throw new
+               IllegalArgumentException("TIFFDirectory3");
         }
 
         stream.seek(ifd_offset);

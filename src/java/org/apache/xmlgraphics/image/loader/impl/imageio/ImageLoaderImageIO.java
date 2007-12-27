@@ -101,7 +101,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                     imgStream.mark();
                     ImageReadParam param = reader.getDefaultReadParam();
                     reader.setInput(imgStream, false, ignoreMetadata);
-                    final int pageIndex = ImageUtil.extractPageIndexFromURI(info.getOriginalURI());
+                    final int pageIndex = ImageUtil.needPageIndexFromURI(info.getOriginalURI());
                     try {
                         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
                             imageData = reader.read(pageIndex, param);

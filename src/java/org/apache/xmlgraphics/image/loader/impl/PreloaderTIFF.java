@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
@@ -32,6 +33,7 @@ import org.apache.xmlgraphics.image.loader.ImageContext;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSize;
+import org.apache.xmlgraphics.image.loader.SubImageNotFoundException;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SeekableStreamAdapter;
 import org.apache.xmlgraphics.util.MimeConstants;
@@ -89,16 +91,16 @@ public class PreloaderTIFF extends AbstractImagePreloader {
         ImageInfo info = null;
         in.mark();
         try {
-            int pageIndex = ImageUtil.extractPageIndexFromURI(uri);
+            int pageIndex = ImageUtil.needPageIndexFromURI(uri);
             
             SeekableStream seekable = new SeekableStreamAdapter(in);
             TIFFDirectory dir;
             try {
                 dir = new TIFFDirectory(seekable, pageIndex);
             } catch (IllegalArgumentException iae) {
-                //Fall back to page 0
-                pageIndex = 0;
-                dir = new TIFFDirectory(seekable, pageIndex);
+                String errorMessage = MessageFormat.format(
+                        "Subimage {0} does not exist.", new Object[] {new Integer(pageIndex)});
+                throw new SubImageNotFoundException(errorMessage);
             }
             int width = (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_WIDTH);
             int height = (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_LENGTH);
@@ -157,6 +159,13 @@ public class PreloaderTIFF extends AbstractImagePreloader {
             }
             info.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(stripCount));
             
+            try {
+                //Check if there is a next page
+                new TIFFDirectory(seekable, pageIndex + 1);
+                info.getCustomObjects().put(ImageInfo.HAS_MORE_IMAGES, Boolean.TRUE);
+            } catch (IllegalArgumentException iae) {
+                info.getCustomObjects().put(ImageInfo.HAS_MORE_IMAGES, Boolean.FALSE);
+            }
         } finally {
             in.reset();
         }
