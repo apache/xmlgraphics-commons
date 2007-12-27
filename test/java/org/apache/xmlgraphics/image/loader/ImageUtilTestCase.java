@@ -29,33 +29,47 @@ import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 public class ImageUtilTestCase extends TestCase {
 
     /**
-     * Tests {@link ImageUtil.extractPageIndexFromURI(String)}.
+     * Tests {@link ImageUtil.needPageIndexFromURI(String)}.
      * @throws Exception if an error occurs
      */
-    public void testPageIndexExtraction() throws Exception {
+    public void testNeedPageIndex() throws Exception {
         int pageIndex;
         
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif");
         assertEquals(0, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
         assertEquals(2, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif#page=0");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=0");
         assertEquals(0, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif#page=");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=");
         assertEquals(0, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif#page=x");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=x");
         assertEquals(0, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("http://localhost/images/scan1.tif#page=-1");
+        pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=-1");
         assertEquals(0, pageIndex);
-        pageIndex = ImageUtil.extractPageIndexFromURI("#page=2");
+        pageIndex = ImageUtil.needPageIndexFromURI("#page=2");
         assertEquals(1, pageIndex);
 
         //Not a valid URI
-        pageIndex = ImageUtil.extractPageIndexFromURI("C:\\images\\scan1.tif#page=44");
+        pageIndex = ImageUtil.needPageIndexFromURI("C:\\images\\scan1.tif#page=44");
         assertEquals(0, pageIndex);
         //Valid URI
-        pageIndex = ImageUtil.extractPageIndexFromURI("file:///C:/images/scan1.tif#page=44");
+        pageIndex = ImageUtil.needPageIndexFromURI("file:///C:/images/scan1.tif#page=44");
         assertEquals(43, pageIndex);
+    }
+    
+    /**
+     * Tests {@link ImageUtil.getPageIndexFromURI(String)}.
+     * @throws Exception if an error occurs
+     */
+    public void testGetPageIndex() throws Exception {
+        Integer pageIndex;
+        
+        pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif");
+        assertNull(pageIndex);
+        pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
+        assertEquals(2, pageIndex.intValue());
+        //Note: no detailed test anymore as this is tested through needPageIndexFromURI().
     }
     
 }

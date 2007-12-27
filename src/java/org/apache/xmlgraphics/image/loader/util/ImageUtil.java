@@ -296,12 +296,12 @@ public class ImageUtil {
      * 3.)
      * <p>
      * If no page index information is found in the URI or if the URI cannot be parsed, the
-     * method just returns 0 which indicates the first page.
+     * method returns null.
      * @param uri the URI that should be inspected
-     * @return the page index (0 is the first page)
+     * @return the page index (0 is the first page) or null if there's no page index information
+     *         in the URI
      */
-    public static int extractPageIndexFromURI(String uri) {
-        int pageIndex = 0;
+    public static Integer getPageIndexFromURI(String uri) {
         try {
             URI u = new URI(uri);
             String fragment = u.getFragment();
@@ -320,15 +320,38 @@ public class ImageUtil {
                         pos++;
                     }
                     if (sb.length() > 0) {
-                        pageIndex = Integer.parseInt(sb.toString()) - 1;
+                        int pageIndex = Integer.parseInt(sb.toString()) - 1;
                         pageIndex = Math.max(0, pageIndex);
+                        return new Integer(pageIndex);
                     }
                 }
             }
         } catch (URISyntaxException e) {
             //ignore
         }
-        return pageIndex;
+        return null;
+    }
+    
+    /**
+     * Extracts page index information from a URI. The expected pattern is "page=x" where x is
+     * a non-negative integer number. The page index must be specified as part of the URI fragment
+     * and is 1-based, i.e. the first page is 1 but the the method returns a zero-based page
+     * index.
+     * An example: <code>http://www.foo.bar/images/scan1.tif#page=4</code> (The method will return
+     * 3.)
+     * <p>
+     * If no page index information is found in the URI or if the URI cannot be parsed, the
+     * method just returns 0 which indicates the first page.
+     * @param uri the URI that should be inspected
+     * @return the page index (0 is the first page)
+     */
+    public static int needPageIndexFromURI(String uri) {
+        Integer res = getPageIndexFromURI(uri);
+        if (res != null) {
+            return res.intValue();
+        } else {
+            return 0;
+        }
     }
     
 }

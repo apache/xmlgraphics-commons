@@ -36,6 +36,15 @@ public class ImageInfo {
      */
     public static final Object ORIGINAL_IMAGE = Image.class;
 
+    /**
+     * Key to register information about additional (sub-)images in the image file after the
+     * selected one. Valid values for this key is either a positive Integer or the constant
+     * {@link Boolean#TRUE} or {@link Boolean#FALSE}. A value of TRUE indicates that there are
+     * more subimages available but the exact number of additional images has not been determined
+     * for performance reasons.
+     */
+    public static final Object HAS_MORE_IMAGES = "HAS_MORE_IMAGES";
+
     /** Original URI the image was accessed with */
     private String originalURI;
     /** MIME type of the image */
