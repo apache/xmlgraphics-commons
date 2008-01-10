@@ -90,10 +90,10 @@ public class DSCCommentBoundingBox extends AbstractDSCComment {
     public void generate(PSGenerator gen) throws IOException {
         if (getBoundingBox() != null) {
             gen.writeDSCComment(getName(), new Object[] {
-                new Integer((int)Math.round(this.bbox.getX())),
-                new Integer((int)Math.round(this.bbox.getY())),
-                new Integer((int)Math.round(this.bbox.getX() + this.bbox.getWidth())),
-                new Integer((int)Math.round(this.bbox.getY() + this.bbox.getHeight()))});
+                new Integer((int)Math.floor(this.bbox.getX())),
+                new Integer((int)Math.floor(this.bbox.getY())),
+                new Integer((int)Math.ceil(this.bbox.getX() + this.bbox.getWidth())),
+                new Integer((int)Math.ceil(this.bbox.getY() + this.bbox.getHeight()))});
         } else {
             gen.writeDSCComment(getName(), DSCConstants.ATEND);
         }
