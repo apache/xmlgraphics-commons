@@ -140,18 +140,6 @@ public class ImageUtil {
     }
 
     /**
-     * Removes any references to InputStreams or Readers from the given ImageInfo's Source
-     * to prohibit accidental/unwanted use by a component further downstream.
-     * @param info the ImageInfo object
-     *//*
-    public static void removeStreams(ImageInfo info) {
-        //Synchronize to avoid concurrent tampering with the Source
-        synchronized (info) {
-            removeStreams(info.getSource());
-        }
-    }*/
-    
-    /**
      * Removes any references to InputStreams or Readers from the given Source to prohibit
      * accidental/unwanted use by a component further downstream.
      * @param src the Source object
@@ -191,8 +179,6 @@ public class ImageUtil {
                 }
                 imageSource.setImageInputStream(null);
             }
-        } else {
-            throw new IllegalArgumentException("Source not supported: " + src.getClass().getName());
         }
     }
     
