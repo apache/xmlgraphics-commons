@@ -131,4 +131,17 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         return getLangAlt(lang, "description");
     }
     
+    /**
+     * Adds a new entry to the list of languages (RFC 3066).
+     * @param value the new value
+     */
+    public void addLanguage(String value) {
+        addStringToBag("language", value);
+    }
+    
+    /** @return a String array of all language */
+    public String[] getLanguages() {
+        return getStringArray("language");
+    }
+    
 }
