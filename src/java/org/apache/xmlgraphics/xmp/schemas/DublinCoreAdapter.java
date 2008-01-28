@@ -33,6 +33,13 @@ import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
  */
 public class DublinCoreAdapter extends XMPSchemaAdapter {
 
+    private static final String CREATOR = "creator";
+    private static final String DATE = "date";
+    private static final String SUBJECT = "subject";
+    private static final String TITLE = "title";
+    private static final String DESCRIPTION = "description";
+    private static final String LANGUAGE = "language";
+    
     /**
      * Constructs a new adapter for Dublin Core around the given metadata object.
      * @param meta the underlying metadata
@@ -46,12 +53,12 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the new value
      */
     public void addCreator(String value) {
-        addStringToSeq("creator", value);
+        addStringToSeq(CREATOR, value);
     }
     
     /** @return a String array of all creators */
     public String[] getCreators() {
-        return getStringArray("creator");
+        return getStringArray(CREATOR);
     }
     
     /**
@@ -60,7 +67,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the date value 
      */
     public void addDate(Date value) {
-        addDateToSeq("date", value);
+        addDateToSeq(DATE, value);
     }
     
     /**
@@ -69,12 +76,12 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the new value
      */
     public void addSubject(String value) {
-        addStringToBag("subject", value);
+        addStringToBag(SUBJECT, value);
     }
     
     /** @return a String array of all subjects */
     public String[] getSubjects() {
-        return getStringArray("subject");
+        return getStringArray(SUBJECT);
     }
     
     /**
@@ -91,7 +98,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the new value
      */
     public void setTitle(String lang, String value) {
-        setLangAlt("title", lang, value);
+        setLangAlt(TITLE, lang, value);
     }
     
     /** @return the title of the resource (in the default language) */
@@ -105,7 +112,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @return the language-dependent value.
      */
     public String getTitle(String lang) {
-        return getLangAlt(lang, "title");
+        return getLangAlt(lang, TITLE);
     }
     
     /**
@@ -114,7 +121,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the new value
      */
     public void setDescription(String lang, String value) {
-        setLangAlt("description", lang, value);
+        setLangAlt(DESCRIPTION, lang, value);
     }
     
     /** @return the description of the content of the resource (in the default language) */
@@ -128,7 +135,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @return the language-dependent value.
      */
     public String getDescription(String lang) {
-        return getLangAlt(lang, "description");
+        return getLangAlt(lang, DESCRIPTION);
     }
     
     /**
@@ -136,12 +143,12 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * @param value the new value
      */
     public void addLanguage(String value) {
-        addStringToBag("language", value);
+        addStringToBag(LANGUAGE, value);
     }
     
     /** @return a String array of all language */
     public String[] getLanguages() {
-        return getStringArray("language");
+        return getStringArray(LANGUAGE);
     }
     
 }
