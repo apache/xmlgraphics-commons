@@ -30,6 +30,11 @@ import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
  */
 public class XMPBasicAdapter extends XMPSchemaAdapter {
 
+    private static final String CREATOR_TOOL = "CreatorTool";
+    private static final String CREATE_DATE = "CreateDate";
+    private static final String MODIFY_DATE = "ModifyDate";
+    private static final String METADATA_DATE = "MetadataDate";
+
     /**
      * Constructs a new adapter for XMP Basic around the given metadata object.
      * @param meta the underlying metadata
@@ -43,12 +48,12 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
      * @param value the creator tool
      */
     public void setCreatorTool(String value) {
-        setValue("CreatorTool", value);
+        setValue(CREATOR_TOOL, value);
     }
 
     /** @return the first known tool used to create the resource */
     public String getCreatorTool() {
-        return getValue("CreatorTool");
+        return getValue(CREATOR_TOOL);
     }
 
     /**
@@ -56,12 +61,12 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
      * @param creationDate the creation date
      */
     public void setCreateDate(Date creationDate) {
-        setDateValue("CreateDate", creationDate);
+        setDateValue(CREATE_DATE, creationDate);
     }
 
     /** @return the date and time the resource was originally created */
     public Date getCreateDate() {
-        return getDateValue("CreateDate");
+        return getDateValue(CREATE_DATE);
     }
     
     /**
@@ -69,12 +74,12 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
      * @param modifyDate the modification date
      */
     public void setModifyDate(Date modifyDate) {
-        setDateValue("ModifyDate", modifyDate);
+        setDateValue(MODIFY_DATE, modifyDate);
     }
 
     /** @return the date and time the resource was last modified */
     public Date getModifyDate() {
-        return getDateValue("ModifyDate");
+        return getDateValue(MODIFY_DATE);
     }
     
     /**
@@ -82,12 +87,12 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
      * @param metadataDate the modification date for the metadata
      */
     public void setMetadataDate(Date metadataDate) {
-        setDateValue("MetadataDate", metadataDate);
+        setDateValue(METADATA_DATE, metadataDate);
     }
     
     /** @return the date and time the resource was originally created */
     public Date getMetadataDate() {
-        return getDateValue("MetadataDate");
+        return getDateValue(METADATA_DATE);
     }
 
 }

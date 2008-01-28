@@ -29,6 +29,10 @@ import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
  */
 public class PDFAAdapter extends XMPSchemaAdapter {
 
+    private static final String PART = "part";
+    private static final String AMD = "amd";
+    private static final String CONFORMANCE = "conformance";
+
     /**
      * Constructs a new adapter for PDF/A around the given metadata object.
      * @param meta the underlying metadata
@@ -44,12 +48,12 @@ public class PDFAAdapter extends XMPSchemaAdapter {
      * @param value the version identifier ("1" for PDF/A-1)
      */
     public void setPart(int value) {
-        setValue("part", Integer.toString(value));
+        setValue(PART, Integer.toString(value));
     }
 
     /** @return the PDF/A version identifier */
     public int getPart() {
-        return Integer.parseInt(getValue("part"));
+        return Integer.parseInt(getValue(PART));
     }
 
     /**
@@ -57,12 +61,12 @@ public class PDFAAdapter extends XMPSchemaAdapter {
      * @param value the amendment identifiert
      */
     public void setAmendment(String value) {
-        setValue("amd", value);
+        setValue(AMD, value);
     }
     
     /** @return the PDF/A amendment identifier */
     public String getAmendment() {
-        return getValue("amd");
+        return getValue(AMD);
     }
     
     /**
@@ -70,12 +74,12 @@ public class PDFAAdapter extends XMPSchemaAdapter {
      * @param value the conformance level ("A" or "B" for PDF/A-1)
      */
     public void setConformance(String value) {
-        setValue("conformance", value);
+        setValue(CONFORMANCE, value);
     }
     
     /** @return the PDF/A conformance level */
     public String getConformance() {
-        return getValue("conformance");
+        return getValue(CONFORMANCE);
     }
     
 }

@@ -28,6 +28,10 @@ import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
  */
 public class AdobePDFAdapter extends XMPSchemaAdapter {
 
+    private static final String KEYWORDS = "Keywords";
+    private static final String PDFVERSION = "PDFVersion";
+    private static final String PRODUCER = "Producer";
+
     /**
      * Constructs a new adapter for Adobe PDF around the given metadata object.
      * @param meta the underlying metadata
@@ -38,7 +42,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
 
     /** @return the keywords */
     public String getKeywords() {
-        return getValue("Keywords");
+        return getValue(KEYWORDS);
     }
     
     /**
@@ -46,12 +50,12 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
      * @param value the keywords
      */
     public void setKeywords(String value) {
-        setValue("Keywords", value);
+        setValue(KEYWORDS, value);
     }
 
     /** @return the PDF version */
     public String getPDFVersion() {
-        return getValue("PDFVersion");
+        return getValue(PDFVERSION);
     }
     
     /**
@@ -59,12 +63,12 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
      * @param value the PDF version (ex. "1.4")
      */
     public void setPDFVersion(String value) {
-        setValue("PDFVersion", value);
+        setValue(PDFVERSION, value);
     }
 
     /** @return the name of the tool that produced the PDF document */
     public String getProducer() {
-        return getValue("Producer");
+        return getValue(PRODUCER);
     }
     
     /**
@@ -72,7 +76,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
      * @param value the producer
      */
     public void setProducer(String value) {
-        setValue("Producer", value);
+        setValue(PRODUCER, value);
     }
 
 }
