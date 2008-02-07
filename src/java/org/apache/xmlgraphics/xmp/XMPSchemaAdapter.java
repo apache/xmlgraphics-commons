@@ -119,8 +119,18 @@ public class XMPSchemaAdapter {
      * @return the formatted date
      */
     public static String formatISO8601Date(Date dt) {
+        return formatISO8601Date(dt, TimeZone.getDefault());
+    }
+    
+    /**
+     * Formats a Date using ISO 8601 format in the given time zone.
+     * @param dt the date
+     * @param tz the time zone
+     * @return the formatted date
+     */
+    public static String formatISO8601Date(Date dt, TimeZone tz) {
         //ISO 8601 cannot be expressed directly using SimpleDateFormat
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(tz);
         cal.setTime(dt);
         int offset = cal.get(Calendar.ZONE_OFFSET);
         offset += cal.get(Calendar.DST_OFFSET);
@@ -144,7 +154,7 @@ public class XMPSchemaAdapter {
             if (zoneOffsetHours < 10) {
                 sb.append('0');
             }
-            sb.append(zoneOffsetHours);
+            sb.append(Math.abs(zoneOffsetHours));
             sb.append(':');
             if (zoneOffsetMinutes < 10) {
                 sb.append('0');
