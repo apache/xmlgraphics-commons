@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.apache.xmlgraphics.util.QName;
@@ -33,10 +34,11 @@ import org.apache.xmlgraphics.util.QName;
  */
 public class XMPSchemaAdapter {
 
-    private static DateFormat pseudoISO8601DateFormat = new SimpleDateFormat(
-                                                            "yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+    private static DateFormat pseudoISO8601DateFormat;
 
     static {
+        pseudoISO8601DateFormat = new SimpleDateFormat(
+                "yyyy'-'MM'-'dd'T'HH':'mm':'ss", Locale.ENGLISH);
         pseudoISO8601DateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
     
@@ -130,7 +132,7 @@ public class XMPSchemaAdapter {
      */
     public static String formatISO8601Date(Date dt, TimeZone tz) {
         //ISO 8601 cannot be expressed directly using SimpleDateFormat
-        Calendar cal = Calendar.getInstance(tz);
+        Calendar cal = Calendar.getInstance(tz, Locale.ENGLISH);
         cal.setTime(dt);
         int offset = cal.get(Calendar.ZONE_OFFSET);
         offset += cal.get(Calendar.DST_OFFSET);

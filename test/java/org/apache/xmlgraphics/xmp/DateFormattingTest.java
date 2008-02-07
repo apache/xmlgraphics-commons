@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.xmp;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
@@ -35,7 +36,7 @@ public class DateFormattingTest extends TestCase {
      * @throws Exception if an error occurs
      */
     public void testDateFormatting() throws Exception {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
         cal.set(2008, Calendar.FEBRUARY, 07, 15, 11, 07);
         cal.set(Calendar.MILLISECOND, 0);
         Date dt = cal.getTime();
