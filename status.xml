@@ -25,6 +25,9 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="fix">
+		    Bugfix for ISO 8601 date formatting with negative time zones in the XMP package.
+		  </action>
 		  <action context="Code" dev="JM" type="add">
 		    The package org.apache.xmlgraphics.image.loader was added. It contains a general
 		    image loading framework for various image formats (bitmap &amp; vector).
