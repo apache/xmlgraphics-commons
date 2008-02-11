@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.image.loader;
 import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
 
+import org.apache.xmlgraphics.java2d.Dimension2DDouble;
 import org.apache.xmlgraphics.util.UnitConv;
 
 /**
@@ -190,32 +191,9 @@ public class ImageSize {
      * @return the size in points
      */
     public Dimension2D getDimensionPt() {
-        return new DoubleDimension2D(getWidthMpt() / 1000.0, getHeightMpt() / 1000.0);
+        return new Dimension2DDouble(getWidthMpt() / 1000.0, getHeightMpt() / 1000.0);
     }
     
-    private static final class DoubleDimension2D extends Dimension2D {
-        private double width;
-        private double height;
-
-        private DoubleDimension2D(double width, double height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        public double getWidth() {
-            return width;
-        }
-
-        public double getHeight() {
-            return height;
-        }
-
-        public void setSize(double w, double h) {
-            this.width = w;
-            this.height = h;
-        }
-    }
-
     /**
      * Returns the size in pixels as a Dimension object.
      * @return the size in pixels
