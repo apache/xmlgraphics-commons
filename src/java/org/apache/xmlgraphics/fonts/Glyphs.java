@@ -19,6 +19,9 @@
  
 package org.apache.xmlgraphics.fonts;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * This class provides a number of constants for glyph management.
  */
@@ -1265,6 +1268,23 @@ public class Glyphs {
         "\u03B6", "zeta"
     };
 
+    private static final Map CHARNAMES_TO_UNICODE;
+    
+    static {
+        Map map = new java.util.TreeMap();
+        for (int i = 0; i < UNICODE_GLYPHS.length; i += 2) {
+            String charName = UNICODE_GLYPHS[i + 1];
+            String unicode = UNICODE_GLYPHS[i];
+            String existing = (String)map.get(charName);
+            if (existing == null) {
+                map.put(charName, unicode);
+            } else {
+                map.put(charName, existing + unicode);
+            }
+        }
+        CHARNAMES_TO_UNICODE = Collections.unmodifiableMap(map);
+    }
+    
     /**
      * Return the glyphname from a character,
      * eg, charToGlyphName('\\') returns "backslash"
@@ -1277,13 +1297,24 @@ public class Glyphs {
     }
     
     /**
+     * Returns a String containing all Unicode code points the given glyph names can be mapped to.
+     * @param glyphName the glyph name
+     * @return a String with a character per applicable Unicode code point or null if no such glyph
+     *          name is known
+     */
+    public static final String getUnicodeCodePointsForGlyphName(String glyphName) {
+        return (String)CHARNAMES_TO_UNICODE.get(glyphName);
+    }
+    
+    /**
      * Return the glyphname from a string,
      * eg, glyphToString("\\") returns "backslash"
      *
      * @param name glyph to evaluate
      * @return the name of the glyph
      * TODO: javadocs for glyphToString and stringToGlyph are confused
-     * TODO: Improve method names
+     * @deprecated User getUnicodeCodePointsForGlyphName instead. This method only returns the
+     *          first Unicode code point it finds.
      */
     public static final String glyphToString(String name) {
         for (int i = 0; i < UNICODE_GLYPHS.length; i += 2) {
