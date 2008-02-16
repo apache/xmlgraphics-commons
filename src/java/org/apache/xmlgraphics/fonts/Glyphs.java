@@ -19,8 +19,17 @@
  
 package org.apache.xmlgraphics.fonts;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * This class provides a number of constants for glyph management.
@@ -102,8 +111,8 @@ public class Glyphs {
                    "Lslash", "lslash", "ogonek", "ring", ".notdef", "breve",
                    "minus", ".notdef", "Zcaron", "zcaron", // 0x10
         "caron", "dotlessi", "dotlessj", "ff", "ffi", "ffl", ".notdef",
-                 ".notdef", ".notdef", ".notdef", ".notdef", ".notdef",
-                 ".notdef", ".notdef", "grave", "quotesingle", // 0x20
+                 ".notdef", NOTDEF, NOTDEF, NOTDEF, NOTDEF,
+                 NOTDEF, NOTDEF, "grave", "quotesingle", // 0x20
         "space", "exclam", "quotedbl", "numbersign", "dollar", "percent",
                  "ampersand", "quoteright", "parenleft", "parenright",
                  "asterisk", "plus", "comma", "hyphen", "period", "slash",
@@ -118,16 +127,16 @@ public class Glyphs {
         "quoteleft", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
                      "l", "m", "n", "o", // 0x70
         "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "braceleft",
-             "bar", "braceright", "asciitilde", ".notdef", // 0x80
-        "Euro", ".notdef", "quotesinglbase", "florin", "quotedblbase",
+             "bar", "braceright", "asciitilde", NOTDEF, // 0x80
+        "Euro", NOTDEF, "quotesinglbase", "florin", "quotedblbase",
                 "ellipsis", "dagger", "daggerdbl", "circumflex",
-                "perthousand", "Scaron", "guilsinglleft", "OE", ".notdef",
-                ".notdef", ".notdef", // 0x90
-        ".notdef", ".notdef", ".notdef", "quotedblleft", "quotedblright",
+                "perthousand", "Scaron", "guilsinglleft", "OE", NOTDEF,
+                NOTDEF, NOTDEF, // 0x90
+        NOTDEF, NOTDEF, NOTDEF, "quotedblleft", "quotedblright",
                    "bullet", "endash", "emdash", "tilde", "trademark",
-                   "scaron", "guilsinglright", "oe", ".notdef", ".notdef",
+                   "scaron", "guilsinglright", "oe", NOTDEF, NOTDEF,
                    "Ydieresis", // 0xA0
-        ".notdef", "exclamdown", "cent", "sterling", "currency", "yen",
+        NOTDEF, "exclamdown", "cent", "sterling", "currency", "yen",
                    "brokenbar", "section", "dieresis", "copyright",
                    "ordfeminine", "guillemotleft", "logicalnot", "hyphen",
                    "registered", "macron", // 0xB0
@@ -212,7 +221,10 @@ public class Glyphs {
     /**
      * List of unicode glyphs
      */
-    public static final String[] UNICODE_GLYPHS = {
+    private static final String[] UNICODE_GLYPHS;
+    private static final String[] DINGBATS_GLYPHS;
+    /*
+    public static final String[] OLD_UNICODE_GLYPHS = {
         "\u0041", "A",
         "\u00C6", "AE",
         "\u01FC", "AEacute",
@@ -1266,25 +1278,143 @@ public class Glyphs {
         "\uF730", "zerooldstyle",
         "\u2070", "zerosuperior",
         "\u03B6", "zeta"
-    };
+    };*/
+    
+    private static final Map CHARNAME_ALTERNATIVES;
 
     private static final Map CHARNAMES_TO_UNICODE;
     
     static {
         Map map = new java.util.TreeMap();
-        for (int i = 0; i < UNICODE_GLYPHS.length; i += 2) {
-            String charName = UNICODE_GLYPHS[i + 1];
-            String unicode = UNICODE_GLYPHS[i];
+        UNICODE_GLYPHS = loadGlyphList("glyphlist.txt", map);
+        DINGBATS_GLYPHS = loadGlyphList("zapfdingbats.txt", map);
+        CHARNAMES_TO_UNICODE = Collections.unmodifiableMap(map);
+        
+        /*
+        map = new java.util.TreeMap();
+        Map unicodes = new java.util.HashMap();
+        for (int i = 0; i < OLD_UNICODE_GLYPHS.length; i += 2) {
+            String charName = OLD_UNICODE_GLYPHS[i + 1];
+            String unicode = OLD_UNICODE_GLYPHS[i];
             String existing = (String)map.get(charName);
             if (existing == null) {
                 map.put(charName, unicode);
             } else {
+                System.out.println("Duplicate: " + charName + " " + Integer.toHexString(existing.charAt(0)) + " " + Integer.toHexString(unicode.charAt(0)));
                 map.put(charName, existing + unicode);
             }
-        }
-        CHARNAMES_TO_UNICODE = Collections.unmodifiableMap(map);
+            Character u = new Character(unicode.charAt(0));
+            if (unicodes.containsKey(u)) {
+                System.out.println("Duplicate Unicode " + Integer.toHexString(u.charValue()) + " " + charName);
+            }
+            unicodes.put(u, charName);
+        }*/
+        
+        map = new java.util.TreeMap();
+        addAlternatives(map, new String[] {"Omega", "Omegagreek"});
+        addAlternatives(map, new String[] {"Delta", "Deltagreek"});
+        //fraction maps to 2044 (FRACTION SLASH) and 2215 (DIVISION SLASH)
+        addAlternatives(map, new String[] {"fraction", "divisionslash"});
+        //hyphen maps to 002D (HYPHEN-MINUS) and 00AD (SOFT HYPHEN)
+        addAlternatives(map, new String[] {"hyphen", "sfthyphen", "softhyphen"});
+        //macron maps to 00AF (MACRON) and 02C9 (MODIFIER LETTER MACRON)
+        addAlternatives(map, new String[] {"macron", "overscore"});
+        //mu maps to 00B5 (MICRO SIGN) and 03BC (GREEK SMALL LETTER MU)
+        addAlternatives(map, new String[] {"mu", "mu1", "mugreek"});
+        //periodcentered maps to 00B7 (MIDDLE DOT) and 2219 (BULLET OPERATOR)
+        addAlternatives(map, new String[]
+                                    {"periodcentered", "middot", "bulletoperator", "anoteleia"});
+        //space maps to 0020 (SPACE) and 00A0 (NO-BREAK SPACE)
+        addAlternatives(map, new String[] {"space", "nonbreakingspace", "nbspace"});
+
+        //Scedilla maps to 015E (and F6C1 in private use area)
+        //Tcommaaccent maps to 0162 (LATIN CAPITAL LETTER T WITH CEDILLA)
+        //  and 021a (LATIN CAPITAL LETTER T WITH COMMA BELOW)
+        //scedilla maps to 015f (LATIN SMALL LETTER S WITH CEDILLA) (and F6C2 in private use area)
+        //tcommaaccent maps to 0163 and 021b
+        
+        CHARNAME_ALTERNATIVES = Collections.unmodifiableMap(map);
     }
     
+    private static void addAlternatives(Map map, String[] alternatives) {
+        for (int i = 0, c = alternatives.length; i < c; i++) {
+            String[] alt = new String[c - 1];
+            int idx = 0;
+            for (int j = 0; j < c; j++) {
+                if (i != j) {
+                    alt[idx] = alternatives[j];
+                    idx++;
+                }
+            }
+            map.put(alternatives[i], alt);
+        }
+    }
+    
+    private static String[] loadGlyphList(String filename, Map charNameToUnicodeMap) {
+        List lines = new java.util.ArrayList();
+        InputStream in = Glyphs.class.getResourceAsStream(filename);
+        if (in == null) {
+            throw new Error("Cannot load " + filename
+                    + ". The Glyphs class cannot properly be initialized!");
+        }
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
+            String line;
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (line.startsWith("#")) {
+                    continue;
+                } else {
+                    lines.add(line);
+                }
+            };
+        } catch (UnsupportedEncodingException uee) {
+            throw new Error("Incompatible JVM! US-ASCII encoding is not supported."
+                    + " The Glyphs class cannot properly be initialized!");
+        } catch (IOException ioe) {
+            throw new Error("I/O error while loading " + filename
+                    + ". The Glyphs class cannot properly be initialized!");
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+        String[] arr = new String[lines.size() * 2];
+        int pos = 0;
+        StringBuffer buf = new StringBuffer();;
+        for (int i = 0, c = lines.size(); i < c; i++) {
+            String line = (String)lines.get(i);
+            int semicolon = line.indexOf(';');
+            if (semicolon <= 0) {
+                continue;
+            }
+            String charName = line.substring(0, semicolon);
+            String rawUnicode = line.substring(semicolon + 1);
+            buf.setLength(0);
+            
+            StringTokenizer tokenizer = new StringTokenizer(rawUnicode, " ", false);
+            while (tokenizer.hasMoreTokens()) {
+                String token = tokenizer.nextToken();
+                assert token.length() == 4;
+                buf.append(hexToChar(token));
+            }
+                
+            String unicode = buf.toString(); 
+            arr[pos] = unicode;
+            pos++;
+            arr[pos] = charName;
+            pos++;
+            assert !charNameToUnicodeMap.containsKey(charName);
+            charNameToUnicodeMap.put(charName, unicode);
+        }
+        return arr;
+    }
+    
+    private static final char hexToChar(String hex) {
+        return (char)Integer.parseInt(hex, 16);
+    }
+
     /**
      * Return the glyphname from a character,
      * eg, charToGlyphName('\\') returns "backslash"
@@ -1297,13 +1427,52 @@ public class Glyphs {
     }
     
     /**
-     * Returns a String containing all Unicode code points the given glyph names can be mapped to.
+     * Returns a String containing the Unicode sequence the given glyph name represents.
      * @param glyphName the glyph name
-     * @return a String with a character per applicable Unicode code point or null if no such glyph
-     *          name is known
+     * @return the Unicode sequence of the glyph (or null if the glyph name is unknown)
      */
-    public static final String getUnicodeCodePointsForGlyphName(String glyphName) {
-        return (String)CHARNAMES_TO_UNICODE.get(glyphName);
+    public static final String getUnicodeSequenceForGlyphName(String glyphName) {
+        //Mapping: see http://www.adobe.com/devnet/opentype/archives/glyph.html
+        //Step 1
+        int period = glyphName.indexOf('.');
+        if (period >= 0) {
+            glyphName = glyphName.substring(0, period);
+        }
+        
+        //Step 2
+        StringBuffer sb = new StringBuffer();
+        StringTokenizer tokenizer = new StringTokenizer(glyphName, "_", false);
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            //Step 3
+            String sequence = (String)CHARNAMES_TO_UNICODE.get(token);
+            if (sequence == null) {
+                if (token.startsWith("uni")) {
+                    int len = token.length();
+                    int pos = 3;
+                    while (pos + 4 <= len) {
+                        sb.append(hexToChar(token.substring(pos, pos + 4)));
+                        pos += 4;
+                    }
+                } else if (token.startsWith("u")) {
+                    if (token.length() > 7) {
+                        //TODO: Unicode scalar values greater than FFFF are currently not supported
+                        return null;
+                    }
+                    sb.append(hexToChar(token.substring(1, 5)));
+                } else {
+                    //ignore (empty string)
+                }
+            } else {
+                sb.append(sequence);
+            }
+        }
+        
+        if (sb.length() == 0) {
+            return null;
+        } else {
+            return sb.toString();
+        }
     }
     
     /**
@@ -1330,7 +1499,7 @@ public class Glyphs {
      * eg stringToGlyph("backslash") returns "\\"
      *
      * @param name name of the glyph
-     * @return the string representation
+     * @return the string representation (or an empty String if no match was found)
      */
     public static String stringToGlyph(String name) {
         for (int i = 0; i < UNICODE_GLYPHS.length; i += 2) {
@@ -1338,8 +1507,22 @@ public class Glyphs {
                 return UNICODE_GLYPHS[i + 1];
             }
         }
+        for (int i = 0; i < DINGBATS_GLYPHS.length; i += 2) {
+            if (DINGBATS_GLYPHS[i].equals(name)) {
+                return DINGBATS_GLYPHS[i + 1];
+            }
+        }
         return "";
     }
 
+    /**
+     * Returns an array of char names which can serve as alternatives for the given one.
+     * @param charName the character name to search alternatives for
+     * @return an array of char names or null if no alternatives are available
+     */
+    public static String[] getCharNameAlternativesFor(String charName) {
+        return (String[])CHARNAME_ALTERNATIVES.get(charName);
+    }
+    
 }
 
