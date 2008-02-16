@@ -57,6 +57,10 @@ version 2.0. For the license text, please see the following files:
 Legal information on libraries used by Apache XML Graphics Commons, i.e. 
 its dependencies, can be found in the "lib/README.txt" file.
 
+Apache XML Graphics Commons contains unmodified copies of the Adobe Glyph
+List and the ITC Zapf Dingbats Glyph List, available from:
+http://www.adobe.com/devnet/opentype/archives/glyph.html
+
 License labeling (according to http://www.apache.org/legal/3party.html):
 - Single-License
 - Source Available
