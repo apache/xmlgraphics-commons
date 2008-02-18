@@ -44,7 +44,7 @@ public class Glyphs {
     /**
      * Glyph names for Mac encoding
      */
-    public static final String MAC_GLYPH_NAMES[] = {
+    public static final String[] MAC_GLYPH_NAMES = {
         /* 0x00 */
         NOTDEF, ".null", "CR", "space", "exclam", "quotedbl", "numbersign",
                 "dollar", "percent", "ampersand", "quotesingle", "parenleft",
@@ -284,17 +284,11 @@ public class Glyphs {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
             String line;
-            while (true) {
-                line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                if (line.startsWith("#")) {
-                    continue;
-                } else {
+            while ((line = reader.readLine()) != null) {
+                if (!line.startsWith("#")) {
                     lines.add(line);
                 }
-            };
+            }
         } catch (UnsupportedEncodingException uee) {
             throw new Error("Incompatible JVM! US-ASCII encoding is not supported."
                     + " The Glyphs class cannot properly be initialized!");
@@ -306,7 +300,7 @@ public class Glyphs {
         }
         String[] arr = new String[lines.size() * 2];
         int pos = 0;
-        StringBuffer buf = new StringBuffer();;
+        StringBuffer buf = new StringBuffer();
         for (int i = 0, c = lines.size(); i < c; i++) {
             String line = (String)lines.get(i);
             int semicolon = line.indexOf(';');
@@ -335,7 +329,7 @@ public class Glyphs {
         return arr;
     }
     
-    private static final char hexToChar(String hex) {
+    private static char hexToChar(String hex) {
         return (char)Integer.parseInt(hex, 16);
     }
 
