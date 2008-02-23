@@ -25,6 +25,9 @@
 	</todo>
 	<changes>
 		<release version="Trunk" date="n/a">
+		  <action context="Code" dev="JM" type="add" fixes-bug="44466" due-to="Adam Strzelecki">
+		    Image Loading: Support for passing in SAXSource instance.
+		  </action>
 		  <action context="Code" dev="JM" type="fix">
 		    Bugfix for ISO 8601 date formatting with negative time zones in the XMP package.
 		  </action>

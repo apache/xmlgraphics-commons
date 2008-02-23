@@ -45,6 +45,6 @@ public class MockImageContext implements ImageContext {
     }
     
     public ImageSessionContext newSessionContext() {
-        return new MockImageSessionContext();
+        return new MockImageSessionContext(this);
     }
 }

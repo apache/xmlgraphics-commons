@@ -19,9 +19,18 @@
 
 package org.apache.xmlgraphics.image.loader;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXSource;
 
 import junit.framework.TestCase;
+
+import org.xml.sax.InputSource;
 
 import org.apache.xmlgraphics.image.loader.spi.ImageLoaderFactory;
 import org.apache.xmlgraphics.util.MimeConstants;
@@ -245,4 +254,51 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(17000, info.getSize().getHeightMpt());
     }
  
+    public void testSAXSourceWithSystemID() throws Exception {
+        URIResolver resolver = new URIResolver() {
+            public Source resolve(String href, String base) throws TransformerException {
+                if (href.startsWith("img:")) {
+                    String filename = href.substring(4);
+                    InputSource is = new InputSource(base + filename);
+                    return new SAXSource(is);
+                } else {
+                    return null;
+                }
+            }
+        };
+        checkImageFound("img:asf-logo.png", resolver);
+    }
+    
+    public void testSAXSourceWithInputStream() throws Exception {
+        URIResolver resolver = new URIResolver() {
+            public Source resolve(String href, String base) throws TransformerException {
+                if (href.startsWith("img:")) {
+                    String filename = href.substring(4);
+                    InputSource is;
+                    try {
+                        is = new InputSource(new java.io.FileInputStream(
+                                new File(MockImageSessionContext.IMAGE_BASE_DIR, filename)));
+                    } catch (FileNotFoundException e) {
+                        throw new TransformerException(e);
+                    }
+                    return new SAXSource(is);
+                } else {
+                    return null;
+                }
+            }
+        };
+        checkImageFound("img:asf-logo.png", resolver);
+    }
+    
+    private void checkImageFound(String uri, URIResolver resolver)
+                throws ImageException, IOException {
+        ImageSessionContext sessionContext = new SimpleURIResolverBasedImageSessionContext(
+                imageContext, MockImageSessionContext.IMAGE_BASE_DIR, resolver);
+        ImageManager manager = imageContext.getImageManager();
+        
+        ImageInfo info = manager.preloadImage(uri, sessionContext);
+        assertNotNull("ImageInfo must not be null", info);
+        assertEquals(uri, info.getOriginalURI());
+    }
+    
 }

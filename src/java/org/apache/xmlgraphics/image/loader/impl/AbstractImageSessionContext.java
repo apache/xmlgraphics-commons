@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
@@ -68,7 +69,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             }
             return null;
         }
-        if (!(source instanceof StreamSource)) {
+        if (!(source instanceof StreamSource) && !(source instanceof SAXSource)) {
             //Return any non-stream Sources and let the ImageLoaders deal with them
             return source;
         }
@@ -85,20 +86,19 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         File f = FileUtils.toFile(url);
         if (f != null) {
             boolean directFileAccess = true;
-            InputStream in = null;
-            if (source instanceof StreamSource) {
-                StreamSource streamSource = (StreamSource)source; 
-                in = streamSource.getInputStream();
-                if (in == null) {
-                    try {
-                        in = new java.io.FileInputStream(f);
-                    } catch (FileNotFoundException fnfe) {
-                        log.error("Error while opening file."
-                                + " Could not load image from system identifier '"
-                                + source.getSystemId() + "' (" + fnfe.getMessage() + ")");
-                        return null;
-                    }
+            assert (source instanceof StreamSource) || (source instanceof SAXSource);
+            InputStream in = ImageUtil.getInputStream(source);
+            if (in == null) {
+                try {
+                    in = new java.io.FileInputStream(f);
+                } catch (FileNotFoundException fnfe) {
+                    log.error("Error while opening file."
+                            + " Could not load image from system identifier '"
+                            + source.getSystemId() + "' (" + fnfe.getMessage() + ")");
+                    return null;
                 }
+            }
+            if (in != null) {
                 in = ImageUtil.decorateMarkSupported(in);
                 try {
                     if (ImageUtil.isGZIPCompressed(in)) {
@@ -130,16 +130,12 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         }
         
         if (imageSource == null) {
-            // Got a valid source, obtain an InputStream from it
-            InputStream in = null;
-            if (source instanceof StreamSource) {
-                StreamSource ssrc = (StreamSource)source;
-                if (ssrc.getReader() != null && ssrc.getInputStream() == null) {
-                    //We don't handle Reader instances here so return the Source unchanged
-                    return ssrc;
-                }
-                in = ssrc.getInputStream();
+            if (ImageUtil.hasReader(source) && !ImageUtil.hasInputStream(source)) {
+                //We don't handle Reader instances here so return the Source unchanged
+                return source;
             }
+            // Got a valid source, obtain an InputStream from it
+            InputStream in = ImageUtil.getInputStream(source);
             if (in == null && url != null) {
                 try {
                     in = url.openStream();

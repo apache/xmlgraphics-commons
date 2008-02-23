@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.image.loader.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -31,7 +32,10 @@ import java.util.zip.GZIPInputStream;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+
+import org.xml.sax.InputSource;
 
 import org.apache.commons.io.IOUtils;
 
@@ -54,9 +58,13 @@ public class ImageUtil {
             return ((StreamSource)src).getInputStream();
         } else if (src instanceof ImageSource) {
             return new ImageInputStreamAdapter(((ImageSource)src).getImageInputStream());
-        } else {
-            return null;
+        } else if (src instanceof SAXSource) {
+            InputSource is = ((SAXSource)src).getInputSource();
+            if (is != null) {
+                return is.getByteStream();
+            }
         }
+        return null;
     }
 
     /**
@@ -119,9 +127,31 @@ public class ImageUtil {
             return (in != null);
         } else if (src instanceof ImageSource) {
             return hasImageInputStream(src);
-        } else {
-            return false;
+        } else if (src instanceof SAXSource) {
+            InputSource is = ((SAXSource)src).getInputSource();
+            if (is != null) {
+                return (is.getByteStream() != null);
+            }
         }
+        return false;
+    }
+
+    /**
+     * Indicates whether the Source object has a Reader instance.
+     * @param src the Source object
+     * @return true if an Reader is available
+     */
+    public static boolean hasReader(Source src) {
+        if (src instanceof StreamSource) {
+            Reader reader = ((StreamSource)src).getReader(); 
+            return (reader != null);
+        } else if (src instanceof SAXSource) {
+            InputSource is = ((SAXSource)src).getInputSource();
+            if (is != null) {
+                return (is.getCharacterStream() != null);
+            }
+        }
+        return false;
     }
 
     /**
@@ -152,6 +182,12 @@ public class ImageUtil {
             StreamSource ssrc = (StreamSource)src;
             ssrc.setInputStream(null);
             ssrc.setReader(null);
+        } else if (src instanceof SAXSource) {
+            InputSource is = ((SAXSource)src).getInputSource();
+            if (is != null) {
+                is.setByteStream(null);
+                is.setCharacterStream(null);
+            }
         }
     }
     
@@ -178,6 +214,14 @@ public class ImageUtil {
                     //ignore
                 }
                 imageSource.setImageInputStream(null);
+            }
+        } else if (src instanceof SAXSource) {
+            InputSource is = ((SAXSource)src).getInputSource();
+            if (is != null) {
+                IOUtils.closeQuietly(is.getByteStream());
+                is.setByteStream(null);
+                IOUtils.closeQuietly(is.getCharacterStream());
+                is.setCharacterStream(null);
             }
         }
     }

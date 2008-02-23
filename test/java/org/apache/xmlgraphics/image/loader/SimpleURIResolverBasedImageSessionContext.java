@@ -21,22 +21,40 @@ package org.apache.xmlgraphics.image.loader;
 
 import java.io.File;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+
 import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
 
 /**
- * Mock implementation for testing.
+ * ImageSessionContext which uses a URIResolver to resolve URIs.
  */
-public class MockImageSessionContext extends DefaultImageSessionContext {
+public class SimpleURIResolverBasedImageSessionContext
+            extends DefaultImageSessionContext {
 
-    public static final File IMAGE_BASE_DIR = new File("./test/images/");
-    
-    public MockImageSessionContext(ImageContext context) {
-        super(context, IMAGE_BASE_DIR);
+    private URIResolver resolver;
+
+    /**
+     * Main constructor
+     * @param context the parent image context
+     * @param baseDir the base directory
+     * @param resolver the URI resolver
+     */
+    public SimpleURIResolverBasedImageSessionContext(ImageContext context, 
+            File baseDir, URIResolver resolver) {
+        super(context, baseDir);
+        this.resolver = resolver;
     }
     
     /** {@inheritDoc} */
-    public float getTargetResolution() {
-        return 300;
+    protected Source resolveURI(String uri) {
+        try {
+            return this.resolver.resolve(uri, getBaseDir().toURI().toASCIIString());
+        } catch (TransformerException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
