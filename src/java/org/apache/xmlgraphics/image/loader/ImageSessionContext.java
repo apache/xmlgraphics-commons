@@ -46,7 +46,7 @@ public interface ImageSessionContext {
     
     /**
      * Attempts to create a Source object from the given URI. If possible this method returns
-     * ImageSource instance which provide the best possible method to access the image.
+     * an ImageSource instance which provides the best possible method to access the image.
      * @param uri URI to access
      * @return A {@link javax.xml.transform.Source} object, or null if the URI
      * cannot be resolved. 
