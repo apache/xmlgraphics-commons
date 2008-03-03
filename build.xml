@@ -90,6 +90,7 @@
   <fileset dir="${basedir}" id="dist.bin.lib">
     <patternset id="dist.lib">
       <include name="lib/commons-io*"/>
+      <include name="lib/commons-logging*"/>
       <include name="lib/README*"/>
     </patternset>
   </fileset>
@@ -556,7 +557,8 @@ NOTE:
     <mkdir dir="${dist.bin.result.dir}/build"/>
     <copy todir="${dist.bin.result.dir}/build" file="build/${name}-${version}.jar"/>
 
-    <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
+    <!--property name="bin.suffix" value="bin-jdk${java.specification.version}"/-->
+    <property name="bin.suffix" value="bin"/>
     <zip zipfile="${name}-${version}-${bin.suffix}.zip" basedir="${dist.bin.dir}" includes="**"/>
     <tar longfile="gnu"
          destfile="${name}-${version}-${bin.suffix}.tar">
@@ -591,7 +593,8 @@ NOTE:
   </target>
 
   <target name="release-dist" depends="dist" description="Generates the distribution package and signs the release">
-    <property name="bin.suffix" value="bin-jdk${java.specification.version}"/>
+    <!--property name="bin.suffix" value="bin-jdk${java.specification.version}"/-->
+    <property name="bin.suffix" value="bin"/>
     <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
     <antcall target="md5">
       <param name="sign.archive" value="${name}-${version}-src.zip"/>
