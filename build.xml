@@ -627,8 +627,8 @@ NOTE:
   </target>
 
   <target name="md5">
-    <property name="md5.exec" value="md5"/>
-    <property name="md5.options" value="-q"/>
+    <property name="md5.exec" value="md5sum"/>
+    <property name="md5.options" value=""/>
     <exec executable="${md5.exec}" output="${sign.archive}.md5">
       <arg line="${md5.options} ${sign.archive}"/>
     </exec>
