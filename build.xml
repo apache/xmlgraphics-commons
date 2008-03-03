@@ -386,7 +386,8 @@ NOTE:
         failonerror="true"
         public="${javadoc.public}"
         package="${javadoc.package}"
-        private="${javadoc.private}">
+        private="${javadoc.private}"
+        source="${javac.source}">
       <header><![CDATA[${name} ${version}]]></header>
       <footer><![CDATA[${name} ${version}]]></footer>
       <classpath>
