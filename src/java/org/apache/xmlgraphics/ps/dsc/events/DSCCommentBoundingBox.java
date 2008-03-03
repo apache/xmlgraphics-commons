@@ -58,7 +58,7 @@ public class DSCCommentBoundingBox extends AbstractDSCComment {
     
     /**
      * Sets the bounding box.
-     * @param name the bounding box
+     * @param bbox the bounding box
      */
     public void setBoundingBox(Rectangle2D bbox) {
         this.bbox = bbox;
