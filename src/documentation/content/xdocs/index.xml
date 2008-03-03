@@ -102,6 +102,18 @@
     <section>
       <title>News</title>
       <section>
+        <title>7 March 2008: Version 1.3 Released</title>
+        <p>
+          The most important addition in this release is an image loading framework
+          which supports all sorts of different image formats (bitmap and vector) and
+          is highly extensible.
+          Support for Java 1.3 has been dropped. Java 1.4 or later is required now.
+          Besides that there were a larger number of smaller additions and bugfixes.
+          For details about other fixes, please see the
+          <a href="changes.html">Changes</a> page.
+        </p>
+      </section>
+      <section>
         <title>21 July 2007: Version 1.2 Released</title>
         <p>This release mainly adds support for CMYK and GRAY color spaces for
           PSGenerator. For details about other fixes, please see the <a
