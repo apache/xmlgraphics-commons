@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.imageio.stream.ImageInputStream;
 
@@ -42,7 +43,10 @@ public abstract class AbstractImagePreloader implements ImagePreloader {
                 throws IOException {
         byte[] header = new byte[size];
         long startPos = in.getStreamPosition();
-        in.readFully(header);
+        int read = in.read(header);
+        if (read < size) {
+            Arrays.fill(header, (byte)0);
+        }
         in.seek(startPos); //Seek back to start position
         return header;
     }

@@ -39,7 +39,12 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
-		<release version="Trunk" date="n/a">
+    <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix for EOFException when pre-loading very small PNG images.
+      </action>
+    </release>
+    <release version="1.3" date="07 Feb 2008">
 		  <action context="Code" dev="JM" type="update" importance="high">
 		    Support for Java 1.3 has been dropped. Java 1.4 or later is required now.
 		  </action>
