@@ -41,7 +41,7 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
-        Bugfix for EOFException when pre-loading very small PNG images.
+        Bugfix for EOFException when pre-loading very small PNG images (file size &lt; 88 bytes).
       </action>
     </release>
     <release version="1.3" date="07 Feb 2008">
