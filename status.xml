@@ -41,6 +41,9 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Fixed behaviour for the cases where a corrupt PNG image is encountered.
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Bugfix for EOFException when pre-loading very small PNG images (file size &lt; 88 bytes).
       </action>
     </release>
