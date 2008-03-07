@@ -57,6 +57,7 @@ public class PreloaderImageIO extends AbstractImagePreloader {
             return null;
         }
 
+        IOException firstIOException = null;
         IIOMetadata iiometa = null;
         ImageSize size = null;
         String mime = null;
@@ -73,10 +74,25 @@ public class PreloaderImageIO extends AbstractImagePreloader {
                 mime = reader.getOriginatingProvider().getMIMETypes()[0];
                 break;
             } catch (IOException ioe) {
-                //ignore and continue
+                //remember the first exception, ignore all others and continue
+                if (firstIOException == null) {
+                    firstIOException = ioe;
+                }
             } finally {
                 reader.dispose();
                 in.reset();
+            }
+        }
+        
+        if (iiometa == null) {
+            if (firstIOException == null) {
+                throw new ImageException("Could not extract image metadata");
+            } else {
+                throw new ImageException("I/O error while extracting image metadata"
+                        + (firstIOException.getMessage() != null
+                            ? ": " + firstIOException.getMessage()
+                            : ""),
+                        firstIOException);
             }
         }
         

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
@@ -241,7 +242,11 @@ public class ImageUtil {
                         String methodName = method.getName();
                         //Ignore calls to flush*()
                         if (!methodName.startsWith("flush")) {
-                            return method.invoke(in, args);
+                            try {
+                                return method.invoke(in, args);
+                            } catch (InvocationTargetException ite) {
+                                throw ite.getCause();
+                            }
                         } else {
                             return null;
                         }
