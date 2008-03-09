@@ -71,6 +71,11 @@
           <td>Batik</td>
         </tr>
         <tr>
+          <td>Image loader framework (format detection, conversion and unified handling for bitmap and vector images).</td>
+          <td>org.apache.xmlgraphics.image.loader</td>
+          <td>new</td>
+        </tr>
+        <tr>
           <td>Graphics2D implementation that produces PostScript and EPS</td>
           <td>org.apache.xmlgraphics.java2d.ps</td>
           <td>FOP</td>
@@ -101,26 +106,10 @@
     </section>
     <section>
       <title>News</title>
-      <section>
-        <title>21 July 2007: Version 1.2 Released</title>
-        <p>This release mainly adds support for CMYK and GRAY color spaces for
-          PSGenerator. For details about other fixes, please see the <a
-            href="changes.html">Changes</a> page.</p>
-      </section>
-      <section>
-        <title>22 December 2006: Version 1.1 Released</title>
-        <p>
-          This release adds an XMP metadata framework and brings improvements for the
-          ImageWriter package plus some minor fixes mainly in the PostScript area.
-        </p>
-      </section>
-      <section>
-        <title>17 April 2006: Version 1.0 Released</title>
-        <p>
-          This is the first release of Apache XML Graphics Commons. There are currently no
-          known issues with the code.
-        </p>
-      </section>
+      <p>
+        RSS Feed: <a href="subproject-news-feed.rss"><img src="feed-icon-14x14.png" alt="Subproject News Feed"/></a>
+      </p>
+      <xi:include href="cocoon://subproject-news-document.xml#xpointer(/document/body/*)" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     </section>
   </body>
 </document>
