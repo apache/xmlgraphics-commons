@@ -51,6 +51,11 @@
     <release>
       <Version>
         <name>Latest release (stable)</name>
+        <created>2008-03-07</created>
+        <revision>1.3</revision>
+      </Version>
+      <Version>
+        <name>Previous release (stable)</name>
         <created>2007-07-21</created>
         <revision>1.2</revision>
       </Version>
