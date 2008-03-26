@@ -65,18 +65,19 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
         in.mark();
         try {
             ImageSize size = new ImageSize();
+            JPEGFile jpeg = new JPEGFile(in);
 
             //TODO Read resolution from EXIF if there's no APP0
             //(for example with JPEGs from digicams)
             while (true) {
-                int segID = readMarkerSegment(in);
+                int segID = jpeg.readMarkerSegment();
                 //System.out.println("Segment: " + Integer.toHexString(segID));
                 switch (segID) {
                 case SOI:
                 case NULL:
                     break;
                 case APP0:
-                    int reclen = in.readUnsignedShort();
+                    int reclen = jpeg.readSegmentLength();
                     in.skipBytes(7);
                     int densityUnits = in.read();
                     int xdensity = in.readUnsignedShort();
@@ -103,7 +104,7 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                 case SOF1:
                 case SOF2: // SOF2 and SOFA are only supported by PDF 1.3
                 case SOFA:
-                    in.skipBytes(2); //length field
+                    reclen = jpeg.readSegmentLength();
                     in.skipBytes(1);
                     int height = in.readUnsignedShort();
                     int width = in.readUnsignedShort();
@@ -112,17 +113,18 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                         size.calcSizeFromPixels();
                         return size;
                     }
+                    in.skipBytes(reclen - 7);
                     break;
                 case SOS:
                 case EOI:
+                    //Break as early as possible (we don't want to read the whole file here)
                     if (size.getDpiHorizontal() == 0) {
                         size.setResolution(context.getSourceResolution());
                         size.calcSizeFromPixels();
                     }
                     return size;
                 default:
-                    reclen = in.readUnsignedShort();
-                    in.skipBytes(reclen - 2);
+                    jpeg.skipCurrentMarkerSegment();
                 }
             }
         } finally {
@@ -130,13 +132,4 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
         }
     }
 
-    private int readMarkerSegment(ImageInputStream in) throws IOException {
-        int marker;
-        do {
-            marker = in.read();
-        } while (marker != MARK);
-        int segID = in.read();
-        return segID;
-    }
-    
 }

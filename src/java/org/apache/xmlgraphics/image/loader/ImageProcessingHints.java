@@ -30,4 +30,7 @@ public interface ImageProcessingHints {
     /** Used to send a hint about the target resolution (of the final output format). */
     Object TARGET_RESOLUTION = "TARGET_RESOLUTION"; //Value: Number (unit dpi)
     
+    /** Used to tell the image loader to ignore any color profile in the image. */
+    Object IGNORE_COLOR_PROFILE = "IGNORE_COLOR_PROFILE"; //Value: Boolean
+    
 }

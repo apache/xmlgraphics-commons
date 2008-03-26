@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add">
+        Added image processing hints to ignore an optionally embedded color profile in JPEG images.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Fixed behaviour for the cases where a corrupt PNG image is encountered.
       </action>
