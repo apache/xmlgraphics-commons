@@ -25,6 +25,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.EndianUtils;
 import org.apache.commons.io.IOUtils;
+
 import org.apache.xmlgraphics.fonts.Glyphs;
 import org.apache.xmlgraphics.util.io.ASCIIHexOutputStream;
 import org.apache.xmlgraphics.util.io.SubInputStream;
@@ -84,12 +85,17 @@ public class PSFontUtils {
         }
     }
 
+    /** the PSResource representing the WinAnsiEncoding. */
+    public static final PSResource WINANSI_ENCODING_RESOURCE
+            = new PSResource(PSResource.TYPE_ENCODING, "WinAnsiEncoding");
+    
     /**
      * Defines the WinAnsi encoding for use in PostScript files.
      * @param gen the PostScript generator
      * @throws IOException In case of an I/O problem
      */
     public static void defineWinAnsiEncoding(PSGenerator gen) throws IOException {
+        gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, WINANSI_ENCODING_RESOURCE);
         gen.writeln("/WinAnsiEncoding [");
         for (int i = 0; i < Glyphs.WINANSI_ENCODING.length; i++) {
             if (i > 0) {
@@ -110,6 +116,8 @@ public class PSFontUtils {
         }
         gen.newLine();
         gen.writeln("] def");
+        gen.writeDSCComment(DSCConstants.END_RESOURCE);
+        gen.getResourceTracker().registerSuppliedResource(WINANSI_ENCODING_RESOURCE);
     }
 
     /**
@@ -130,5 +138,4 @@ public class PSFontUtils {
         gen.writeln("/" + fontName + " exch definefont pop");
     }
 
-    
 }

@@ -67,8 +67,7 @@ public class PSResource {
         return sb.toString();
     }
     
-    
-    /** @see java.lang.Object#equals(java.lang.Object) */
+    /** {@inheritDoc} */
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -80,12 +79,12 @@ public class PSResource {
         }
     }
 
-    /** @see java.lang.Object#hashCode() */
+    /** {@inheritDoc} */
     public int hashCode() {
         return toString().hashCode();
     }
 
-    /** @see java.lang.Object#toString() */
+    /** {@inheritDoc} */
     public String toString() {
         return getResourceSpecification();
     }
