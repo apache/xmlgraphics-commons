@@ -67,7 +67,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
             throw new IllegalArgumentException("ImageInfo must be from a image with MIME type: "
                     + MimeConstants.MIME_JPEG);
         }
-
+        
         ColorSpace colorSpace = null;
         boolean appeFound = false;
         int sofType = 0;
@@ -75,12 +75,13 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
         
         Source src = session.needSource(info.getOriginalURI());
         ImageInputStream in = ImageUtil.needImageInputStream(src);
+        JPEGFile jpeg = new JPEGFile(in);
         in.mark();
         try {
             outer:
             while (true) {
                 int reclen;
-                int segID = readMarkerSegment(in);
+                int segID = jpeg.readMarkerSegment();
                 if (log.isDebugEnabled()) {
                     log.debug("Seg Marker: " + Integer.toHexString(segID));
                 }
@@ -103,7 +104,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                     }
                     in.mark();
                     try {
-                        reclen = in.readUnsignedShort();
+                        reclen = jpeg.readSegmentLength();
                         in.skipBytes(1); //data precision
                         in.skipBytes(2); //height
                         in.skipBytes(2); //width
@@ -129,7 +130,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                 case APP2: //ICC (see ICC1V42.pdf)
                     in.mark();
                     try {
-                        reclen = in.readUnsignedShort();
+                        reclen = jpeg.readSegmentLength();
                         // Check for ICC profile
                         byte[] iccString = new byte[11];
                         in.readFully(iccString);
@@ -138,14 +139,18 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                         if ("ICC_PROFILE".equals(new String(iccString, "US-ASCII"))) {
                             log.debug("JPEG has an ICC profile");
                             in.skipBytes(2); //chunk sequence number and total number of chunks
-                            if (iccStream == null) {
-                                //ICC profiles can be split into several chunks
-                                //so collect in a byte array output stream
-                                iccStream = new ByteArrayOutputStream();
+                            if (ignoreColorProfile(hints)) {
+                                in.skipBytes(reclen - 18);
+                            } else {
+                                if (iccStream == null) {
+                                    //ICC profiles can be split into several chunks
+                                    //so collect in a byte array output stream
+                                    iccStream = new ByteArrayOutputStream();
+                                }
+                                byte[] buf = new byte[reclen - 18];
+                                in.readFully(buf);
+                                iccStream.write(buf);
                             }
-                            byte[] buf = new byte[reclen - 18];
-                            in.readFully(buf);
-                            iccStream.write(buf);
                         }
                     } finally {
                         in.reset();
@@ -155,7 +160,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                 case APPE: //Adobe-specific (see 5116.DCT_Filter.pdf)
                     in.mark();
                     try {
-                        reclen = in.readUnsignedShort();
+                        reclen = jpeg.readSegmentLength();
                         // Check for Adobe header
                         byte[] adobeHeader = new byte[5];
                         in.readFully(adobeHeader);
@@ -174,8 +179,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                     in.skipBytes(reclen);
                     break;
                 default:
-                    reclen = in.readUnsignedShort();
-                    in.skipBytes(reclen - 2);
+                    jpeg.skipCurrentMarkerSegment();
                 }
             }
         } finally {
@@ -236,21 +240,6 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
         } else {
             return null; //no ICC profile available
         }
-    }
-
-    private int readMarkerSegment(ImageInputStream in) throws IOException {
-        int marker;
-        int count = 0;
-        long startPos = in.getStreamPosition();
-        do {
-            marker = in.read();
-            count++;
-        } while (marker != MARK);
-        if (count > 1) {
-            log.warn("no direct marker found: " + count + " at pos " + startPos);
-        }
-        int segID = in.read();
-        return segID;
     }
 
 }

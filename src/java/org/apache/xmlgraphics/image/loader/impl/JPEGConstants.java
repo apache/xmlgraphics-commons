@@ -43,14 +43,20 @@ public interface JPEGConstants {
     int SOF2 = 0xc2;
     /** Progressive DCT only PDF 1.3 */
     int SOFA = 0xca;
-    /** Application marker, JFIF */
+    
+    /** Application marker, JFIF, JFXX, CIFF */
     int APP0 = 0xe0;
-    /** Application marker, JFIF */
+    /** Application marker, EXIF, XMP */
+    int APP1 = 0xe1;
+    /** Application marker, ICC, FlashPix */
     int APP2 = 0xe2;
-    /** Application marker APPE */
+    /** Application marker APPD/APP13, Photoshop, Adobe_CM */
+    int APPD = 0xed; 
+    /** Application marker APPE/APP14, Adobe */
     int APPE = 0xee; 
-    /** Application marker APPF */
-    int APPF = 0xef; 
+    /** Application marker APPF/APP15, GraphicConverter */
+    int APPF = 0xef;
+    
     /** Start of Scan */
     int SOS = 0xda;
     /** start of Image */

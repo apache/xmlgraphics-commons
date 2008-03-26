@@ -38,7 +38,7 @@ public interface ImageLoader {
      * Loads and returns an image.
      * @param info the image info object indicating the image
      * @param hints a Map of hints that can be used by implementations to customize the loading
-     *                  process.
+     *                  process (may be null).
      * @param session the session context
      * @return the fully loaded image
      * @throws ImageException if an error occurs while loading the image

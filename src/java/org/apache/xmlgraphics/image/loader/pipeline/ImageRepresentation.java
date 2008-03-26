@@ -36,6 +36,9 @@ public class ImageRepresentation implements Vertex {
      * @param flavor the image flavor
      */
     public ImageRepresentation(ImageFlavor flavor) {
+        if (flavor == null) {
+            throw new NullPointerException("flavor must not be null");
+        }
         this.flavor = flavor;
     }
     

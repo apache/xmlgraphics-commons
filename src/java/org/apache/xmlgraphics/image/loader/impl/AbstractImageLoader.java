@@ -20,10 +20,12 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
+import org.apache.xmlgraphics.image.loader.ImageProcessingHints;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
 
@@ -41,6 +43,20 @@ public abstract class AbstractImageLoader implements ImageLoader {
     /** {@inheritDoc} */
     public int getUsagePenalty() {
         return 0;
+    }
+
+    /**
+     * Indicates whether an embedded color profile should be ignored.
+     * @param hints a Map of hints that can be used by implementations to customize the loading
+     *                  process (may be null).
+     * @return true if any color profile should be ignored
+     */
+    protected boolean ignoreColorProfile(Map hints) {
+        if (hints == null) {
+            return false;
+        }
+        Boolean b = (Boolean)hints.get(ImageProcessingHints.IGNORE_COLOR_PROFILE);
+        return (b != null) && b.booleanValue();
     }
 
 }
