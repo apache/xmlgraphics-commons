@@ -25,10 +25,13 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
+import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
+import java.awt.image.SampleModel;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
@@ -200,6 +203,16 @@ public class ImageEncodingHelper {
                     && !cm.hasAlpha()) {
                 Raster raster = image.getTile(0, 0);
                 DataBuffer buffer = raster.getDataBuffer();
+                SampleModel sampleModel = raster.getSampleModel();
+                if (sampleModel instanceof PixelInterleavedSampleModel) {
+                    PixelInterleavedSampleModel piSampleModel;
+                    piSampleModel = (PixelInterleavedSampleModel)sampleModel;
+                    final int[] expectedOffsets = new int[] {0, 1, 2};
+                    int[] offsets = piSampleModel.getBandOffsets();
+                    if (!Arrays.equals(offsets, expectedOffsets)) {
+                        return;
+                    }
+                }
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE
                         && buffer.getOffset() == 0
                         && buffer.getNumBanks() == 1) {
@@ -218,10 +231,11 @@ public class ImageEncodingHelper {
      */
     public void encode(OutputStream out) throws IOException {
         if (!isConverted()) {
-            optimizedWriteTo(out);
-        } else {
-            writeRGBTo(out);
+            if (optimizedWriteTo(out)) {
+                return;
+            }
         }
+        writeRGBTo(out);
     }
     
     /**
