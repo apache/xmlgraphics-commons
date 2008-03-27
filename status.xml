@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix for ImageEncodingHelper which produced false results if an image's sample model
+        used BGR instead of RGB.
+      </action>
       <action context="Code" dev="JM" type="add">
         Added image processing hints to ignore an optionally embedded color profile in JPEG images.
       </action>
