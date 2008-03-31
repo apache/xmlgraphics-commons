@@ -369,7 +369,11 @@ public class Glyphs {
                     int len = token.length();
                     int pos = 3;
                     while (pos + 4 <= len) {
-                        sb.append(hexToChar(token.substring(pos, pos + 4)));
+                        try {
+                            sb.append(hexToChar(token.substring(pos, pos + 4)));
+                        } catch (NumberFormatException nfe) {
+                            return null;
+                        }
                         pos += 4;
                     }
                 } else if (token.startsWith("u")) {
@@ -377,7 +381,11 @@ public class Glyphs {
                         //TODO: Unicode scalar values greater than FFFF are currently not supported
                         return null;
                     }
-                    sb.append(hexToChar(token.substring(1, 5)));
+                    try {
+                        sb.append(hexToChar(token.substring(1, 5)));
+                    } catch (NumberFormatException nfe) {
+                        return null;
+                    }
                 } else {
                     //ignore (empty string)
                 }

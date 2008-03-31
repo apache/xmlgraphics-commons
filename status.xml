@@ -41,6 +41,10 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Bugfix for unhandled NumberFormatException in Glpyhs when a unknown glyph name starting
+        with "u" is found.
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Bugfix for ImageEncodingHelper which produced false results if an image's sample model
         used BGR instead of RGB.
       </action>
