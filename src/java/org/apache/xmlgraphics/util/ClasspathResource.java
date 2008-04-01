@@ -24,9 +24,11 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -77,47 +79,84 @@ public final class ClasspathResource {
         return classpathResource;
     }
 
-    private ClassLoader getClassLoaderForResources() {
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-        return cl;
+    /* Actual return type: Set<ClassLoader> */
+    private Set getClassLoadersForResources() {
+        Set v = new HashSet();
+        try {
+            ClassLoader l = ClassLoader.getSystemClassLoader();
+            if (l != null) {
+                v.add(l);
+            }
+        } catch (SecurityException e) {
+            // Ignore
+        }
+        try {
+            ClassLoader l = Thread.currentThread().getContextClassLoader();
+            if (l != null) {
+                v.add(l);
+            }
+        } catch (SecurityException e) {
+            // Ignore
+        }
+        try {
+            ClassLoader l = ClasspathResource.class.getClassLoader();
+            if (l != null) {
+                v.add(l);
+            }
+        } catch (SecurityException e) {
+            // Ignore
+        }
+        return v;
     }
-    
+
     private void loadManifests() {
         Enumeration e;
         try {
-            e = getClassLoaderForResources().getResources(MANIFEST_PATH);
 
-            while (e.hasMoreElements()) {
-                final URL u = (URL) e.nextElement();
-                try {
-                    final Manifest manifest = new Manifest(u.openStream());
-                    final Map entries = manifest.getEntries();
-                    final Iterator entrysetiterator = entries.entrySet().iterator();
-                    while (entrysetiterator.hasNext()) {
-                        final Map.Entry entry = (Map.Entry) entrysetiterator.next();
-                        final String name = (String) entry.getKey();
-                        final Attributes attributes = (Attributes) entry.getValue();
-                        final String contentType = attributes.getValue(CONTENT_TYPE_KEY);
-                        if (contentType != null) {
-                            addToMapping(contentType, name);
+            Iterator it = getClassLoadersForResources().iterator();
+            while (it.hasNext()) {
+                ClassLoader classLoader = (ClassLoader) it.next();
+
+                e = classLoader.getResources(MANIFEST_PATH);
+
+                while (e.hasMoreElements()) {
+                    final URL u = (URL) e.nextElement();
+                    try {
+                        final Manifest manifest = new Manifest(u.openStream());
+                        final Map entries = manifest.getEntries();
+                        final Iterator entrysetiterator = entries.entrySet()
+                                .iterator();
+                        while (entrysetiterator.hasNext()) {
+                            final Map.Entry entry = (Map.Entry) entrysetiterator
+                                    .next();
+                            final String name = (String) entry.getKey();
+                            final Attributes attributes = (Attributes) entry
+                                    .getValue();
+                            final String contentType = attributes
+                                    .getValue(CONTENT_TYPE_KEY);
+                            if (contentType != null) {
+                                addToMapping(contentType, name, classLoader);
+                            }
                         }
+                    } catch (IOException io) {
+                        // TODO: Log.
                     }
-                } catch (IOException io) {
-                    // TODO: Log.
                 }
             }
+
         } catch (IOException io) {
             // TODO: Log.
         }
     }
 
-    private void addToMapping(final String contentType, final String name) {
+    private void addToMapping(final String contentType, final String name,
+            final ClassLoader classLoader) {
         List existingFiles = (List) contentMappings.get(contentType);
         if (existingFiles == null) {
             existingFiles = new Vector();
             contentMappings.put(contentType, existingFiles);
         }
-        final URL url = getClassLoaderForResources().getResource(name);
+        final URL url = classLoader.getResource(name);
         if (url != null) {
             existingFiles.add(url);
         }
