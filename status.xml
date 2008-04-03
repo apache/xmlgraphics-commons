@@ -41,6 +41,9 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Fixed two cases of unclosed input streams in image loader code.
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Bugfix for unhandled NumberFormatException in Glpyhs when a unknown glyph name starting
         with "u" is found.
       </action>

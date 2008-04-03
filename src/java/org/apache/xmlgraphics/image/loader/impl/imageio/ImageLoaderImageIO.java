@@ -137,8 +137,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 }
             }
         } finally {
-            //ImageUtil.closeQuietly(src); //Cannot do that as codecs my do late reading
-            ImageUtil.removeStreams(src);
+            ImageUtil.closeQuietly(src);
+            //TODO Some codecs may do late reading.
         }
         if (firstException != null) {
             throw new ImageException("Error while loading image: "

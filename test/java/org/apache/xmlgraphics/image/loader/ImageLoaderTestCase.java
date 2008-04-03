@@ -22,6 +22,12 @@ package org.apache.xmlgraphics.image.loader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.imageio.stream.ImageInputStream;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;
 
@@ -41,10 +47,14 @@ public class ImageLoaderTestCase extends TestCase {
         super(name);
     }
     
+    private MyImageSessionContext createImageSessionContext() {
+        return new MyImageSessionContext(imageContext);
+    }
+    
     public void testPNG() throws Exception {
         String uri = "asf-logo.png";
         
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
@@ -60,12 +70,14 @@ public class ImageLoaderTestCase extends TestCase {
         info = imgRed.getInfo(); //Switch to the ImageInfo returned by the image
         assertEquals(126734, info.getSize().getWidthMpt());
         assertEquals(38245, info.getSize().getHeightMpt());
+        
+        sessionContext.checkAllStreamsClosed();
     }
     
     public void testGIF() throws Exception {
         String uri = "bgimg72dpi.gif";
         
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
@@ -81,12 +93,14 @@ public class ImageLoaderTestCase extends TestCase {
         info = imgRed.getInfo(); //Switch to the ImageInfo returned by the image
         assertEquals(192000, info.getSize().getWidthMpt());
         assertEquals(192000, info.getSize().getHeightMpt());
+        
+        sessionContext.checkAllStreamsClosed();
     }
     
     public void testEPSASCII() throws Exception {
         String uri = "barcode.eps";
         
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
@@ -108,12 +122,14 @@ public class ImageLoaderTestCase extends TestCase {
         } finally {
             IOUtils.closeQuietly(in);
         }
+        
+        sessionContext.checkAllStreamsClosed();
     }
  
     public void testEPSBinary() throws Exception {
         String uri = "img-with-tiff-preview.eps";
         
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
@@ -135,6 +151,57 @@ public class ImageLoaderTestCase extends TestCase {
         } finally {
             IOUtils.closeQuietly(in);
         }
+        
+        sessionContext.checkAllStreamsClosed();
     }
  
+    private static class MyImageSessionContext extends MockImageSessionContext {
+
+        private List streams = new java.util.ArrayList();
+        
+        public MyImageSessionContext(ImageContext context) {
+            super(context);
+        }
+
+        public Source newSource(String uri) {
+            Source src = super.newSource(uri);
+            if (src instanceof ImageSource) {
+                ImageSource is = (ImageSource)src;
+                ImageInputStream in = is.getImageInputStream();
+                //in = new ObservableImageInputStream(in, is.getSystemId());
+                in = ObservableStream.Factory.observe(in, is.getSystemId());
+                streams.add(in);
+                is.setImageInputStream(in);
+            }
+            return src;
+        }
+        
+        /** {@inheritDoc} */
+        protected Source resolveURI(String uri) {
+            Source src = super.resolveURI(uri);
+            if (src instanceof StreamSource) {
+                StreamSource ss = (StreamSource)src;
+                if (ss.getInputStream() != null) {
+                    InputStream in = new ObservableInputStream(
+                            ss.getInputStream(), ss.getSystemId());
+                    streams.add(in);
+                    ss.setInputStream(in);
+                }
+            }
+            return src;
+        }
+        
+        public void checkAllStreamsClosed() {
+            Iterator iter = streams.iterator();
+            while (iter.hasNext()) {
+                ObservableStream stream = (ObservableStream)iter.next();
+                iter.remove();
+                if (!stream.isClosed()) {
+                    fail(stream.getClass().getName() + " is NOT closed: " + stream.getSystemID());
+                }
+            }
+        }
+        
+    }
+    
 }
