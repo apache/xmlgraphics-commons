@@ -67,7 +67,7 @@ public class ImageLoaderEPS extends AbstractImageLoader {
         if (binaryHeader != null) {
             //Binary EPS: just extract the EPS part
             in.skip(binaryHeader.getPSStart());
-            in = new SubInputStream(in, binaryHeader.getPSLength());
+            in = new SubInputStream(in, binaryHeader.getPSLength(), true);
         }
         
         ImageRawEPS epsImage = new ImageRawEPS(info, in);
