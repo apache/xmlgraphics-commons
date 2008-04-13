@@ -139,16 +139,16 @@ public class ImageEncodingHelper {
         ColorModel colorModel = image.getColorModel();
         int w = image.getWidth();
         int h = image.getHeight();
+        byte[] buf = new byte[w * 3];
         for (int y = 0; y < h; y++) {
+            int idx = -1;
             for (int x = 0; x < w; x++) {
                 int rgb = colorModel.getRGB(raster.getDataElements(x, y, data));
-                int r = (rgb >> 16) & 0xFF;
-                int g = (rgb >> 8) & 0xFF;
-                int b = (rgb) & 0xFF;
-                out.write(r);
-                out.write(g);
-                out.write(b);
+                buf[++idx] = (byte)(rgb >> 16);
+                buf[++idx] = (byte)(rgb >> 8);
+                buf[++idx] = (byte)(rgb);
             }
+            out.write(buf);
         }
     }
     
