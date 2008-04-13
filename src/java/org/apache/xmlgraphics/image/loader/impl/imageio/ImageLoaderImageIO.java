@@ -106,7 +106,11 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
                             imageData = reader.read(pageIndex, param);
                         } else {
-                            imageData = reader.readAsRenderedImage(pageIndex, param);
+                            imageData = reader.read(pageIndex, param);
+                            //imageData = reader.readAsRenderedImage(pageIndex, param);
+                            //TODO Reenable the above when proper listeners are implemented
+                            //to react to late pixel population (so the stream can be closed
+                            //properly).
                         }
                         if (iiometa == null) {
                             iiometa = reader.getImageMetadata(pageIndex);
