@@ -362,7 +362,8 @@ public class ImageUtil {
                 }
             }
         } catch (URISyntaxException e) {
-            //ignore
+            throw new IllegalArgumentException("URI is invalid: "
+                    + e.getLocalizedMessage());
         }
         return null;
     }
