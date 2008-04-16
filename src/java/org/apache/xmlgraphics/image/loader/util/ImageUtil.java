@@ -376,7 +376,7 @@ public class ImageUtil {
      * An example: <code>http://www.foo.bar/images/scan1.tif#page=4</code> (The method will return
      * 3.)
      * <p>
-     * If no page index information is found in the URI or if the URI cannot be parsed, the
+     * If no page index information is found in the URI, the
      * method just returns 0 which indicates the first page.
      * @param uri the URI that should be inspected
      * @return the page index (0 is the first page)

@@ -51,8 +51,12 @@ public class ImageUtilTestCase extends TestCase {
         assertEquals(1, pageIndex);
 
         //Not a valid URI
-        pageIndex = ImageUtil.needPageIndexFromURI("C:\\images\\scan1.tif#page=44");
-        assertEquals(0, pageIndex);
+        try {
+            pageIndex = ImageUtil.needPageIndexFromURI("C:\\images\\scan1.tif#page=44");
+            fail("Invalid URI. Method must fail.");
+        } catch (IllegalArgumentException e) {
+            //expected
+        }
         //Valid URI
         pageIndex = ImageUtil.needPageIndexFromURI("file:///C:/images/scan1.tif#page=44");
         assertEquals(43, pageIndex);
