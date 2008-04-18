@@ -74,6 +74,10 @@ public class ImageUtilTestCase extends TestCase {
         pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
         assertEquals(2, pageIndex.intValue());
         //Note: no detailed test anymore as this is tested through needPageIndexFromURI().
+        
+        //getPageIndexFromURI only works on URIs, so ignore anything that doesn't have a '#'
+        pageIndex = ImageUtil.getPageIndexFromURI("C:\\Temp\\scan1.tif");
+        assertNull(pageIndex);
     }
     
 }

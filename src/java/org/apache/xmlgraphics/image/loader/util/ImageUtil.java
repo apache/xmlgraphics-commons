@@ -337,6 +337,9 @@ public class ImageUtil {
      *         in the URI
      */
     public static Integer getPageIndexFromURI(String uri) {
+        if (uri.indexOf('#') < 0) {
+            return null;
+        }
         try {
             URI u = new URI(uri);
             String fragment = u.getFragment();
