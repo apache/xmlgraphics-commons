@@ -21,6 +21,8 @@ package org.apache.xmlgraphics.image.loader.impl;
 
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -82,15 +84,15 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
             while (true) {
                 int reclen;
                 int segID = jpeg.readMarkerSegment();
-                if (log.isDebugEnabled()) {
-                    log.debug("Seg Marker: " + Integer.toHexString(segID));
+                if (log.isTraceEnabled()) {
+                    log.trace("Seg Marker: " + Integer.toHexString(segID));
                 }
                 switch (segID) {
                 case EOI:
-                    log.debug("EOI found. Stopping.");
+                    log.trace("EOI found. Stopping.");
                     break outer;
                 case SOS:
-                    log.debug("SOS found. Stopping early."); //TODO Not sure if this is safe
+                    log.trace("SOS found. Stopping early."); //TODO Not sure if this is safe
                     break outer;
                 case SOI:
                 case NULL:
@@ -99,8 +101,8 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                 case SOF2: //progressive (since PDF 1.3)
                 case SOFA: //progressive (since PDF 1.3)
                     sofType = segID;
-                    if (log.isDebugEnabled()) {
-                        log.debug("SOF: " + Integer.toHexString(sofType));
+                    if (log.isTraceEnabled()) {
+                        log.trace("SOF: " + Integer.toHexString(sofType));
                     }
                     in.mark();
                     try {
@@ -137,18 +139,24 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                         in.skipBytes(1); //string terminator (null byte)
 
                         if ("ICC_PROFILE".equals(new String(iccString, "US-ASCII"))) {
-                            log.debug("JPEG has an ICC profile");
                             in.skipBytes(2); //chunk sequence number and total number of chunks
+                            int payloadSize = reclen - 2 - 12 - 2;
                             if (ignoreColorProfile(hints)) {
-                                in.skipBytes(reclen - 18);
+                                log.debug("Ignoring ICC profile data in JPEG");
+                                in.skipBytes(payloadSize);
                             } else {
+                                byte[] buf = new byte[payloadSize];
+                                in.readFully(buf);
                                 if (iccStream == null) {
+                                    if (log.isDebugEnabled()) {
+                                        log.debug("JPEG has an ICC profile");
+                                        DataInputStream din = new DataInputStream(new ByteArrayInputStream(buf));
+                                        log.debug("Declared ICC profile size: " + din.readInt());
+                                    }
                                     //ICC profiles can be split into several chunks
                                     //so collect in a byte array output stream
                                     iccStream = new ByteArrayOutputStream();
                                 }
-                                byte[] buf = new byte[reclen - 18];
-                                in.readFully(buf);
                                 iccStream.write(buf);
                             }
                         }
@@ -209,7 +217,11 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
     private ICC_Profile buildICCProfile(ImageInfo info, ColorSpace colorSpace,
             ByteArrayOutputStream iccStream) throws IOException, ImageException {
         if (iccStream != null && iccStream.size() > 0) {
-            int padding = (8 - (iccStream.size() % 8)) % 8;
+            if (log.isDebugEnabled()) {
+                log.debug("Effective ICC profile size: " + iccStream.size());
+            }
+            final int alignment = 4;
+            int padding = (alignment - (iccStream.size() % alignment)) % alignment;
             if (padding != 0) {
                 try {
                     iccStream.write(new byte[padding]);
@@ -217,12 +229,15 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                     throw new IOException("Error while aligning ICC stream: " + ioe.getMessage());
                 }
             }
+            
             ICC_Profile iccProfile = null;
             try {
                 iccProfile = ICC_Profile.getInstance(iccStream.toByteArray());
-                log.debug("JPEG has an ICC profile: " + iccProfile.toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("JPEG has an ICC profile: " + iccProfile.toString());
+                }
             } catch (IllegalArgumentException iae) {
-                log.warn("An ICC profile is present but it is invalid (" 
+                log.warn("An ICC profile is present in the JPEG file but it is invalid (" 
                         + iae.getMessage() + "). The color profile will be ignored. (" 
                         + info.getOriginalURI() + ")");
                 return null;
