@@ -41,6 +41,9 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="add">
+        Bugfix for extracting ICC color profiles from JPEG images.
+      </action>
+      <action context="Code" dev="JM" type="add">
         Added an image loader for XML Graphics Commons' internal TIFF codec.
       </action>
       <action context="Code" dev="JM" type="fix">
