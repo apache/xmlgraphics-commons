@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="MB" type="fix">
+        Bugfix for classpath resources: the code doesn't just check the system class loader anymore.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix for a potential multi-threading issue concerning the use of the java.text package.
       </action>
