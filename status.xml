@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix for a potential multi-threading issue concerning the use of the java.text package.
+      </action>
       <action context="Code" dev="JM" type="add">
         Added fallbacks for Type 1 fonts which don't have the normal "one", "two" etc. glyphs,
         but actually only provide "oneoldstyle", "twooldstyle" etc.

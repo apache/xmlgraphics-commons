@@ -34,14 +34,6 @@ import org.apache.xmlgraphics.util.QName;
  */
 public class XMPSchemaAdapter {
 
-    private static DateFormat pseudoISO8601DateFormat;
-
-    static {
-        pseudoISO8601DateFormat = new SimpleDateFormat(
-                "yyyy'-'MM'-'dd'T'HH':'mm':'ss", Locale.ENGLISH);
-        pseudoISO8601DateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
-    
     /** the Metadata object this schema instance operates on */
     protected Metadata meta;
     private XMPSchema schema;
@@ -123,6 +115,13 @@ public class XMPSchemaAdapter {
     public static String formatISO8601Date(Date dt) {
         return formatISO8601Date(dt, TimeZone.getDefault());
     }
+
+    private static DateFormat createPseudoISO8601DateFormat() {
+        DateFormat df = new SimpleDateFormat(
+                "yyyy'-'MM'-'dd'T'HH':'mm':'ss", Locale.ENGLISH);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return df;
+    }
     
     /**
      * Formats a Date using ISO 8601 format in the given time zone.
@@ -139,7 +138,7 @@ public class XMPSchemaAdapter {
         
         //DateFormat is operating on GMT so adjust for time zone offset
         Date dt1 = new Date(dt.getTime() + offset);
-        StringBuffer sb = new StringBuffer(pseudoISO8601DateFormat.format(dt1));
+        StringBuffer sb = new StringBuffer(createPseudoISO8601DateFormat().format(dt1));
 
         offset /= (1000 * 60); //Convert to minutes
         
@@ -198,7 +197,7 @@ public class XMPSchemaAdapter {
         }
         Date d;
         try {
-            d = pseudoISO8601DateFormat.parse(parsablePart);
+            d = createPseudoISO8601DateFormat().parse(parsablePart);
         } catch (ParseException e) {
             throw new IllegalArgumentException("Invalid ISO 8601 date format: " + dt);
         }
