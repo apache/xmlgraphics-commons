@@ -256,6 +256,22 @@ public class Glyphs {
         //  and 021a (LATIN CAPITAL LETTER T WITH COMMA BELOW)
         //scedilla maps to 015f (LATIN SMALL LETTER S WITH CEDILLA) (and F6C2 in private use area)
         //tcommaaccent maps to 0163 and 021b
+
+        //map numbers from and to their respective "oldstyle" variant
+        addAlternatives(map, new String[] {"zero", "zerooldstyle"});
+        addAlternatives(map, new String[] {"one", "oneoldstyle"});
+        addAlternatives(map, new String[] {"two", "twooldstyle"});
+        addAlternatives(map, new String[] {"three", "threeoldstyle"});
+        addAlternatives(map, new String[] {"four", "fouroldstyle"});
+        addAlternatives(map, new String[] {"five", "fiveoldstyle"});
+        addAlternatives(map, new String[] {"six", "sixoldstyle"});
+        addAlternatives(map, new String[] {"seven", "sevenoldstyle"});
+        addAlternatives(map, new String[] {"eight", "eightoldstyle"});
+        addAlternatives(map, new String[] {"nine", "nineoldstyle"});
+        
+        //map currency signs from and to their respective "oldstyle" variant
+        addAlternatives(map, new String[] {"cent", "centoldstyle"});
+        addAlternatives(map, new String[] {"dollar", "dollaroldstyle"});
         
         CHARNAME_ALTERNATIVES = Collections.unmodifiableMap(map);
     }
@@ -341,7 +357,7 @@ public class Glyphs {
      * @return the name of the glyph
      */
     public static final String charToGlyphName(char ch) {
-        return stringToGlyph(new Character(ch).toString());
+        return stringToGlyph(Character.toString(ch));
     }
     
     /**
