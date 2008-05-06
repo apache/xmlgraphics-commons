@@ -52,6 +52,16 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     /** logger */
     private static Log log = LogFactory.getLog(AbstractImageSessionContext.class);
 
+    private static boolean noSourceReuse = false;
+    
+    static {
+        //TODO Temporary measure to track down a problem
+        //See: http://markmail.org/message/k6mno3jsxmovaz2e
+        String v = System.getProperty(
+                AbstractImageSessionContext.class.getName() + ".no-source-reuse");
+        noSourceReuse = Boolean.valueOf(v).booleanValue();
+    }
+    
     /**
      * Attempts to resolve the given URI.
      * @param uri URI to access
@@ -221,6 +231,9 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
      * @return true if the Source is reusable
      */
     protected boolean isReusable(Source src) {
+        if (noSourceReuse) {
+            return false;
+        }
         if (src instanceof ImageSource) {
             ImageSource is = (ImageSource)src;
             if (is.getImageInputStream() != null) {
