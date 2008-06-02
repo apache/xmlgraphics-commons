@@ -33,7 +33,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -93,7 +92,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         } catch (MalformedURLException e) {
             url = null;
         } 
-        File f = FileUtils.toFile(url);
+        File f = /*FileUtils.*/toFile(url);
         if (f != null) {
             boolean directFileAccess = true;
             assert (source instanceof StreamSource) || (source instanceof SAXSource);
@@ -172,6 +171,44 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             }
         }
         return imageSource;
+    }
+    
+    /**
+     * Convert from a <code>URL</code> to a <code>File</code>.
+     * <p>
+     * This method will decode the URL.
+     * Syntax such as <code>file:///my%20docs/file.txt</code> will be
+     * correctly decoded to <code>/my docs/file.txt</code>.
+     * <p>
+     * Note: this method has been copied over from Apache Commons IO and enhanced to support
+     * UNC paths.
+     *
+     * @param url  the file URL to convert, <code>null</code> returns <code>null</code>
+     * @return the equivalent <code>File</code> object, or <code>null</code>
+     *  if the URL's protocol is not <code>file</code>
+     * @throws IllegalArgumentException if the file is incorrectly encoded
+     */
+    public static File toFile(URL url) {
+        if (url == null || !url.getProtocol().equals("file")) {
+            return null;
+        } else {
+            String filename = "";
+            if (url.getHost() != null) {
+                filename += Character.toString(File.separatorChar)
+                        + Character.toString(File.separatorChar)
+                        + url.getHost();
+            }
+            filename += url.getFile().replace('/', File.separatorChar);
+            int pos = 0;
+            while ((pos = filename.indexOf('%', pos)) >= 0) {
+                if (pos + 2 < filename.length()) {
+                    String hexStr = filename.substring(pos + 1, pos + 3);
+                    char ch = (char) Integer.parseInt(hexStr, 16);
+                    filename = filename.substring(0, pos) + ch + filename.substring(pos + 3);
+                }
+            }
+            return new File(filename);
+        }
     }
     
     private SoftMapCache sessionSources = new SoftMapCache(false); //no need for synchronization
