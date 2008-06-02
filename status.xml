@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix" fixes-bug="44902">
+        Made file URLs with a host (as happens when using UNC paths) work when loading images.
+      </action>
       <action context="Code" dev="MB" type="fix">
         Bugfix for classpath resources: the code doesn't just check the system class loader anymore.
       </action>
