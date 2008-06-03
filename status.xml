@@ -39,7 +39,11 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
+    <!--
     <release version="Trunk" date="n/a">
+    </release>
+    -->
+    <release version="1.3.1" date="9 May 2008">
       <action context="Code" dev="JM" type="fix" fixes-bug="44902">
         Made file URLs with a host (as happens when using UNC paths) work when loading images.
       </action>

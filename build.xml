@@ -25,7 +25,6 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="version" value="1.4svn"/>
   <property name="year" value="1999-2008"/>
 
   <property name="javac.debug" value="on"/>
@@ -316,6 +315,7 @@
     <junit haltonerror="no" fork="${junit.fork}" errorproperty="test.junit.error" failureproperty="test.junit.failure">
       <sysproperty key="basedir" value="${basedir}"/>
       <sysproperty key="jawa.awt.headless" value="true"/>
+      <jvmarg value="-enableassertions"/>
       <formatter type="brief" usefile="false"/>
       <formatter type="plain" usefile="true"/>
       <classpath>
