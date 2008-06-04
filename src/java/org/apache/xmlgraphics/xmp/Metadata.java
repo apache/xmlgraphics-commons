@@ -91,7 +91,9 @@ public class Metadata implements XMLizable, PropertyAccess {
     /** {@inheritDoc} */
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
+        handler.startPrefixMapping("x", XMPConstants.XMP_NAMESPACE);
         handler.startElement(XMPConstants.XMP_NAMESPACE, "xmpmeta", "x:xmpmeta", atts);
+        handler.startPrefixMapping("rdf", XMPConstants.RDF_NAMESPACE);
         handler.startElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:RDF", atts);
         //Get all property namespaces
         Set namespaces = new java.util.HashSet();
@@ -141,7 +143,9 @@ public class Metadata implements XMLizable, PropertyAccess {
         }
         
         handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:RDF");
+        handler.endPrefixMapping("rdf");
         handler.endElement(XMPConstants.XMP_NAMESPACE, "xmpmeta", "x:xmpmeta");
+        handler.endPrefixMapping("x");
     }
 
 }
