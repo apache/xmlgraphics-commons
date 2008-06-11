@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <news>
-  <item date="2008-06-06" title="Version 1.3.1 Released">
+  <item date="2008-06-11" title="Version 1.3.1 Released">
     <p>
       This release is mostly a bugfix release for the image loading framework
       that has been introduced in version 1.3. For details, please see the
