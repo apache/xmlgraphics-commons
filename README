@@ -73,6 +73,12 @@ License labeling (according to http://www.apache.org/legal/3party.html):
 For more detailed info about the changes, please see:
 http://xmlgraphics.apache.org/commons/changes.html
 
+Version 1.3.1
+--------------
+
+This release is mostly a bugfix release for the image loading framework that
+has been introduced in version 1.3.
+
 Version 1.3
 --------------
 
