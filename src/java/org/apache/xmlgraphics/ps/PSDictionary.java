@@ -113,7 +113,7 @@ public class PSDictionary extends java.util.HashMap {
          * @param fromIndex
          *            searches from index
          * @return matching brace index
-         * @throws org.apache.fop.render.ps.PSDictionaryFormatException
+         * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
          *            thrown in the event that a parsing error occurred
          */
         private int indexOfMatchingBrace(String str, String[] braces,
@@ -143,8 +143,8 @@ public class PSDictionary extends java.util.HashMap {
          * @param braces
          *            String array containing opening and closing braces
          * @return String with braces stripped
-         * @throws
-         *      org.apache.fop.render.ps.PSDictionaryFormatException object format exception
+         * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
+         *            thrown in the event that a parsing error occurred
          */
         private String stripBraces(String str, String[] braces) throws PSDictionaryFormatException {
             // find first opening brace
@@ -174,8 +174,8 @@ public class PSDictionary extends java.util.HashMap {
          * 
          * @param str a dictionary string
          * @return A postscript dictionary object
-         * @throws
-         *      PSDictionaryFormatException thrown if a dictionary format exception occurs
+         * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
+         *            thrown in the event that a parsing error occurred
          */
         public PSDictionary parseDictionary(String str) throws PSDictionaryFormatException {
             PSDictionary dictionary = new PSDictionary();
@@ -235,7 +235,8 @@ public class PSDictionary extends java.util.HashMap {
      * 
      * @param str dictionary string
      * @return dictionary object
-     * @throws PSDictionaryFormatException object format exception
+     * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
+     *            thrown in the event that a parsing error occurred
      */
     public static PSDictionary valueOf(String str) throws PSDictionaryFormatException {
         return (new Maker()).parseDictionary(str);
@@ -266,10 +267,7 @@ public class PSDictionary extends java.util.HashMap {
         return true;
     }
     
-    /**
-     * @return a hash code value for this object.
-     * @see java.lang.Object#hashCode()
-     */
+    /** {@inheritDoc} */
     public int hashCode() {
         int hashCode = 7;
         for (Iterator it = values().iterator(); it.hasNext();) {
@@ -279,10 +277,7 @@ public class PSDictionary extends java.util.HashMap {
         return hashCode;
     }
 
-    /**
-     * @return a string representation of this dictionary
-     * @see java.lang.String#toString()
-     */
+    /** {@inheritDoc} */
     public String toString() {
         if (isEmpty()) {
             return "";
