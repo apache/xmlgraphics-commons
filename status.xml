@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="AC" type="add">
+        Added the new org.apache.xmlgraphics.store package to provide temporary storage features.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix: Added missing start/endPrefixMapping() calls when serializing XMP packets.
       </action>
