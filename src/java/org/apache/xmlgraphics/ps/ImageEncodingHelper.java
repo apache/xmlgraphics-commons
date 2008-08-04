@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.awt.color.ColorSpace;
@@ -43,11 +43,11 @@ public class ImageEncodingHelper {
     private static final ColorModel DEFAULT_RGB_COLOR_MODEL = new ComponentColorModel(
             ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB),
             false, false, ColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
-    
-    private RenderedImage image;
+
+    private final RenderedImage image;
     private ColorModel encodedColorModel;
     private boolean firstTileDump;
-    
+
     /**
      * Main constructor
      * @param image the image
@@ -56,7 +56,7 @@ public class ImageEncodingHelper {
         this.image = image;
         determineEncodedColorModel();
     }
-    
+
     /**
      * Returns the associated image.
      * @return the image
@@ -64,7 +64,7 @@ public class ImageEncodingHelper {
     public RenderedImage getImage() {
         return this.image;
     }
-    
+
     /**
      * Returns the native {@link ColorModel} used by the image.
      * @return the native color model
@@ -72,17 +72,17 @@ public class ImageEncodingHelper {
     public ColorModel getNativeColorModel() {
         return getImage().getColorModel();
     }
-    
+
     /**
      * Returns the effective {@link ColorModel} used to encode the image. If this is different
      * from the value returned by {@link #getNativeColorModel()} this means that the image
-     * is converted in order to encode it because no native encoding is currently possible. 
+     * is converted in order to encode it because no native encoding is currently possible.
      * @return the effective color model
      */
     public ColorModel getEncodedColorModel() {
         return this.encodedColorModel;
     }
-    
+
     /**
      * Indicates whether the image has an alpha channel.
      * @return true if the image has an alpha channel
@@ -90,7 +90,7 @@ public class ImageEncodingHelper {
     public boolean hasAlpha() {
         return image.getColorModel().hasAlpha();
     }
-    
+
     /**
      * Indicates whether the image is converted during encodation.
      * @return true if the image cannot be encoded in its native format
@@ -98,11 +98,11 @@ public class ImageEncodingHelper {
     public boolean isConverted() {
         return getNativeColorModel() != getEncodedColorModel();
     }
-    
+
     private void writeRGBTo(OutputStream out) throws IOException {
         encodeRenderedImageAsRGB(image, out);
     }
-    
+
     /**
      * Writes a RenderedImage to an OutputStream by converting it to RGB.
      * @param image the image
@@ -135,7 +135,7 @@ public class ImageEncodingHelper {
             throw new IllegalArgumentException("Unknown data buffer type: "+
                                                dataType);
         }
-        
+
         ColorModel colorModel = image.getColorModel();
         int w = image.getWidth();
         int h = image.getHeight();
@@ -151,7 +151,73 @@ public class ImageEncodingHelper {
             out.write(buf);
         }
     }
-    
+
+    /**
+     * Converts a byte array containing 24 bit RGB image data to a grayscale
+     * image.
+     *
+     * @param raw
+     *            the buffer containing the RGB image data
+     * @param width
+     *            the width of the image in pixels
+     * @param height
+     *            the height of the image in pixels
+     * @param bitsPerPixel
+     *            the number of bits to use per pixel
+     * @param out the OutputStream to write the pixels to
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    public static void encodeRGBAsGrayScale(
+            byte[] raw, int width, int height, int bitsPerPixel, OutputStream out)
+    throws IOException {
+        int pixelsPerByte = 8 / bitsPerPixel;
+        int bytewidth = (width / pixelsPerByte);
+        if ((width % pixelsPerByte) != 0) {
+            bytewidth++;
+        }
+
+        //TODO buffer less write more
+        byte[] data = new byte[height * bytewidth];
+        byte ib;
+        for (int y = 0; y < height; y++) {
+            ib = 0;
+            int i = 3 * y * width;
+            for (int x = 0; x < width; x++, i += 3) {
+
+                // see http://www.jguru.com/faq/view.jsp?EID=221919
+                double greyVal = 0.212671d * (raw[i] & 0xff) + 0.715160d
+                        * (raw[i + 1] & 0xff) + 0.072169d
+                        * (raw[i + 2] & 0xff);
+                switch (bitsPerPixel) {
+                case 1:
+                    if (greyVal < 128) {
+                        ib |= (byte) (1 << (7 - (x % 8)));
+                    }
+                    break;
+                case 4:
+                    greyVal /= 16;
+                    ib |= (byte) ((byte) greyVal << ((1 - (x % 2)) * 4));
+                    break;
+                case 8:
+                    ib = (byte) greyVal;
+                    break;
+                default:
+                    throw new UnsupportedOperationException(
+                            "Unsupported bits per pixel: " + bitsPerPixel);
+                }
+
+                if ((x % pixelsPerByte) == (pixelsPerByte - 1)
+                        || ((x + 1) == width)) {
+                    data[(y * bytewidth) + (x / pixelsPerByte)] = ib;
+                    ib = 0;
+                }
+            }
+        }
+        //TODO buffer less write more
+        out.write(data);
+    }
+
     private boolean optimizedWriteTo(OutputStream out)
             throws IOException {
         if (this.firstTileDump) {
@@ -164,7 +230,7 @@ public class ImageEncodingHelper {
         }
         return false;
     }
-    
+
     /**
      * Indicates whether the image consists of multiple tiles.
      * @return true if there are multiple tiles
@@ -172,9 +238,9 @@ public class ImageEncodingHelper {
     protected boolean isMultiTile() {
         int tilesX = image.getNumXTiles();
         int tilesY = image.getNumYTiles();
-        return (tilesX != 1 || tilesY != 1); 
+        return (tilesX != 1 || tilesY != 1);
     }
-    
+
     /**
      * Determines the color model used for encoding the image.
      */
@@ -223,7 +289,7 @@ public class ImageEncodingHelper {
         }
 
     }
-    
+
     /**
      * Encodes the image and writes everything to the given OutputStream.
      * @param out the OutputStream
@@ -237,7 +303,7 @@ public class ImageEncodingHelper {
         }
         writeRGBTo(out);
     }
-    
+
     /**
      * Encodes the image's alpha channel. If it doesn't have an alpha channel, an
      * {@link IllegalStateException} is thrown.
@@ -260,7 +326,7 @@ public class ImageEncodingHelper {
 
     /**
      * Writes all pixels (color components only) of a RenderedImage to an OutputStream.
-     * @param image the image to be encoded 
+     * @param image the image to be encoded
      * @param out the OutputStream to write to
      * @throws IOException if an I/O error occurs
      */
@@ -269,7 +335,7 @@ public class ImageEncodingHelper {
         ImageEncodingHelper helper = new ImageEncodingHelper(image);
         helper.encode(out);
     }
-    
+
     /**
      * Create an ImageEncoder for the given RenderImage instance.
      * @param img the image
@@ -278,18 +344,18 @@ public class ImageEncodingHelper {
     public static ImageEncoder createRenderedImageEncoder(RenderedImage img) {
         return new RenderedImageEncoder(img);
     }
-    
+
     /**
      * ImageEncoder implementation for RenderedImage instances.
      */
     private static class RenderedImageEncoder implements ImageEncoder {
 
-        private RenderedImage img;
-        
+        private final RenderedImage img;
+
         public RenderedImageEncoder(RenderedImage img) {
             this.img = img;
         }
-        
+
         public void writeTo(OutputStream out) throws IOException {
             ImageEncodingHelper.encodePackedColorComponents(img, out);
         }
@@ -297,7 +363,7 @@ public class ImageEncodingHelper {
         public String getImplicitFilter() {
             return null; //No implicit filters with RenderedImage instances
         }
-        
+
     }
-    
+
 }
