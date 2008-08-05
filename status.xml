@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add">
+        Added RefinedImageFlavor to the image loading framework for better refinement
+        of image flavors.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix: Added missing start/endPrefixMapping() calls when serializing XMP packets.
       </action>

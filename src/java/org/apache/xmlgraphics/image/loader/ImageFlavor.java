@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,8 @@
 /* $Id$ */
 
 package org.apache.xmlgraphics.image.loader;
+
+import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
  * The flavor of an image indicates in which form it is available. A bitmap image loaded into
@@ -30,24 +32,31 @@ public class ImageFlavor {
     /** An image in form of a RenderedImage instance */
     public static final ImageFlavor RENDERED_IMAGE = new ImageFlavor("RenderedImage");
     /** An image in form of a BufferedImage instance */
-    public static final ImageFlavor BUFFERED_IMAGE = new ImageFlavor("BufferedImage");
+    public static final ImageFlavor BUFFERED_IMAGE = new SimpleRefinedImageFlavor(
+                                                            RENDERED_IMAGE, "BufferedImage");
     /** An XML-based image in form of a W3C DOM instance */
     public static final ImageFlavor XML_DOM = new ImageFlavor("text/xml;form=dom");
     /** An image in form of a raw PNG file/stream */
-    public static final ImageFlavor RAW_PNG = new ImageFlavor("RawPNG");
+    public static final ImageFlavor RAW = new ImageFlavor("Raw");
+    /** An image in form of a raw PNG file/stream */
+    public static final ImageFlavor RAW_PNG = new MimeEnabledImageFlavor(RAW,
+                                                        MimeConstants.MIME_PNG);
     /** An image in form of a raw JPEG/JFIF file/stream */
-    public static final ImageFlavor RAW_JPEG = new ImageFlavor("RawJPEG");
+    public static final ImageFlavor RAW_JPEG = new MimeEnabledImageFlavor(RAW,
+                                                        MimeConstants.MIME_JPEG);
     /** An image in form of a raw EMF (Windows Enhanced Metafile) file/stream */
-    public static final ImageFlavor RAW_EMF = new ImageFlavor("RawEMF");
+    public static final ImageFlavor RAW_EMF = new MimeEnabledImageFlavor(RAW,
+                                                        MimeConstants.MIME_EMF);
     /** An image in form of a raw EPS (Encapsulated PostScript) file/stream */
-    public static final ImageFlavor RAW_EPS = new ImageFlavor("RawEPS");
+    public static final ImageFlavor RAW_EPS = new MimeEnabledImageFlavor(RAW,
+                                                        MimeConstants.MIME_EPS);
     /** An image in form of a raw CCITTFax stream */
     public static final ImageFlavor RAW_CCITTFAX = new ImageFlavor("RawCCITTFax");
     /** An image in form of a Graphics2DImage (can be painted on a Graphics2D interface) */
     public static final ImageFlavor GRAPHICS2D = new ImageFlavor("Graphics2DImage");
-    
+
     private String name;
-    
+
     /**
      * Constructs a new ImageFlavor. Please reuse existing constants wherever possible!
      * @param name the name of the flavor (must be unique)
@@ -55,13 +64,22 @@ public class ImageFlavor {
     public ImageFlavor(String name) {
         this.name = name;
     }
-    
+
     /**
      * Returns the name of the ImageFlavor.
      * @return the flavor name
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Indicates whether a particular image flavor is compatible with this one.
+     * @param flavor the other image flavor
+     * @return true if the two are compatible
+     */
+    public boolean isCompatible(ImageFlavor flavor) {
+        return this.equals(flavor);
     }
 
     /** {@inheritDoc} */
@@ -98,5 +116,5 @@ public class ImageFlavor {
     public String toString() {
         return getName();
     }
-    
+
 }
