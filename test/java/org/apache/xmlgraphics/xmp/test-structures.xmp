@@ -52,7 +52,7 @@
           <test:other-name>Palpatine</test:other-name>
         </rdf:Description>
       </test:villain>
-      <test:project> <!-- shorthand form for structure -->
+      <test:project rdf:parseType="Resource"> <!-- shorthand form for structure -->
         <test:name>Apache XML Graphics</test:name>
         <test:url>http://xmlgraphics.apache.org/</test:url>
       </test:project>
