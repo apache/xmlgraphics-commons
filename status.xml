@@ -41,6 +41,10 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="add">
+        XMP framework: Added support for the structure property shorthand form and for
+        specifying simple property values as attributes on rdf:Description elements.
+      </action>
+      <action context="Code" dev="JM" type="add">
         Added RefinedImageFlavor to the image loading framework for better refinement
         of image flavors.
       </action>
