@@ -146,6 +146,8 @@ public class XMPHandler extends DefaultHandler {
                     String ns = attributes.getURI(i);
                     if (XMPConstants.RDF_NAMESPACE.equals(ns)) {
                         //ignore
+                    } else if (XMPConstants.XMLNS_NAMESPACE.equals(ns)) {
+                        //ignore
                     } else if ("".equals(ns)) {
                         //ignore
                     } else {
