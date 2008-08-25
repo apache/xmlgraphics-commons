@@ -35,17 +35,22 @@ import org.apache.xmlgraphics.util.Service;
  * <p>
  * This resolver will try all resolvers registered as an {@link URIResolver}
  * class. For proper operation, the registers URIResolvers must return null if
- * they cannot handle the given URI.
+ * they cannot handle the given URI and fail fast. 
  */
-public final class CommonURIResolver implements URIResolver {
+public class CommonURIResolver implements URIResolver {
 
     private final List uriResolvers = new LinkedList();
 
-    private final static class SingletonHolder {
+    private final static class DefaultInstanceHolder {
         private static final CommonURIResolver INSTANCE = new CommonURIResolver();
     }
 
-    private CommonURIResolver() {
+    /**
+     * Creates a new CommonURIResolver. Use this if you need support for
+     * resolvers in the current context.
+     * @see CommonURIResolver#getDefaultURIResolver()
+     */
+    public CommonURIResolver() {
         Iterator iter = Service.providers(URIResolver.class);
         while (iter.hasNext()) {
             URIResolver resolver = (URIResolver) iter.next();
@@ -53,8 +58,13 @@ public final class CommonURIResolver implements URIResolver {
         }
     }
 
-    public static CommonURIResolver getInstance() {
-        return SingletonHolder.INSTANCE;
+    /**
+     * Retrieve the default resolver instance.
+     * 
+     * @return the default resolver instance.
+     */
+    public static CommonURIResolver getDefaultURIResolver() {
+        return DefaultInstanceHolder.INSTANCE;
     }
 
     /** {@inheritDoc} */

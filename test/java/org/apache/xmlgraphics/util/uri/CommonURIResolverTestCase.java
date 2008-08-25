@@ -35,7 +35,7 @@ public class CommonURIResolverTestCase extends TestCase {
      *             if an error occurs
      */
     public void testDataURLHandling() throws Exception {
-        URIResolver resolver = CommonURIResolver.getInstance();
+        URIResolver resolver = CommonURIResolver.getDefaultURIResolver();
         DataURIResolverTestCase.actualURLHAndlingTest(resolver);
     }
 
