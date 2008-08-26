@@ -20,13 +20,16 @@
 package org.apache.xmlgraphics.util.uri;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-// base64 support for "data" urls
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xmlgraphics.util.io.Base64DecodeStream;
 
 /**
@@ -37,6 +40,10 @@ import org.apache.xmlgraphics.util.io.Base64DecodeStream;
  */
 public class DataURIResolver implements URIResolver {
 
+    /** logger */
+    private static Log LOG = LogFactory.getLog(URIResolver.class);
+
+    
     /**
      * {@inheritDoc}
      */
@@ -66,13 +73,23 @@ public class DataURIResolver implements URIResolver {
                     encodedStream);
             return new StreamSource(decodedStream);
         } else {
-            // Note that this is not quite the full story here. But since we are
-            // only interested
-            // in base64-encoded binary data, the next line will probably never
-            // be called.
-            //TODO Handle un-escaping of special URL chars like %20
-            return new StreamSource(new java.io.StringReader(data));
+            String encoding = "UTF-8";
+            final int charsetpos = header.indexOf(";charset=");
+            if (charsetpos > 0) {
+                encoding = header.substring(charsetpos + 9);
+            }
+            try {
+                final String unescapedString = URLDecoder
+                        .decode(data, encoding);
+                return new StreamSource(new java.io.StringReader(
+                        unescapedString));
+            } catch (IllegalArgumentException e) {
+                LOG.warn(e.getMessage());
+            } catch (UnsupportedEncodingException e) {
+                LOG.warn(e.getMessage());
+            }
         }
+        return null;
     }
 
 }

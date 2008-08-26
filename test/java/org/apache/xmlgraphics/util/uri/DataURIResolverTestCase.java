@@ -125,14 +125,17 @@ public class DataURIResolverTestCase extends TestCase {
         String text = IOUtils.toString(streamSource.getReader());
         assertEquals("FOP", text);
 
-        /*
-         * TODO Un-escaping of special URL chars like %20 hasn't been
-         * implemented, yet. src = resolver.resolve("data:,A%20brief%20note",
-         * null); assertNotNull(src); streamSource = (StreamSource)src; text =
-         * IOUtils.toString(streamSource.getReader());
-         * assertEquals("A brief note", text);
-         */
-
+        src = resolver.resolve("data:,A%20brief%20note", null);
+        assertNotNull(src);
+        streamSource = (StreamSource) src;
+        text = IOUtils.toString(streamSource.getReader());
+        assertEquals("A brief note", text);
+        
+        src = resolver.resolve("data:text/plain;charset=iso-8859-7,%be%f9%be", null);
+        assertNotNull(src);
+        streamSource = (StreamSource) src;
+        text = IOUtils.toString(streamSource.getReader());
+        assertEquals("\u038e\u03c9\u038e", text);
     }
 
 }
