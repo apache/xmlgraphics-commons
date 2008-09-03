@@ -39,8 +39,18 @@ public interface MimeConstants {
 
     /** IBM's AFP */
     String MIME_AFP             = "application/x-afp";
+
     /** IBM's AFP (alternative MIME type) */
     String MIME_AFP_ALT         = "application/vnd.ibm.modcap";
+
+    /** IBM's AFP IOCA subset for bilevel raster image */
+    String MIME_AFP_IOCA_FS10   = "image/x-afp+fs10";
+
+    /** IBM's AFP IOCA subset for grayscale and color raster image */
+    String MIME_AFP_IOCA_FS11   = "image/x-afp+fs11";
+
+    /** IBM's AFP IOCA subset for grayscale and color tiled raster image */
+    String MIME_AFP_IOCA_FS45   = "image/x-afp+fs45";
 
     /** Plain text */
     String MIME_PLAIN_TEXT      = "text/plain";
