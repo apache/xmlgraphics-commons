@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
+
 import org.apache.xmlgraphics.util.WriterOutputStream;
 import org.apache.xmlgraphics.util.io.Base64EncodeStream;
 
@@ -61,8 +62,8 @@ public class DataURLUtil {
         }
         writer.write(";base64,");
         Base64EncodeStream out = new Base64EncodeStream(
-                new WriterOutputStream(writer, "US-ASCII"));
+                new WriterOutputStream(writer, "US-ASCII"), false);
         IOUtils.copy(in, out);
-        out.flush();
+        out.close();
     }
 }
