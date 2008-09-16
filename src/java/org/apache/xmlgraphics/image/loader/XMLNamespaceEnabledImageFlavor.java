@@ -24,6 +24,10 @@ package org.apache.xmlgraphics.image.loader;
  */
 public class XMLNamespaceEnabledImageFlavor extends RefinedImageFlavor {
 
+    /** An XML-based SVG image in form of a W3C DOM instance */
+    public static final ImageFlavor SVG_DOM = new XMLNamespaceEnabledImageFlavor(
+            ImageFlavor.XML_DOM, "http://www.w3.org/2000/svg");
+    
     private String namespace;
 
     /**
