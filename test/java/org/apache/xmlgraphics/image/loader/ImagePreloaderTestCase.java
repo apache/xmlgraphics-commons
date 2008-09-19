@@ -84,6 +84,26 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(38245, info.getSize().getHeightMpt());
     }
 
+    public void testPNGNoResolution() throws Exception {
+        String uri = "no-resolution.png";
+        //This file contains a pHYs chunk but the resolution is set to zero.
+        //Reported in Bugzilla #45789
+
+        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        ImageManager manager = imageContext.getImageManager();
+
+        ImageInfo info = manager.preloadImage(uri, sessionContext);
+        assertNotNull("ImageInfo must not be null", info);
+        assertEquals(MimeConstants.MIME_PNG, info.getMimeType());
+        assertEquals("no-resolution.png", info.getOriginalURI());
+        assertEquals(51, info.getSize().getWidthPx());
+        assertEquals(24, info.getSize().getHeightPx());
+        //Without resolution information (or resolution=0), the default shall be used
+        assertEquals(72, info.getSize().getDpiHorizontal(), 0.1);
+        assertEquals(51000, info.getSize().getWidthMpt());
+        assertEquals(24000, info.getSize().getHeightMpt());
+    }
+
     public void testTIFF() throws Exception {
         String uri = "tiff_group4.tif";
 
