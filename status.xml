@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix" fixes-bug="45835">
+        JPEGPreloader: Fixed interpretation of JPEG resolution when "dots per centimeter"
+        is specified.
+      </action>
       <action context="Code" dev="JM" type="add">
         XMP framework: Added support for the structure property shorthand form and for
         specifying simple property values as attributes on rdf:Description elements.

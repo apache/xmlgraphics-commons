@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +30,7 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
+import org.apache.xmlgraphics.util.UnitConv;
 
 /**
  * Image preloader for JPEG images.
@@ -38,7 +39,7 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
 
     private static final int JPG_SIG_LENGTH = 3;
 
-    /** {@inheritDoc} 
+    /** {@inheritDoc}
      * @throws ImageException */
     public ImageInfo preloadImage(String uri, Source src, ImageContext context)
                 throws IOException, ImageException {
@@ -84,9 +85,9 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                     int ydensity = in.readUnsignedShort();
                     if (densityUnits == 2) {
                         //dots per centimeter
-                        size.setResolution(xdensity * 28.3464567 / 72, ydensity * 28.3464567 / 72);
-                        //TODO Why is 28.3464567 used for cm to inch conversion?
-                        //We normally use 25.4.
+                        size.setResolution(
+                                xdensity * UnitConv.IN2CM,
+                                ydensity * UnitConv.IN2CM);
                     } else if (densityUnits == 1) {
                         //dots per inch
                         size.setResolution(xdensity, ydensity);

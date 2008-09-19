@@ -41,11 +41,11 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class ImagePreloaderTestCase extends TestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
-    
+
     public ImagePreloaderTestCase(String name) {
         super(name);
     }
-    
+
     public void testImageLoaderFactory() throws Exception {
         ImageManager manager = imageContext.getImageManager();
         ImageInfo info = new ImageInfo(null, MimeConstants.MIME_PNG);
@@ -53,10 +53,10 @@ public class ImagePreloaderTestCase extends TestCase {
                 info, ImageFlavor.BUFFERED_IMAGE);
         assertNotNull(ilf);
     }
-    
+
     public void testFileNotFound() throws Exception {
         String uri = "doesnotexistanywhere.png";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
         try {
@@ -66,13 +66,13 @@ public class ImagePreloaderTestCase extends TestCase {
             //expected!
         }
     }
-    
+
     public void testPNG() throws Exception {
         String uri = "asf-logo.png";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-        
+
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
         assertEquals(MimeConstants.MIME_PNG, info.getMimeType());
@@ -83,10 +83,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(126734, info.getSize().getWidthMpt());
         assertEquals(38245, info.getSize().getHeightMpt());
     }
-    
+
     public void testTIFF() throws Exception {
         String uri = "tiff_group4.tif";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -100,10 +100,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(550588, info.getSize().getWidthMpt());
         assertEquals(66706, info.getSize().getHeightMpt());
     }
-    
+
     public void testTIFFNoResolution() throws Exception {
         String uri = "no-resolution.tif";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -117,10 +117,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(51000, info.getSize().getWidthMpt());
         assertEquals(24000, info.getSize().getHeightMpt());
     }
-    
+
     public void testGIF() throws Exception {
         String uri = "bgimg72dpi.gif";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -134,10 +134,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(192000, info.getSize().getWidthMpt());
         assertEquals(192000, info.getSize().getHeightMpt());
     }
-    
+
     public void testEMF() throws Exception {
         String uri = "img.emf";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -151,10 +151,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(56665, info.getSize().getWidthMpt());
         assertEquals(56665, info.getSize().getHeightMpt());
     }
- 
+
     public void testJPEG1() throws Exception {
         String uri = "bgimg300dpi.jpg";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -168,10 +168,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(46080, info.getSize().getWidthMpt());
         assertEquals(46080, info.getSize().getHeightMpt());
     }
- 
+
     public void testJPEG2() throws Exception {
         String uri = "cmyk.jpg";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -185,10 +185,27 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(160000, info.getSize().getWidthMpt());
         assertEquals(35000, info.getSize().getHeightMpt());
     }
- 
+
+    public void testJPEG3() throws Exception {
+        String uri = "cmyk-pxcm.jpg"; //Contains resolution as pixels per centimeter
+
+        ImageSessionContext sessionContext = imageContext.newSessionContext();
+        ImageManager manager = imageContext.getImageManager();
+
+        ImageInfo info = manager.preloadImage(uri, sessionContext);
+        assertNotNull("ImageInfo must not be null", info);
+        assertEquals(MimeConstants.MIME_JPEG, info.getMimeType());
+        assertEquals(uri, info.getOriginalURI());
+        assertEquals(160, info.getSize().getWidthPx());
+        assertEquals(35, info.getSize().getHeightPx());
+        assertEquals(71.1, info.getSize().getDpiHorizontal(), 0.1); //28 px/cm = 71.1199 dpi
+        assertEquals(161980, info.getSize().getWidthMpt());
+        assertEquals(35433, info.getSize().getHeightMpt());
+    }
+
     public void testBMP() throws Exception {
         String uri = "bgimg300dpi.bmp";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -202,10 +219,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(46092, info.getSize().getWidthMpt());
         assertEquals(46092, info.getSize().getHeightMpt());
     }
- 
+
     public void testBMPNoResolution() throws Exception {
         String uri = "no-resolution.bmp";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -219,10 +236,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(50000, info.getSize().getWidthMpt());
         assertEquals(50000, info.getSize().getHeightMpt());
     }
- 
+
     public void testEPSAscii() throws Exception {
         String uri = "barcode.eps";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -236,10 +253,10 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(135655, info.getSize().getWidthMpt());
         assertEquals(42525, info.getSize().getHeightMpt());
     }
- 
+
     public void testEPSBinary() throws Exception {
         String uri = "img-with-tiff-preview.eps";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -253,7 +270,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(17000, info.getSize().getWidthMpt());
         assertEquals(17000, info.getSize().getHeightMpt());
     }
- 
+
     public void testSAXSourceWithSystemID() throws Exception {
         URIResolver resolver = new URIResolver() {
             public Source resolve(String href, String base) throws TransformerException {
@@ -268,7 +285,7 @@ public class ImagePreloaderTestCase extends TestCase {
         };
         checkImageFound("img:asf-logo.png", resolver);
     }
-    
+
     public void testSAXSourceWithInputStream() throws Exception {
         URIResolver resolver = new URIResolver() {
             public Source resolve(String href, String base) throws TransformerException {
@@ -289,16 +306,16 @@ public class ImagePreloaderTestCase extends TestCase {
         };
         checkImageFound("img:asf-logo.png", resolver);
     }
-    
+
     private void checkImageFound(String uri, URIResolver resolver)
                 throws ImageException, IOException {
         ImageSessionContext sessionContext = new SimpleURIResolverBasedImageSessionContext(
                 imageContext, MockImageSessionContext.IMAGE_BASE_DIR, resolver);
         ImageManager manager = imageContext.getImageManager();
-        
+
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
         assertEquals(uri, info.getOriginalURI());
     }
-    
+
 }
