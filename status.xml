@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix" fixes-bug="45789">
+        Made loading images via Image I/O more robust: A PNG with a zero resolution
+        should fall back to the default resolution.
+      </action>
       <action context="Code" dev="JM" type="fix" fixes-bug="45835">
         JPEGPreloader: Fixed interpretation of JPEG resolution when "dots per centimeter"
         is specified.

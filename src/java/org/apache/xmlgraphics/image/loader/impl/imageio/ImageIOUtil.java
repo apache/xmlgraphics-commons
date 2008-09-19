@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ public class ImageIOUtil {
 
     /** Key for ImageInfo's custom objects to embed the ImageIO metadata */
     public static final Object IMAGEIO_METADATA = IIOMetadata.class;
-    
+
     /**
      * Extracts the resolution information from the standard ImageIO metadata.
      * @param iiometa the metadata provided by ImageIO
@@ -60,20 +60,24 @@ public class ImageIOUtil {
                 double dpiVert = size.getDpiVertical();
                 child = getChild(dim, "HorizontalPixelSize");
                 if (child != null) {
-                    dpiHorz = UnitConv.IN2MM
-                            / Float.parseFloat(child.getAttribute("value"));
+                    float value = Float.parseFloat(child.getAttribute("value"));
+                    if (value != 0 && !Float.isInfinite(value)) {
+                        dpiHorz = UnitConv.IN2MM / value;
+                    }
                 }
                 child = getChild(dim, "VerticalPixelSize");
                 if (child != null) {
-                    dpiVert = UnitConv.IN2MM
-                            / Float.parseFloat(child.getAttribute("value"));
+                    float value = Float.parseFloat(child.getAttribute("value"));
+                    if (value != 0 && !Float.isInfinite(value)) {
+                        dpiVert = UnitConv.IN2MM / value;
+                    }
                 }
                 size.setResolution(dpiHorz, dpiVert);
                 size.calcSizeFromPixels();
             }
         }
     }
-    
+
     /**
      * Returns a child element of another element or null if there's no such child.
      * @param el the parent element
@@ -88,7 +92,7 @@ public class ImageIOUtil {
             return null;
         }
     }
-    
+
     /**
      * Dumps the content of an IIOMetadata instance to System.out.
      * @param iiometa the metadata
@@ -98,9 +102,9 @@ public class ImageIOUtil {
         for (int j = 0; j < metanames.length; j++) {
             System.out.println("--->" + metanames[j]);
             dumpNodeToSystemOut(iiometa.getAsTree(metanames[j]));
-        } 
+        }
     }
-    
+
     /**
      * Serializes a W3C DOM node to a String and dumps it to System.out.
      * @param node a W3C DOM node
@@ -117,5 +121,5 @@ public class ImageIOUtil {
             e.printStackTrace();
         }
     }
-    
+
 }
