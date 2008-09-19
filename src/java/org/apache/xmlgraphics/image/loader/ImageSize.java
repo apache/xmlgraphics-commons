@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,15 +32,15 @@ public class ImageSize {
 
     private int widthPx;
     private int heightPx;
-    
+
     private int widthMpt;
     private int heightMpt;
     private int baselinePositionFromBottomMpt;
-    
+
     private double dpiHorizontal;
     private double dpiVertical;
-    
-    
+
+
     /**
      * Constructor.
      * @param widthPx the width of the image in pixels
@@ -52,7 +52,7 @@ public class ImageSize {
         setSizeInPixels(widthPx, heightPx);
         setResolution(dpiHorizontal, dpiVertical);
     }
-    
+
     /**
      * Constructor.
      * @param widthPx the width of the image in pixels
@@ -62,34 +62,34 @@ public class ImageSize {
     public ImageSize(int widthPx, int heightPx, double dpi) {
         this(widthPx, heightPx, dpi, dpi);
     }
-    
+
     /**
      * Default Constructor.
      */
     public ImageSize() {
         //nop
     }
-    
+
     /**
      * Sets the image's size in pixels.
-     * @param width the width in pixels 
+     * @param width the width in pixels
      * @param height the height in pixels
      */
     public void setSizeInPixels(int width, int height) {
         this.widthPx = width;
         this.heightPx = height;
     }
-    
+
     /**
      * Sets the image's size in millipoints.
-     * @param width the width in millipoints 
+     * @param width the width in millipoints
      * @param height the height in millipoints
      */
     public void setSizeInMillipoints(int width, int height) {
         this.widthMpt = width;
         this.heightMpt = height;
     }
-    
+
     /**
      * Sets the image's resolution for interpreting the pixel size.
      * @param horizontal the horizontal resolution in dpi
@@ -99,7 +99,7 @@ public class ImageSize {
         this.dpiHorizontal = horizontal;
         this.dpiVertical = vertical;
     }
-    
+
     /**
      * Sets the image's resolution for interpreting the pixel size.
      * @param resolution the resolution in dpi
@@ -107,18 +107,18 @@ public class ImageSize {
     public void setResolution(double resolution) {
         setResolution(resolution, resolution);
     }
-    
+
     /**
      * Sets the vertical position of the baseline of the image relative to the bottom of the image.
      * The default is 0mpt (i.e. the image is bottom-aligned). This is used for MathML images, for
      * example, which have a baseline. Using the value the images can be properly aligned with
      * other text. Most other image don't have an implicit baseline.
-     * @param distance the distance from the bottom of the image in millipoints 
+     * @param distance the distance from the bottom of the image in millipoints
      */
     public void setBaselinePositionFromBottom(int distance) {
         this.baselinePositionFromBottomMpt = distance;
     }
-    
+
     /**
      * Returns the vertical position of the baseline of the image relative to the bottom of the
      * image. The default is 0mpt (i.e. the image is bottom-aligned). This is used for MathML
@@ -129,7 +129,7 @@ public class ImageSize {
     public int getBaselinePositionFromBottom() {
         return this.baselinePositionFromBottomMpt;
     }
-    
+
     /**
      * Returns the image's width in pixels.
      * @return the width in pixels
@@ -185,7 +185,7 @@ public class ImageSize {
     public Dimension getDimensionMpt() {
         return new Dimension(getWidthMpt(), getHeightMpt());
     }
-    
+
     /**
      * Returns the size in points as a Dimension2D object.
      * @return the size in points
@@ -193,7 +193,7 @@ public class ImageSize {
     public Dimension2D getDimensionPt() {
         return new Dimension2DDouble(getWidthMpt() / 1000.0, getHeightMpt() / 1000.0);
     }
-    
+
     /**
      * Returns the size in pixels as a Dimension object.
      * @return the size in pixels
@@ -201,13 +201,13 @@ public class ImageSize {
     public Dimension getDimensionPx() {
         return new Dimension(getWidthPx(), getHeightPx());
     }
-    
+
     /**
      * Calculates the size in millipoints based on the size in pixels and the resolution.
      */
     public void calcSizeFromPixels() {
         if (this.dpiHorizontal == 0 || this.dpiVertical == 0) {
-            throw new IllegalStateException("The resolution mus be set");
+            throw new IllegalStateException("The resolution must be set");
         }
         this.widthMpt = (int)Math.round(UnitConv.in2mpt(this.widthPx / this.dpiHorizontal));
         this.heightMpt = (int)Math.round(UnitConv.in2mpt(this.heightPx / this.dpiVertical));
