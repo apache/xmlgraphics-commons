@@ -52,6 +52,9 @@ public interface MimeConstants {
     /** IBM's AFP IOCA subset for grayscale and color tiled raster image */
     String MIME_AFP_IOCA_FS45   = "image/x-afp+fs45";
 
+    /** IBM's AFP GOCA subset for graphical objects */
+    String MIME_AFP_GOCA        = "image/x-afp+goca";
+
     /** Plain text */
     String MIME_PLAIN_TEXT      = "text/plain";
 
