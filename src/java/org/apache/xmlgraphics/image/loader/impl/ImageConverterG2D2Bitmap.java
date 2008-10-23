@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.awt.Color;
@@ -50,17 +50,26 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
         checkSourceFlavor(src);
         ImageGraphics2D g2dImage = (ImageGraphics2D)src;
 
-        //TODO Make configurable!
+        Object formatIntent = hints.get(ImageProcessingHints.BITMAP_TYPE_INTENT);
         boolean gray = false;
+        if (ImageProcessingHints.BITMAP_TYPE_INTENT_GRAY.equals(formatIntent)) {
+            gray = true;
+        }
+
+        Object transparencyIntent = hints.get(ImageProcessingHints.TRANSPARENCY_INTENT);
         boolean withAlpha = true;
+        if (ImageProcessingHints.TRANSPARENCY_INTENT_IGNORE.equals(transparencyIntent)) {
+            withAlpha = false;
+        }
+
         int resolution = 300; //default: 300dpi
         Number res = (Number)hints.get(ImageProcessingHints.TARGET_RESOLUTION);
         if (res != null) {
             resolution = res.intValue();
         }
-        
+
         BufferedImage bi = paintToBufferedImage(g2dImage, gray, withAlpha, resolution);
-        
+
         ImageBuffered bufImage = new ImageBuffered(src.getInfo(), bi, null);
         return bufImage;
     }
@@ -76,7 +85,7 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
     protected BufferedImage paintToBufferedImage(ImageGraphics2D g2dImage,
             boolean gray, boolean withAlpha, int resolution) {
         ImageSize size = g2dImage.getSize();
-        
+
         int bmw = (int)Math.ceil(UnitConv.mpt2px(size.getWidthMpt(), resolution));
         int bmh = (int)Math.ceil(UnitConv.mpt2px(size.getHeightMpt(), resolution));
         BufferedImage bi;
@@ -95,10 +104,10 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
         }
         Graphics2D g2d = bi.createGraphics();
         try {
-            g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, 
+            g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                     RenderingHints.VALUE_FRACTIONALMETRICS_ON);
             setRenderingHintsForBufferedImage(g2d);
-            
+
             g2d.setBackground(Color.white);
             g2d.setColor(Color.black);
             if (!withAlpha) {
@@ -153,9 +162,9 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
      * @param g2d the Graphics2D instance
      */
     protected void setRenderingHintsForBufferedImage(Graphics2D g2d) {
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_OFF);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
     }
 
