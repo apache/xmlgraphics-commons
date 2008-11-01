@@ -37,7 +37,7 @@ public class XMPSchemaAdapter {
     /** the Metadata object this schema instance operates on */
     protected Metadata meta;
     private XMPSchema schema;
-    
+
     /**
      * Main constructor.
      * @param meta the Metadata object to wrao
@@ -53,12 +53,12 @@ public class XMPSchemaAdapter {
         this.meta = meta;
         this.schema = schema;
     }
-    
+
     /** @return the XMP schema associated with this adapter */
     public XMPSchema getSchema() {
         return this.schema;
     }
-    
+
     /**
      * Returns the QName for a given property
      * @param propName the property name
@@ -122,7 +122,7 @@ public class XMPSchemaAdapter {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
         return df;
     }
-    
+
     /**
      * Formats a Date using ISO 8601 format in the given time zone.
      * @param dt the date
@@ -135,13 +135,13 @@ public class XMPSchemaAdapter {
         cal.setTime(dt);
         int offset = cal.get(Calendar.ZONE_OFFSET);
         offset += cal.get(Calendar.DST_OFFSET);
-        
+
         //DateFormat is operating on GMT so adjust for time zone offset
         Date dt1 = new Date(dt.getTime() + offset);
         StringBuffer sb = new StringBuffer(createPseudoISO8601DateFormat().format(dt1));
 
         offset /= (1000 * 60); //Convert to minutes
-        
+
         if (offset == 0) {
             sb.append('Z');
         } else {
@@ -162,10 +162,10 @@ public class XMPSchemaAdapter {
             }
             sb.append(zoneOffsetMinutes);
         }
-        
+
         return sb.toString();
     }
-    
+
     /**
      * Parses an ISO 8601 date and time value.
      * @param dt the date and time value as an ISO 8601 string
@@ -214,7 +214,7 @@ public class XMPSchemaAdapter {
         String dt = formatISO8601Date(value);
         addStringToSeq(propName, dt);
     }
-    
+
     /**
      * Set a date value.
      * @param propName the property name
@@ -238,7 +238,7 @@ public class XMPSchemaAdapter {
             return parseISO8601Date(dt);
         }
     }
-    
+
     /**
      * Sets a language-dependent value.
      * @param propName the property name
@@ -315,7 +315,7 @@ public class XMPSchemaAdapter {
             }
         }
     }
-    
+
     /**
      * Returns a language-dependent value. If the value in the requested language is not available
      * the value for the default language is returned.
@@ -374,5 +374,27 @@ public class XMPSchemaAdapter {
         return res;
     }
 
-    
+    /**
+     * Returns a Date array representation of the property's values.
+     * @param propName the property name
+     * @return the Date array or null if the property isn't set
+     */
+    protected Date[] getDateArray(String propName) {
+        Object[] arr = getObjectArray(propName);
+        if (arr == null) {
+            return null;
+        }
+        Date[] res = new Date[arr.length];
+        for (int i = 0, c = res.length; i < c; i++) {
+            Object obj = arr[i];
+            if (obj instanceof Date) {
+                res[i] = (Date)((Date)obj).clone();
+            } else {
+                res[i] = parseISO8601Date(obj.toString());
+            }
+        }
+        return res;
+    }
+
+
 }
