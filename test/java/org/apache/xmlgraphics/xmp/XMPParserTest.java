@@ -20,6 +20,9 @@
 package org.apache.xmlgraphics.xmp;
 
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -127,6 +130,38 @@ public class XMPParserTest extends TestCase {
         DublinCoreAdapter dcAdapter = DublinCoreSchema.getAdapter(meta);
         assertEquals("Ender's Game", dcAdapter.getTitle());
         assertEquals("Orson Scott Card", dcAdapter.getCreators()[0]);
+    }
+
+    public void testParseDates() throws Exception {
+        URL url = getClass().getResource("test-dates.xmp");
+        Metadata meta = XMPParser.parseXMP(url);
+        XMPProperty prop;
+
+        DublinCoreAdapter dcAdapter = DublinCoreSchema.getAdapter(meta);
+
+        //Simple adapter access
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+2:00"));
+        cal.set(2006, Calendar.JUNE, 2, 10, 36, 40);
+        cal.set(Calendar.MILLISECOND, 0);
+        assertEquals(cal.getTime(), dcAdapter.getDate());
+        Date[] dates = dcAdapter.getDates();
+        assertEquals(2, dates.length);
+
+        //The second is the most recent and should match the simple value
+        assertEquals(dates[1], dcAdapter.getDate());
+
+        prop = meta.getProperty(XMPConstants.DUBLIN_CORE_NAMESPACE, "date");
+        assertNotNull(prop.getArrayValue());
+        assertEquals(2, prop.getArrayValue().getSize());
+
+        //Now add a new date and check if the adapter's getDate() method returns the new date.
+        cal.set(2008, Calendar.NOVEMBER, 1, 10, 10, 0);
+        dcAdapter.addDate(cal.getTime());
+        assertEquals(3, dcAdapter.getDates().length);
+        prop = meta.getProperty(XMPConstants.DUBLIN_CORE_NAMESPACE, "date");
+        assertNotNull(prop.getArrayValue());
+        assertEquals(3, prop.getArrayValue().getSize());
+        assertEquals(cal.getTime(), dcAdapter.getDate());
     }
 
 }
