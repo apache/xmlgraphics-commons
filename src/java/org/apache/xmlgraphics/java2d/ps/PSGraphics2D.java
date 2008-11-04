@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,11 +64,11 @@ import org.apache.xmlgraphics.ps.PSImageUtils;
 public class PSGraphics2D extends AbstractGraphics2D {
 
     private static final AffineTransform IDENTITY_TRANSFORM = new AffineTransform();
-    
+
     private static final boolean DEBUG = false;
-    
+
     protected PSGraphics2D rootG2D;
-    
+
     /** the PostScript generator being created */
     protected PSGenerator gen;
 
@@ -76,10 +76,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
 
     /** Fallback text handler */
     protected TextHandler fallbackTextHandler = new StrokingTextHandler(this);
-    
+
     /** Custom text handler */
     protected TextHandler customTextHandler;
-    
+
     /**
      * the current colour for use in svg
      */
@@ -161,10 +161,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
     public void setCustomTextHandler(TextHandler handler) {
         this.customTextHandler = handler;
     }
-    
+
     /* TODO Add me back at the right place!!!
     private void setPrivateHints() {
-        setRenderingHint(RenderingHintsKeyExt.KEY_AVOID_TILE_PAINTING, 
+        setRenderingHint(RenderingHintsKeyExt.KEY_AVOID_TILE_PAINTING,
                 RenderingHintsKeyExt.VALUE_AVOID_TILE_PAINTING_ON);
     }*/
 
@@ -258,7 +258,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             gen.concatMatrix(at);
             Shape imclip = getClip();
             writeClip(imclip);
-            PSImageUtils.renderBitmapImage(buf, 
+            PSImageUtils.renderBitmapImage(buf,
                 x, y, width, height, gen);
             gen.restoreGraphicsState();
         } catch (IOException ioe) {
@@ -383,9 +383,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
                                  + " M");
                 break;
             case PathIterator.SEG_QUADTO:
-                gen.writeln(gen.formatDouble(vals[0]) + " " 
-                          + gen.formatDouble(vals[1]) + " " 
-                          + gen.formatDouble(vals[2]) + " " 
+                gen.writeln(gen.formatDouble(vals[0]) + " "
+                          + gen.formatDouble(vals[1]) + " "
+                          + gen.formatDouble(vals[2]) + " "
                           + gen.formatDouble(vals[3]) + " QUADTO ");
                 break;
             case PathIterator.SEG_CLOSE:
@@ -418,7 +418,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
         preparePainting();
         try {
             gen.saveGraphicsState();
-            
+
             AffineTransform trans = getTransform();
             boolean newTransform = gen.getCurrentState().checkTransform(trans)
                     && !trans.isIdentity();
@@ -561,7 +561,19 @@ public class PSGraphics2D extends AbstractGraphics2D {
      */
     public void drawRenderedImage(RenderedImage img, AffineTransform xform) {
         preparePainting();
-        System.err.println("NYI: drawRenderedImage");
+        try {
+            AffineTransform at = getTransform();
+            gen.saveGraphicsState();
+            gen.concatMatrix(at);
+            gen.concatMatrix(xform);
+            Shape imclip = getClip();
+            writeClip(imclip);
+            PSImageUtils.renderBitmapImage(img,
+                0, 0, img.getWidth(), img.getHeight(), gen);
+            gen.restoreGraphicsState();
+        } catch (IOException ioe) {
+            handleIOException(ioe);
+        }
     }
 
     /**
@@ -663,17 +675,17 @@ public class PSGraphics2D extends AbstractGraphics2D {
         preparePainting();
         try {
             gen.saveGraphicsState();
-            
+
             AffineTransform trans = getTransform();
             boolean newTransform = gen.getCurrentState().checkTransform(trans)
                     && !trans.isIdentity();
-            
+
             if (newTransform) {
                 gen.concatMatrix(trans);
             }
             Shape imclip = getClip();
             writeClip(imclip);
-            
+
             establishColor(getColor());
 
             applyPaint(getPaint(), true);
@@ -696,7 +708,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @param nonzero true if the non-zero winding rule should be used when filling
      * @exception IOException In case of an I/O problem
      */
-    protected void doDrawing(boolean fill, boolean stroke, boolean nonzero) 
+    protected void doDrawing(boolean fill, boolean stroke, boolean nonzero)
                 throws IOException {
         preparePainting();
         if (fill) {
