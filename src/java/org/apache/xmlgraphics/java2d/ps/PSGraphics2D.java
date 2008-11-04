@@ -115,7 +115,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
         this.rootG2D = (g.rootG2D != null ? g.rootG2D : g);
         setPSGenerator(g.gen);
         this.clippingDisabled = g.clippingDisabled;
-        this.fallbackTextHandler = g.fallbackTextHandler;
+        //this.fallbackTextHandler is not copied
+        //TODO The customTextHandler should probably not be passed over just like that
+        //fallbackTextHandler, for example, has to be recreated to point to the sub-Graphics2D
+        //to get the text positioning right. This might require changes in the TextHandler interface
         this.customTextHandler = g.customTextHandler;
         this.currentColour    = g.currentColour;
     }
