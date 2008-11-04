@@ -43,6 +43,12 @@ public interface ImageProcessingHints {
     String BITMAP_TYPE_INTENT_GRAY = "gray";
 
     /**
+     * Used with BITMAP_TYPE_INTENT to indicate that the generated bitmap should be a
+     * 1 bit black and white image.
+     */
+    String BITMAP_TYPE_INTENT_MONO = "mono";
+
+    /**
      * Used to indicate how existing transparency information (for example, an alpha channel)
      * shall be treated. */
     Object TRANSPARENCY_INTENT = "TRANSPARENCY_INTENT";
