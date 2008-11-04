@@ -51,9 +51,11 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
         ImageGraphics2D g2dImage = (ImageGraphics2D)src;
 
         Object formatIntent = hints.get(ImageProcessingHints.BITMAP_TYPE_INTENT);
-        boolean gray = false;
+        int bitsPerPixel = 24;
         if (ImageProcessingHints.BITMAP_TYPE_INTENT_GRAY.equals(formatIntent)) {
-            gray = true;
+            bitsPerPixel = 8;
+        } else if (ImageProcessingHints.BITMAP_TYPE_INTENT_MONO.equals(formatIntent)) {
+            bitsPerPixel = 1;
         }
 
         Object transparencyIntent = hints.get(ImageProcessingHints.TRANSPARENCY_INTENT);
@@ -68,7 +70,7 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
             resolution = res.intValue();
         }
 
-        BufferedImage bi = paintToBufferedImage(g2dImage, gray, withAlpha, resolution);
+        BufferedImage bi = paintToBufferedImage(g2dImage, bitsPerPixel, withAlpha, resolution);
 
         ImageBuffered bufImage = new ImageBuffered(src.getInfo(), bi, null);
         return bufImage;
@@ -77,36 +79,52 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
     /**
      * Paints a Graphics2D image on a BufferedImage and returns this bitmap.
      * @param g2dImage the Graphics2D image
-     * @param gray true if the generated image should be in grayscales
+     * @param bitsPerPixel the desired number of bits per pixel (supported: 1, 8, 24)
      * @param withAlpha true if the generated image should have an alpha channel
      * @param resolution the requested bitmap resolution
      * @return the newly created BufferedImage
      */
     protected BufferedImage paintToBufferedImage(ImageGraphics2D g2dImage,
-            boolean gray, boolean withAlpha, int resolution) {
+            int bitsPerPixel, boolean withAlpha, int resolution) {
         ImageSize size = g2dImage.getSize();
 
+        RenderingHints additionalHints = null;
         int bmw = (int)Math.ceil(UnitConv.mpt2px(size.getWidthMpt(), resolution));
         int bmh = (int)Math.ceil(UnitConv.mpt2px(size.getHeightMpt(), resolution));
         BufferedImage bi;
-        if (gray) {
+        switch (bitsPerPixel) {
+        case 1:
+            bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_BYTE_BINARY);
+            withAlpha = false;
+            //withAlpha is ignored in this case
+            additionalHints = new RenderingHints(null);
+            //The following usually has no effect but some class libraries might support it
+            additionalHints.put(RenderingHints.KEY_DITHERING,
+                    RenderingHints.VALUE_DITHER_ENABLE);
+            break;
+        case 8:
             if (withAlpha) {
                 bi = createGrayBufferedImageWithAlpha(bmw, bmh);
             } else {
                 bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_BYTE_GRAY);
             }
-        } else {
+            break;
+        default:
             if (withAlpha) {
                 bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_INT_ARGB);
             } else {
                 bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_INT_RGB);
             }
         }
+
         Graphics2D g2d = bi.createGraphics();
         try {
             g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                     RenderingHints.VALUE_FRACTIONALMETRICS_ON);
             setRenderingHintsForBufferedImage(g2d);
+            if (additionalHints != null) {
+                g2d.addRenderingHints(additionalHints);
+            }
 
             g2d.setBackground(Color.white);
             g2d.setColor(Color.black);
