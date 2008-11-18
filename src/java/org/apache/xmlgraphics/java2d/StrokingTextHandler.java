@@ -19,31 +19,47 @@
 
 package org.apache.xmlgraphics.java2d;
 
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 
 /**
- * Default TextHandler implementation which paints text using graphics primitives (shapes). 
+ * Default TextHandler implementation which paints text using graphics primitives (shapes).
  */
 public class StrokingTextHandler implements TextHandler {
 
     private AbstractGraphics2D g2d;
-    
+
     /**
-     * Main constructor
+     * Legacy constructor.
      * @param g2d a graphics 2d implementation
+     * @deprecated Use default constructor instead
      */
     public StrokingTextHandler(AbstractGraphics2D g2d) {
+        this();
         this.g2d = g2d;
     }
-    
+
+    public StrokingTextHandler() {
+        //nop
+    }
+
     /** {@inheritDoc} */
-    public void drawString(String text, float x, float y) {
+    public void drawString(Graphics2D g2d, String text, float x, float y) {
         java.awt.Font awtFont = g2d.getFont();
         FontRenderContext frc = g2d.getFontRenderContext();
         GlyphVector gv = awtFont.createGlyphVector(frc, text);
         Shape glyphOutline = gv.getOutline(x, y);
         g2d.fill(glyphOutline);
+    }
+
+    /** {@inheritDoc} */
+    public void drawString(String text, float x, float y) {
+        if (g2d == null) {
+            throw new NullPointerException(
+            "Use legacy constructor when calling this deprecated method!");
+        }
+        drawString(this.g2d, text, x, y);
     }
 }
