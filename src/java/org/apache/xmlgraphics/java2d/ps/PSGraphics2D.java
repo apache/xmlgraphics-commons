@@ -24,8 +24,6 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-/* java.awt.Font is not imported to avoid confusion with 
-      other classes called "Font" */ 
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -75,7 +73,8 @@ public class PSGraphics2D extends AbstractGraphics2D {
     private boolean clippingDisabled = false;
 
     /** Fallback text handler */
-    protected TextHandler fallbackTextHandler = new StrokingTextHandler(this);
+
+    protected TextHandler fallbackTextHandler = new StrokingTextHandler();
 
     /** Custom text handler */
     protected TextHandler customTextHandler;
@@ -651,9 +650,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
     public void drawString(String s, float x, float y) {
         try {
             if (customTextHandler != null && !textAsShapes) {
-                customTextHandler.drawString(s, x, y);
+                customTextHandler.drawString(this, s, x, y);
             } else {
-                fallbackTextHandler.drawString(s, x, y);
+                fallbackTextHandler.drawString(this, s, x, y);
             }
         } catch (IOException ioe) {
             handleIOException(ioe);

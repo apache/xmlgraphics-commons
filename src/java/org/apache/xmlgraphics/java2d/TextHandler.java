@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.java2d;
 
+import java.awt.Graphics2D;
 import java.io.IOException;
 
 /**
@@ -28,10 +29,21 @@ public interface TextHandler {
 
     /**
      * Draw some text.
+     * @param g2d the graphics 2D implementation
      * @param text the text to paint
      * @param x the x-coordinate where the <code>String</code> should be rendered
      * @param y the y-coordinate where the <code>String</code> should be rendered
      * @throws IOException In case of an I/O error
+     */
+    void drawString(Graphics2D g2d, String text, float x, float y) throws IOException;
+
+    /**
+     * Draw some text.
+     * @param text the text to paint
+     * @param x the x-coordinate where the <code>String</code> should be rendered
+     * @param y the y-coordinate where the <code>String</code> should be rendered
+     * @throws IOException In case of an I/O error
+     * @deprecated Use {@code #drawString(Graphics2D, String, float, float)} instead.
      */
     void drawString(String text, float x, float y) throws IOException;
 }
