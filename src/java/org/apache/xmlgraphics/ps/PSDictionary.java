@@ -58,7 +58,8 @@ public class PSDictionary extends java.util.HashMap {
         private static final String[][] BRACES = {
             {"<<", ">>"},
             {"[", "]"},
-            {"{", "}"}
+            {"{", "}"},
+            {"(", ")"}
         };
 
         private static final int OPENING = 0;
@@ -66,6 +67,7 @@ public class PSDictionary extends java.util.HashMap {
         private static final int DICTIONARY = 0;
         private static final int ARRAY = 1;
         private static final int PROCEDURE = 2;
+        private static final int STRING = 3;
 
         /**
          * Returns a Token containing the start, end index and value of the next token
@@ -210,7 +212,7 @@ public class PSDictionary extends java.util.HashMap {
                     }
                     valueToken.value = str.substring(valueToken.startIndex, valueToken.endIndex);
                 }
-                if (braces == null || braces == BRACES[PROCEDURE]) {
+                if (braces == null || braces == BRACES[PROCEDURE] || braces == BRACES[STRING]) {
                     obj = valueToken.value;                        
                 } else if (BRACES[ARRAY] == braces) {
                     List objList = new java.util.ArrayList();
