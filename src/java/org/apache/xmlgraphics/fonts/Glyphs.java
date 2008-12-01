@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.fonts;
 
 import java.io.BufferedReader;
@@ -190,7 +190,7 @@ public class Glyphs {
         '\u2022',                                       // bullet
         '\u2013',                                       // endash
         '\u2014',                                       // emdash
-        '~', 
+        '~',
         '\u2122',                                       // trademark
         '\u0161', '\u203a', '\u0153', '\u2022', '\u017e', '\u0178', // 0xA0
              ' ', '\u00a1', '\u00a2', '\u00a3', '\u00a4', '\u00a5',
@@ -223,24 +223,24 @@ public class Glyphs {
      */
     private static final String[] UNICODE_GLYPHS;
     private static final String[] DINGBATS_GLYPHS;
-    
+
     private static final Map CHARNAME_ALTERNATIVES;
 
     private static final Map CHARNAMES_TO_UNICODE;
-    
+
     static {
         Map map = new java.util.TreeMap();
         UNICODE_GLYPHS = loadGlyphList("glyphlist.txt", map);
         DINGBATS_GLYPHS = loadGlyphList("zapfdingbats.txt", map);
         CHARNAMES_TO_UNICODE = Collections.unmodifiableMap(map);
-        
+
         map = new java.util.TreeMap();
         addAlternatives(map, new String[] {"Omega", "Omegagreek"});
         addAlternatives(map, new String[] {"Delta", "Deltagreek"});
         //fraction maps to 2044 (FRACTION SLASH) and 2215 (DIVISION SLASH)
         addAlternatives(map, new String[] {"fraction", "divisionslash"});
         //hyphen maps to 002D (HYPHEN-MINUS) and 00AD (SOFT HYPHEN)
-        addAlternatives(map, new String[] {"hyphen", "sfthyphen", "softhyphen"});
+        addAlternatives(map, new String[] {"hyphen", "sfthyphen", "softhyphen", "minus"});
         //macron maps to 00AF (MACRON) and 02C9 (MODIFIER LETTER MACRON)
         addAlternatives(map, new String[] {"macron", "overscore"});
         //mu maps to 00B5 (MICRO SIGN) and 03BC (GREEK SMALL LETTER MU)
@@ -268,14 +268,14 @@ public class Glyphs {
         addAlternatives(map, new String[] {"seven", "sevenoldstyle"});
         addAlternatives(map, new String[] {"eight", "eightoldstyle"});
         addAlternatives(map, new String[] {"nine", "nineoldstyle"});
-        
+
         //map currency signs from and to their respective "oldstyle" variant
         addAlternatives(map, new String[] {"cent", "centoldstyle"});
         addAlternatives(map, new String[] {"dollar", "dollaroldstyle"});
-        
+
         CHARNAME_ALTERNATIVES = Collections.unmodifiableMap(map);
     }
-    
+
     private static void addAlternatives(Map map, String[] alternatives) {
         for (int i = 0, c = alternatives.length; i < c; i++) {
             String[] alt = new String[c - 1];
@@ -289,7 +289,7 @@ public class Glyphs {
             map.put(alternatives[i], alt);
         }
     }
-    
+
     private static String[] loadGlyphList(String filename, Map charNameToUnicodeMap) {
         List lines = new java.util.ArrayList();
         InputStream in = Glyphs.class.getResourceAsStream(filename);
@@ -326,15 +326,15 @@ public class Glyphs {
             String charName = line.substring(0, semicolon);
             String rawUnicode = line.substring(semicolon + 1);
             buf.setLength(0);
-            
+
             StringTokenizer tokenizer = new StringTokenizer(rawUnicode, " ", false);
             while (tokenizer.hasMoreTokens()) {
                 String token = tokenizer.nextToken();
                 assert token.length() == 4;
                 buf.append(hexToChar(token));
             }
-                
-            String unicode = buf.toString(); 
+
+            String unicode = buf.toString();
             arr[pos] = unicode;
             pos++;
             arr[pos] = charName;
@@ -344,7 +344,7 @@ public class Glyphs {
         }
         return arr;
     }
-    
+
     private static char hexToChar(String hex) {
         return (char)Integer.parseInt(hex, 16);
     }
@@ -359,7 +359,7 @@ public class Glyphs {
     public static final String charToGlyphName(char ch) {
         return stringToGlyph(Character.toString(ch));
     }
-    
+
     /**
      * Returns a String containing the Unicode sequence the given glyph name represents.
      * @param glyphName the glyph name
@@ -372,7 +372,7 @@ public class Glyphs {
         if (period >= 0) {
             glyphName = glyphName.substring(0, period);
         }
-        
+
         //Step 2
         StringBuffer sb = new StringBuffer();
         StringTokenizer tokenizer = new StringTokenizer(glyphName, "_", false);
@@ -409,14 +409,14 @@ public class Glyphs {
                 sb.append(sequence);
             }
         }
-        
+
         if (sb.length() == 0) {
             return null;
         } else {
             return sb.toString();
         }
     }
-    
+
     /**
      * Return the glyphname from a string,
      * eg, glyphToString("\\") returns "backslash"
@@ -465,6 +465,6 @@ public class Glyphs {
     public static String[] getCharNameAlternativesFor(String charName) {
         return (String[])CHARNAME_ALTERNATIVES.get(charName);
     }
-    
+
 }
 
