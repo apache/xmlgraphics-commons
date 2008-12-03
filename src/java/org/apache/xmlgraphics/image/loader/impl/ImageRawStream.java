@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -191,6 +192,38 @@ public class ImageRawStream extends AbstractImage {
         /** {@inheritDoc} */
         protected void finalize() {
             close();
+        }
+
+    }
+
+    /**
+     * InputStream factory that wraps a byte array.
+     */
+    public static class ByteArrayStreamFactory implements InputStreamFactory {
+
+        private byte[] data;
+
+        /**
+         * Main constructor.
+         * @param data the byte array
+         */
+        public ByteArrayStreamFactory(byte[] data) {
+            this.data = data;
+        }
+
+        /** {@inheritDoc} */
+        public InputStream createInputStream() {
+            return new ByteArrayInputStream(data);
+        }
+
+        /** {@inheritDoc} */
+        public void close() {
+            //nop
+        }
+
+        /** {@inheritDoc} */
+        public boolean isUsedOnceOnly() {
+            return false;
         }
 
     }

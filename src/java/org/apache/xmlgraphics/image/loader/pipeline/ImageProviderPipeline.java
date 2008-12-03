@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,9 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.pipeline;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +53,7 @@ public class ImageProviderPipeline {
     private ImageCache cache;
     private ImageLoader loader;
     private List converters = new java.util.ArrayList();
-    
+
     /**
      * Main constructor.
      * @param cache the image cache (may be null if no caching is desired)
@@ -64,7 +63,7 @@ public class ImageProviderPipeline {
         this.cache = cache;
         setImageLoader(loader);
     }
-    
+
     /**
      * Constructor for operation without caching.
      * @param loader the image loader to drive the pipeline with
@@ -72,7 +71,7 @@ public class ImageProviderPipeline {
     public ImageProviderPipeline(ImageLoader loader) {
         this(null, loader);
     }
-    
+
     /**
      * Default constructor without caching and without an ImageLoader (or the ImageLoader may
      * be set later).
@@ -80,7 +79,7 @@ public class ImageProviderPipeline {
     public ImageProviderPipeline() {
         this(null, null);
     }
-    
+
     /**
      * Executes the image converter pipeline. First, the image indicated by the ImageInfo instance
      * is loaded through an ImageLoader and then optionally converted by a series of
@@ -97,7 +96,7 @@ public class ImageProviderPipeline {
                 throws ImageException, IOException {
         return execute(info, null, hints, context);
     }
-    
+
     /**
      * Executes the image converter pipeline. First, the image indicated by the ImageInfo instance
      * is loaded through an ImageLoader and then optionally converted by a series of
@@ -120,10 +119,10 @@ public class ImageProviderPipeline {
         long start, duration;
         start = System.currentTimeMillis();
         Image img = null;
-        
+
         //Remember the last image in the pipeline that is cacheable and cache that.
         Image lastCacheableImage = null;
-        
+
         int converterCount = converters.size();
         int startingPoint = 0;
         if (cache != null) {
@@ -136,7 +135,7 @@ public class ImageProviderPipeline {
                     break;
                 }
             }
-        
+
             if (img == null && loader != null) {
                 //try target flavor of loader from cache
                 ImageFlavor flavor = loader.getTargetFlavor();
@@ -146,7 +145,7 @@ public class ImageProviderPipeline {
         if (img == null && originalImage != null) {
             img = originalImage;
         }
-        
+
         boolean entirelyInCache = true;
         if (img == null && loader != null) {
             //Load image
@@ -155,7 +154,7 @@ public class ImageProviderPipeline {
                 duration = System.currentTimeMillis() - start;
                 log.trace("Image loading using " + loader + " took " + duration + " ms.");
             }
-            
+
             //Caching
             entirelyInCache = false;
             if (img.isCacheable()) {
@@ -166,7 +165,7 @@ public class ImageProviderPipeline {
             throw new ImageException(
                     "Pipeline fails. No ImageLoader and no original Image available.");
         }
-        
+
         if (converterCount > 0) {
             for (int i = startingPoint; i < converterCount; i++) {
                 ImageConverter converter = getConverter(i);
@@ -176,7 +175,7 @@ public class ImageProviderPipeline {
                     duration = System.currentTimeMillis() - start;
                     log.trace("Image conversion using " + converter + " took " + duration + " ms.");
                 }
-                
+
                 //Caching
                 entirelyInCache = false;
                 if (img.isCacheable()) {
@@ -222,7 +221,7 @@ public class ImageProviderPipeline {
             if (log.isDebugEnabled()) {
                 log.debug("Image is made cacheable: " + img.getInfo());
             }
-            
+
             //Read the whole stream and hold it in memory so the image can be cached
             ByteArrayOutputStream baout = new ByteArrayOutputStream();
             InputStream in = raw.createInputStream();
@@ -232,27 +231,12 @@ public class ImageProviderPipeline {
                 IOUtils.closeQuietly(in);
             }
             final byte[] data = baout.toByteArray();
-            
-            raw.setInputStreamFactory(new ImageRawStream.InputStreamFactory() {
-
-                public void close() {
-                    //nop
-                }
-
-                public InputStream createInputStream() {
-                    return new ByteArrayInputStream(data);
-                }
-
-                public boolean isUsedOnceOnly() {
-                    return false;
-                }
-                
-            });
+            raw.setInputStreamFactory(new ImageRawStream.ByteArrayStreamFactory(data));
             return raw;
         }
         return null;
     }
-    
+
     /**
      * Sets the ImageLoader that is used at the beginning of the pipeline if the image is not
      * loaded, yet.
@@ -261,7 +245,7 @@ public class ImageProviderPipeline {
     public void setImageLoader(ImageLoader imageLoader) {
         this.loader = imageLoader;
     }
-    
+
     /**
      * Adds an additional ImageConverter to the end of the pipeline.
      * @param converter the ImageConverter instance
@@ -313,5 +297,5 @@ public class ImageProviderPipeline {
             return null;
         }
     }
-    
+
 }
