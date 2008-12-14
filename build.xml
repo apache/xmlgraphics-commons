@@ -319,6 +319,7 @@
       <jvmarg value="-enableassertions"/>
       <formatter type="brief" usefile="false"/>
       <formatter type="plain" usefile="true"/>
+      <formatter type="xml" usefile="true"/>
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <path refid="libs-build-classpath"/>
