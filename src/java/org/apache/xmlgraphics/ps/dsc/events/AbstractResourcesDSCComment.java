@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,20 +31,20 @@ import org.apache.xmlgraphics.ps.PSProcSet;
 import org.apache.xmlgraphics.ps.PSResource;
 
 /**
- * Abstract base class for Resource DSC comments (DocumentNeededResources, 
+ * Abstract base class for Resource DSC comments (DocumentNeededResources,
  * DocumentSuppliedResources and PageResources).
  */
 public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
 
     private Set resources;
-    
+
     /**
      * Creates a new instance.
      */
     public AbstractResourcesDSCComment() {
         super();
     }
-    
+
     /**
      * Creates a new instance.
      * @param resources a Collection of PSResource instances
@@ -52,12 +52,16 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
     public AbstractResourcesDSCComment(Collection resources) {
         addResources(resources);
     }
-    
-    /**
-     * @see org.apache.xmlgraphics.ps.dsc.events.DSCComment#hasValues()
-     */
+
+    /** {@inheritDoc} */
     public boolean hasValues() {
         return true;
+    }
+
+    private void prepareResourceSet() {
+        if (this.resources == null) {
+            this.resources = new java.util.TreeSet();
+        }
     }
 
     /**
@@ -65,25 +69,21 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
      * @param res the resource
      */
     public void addResource(PSResource res) {
-        if (this.resources == null) {
-            this.resources = new java.util.HashSet();
-        }
+        prepareResourceSet();
         this.resources.add(res);
     }
-    
+
     /**
      * Adds a collection of resources.
-     * @param resources a Collection of PSResource instances. 
+     * @param resources a Collection of PSResource instances.
      */
     public void addResources(Collection resources) {
         if (resources != null) {
-            if (this.resources == null) {
-                this.resources = new java.util.HashSet();
-            }
+            prepareResourceSet();
             this.resources.addAll(resources);
         }
     }
-    
+
     /**
      * Returns the set of resources associated with this DSC comment.
      * @return the set of resources
@@ -91,12 +91,12 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
     public Set getResources() {
         return Collections.unmodifiableSet(this.resources);
     }
-    
+
     /**
      * Defines the known resource types (font, procset, file, pattern etc.).
      */
     protected static final Set RESOURCE_TYPES = new java.util.HashSet();
-    
+
     static {
         RESOURCE_TYPES.add(PSResource.TYPE_FONT);
         RESOURCE_TYPES.add(PSResource.TYPE_PROCSET);
@@ -105,10 +105,8 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
         RESOURCE_TYPES.add(PSResource.TYPE_FORM);
         RESOURCE_TYPES.add(PSResource.TYPE_ENCODING);
     }
-    
-    /**
-     * @see org.apache.xmlgraphics.ps.dsc.events.DSCComment#parseValue(java.lang.String)
-     */
+
+    /** {@inheritDoc} */
     public void parseValue(String value) {
         List params = splitParams(value);
         String currentResourceType = null;
@@ -132,7 +130,7 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
                 String procname = (String)iter.next();
                 String version = (String)iter.next();
                 String revision = (String)iter.next();
-                addResource(new PSProcSet(procname, 
+                addResource(new PSProcSet(procname,
                         Float.parseFloat(version), Integer.parseInt(revision)));
             } else if (PSResource.TYPE_FILE.equals(currentResourceType)) {
                 String filename = (String)iter.next();
@@ -143,10 +141,7 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
         }
     }
 
-    /**
-     * @see org.apache.xmlgraphics.ps.dsc.events.DSCEvent#generate(
-     *          org.apache.xmlgraphics.ps.PSGenerator)
-     */
+    /** {@inheritDoc} */
     public void generate(PSGenerator gen) throws IOException {
         if (resources == null || resources.size() == 0) {
             return;

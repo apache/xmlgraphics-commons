@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.xmlgraphics.ps.PSGenerator;
@@ -42,7 +43,10 @@ public class ResourceTracker {
     private Set documentNeededResources;
     private Set usedResources;
     private Set pageResources;
-    
+
+    //Map<PSResource, Integer>
+    private Map resourceUsageCounts;
+
     /**
      * Returns the set of supplied resources.
      * @return the set of supplied resources
@@ -54,7 +58,7 @@ public class ResourceTracker {
             return Collections.EMPTY_SET;
         }
     }
-    
+
     /**
      * Returns the set of needed resources.
      * @return the set of needed resources
@@ -66,7 +70,7 @@ public class ResourceTracker {
             return Collections.EMPTY_SET;
         }
     }
-    
+
     /**
      * Notifies the resource tracker that a new page has been started and that the page resource
      * set can be cleared.
@@ -76,7 +80,7 @@ public class ResourceTracker {
             pageResources.clear();
         }
     }
-    
+
     /**
      * Registers a supplied resource. If the same resources is already in the set of needed
      * resources, it is removed there.
@@ -91,7 +95,7 @@ public class ResourceTracker {
             documentNeededResources.remove(res);
         }
     }
-    
+
     /**
      * Registers a needed resource. If the same resources is already in the set of supplied
      * resources, it is ignored, i.e. it is assumed to be supplied.
@@ -105,16 +109,34 @@ public class ResourceTracker {
             documentNeededResources.add(res);
         }
     }
-    
+
+    private void preparePageResources() {
+        if (pageResources == null) {
+            pageResources = new java.util.HashSet();
+        }
+    }
+
+    private void prepareUsageCounts() {
+        if (resourceUsageCounts == null) {
+            resourceUsageCounts = new java.util.HashMap();
+        }
+    }
+
     /**
      * Notifies the resource tracker about the usage of a resource on the current page.
      * @param res the resource being used
      */
     public void notifyResourceUsageOnPage(PSResource res) {
-        if (pageResources == null) {
-            pageResources = new java.util.HashSet();
-        }
+        preparePageResources();
         pageResources.add(res);
+
+        prepareUsageCounts();
+        Counter counter = (Counter)resourceUsageCounts.get(res);
+        if (counter == null) {
+            resourceUsageCounts.put(res, new Counter());
+        } else {
+            counter.inc();
+        }
     }
 
     /**
@@ -122,10 +144,12 @@ public class ResourceTracker {
      * @param resources the resources being used
      */
     public void notifyResourceUsageOnPage(Collection resources) {
-        if (pageResources == null) {
-            pageResources = new java.util.HashSet();
+        preparePageResources();
+        Iterator iter = resources.iterator();
+        while (iter.hasNext()) {
+            PSResource res = (PSResource)iter.next();
+            notifyResourceUsageOnPage(res);
         }
-        pageResources.addAll(resources);
     }
 
     /**
@@ -140,34 +164,101 @@ public class ResourceTracker {
     /**
      * Writes a DSC comment for the accumulated used resources, either at page level or
      * at document level.
-     * @param pageLevel true if the DSC comment for the page level should be generated, 
+     * @param pageLevel true if the DSC comment for the page level should be generated,
      *                  false for the document level (in the trailer)
      * @param gen the PSGenerator to write the DSC comments with
      * @exception IOException In case of an I/O problem
      */
     public void writeResources(boolean pageLevel, PSGenerator gen) throws IOException {
         if (pageLevel) {
-            new DSCCommentPageResources(pageResources).generate(gen);
-            if (usedResources == null) {
-                usedResources = new java.util.HashSet();
-            }
-            usedResources.addAll(pageResources);
+            writePageResources(gen);
         } else {
-            if (usedResources != null) {
-                Iterator iter = usedResources.iterator();
-                while (iter.hasNext()) {
-                    PSResource res = (PSResource)iter.next();
-                    if (documentSuppliedResources == null 
-                            || !documentSuppliedResources.contains(res)) {
-                        registerNeededResource(res);
-                    }
-                }
-            }
-            new DSCCommentDocumentNeededResources(documentNeededResources).generate(gen);
-            new DSCCommentDocumentSuppliedResources(documentSuppliedResources).generate(gen);
+            writeDocumentResources(gen);
         }
     }
-    
-    
-    
+
+    /**
+     * Writes a DSC comment for the accumulated used resources on the current page. Then it commits
+     * all those resources to the used resources on document level.
+     * @param gen the PSGenerator to write the DSC comments with
+     * @exception IOException In case of an I/O problem
+     */
+    public void writePageResources(PSGenerator gen) throws IOException {
+        new DSCCommentPageResources(pageResources).generate(gen);
+        if (usedResources == null) {
+            usedResources = new java.util.HashSet();
+        }
+        usedResources.addAll(pageResources);
+    }
+
+    /**
+     * Writes a DSC comment for the needed and supplied resourced for the current DSC document.
+     * @param gen the PSGenerator to write the DSC comments with
+     * @exception IOException In case of an I/O problem
+     */
+    public void writeDocumentResources(PSGenerator gen) throws IOException {
+        if (usedResources != null) {
+            Iterator iter = usedResources.iterator();
+            while (iter.hasNext()) {
+                PSResource res = (PSResource)iter.next();
+                if (documentSuppliedResources == null
+                        || !documentSuppliedResources.contains(res)) {
+                    registerNeededResource(res);
+                }
+            }
+        }
+        new DSCCommentDocumentNeededResources(documentNeededResources).generate(gen);
+        new DSCCommentDocumentSuppliedResources(documentSuppliedResources).generate(gen);
+    }
+
+    /**
+     * This method declares that the given resource will be inlined and can therefore
+     * be removed from resource tracking. This is useful when you don't know beforehand
+     * if a resource will be used multiple times. If it's only used once it's better
+     * to inline the resource to lower the maximum memory needed inside the PostScript
+     * interpreter.
+     * @param res the resource
+     */
+    public void declareInlined(PSResource res) {
+        if (this.documentNeededResources != null) {
+            this.documentNeededResources.remove(res);
+        }
+        if (this.documentSuppliedResources != null) {
+            this.documentSuppliedResources.remove(res);
+        }
+        if (this.pageResources != null) {
+            this.pageResources.remove(res);
+        }
+        if (this.usedResources != null) {
+            this.usedResources.remove(res);
+        }
+    }
+
+    /**
+     * Returns the number of times a resource has been used inside the current DSC document.
+     * @param res the resource
+     * @return the number of times the resource has been used
+     */
+    public long getUsageCount(PSResource res) {
+        Counter counter = (Counter)resourceUsageCounts.get(res);
+        return (counter != null ? counter.getCount() : 0);
+    }
+
+    private static class Counter {
+
+        private long count = 1;
+
+        public void inc() {
+            this.count++;
+        }
+
+        public long getCount() {
+            return this.count;
+        }
+
+        public String toString() {
+            return Long.toString(this.count);
+        }
+    }
+
 }
