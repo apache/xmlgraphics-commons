@@ -22,7 +22,7 @@ package org.apache.xmlgraphics.ps;
 /**
  * Represents a PostScript resource (file, font, procset etc.).
  */
-public class PSResource {
+public class PSResource implements Comparable {
 
     /** a file resource */
     public static final String TYPE_FILE = "file";
@@ -36,10 +36,10 @@ public class PSResource {
     public static final String TYPE_FORM = "form";
     /** a procset resource */
     public static final String TYPE_ENCODING = "encoding";
-    
+
     private String type;
     private String name;
-    
+
     /**
      * Main constructor
      * @param type type of the resource
@@ -49,24 +49,24 @@ public class PSResource {
         this.type = type;
         this.name = name;
     }
-    
+
     /** @return the type of the resource */
     public String getType() {
         return this.type;
     }
-    
+
     /** @return the name of the resource */
     public String getName() {
         return this.name;
     }
-    
+
     /** @return the <resource> specification as defined in DSC v3.0 spec. */
     public String getResourceSpecification() {
         StringBuffer sb = new StringBuffer();
         sb.append(getType()).append(" ").append(PSGenerator.convertStringToDSC(getName()));
         return sb.toString();
     }
-    
+
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -85,7 +85,21 @@ public class PSResource {
     }
 
     /** {@inheritDoc} */
+    public int compareTo(Object o) {
+        PSResource other = (PSResource)o;
+        if (this == other) {
+            return 0;
+        }
+        int result = this.getType().compareTo(other.getType());
+        if (result == 0) {
+            result = this.getName().compareTo(other.getName());
+        }
+        return result;
+    }
+
+    /** {@inheritDoc} */
     public String toString() {
         return getResourceSpecification();
     }
+
 }

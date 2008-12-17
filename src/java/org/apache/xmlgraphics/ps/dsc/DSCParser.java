@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,15 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps.dsc;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
@@ -38,7 +40,7 @@ import org.apache.xmlgraphics.ps.dsc.tools.DSCTools;
 
 /**
  * Parser for DSC-compliant PostScript files (DSC = Document Structuring Conventions). The parser
- * is implemented as a pull parser but has the ability to act as a push parser through the 
+ * is implemented as a pull parser but has the ability to act as a push parser through the
  * DSCHandler interface.
  */
 public class DSCParser implements DSCParserConstants {
@@ -49,9 +51,11 @@ public class DSCParser implements DSCParserConstants {
     private boolean checkEOF = true;
     private DSCEvent currentEvent;
     private DSCEvent nextEvent;
-    private DSCFilter filter;
-    private NestedDocumentHandler nestedDocumentHandler;
-    
+    private DSCListener nestedDocumentHandler;
+    private DSCListener filterListener;
+    private List listeners;
+    private boolean listenersDisabled = false;
+
     /**
      * Creates a new DSC parser.
      * @param in InputStream to read the PostScript file from
@@ -75,7 +79,7 @@ public class DSCParser implements DSCParserConstants {
         }
         parseNext();
     }
-    
+
     /**
      * Returns the InputStream the PostScript code is read from.
      * @return the InputStream the PostScript code is read from
@@ -83,7 +87,7 @@ public class DSCParser implements DSCParserConstants {
     public InputStream getInputStream() {
         return this.in;
     }
-    
+
     /**
      * This method is used to write out warning messages for the parsing process. Subclass to
      * override this method. The default implementation writes to System.err.
@@ -92,7 +96,7 @@ public class DSCParser implements DSCParserConstants {
     protected void warn(String msg) {
         System.err.println(msg);
     }
-    
+
     /**
      * Reads one line from the input file
      * @return the line or null if there are no more lines
@@ -103,7 +107,7 @@ public class DSCParser implements DSCParserConstants {
         String line;
         line = this.reader.readLine();
         checkLine(line);
-        
+
         return line;
     }
 
@@ -116,11 +120,11 @@ public class DSCParser implements DSCParserConstants {
             warn("Line longer than 255 characters. This file is not fully PostScript conforming.");
         }
     }
-    
+
     private final boolean isWhitespace(char c) {
         return c == ' ' || c == '\t';
     }
-    
+
     private DSCComment parseDSCLine(String line) throws IOException, DSCException {
         int colon = line.indexOf(':');
         String name;
@@ -207,7 +211,7 @@ public class DSCParser implements DSCParserConstants {
             }
         }
     }
-    
+
     /**
      * Indicates whether there are additional items.
      * @return true if there are additonal items, false if the end of the file has been reached
@@ -227,15 +231,31 @@ public class DSCParser implements DSCParserConstants {
         if (hasNext()) {
             this.currentEvent = nextEvent;
             parseNext();
-            if (this.nestedDocumentHandler != null) {
-                this.nestedDocumentHandler.handle(this.currentEvent, this);
-            }
+
+            processListeners();
+
             return this.currentEvent.getEventType();
         } else {
             throw new NoSuchElementException("There are no more events");
         }
     }
-    
+
+    private void processListeners() throws IOException, DSCException {
+        if (isListenersDisabled()) {
+            return;
+        }
+        if (this.filterListener != null) {
+            //Filter always comes first
+            this.filterListener.processEvent(this.currentEvent, this);
+        }
+        if (this.listeners != null) {
+            Iterator iter = this.listeners.iterator();
+            while (iter.hasNext()) {
+                ((DSCListener)iter.next()).processEvent(this.currentEvent, this);
+            }
+        }
+    }
+
     /**
      * Steps to the next item returning the new event.
      * @return the new event
@@ -246,7 +266,7 @@ public class DSCParser implements DSCParserConstants {
         next();
         return getCurrentEvent();
     }
-    
+
     /**
      * Returns the current event.
      * @return the current event
@@ -254,7 +274,7 @@ public class DSCParser implements DSCParserConstants {
     public DSCEvent getCurrentEvent() {
         return this.currentEvent;
     }
-    
+
     /**
      * Returns the next event without moving the cursor to the next event.
      * @return the next event
@@ -262,7 +282,7 @@ public class DSCParser implements DSCParserConstants {
     public DSCEvent peek() {
         return this.nextEvent;
     }
-    
+
     /**
      * Parses the next event.
      * @throws IOException In case of an I/O error
@@ -287,14 +307,11 @@ public class DSCParser implements DSCParserConstants {
             } else {
                 this.nextEvent = new PostScriptLine(line);
             }
-            if (this.filter != null && !filter.accept(this.nextEvent)) {
-                parseNext(); //skip
-            }
         } else {
             this.nextEvent = null;
         }
     }
-    
+
     /**
      * Returns the current PostScript line.
      * @return the current PostScript line
@@ -315,11 +332,11 @@ public class DSCParser implements DSCParserConstants {
      * @throws IOException In case of an I/O error
      * @throws DSCException In case of a violation of the DSC spec
      */
-    public DSCComment nextDSCComment(String name) 
+    public DSCComment nextDSCComment(String name)
                 throws IOException, DSCException {
         return nextDSCComment(name, null);
     }
-    
+
     /**
      * Advances to the next DSC comment with the given name.
      * @param name the name of the DSC comment
@@ -328,7 +345,7 @@ public class DSCParser implements DSCParserConstants {
      * @throws IOException In case of an I/O error
      * @throws DSCException In case of a violation of the DSC spec
      */
-    public DSCComment nextDSCComment(String name, PSGenerator gen) 
+    public DSCComment nextDSCComment(String name, PSGenerator gen)
                 throws IOException, DSCException {
         while (hasNext()) {
             DSCEvent event = nextEvent();
@@ -379,16 +396,74 @@ public class DSCParser implements DSCParserConstants {
      * @param filter the filter to use or null to disable filtering
      */
     public void setFilter(DSCFilter filter) {
-        this.filter = filter;
+        if (filter != null) {
+            this.filterListener = new FilteringEventListener(filter);
+        } else {
+            this.filterListener = null;
+        }
+    }
+
+    /**
+     * Adds a DSC event listener.
+     * @param listener the listener
+     */
+    public void addListener(DSCListener listener) {
+        if (listener == null) {
+            throw new NullPointerException("listener must not be null");
+        }
+        if (this.listeners == null) {
+            this.listeners = new java.util.ArrayList();
+        }
+        this.listeners.add(listener);
+    }
+
+    /**
+     * Removes a DSC event listener.
+     * @param listener the listener to remove
+     */
+    public void removeListener(DSCListener listener) {
+        if (this.listeners != null) {
+            this.listeners.remove(listener);
+        }
+    }
+
+    /**
+     * Allows to disable all listeners. This can be used to disable any filtering, for example in
+     * nested documents.
+     * @param value true to disable all listeners, false to re-enable them
+     */
+    public void setListenersDisabled(boolean value) {
+        this.listenersDisabled = value;
+    }
+
+    /**
+     * Indicates whether the listeners are currently disabled.
+     * @return true if they are disabled
+     */
+    public boolean isListenersDisabled() {
+        return this.listenersDisabled;
     }
 
     /**
      * Sets a NestedDocumentHandler which is used to skip nested documents like embedded EPS files.
      * You can also process those parts in a special way.
+     * <p>
+     * It is suggested to use the more generally usable {@link #addListener(DSCListener)} and
+     * {@link #removeListener(DSCListener)} instead. NestedDocumentHandler is internally
+     * mapped onto a {@link DSCListener}.
      * @param handler the NestedDocumentHandler instance or null to disable the feature
      */
-    public void setNestedDocumentHandler(NestedDocumentHandler handler) {
-        this.nestedDocumentHandler = handler;
+    public void setNestedDocumentHandler(final NestedDocumentHandler handler) {
+        if (handler == null) {
+            removeListener(this.nestedDocumentHandler);
+        } else {
+            addListener(new DSCListener() {
+                public void processEvent(DSCEvent event, DSCParser parser) throws IOException,
+                        DSCException {
+                    handler.handle(event, parser);
+                }
+            });
+        }
     }
 
     /**
@@ -399,7 +474,7 @@ public class DSCParser implements DSCParserConstants {
     public void setCheckEOF(boolean value) {
         this.checkEOF = value;
     }
-    
+
     /**
      * Indicates whether the parser is configured to check for content after the EOF comment.
      * @return true if the check is enabled.

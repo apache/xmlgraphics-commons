@@ -24,25 +24,21 @@ import java.io.IOException;
 import org.apache.xmlgraphics.ps.dsc.events.DSCEvent;
 
 /**
- * Interface that is used to delegate the handling of nested documents (EPS files, data sections)
- * in a PostScript document. The implementation receives a parser instance so it can step forward
- * until the end of the nested document is reached at which point control is given back to the
- * original consumer.
- * <p>
- * It is suggested to use the more generally usable {@link DSCListener} instead. This
- * interface may be deprecated in the future.
+ * Listener interface for the DSC parser. It can be used to be notified
  */
-public interface NestedDocumentHandler {
+public interface DSCListener {
 
     /**
-     * Handle a DSC event. Implementations may issue additional calls to the DSC parser and may
-     * modify its state. When returning from the call, state information such as filters should
+     * Called for each DSC event. You can call methods on the DSC parser to skip comments,
+     * for example. But implementations need to be good citizens and take into account that
+     * multiple listeners can be active at the same time and that they might interfere with
+     * other listeners. When returning from the call, state information such as filters should
      * be restored.
-     * @param event the DSC event to handle
-     * @param parser the DSC parser to work with
-     * @throws IOException In case of an I/O error
-     * @throws DSCException In case of a violation of the DSC spec
+     * @param event the DSC event
+     * @param parser the DSC parser
+     * @throws IOException if an I/O error occurs
+     * @throws DSCException if a DSC-specific error occurs
      */
-    void handle(DSCEvent event, DSCParser parser) throws IOException, DSCException;
+    void processEvent(DSCEvent event, DSCParser parser) throws IOException, DSCException;
 
 }

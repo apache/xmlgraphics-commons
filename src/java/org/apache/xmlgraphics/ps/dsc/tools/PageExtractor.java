@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,18 +40,18 @@ import org.apache.xmlgraphics.ps.dsc.events.DSCHeaderComment;
  * This class can extract a certain range of pages from a DSC-compliant PostScript file.
  */
 public class PageExtractor implements DSCParserConstants {
-    
+
     /**
      * Parses a DSC-compliant file and pipes the content through to the OutputStream omitting
      * all pages not within the range.
-     * @param in the InputStream to parse from 
+     * @param in the InputStream to parse from
      * @param out the OutputStream to write the modified file to
      * @param from the starting page (1-based)
      * @param to the last page (inclusive, 1-based)
      * @throws IOException In case of an I/O error
      * @throws DSCException In case of a violation of the DSC spec
      */
-    public static void extractPages(InputStream in, OutputStream out, int from, int to) 
+    public static void extractPages(InputStream in, OutputStream out, int from, int to)
                 throws IOException, DSCException {
         if (from <= 0) {
             throw new IllegalArgumentException("'from' page number must be 1 or higher");
@@ -60,12 +60,12 @@ public class PageExtractor implements DSCParserConstants {
             throw new IllegalArgumentException(
                     "'to' page number must be equal or larger than the 'from' page number");
         }
-        
+
         DSCParser parser = new DSCParser(in);
         PSGenerator gen = new PSGenerator(out);
-        parser.setNestedDocumentHandler(new DefaultNestedDocumentHandler(gen));
+        parser.addListener(new DefaultNestedDocumentHandler(gen));
         int pageCount = 0;
-        
+
         //Skip DSC header
         DSCHeaderComment header = DSCTools.checkAndSkipDSC30Header(parser);
         header.generate(gen);
@@ -90,7 +90,7 @@ public class PageExtractor implements DSCParserConstants {
             throw new DSCException("Page expected, but none found");
         }
         parser.setFilter(null); //Remove filter
-        
+
         //Process individual pages (and skip as necessary)
         while (true) {
             DSCCommentPage page = (DSCCommentPage)pageOrTrailer;
@@ -108,12 +108,12 @@ public class PageExtractor implements DSCParserConstants {
                 break;
             }
         }
-        
+
         //Write the rest
         while (parser.hasNext()) {
             DSCEvent event = parser.nextEvent();
             event.generate(gen);
         }
     }
-    
+
 }

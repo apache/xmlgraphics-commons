@@ -19,8 +19,12 @@
 
 package org.apache.xmlgraphics;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.apache.xmlgraphics.image.codec.png.PNGEncoderTest;
 import org.apache.xmlgraphics.ps.PSEscapeTestCase;
+import org.apache.xmlgraphics.ps.dsc.ListenerTestCase;
 import org.apache.xmlgraphics.ps.dsc.events.DSCValueParserTestCase;
 import org.apache.xmlgraphics.ps.dsc.tools.DSCToolsTestCase;
 import org.apache.xmlgraphics.util.ClasspathResourceTest;
@@ -29,9 +33,6 @@ import org.apache.xmlgraphics.util.UnitConvTestCase;
 import org.apache.xmlgraphics.util.io.ASCII85InputStreamTestCase;
 import org.apache.xmlgraphics.util.io.ASCII85OutputStreamTestCase;
 import org.apache.xmlgraphics.util.io.Base64Test;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * Test suite for basic functionality of XML Graphics Commons.
@@ -55,6 +56,7 @@ public class StandardTestSuite {
         suite.addTest(new TestSuite(PSEscapeTestCase.class));
         suite.addTest(new TestSuite(DSCValueParserTestCase.class));
         suite.addTest(new TestSuite(DSCToolsTestCase.class));
+        suite.addTest(new TestSuite(ListenerTestCase.class));
         suite.addTest(new TestSuite(UnitConvTestCase.class));
         //$JUnit-END$
         return suite;
