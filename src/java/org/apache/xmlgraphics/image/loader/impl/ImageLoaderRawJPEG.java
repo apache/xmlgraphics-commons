@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,12 +69,12 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
             throw new IllegalArgumentException("ImageInfo must be from a image with MIME type: "
                     + MimeConstants.MIME_JPEG);
         }
-        
+
         ColorSpace colorSpace = null;
         boolean appeFound = false;
         int sofType = 0;
         ByteArrayOutputStream iccStream = null;
-        
+
         Source src = session.needSource(info.getOriginalURI());
         ImageInputStream in = ImageUtil.needImageInputStream(src);
         JPEGFile jpeg = new JPEGFile(in);
@@ -98,6 +98,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                 case NULL:
                     break;
                 case SOF0: //baseline
+                case SOF1: //extended sequential DCT
                 case SOF2: //progressive (since PDF 1.3)
                 case SOFA: //progressive (since PDF 1.3)
                     sofType = segID;
@@ -121,7 +122,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                             colorSpace = CMYKColorSpace.getInstance();
                         } else {
                             throw new ImageException("Unsupported ColorSpace for image "
-                                        + info 
+                                        + info
                                         + ". The number of components supported are 1, 3 and 4.");
                         }
                     } finally {
@@ -172,7 +173,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                         // Check for Adobe header
                         byte[] adobeHeader = new byte[5];
                         in.readFully(adobeHeader);
-                        
+
                         if ("Adobe".equals(new String(adobeHeader, "US-ASCII"))) {
                             // The reason for reading the APPE marker is that Adobe Photoshop
                             // generates CMYK JPEGs with inverted values. The correct thing
@@ -193,10 +194,10 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
         } finally {
             in.reset();
         }
-        
+
         ICC_Profile iccProfile = buildICCProfile(info, colorSpace, iccStream);
         if (iccProfile == null && colorSpace == null) {
-            throw new ImageException("ColorSpace not be identified for JPEG image " + info);
+            throw new ImageException("ColorSpace could not be identified for JPEG image " + info);
         }
 
         boolean invertImage = false;
@@ -229,7 +230,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                     throw new IOException("Error while aligning ICC stream: " + ioe.getMessage());
                 }
             }
-            
+
             ICC_Profile iccProfile = null;
             try {
                 iccProfile = ICC_Profile.getInstance(iccStream.toByteArray());
@@ -237,14 +238,14 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                     log.debug("JPEG has an ICC profile: " + iccProfile.toString());
                 }
             } catch (IllegalArgumentException iae) {
-                log.warn("An ICC profile is present in the JPEG file but it is invalid (" 
-                        + iae.getMessage() + "). The color profile will be ignored. (" 
+                log.warn("An ICC profile is present in the JPEG file but it is invalid ("
+                        + iae.getMessage() + "). The color profile will be ignored. ("
                         + info.getOriginalURI() + ")");
                 return null;
             }
             if (iccProfile.getNumComponents() != colorSpace.getNumComponents()) {
                 log.warn("The number of components of the ICC profile ("
-                        + iccProfile.getNumComponents() 
+                        + iccProfile.getNumComponents()
                         + ") doesn't match the image ("
                         + colorSpace.getNumComponents()
                         + "). Ignoring the ICC color profile.");
