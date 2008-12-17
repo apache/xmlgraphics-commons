@@ -214,8 +214,9 @@ public class PSImageUtils {
             if (hival > 4095) {
                 throw new UnsupportedOperationException("hival must not go beyond 4095");
             }
-            decodeArray = "[0 " + Integer.toString(hival) + "]";
             bitsPerComp = im.getPixelSize();
+            int ceiling = ((int)Math.pow(2, bitsPerComp)) - 1;
+            decodeArray = "[0 " + ceiling + "]";
         }
         imageDict.put("/BitsPerComponent", Integer.toString(bitsPerComp));
         imageDict.put("/Decode", decodeArray);
