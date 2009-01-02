@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader;
 
 import java.io.IOException;
@@ -46,15 +46,15 @@ public class ImageManager {
 
     /** Holds all registered interface implementations for the image package */
     private ImageImplRegistry registry = ImageImplRegistry.getDefaultInstance();
-    
+
     /** Provides session-independent information */
     private ImageContext imageContext;
 
     /** The image cache for this instance */
     private ImageCache cache = new ImageCache();
-    
+
     private PipelineFactory pipelineFactory = new PipelineFactory(this);
-    
+
     /**
      * Main constructor.
      * @param context the session-independent context information
@@ -62,7 +62,7 @@ public class ImageManager {
     public ImageManager(ImageContext context) {
         this.imageContext = context;
     }
-    
+
     /**
      * Returns the ImageImplRegistry in use by the ImageManager.
      * @return the ImageImplRegistry
@@ -70,7 +70,7 @@ public class ImageManager {
     public ImageImplRegistry getRegistry() {
         return this.registry;
     }
-    
+
     /**
      * Returns the ImageContext in use by the ImageManager.
      * @return the ImageContext
@@ -78,7 +78,7 @@ public class ImageManager {
     public ImageContext getImageContext() {
         return this.imageContext;
     }
-    
+
     /**
      * Returns the ImageCache in use by the ImageManager.
      * @return the ImageCache
@@ -86,7 +86,7 @@ public class ImageManager {
     public ImageCache getCache() {
         return this.cache;
     }
-    
+
     /**
      * Returns the PipelineFactory in use by the ImageManager.
      * @return the PipelineFactory
@@ -94,11 +94,11 @@ public class ImageManager {
     public PipelineFactory getPipelineFactory() {
         return this.pipelineFactory;
     }
-    
+
     /**
      * Returns an ImageInfo object containing its intrinsic size for a given URI. The ImageInfo
      * is retrieved from an image cache if it has been requested before.
-     * @param uri the URI of the image 
+     * @param uri the URI of the image
      * @param session the session context through which to resolve the URI if the image is not in
      *                the cache
      * @return the ImageInfo object created from the image
@@ -139,7 +139,7 @@ public class ImageManager {
         session.returnSource(uri, src);
         return info;
     }
-    
+
     /**
      * Preloads an image, i.e. the format of the image is identified and some basic information
      * (MIME type, intrinsic size and possibly other values) are loaded and returned as an
@@ -167,7 +167,8 @@ public class ImageManager {
                 return info;
             }
         }
-        throw new ImageException("No ImagePreloader found for " + uri);
+        throw new ImageException("The file format is not supported. No ImagePreloader found for "
+                + uri);
     }
 
     /**
@@ -178,7 +179,7 @@ public class ImageManager {
      * Optionally, it is possible to pass in Map of hints. These hints may be used by ImageLoaders
      * and ImageConverters to act on the image. See {@link ImageProcessingHints} for common hints
      * used by the bundled implementations. You can, of course, define your own hints.
-     * @param info the ImageInfo instance for the image (obtained by 
+     * @param info the ImageInfo instance for the image (obtained by
      *                  {@link #getImageInfo(String, ImageSessionContext)})
      * @param flavor the requested image flavor.
      * @param hints a Map of hints to any of the background components or null
@@ -194,7 +195,7 @@ public class ImageManager {
         if (hints == null) {
             hints = Collections.EMPTY_MAP;
         }
-        
+
         Image img = null;
         ImageProviderPipeline pipeline = getPipelineFactory().newImageConverterPipeline(
                 info, flavor);
@@ -209,7 +210,7 @@ public class ImageManager {
         ImageUtil.closeQuietly(session.getSource(info.getOriginalURI()));
         return img;
     }
-    
+
     /**
      * Loads an image. The caller can indicate what kind of image flavors are requested. When this
      * method is called the code looks for a suitable ImageLoader and, if necessary, builds
@@ -219,7 +220,7 @@ public class ImageManager {
      * Optionally, it is possible to pass in Map of hints. These hints may be used by ImageLoaders
      * and ImageConverters to act on the image. See {@link ImageProcessingHints} for common hints
      * used by the bundled implementations. You can, of course, define your own hints.
-     * @param info the ImageInfo instance for the image (obtained by 
+     * @param info the ImageInfo instance for the image (obtained by
      *                  {@link #getImageInfo(String, ImageSessionContext)})
      * @param flavors the requested image flavors (in preferred order).
      * @param hints a Map of hints to any of the background components or null
@@ -240,7 +241,7 @@ public class ImageManager {
         ImageProviderPipeline[] candidates = getPipelineFactory().determineCandidatePipelines(
                 info, flavors);
         ImageProviderPipeline pipeline = choosePipeline(candidates);
-        
+
         if (pipeline != null) {
             img = pipeline.execute(info, hints, session);
         }
@@ -257,7 +258,7 @@ public class ImageManager {
      * Loads an image with no hints. See
      * {@link #getImage(ImageInfo, ImageFlavor, Map, ImageSessionContext)} for more
      * information.
-     * @param info the ImageInfo instance for the image (obtained by 
+     * @param info the ImageInfo instance for the image (obtained by
      *                  {@link #getImageInfo(String, ImageSessionContext)})
      * @param flavor the requested image flavor.
      * @param session the session context
@@ -275,7 +276,7 @@ public class ImageManager {
      * Loads an image with no hints. See
      * {@link #getImage(ImageInfo, ImageFlavor[], Map, ImageSessionContext)} for more
      * information.
-     * @param info the ImageInfo instance for the image (obtained by 
+     * @param info the ImageInfo instance for the image (obtained by
      *                  {@link #getImageInfo(String, ImageSessionContext)})
      * @param flavors the requested image flavors (in preferred order).
      * @param session the session context
@@ -288,7 +289,7 @@ public class ImageManager {
             throws ImageException, IOException {
         return getImage(info, flavors, ImageUtil.getDefaultHints(session), session);
     }
-    
+
     /**
      * Converts an image. The caller can indicate what kind of image flavors are requested. When
      * this method is called the code looks for a suitable combination of ImageConverters so it
@@ -312,7 +313,7 @@ public class ImageManager {
             hints = Collections.EMPTY_MAP;
         }
         ImageInfo info = image.getInfo();
-        
+
         Image img = null;
         int count = flavors.length;
         for (int i = 0; i < count; i++) {
@@ -324,13 +325,13 @@ public class ImageManager {
         ImageProviderPipeline[] candidates = getPipelineFactory().determineCandidatePipelines(
                 image, flavors);
         ImageProviderPipeline pipeline = choosePipeline(candidates);
-        
+
         if (pipeline != null) {
             img = pipeline.execute(info, image, hints, null);
         }
         if (img == null) {
             throw new ImageException(
-                    "Cannot convert image " + image 
+                    "Cannot convert image " + image
                     + " (no suitable converter combination available)");
         }
         return img;
@@ -351,7 +352,7 @@ public class ImageManager {
                 throws ImageException, IOException {
         return convertImage(image, flavors, null);
     }
-    
+
     /**
      * Chooses the best {@link ImageProviderPipeline} from a set of candidates.
      * @param candidates the candidates
@@ -376,5 +377,5 @@ public class ImageManager {
         }
         return pipeline;
     }
-    
+
 }
