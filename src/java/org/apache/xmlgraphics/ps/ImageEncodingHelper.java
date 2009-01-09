@@ -177,8 +177,9 @@ public class ImageEncodingHelper {
             bytewidth++;
         }
 
-        //TODO buffer less write more
-        byte[] data = new byte[height * bytewidth];
+        //TODO Rewrite to encode directly from a RenderedImage to avoid buffering the whole RGB
+        //image in memory
+        byte[] linedata = new byte[bytewidth];
         byte ib;
         for (int y = 0; y < height; y++) {
             ib = 0;
@@ -209,13 +210,12 @@ public class ImageEncodingHelper {
 
                 if ((x % pixelsPerByte) == (pixelsPerByte - 1)
                         || ((x + 1) == width)) {
-                    data[(y * bytewidth) + (x / pixelsPerByte)] = ib;
+                    linedata[(x / pixelsPerByte)] = ib;
                     ib = 0;
                 }
             }
+            out.write(linedata);
         }
-        //TODO buffer less write more
-        out.write(data);
     }
 
     private boolean optimizedWriteTo(OutputStream out)
