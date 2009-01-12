@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl.imageio;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ import org.apache.xmlgraphics.image.loader.util.ImageUtil;
  */
 public class PreloaderImageIO extends AbstractImagePreloader {
 
-    /** {@inheritDoc} 
+    /** {@inheritDoc}
      * @throws ImageException */
     public ImageInfo preloadImage(String uri, Source src, ImageContext context)
             throws IOException, ImageException {
@@ -63,7 +63,7 @@ public class PreloaderImageIO extends AbstractImagePreloader {
         String mime = null;
         while (iter.hasNext()) {
             in.mark();
-            
+
             ImageReader reader = (ImageReader)iter.next();
             try {
                 reader.setInput(ImageUtil.ignoreFlushing(in), true, false);
@@ -83,7 +83,7 @@ public class PreloaderImageIO extends AbstractImagePreloader {
                 in.reset();
             }
         }
-        
+
         if (iiometa == null) {
             if (firstIOException == null) {
                 throw new ImageException("Could not extract image metadata");
@@ -95,14 +95,19 @@ public class PreloaderImageIO extends AbstractImagePreloader {
                         firstIOException);
             }
         }
-        
+
         //Resolution (first a default, then try to read the metadata)
         size.setResolution(context.getSourceResolution());
         ImageIOUtil.extractResolution(iiometa, size);
+        if (size.getWidthPx() <= 0 || size.getHeightPx() <= 0) {
+            //Watch out for a special case: a TGA image was erroneously identified
+            //as a WBMP image by a Sun ImageIO codec.
+            return null;
+        }
         if (size.getWidthMpt() == 0) {
             size.calcSizeFromPixels();
         }
-        
+
         ImageInfo info = new ImageInfo(uri, mime);
         info.getCustomObjects().put(ImageIOUtil.IMAGEIO_METADATA, iiometa);
         info.setSize(size);
