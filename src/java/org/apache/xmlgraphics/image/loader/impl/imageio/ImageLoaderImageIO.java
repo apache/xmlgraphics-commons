@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,7 +75,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         }
         this.targetFlavor = targetFlavor;
     }
-    
+
     /** {@inheritDoc} */
     public ImageFlavor getTargetFlavor() {
         return this.targetFlavor;
@@ -119,6 +119,10 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                     } catch (IndexOutOfBoundsException indexe) {
                         throw new ImageException("Page does not exist. Invalid image index: "
                                 + pageIndex);
+                    } catch (IllegalArgumentException iae) {
+                        //Some codecs like com.sun.imageio.plugins.wbmp.WBMPImageReader throw
+                        //IllegalArgumentExceptions when they have trouble parsing the image.
+                        throw new ImageException("Error loading image using ImageIO codec", iae);
                     } catch (IIOException iioe) {
                         if (firstException == null) {
                             firstException = iioe;
@@ -185,7 +189,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 }
             }
         }
-        
+
         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
             return new ImageBuffered(info, (BufferedImage)imageData, transparentColor);
         } else {
@@ -197,7 +201,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
             int pageIndex, ImageReadParam param) throws IOException {
         //Work-around found at: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4799903
         //There are some additional ideas there if someone wants to go further.
-        
+
         // Try reading a Raster (no color conversion).
         Raster raster = reader.readRaster(pageIndex, param);
 
