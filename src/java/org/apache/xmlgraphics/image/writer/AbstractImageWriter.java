@@ -25,7 +25,7 @@ import java.io.OutputStream;
 /**
  * Abstract base class for ImageWriter implementations.
  *
- * @version $Id: ImageWriter.java 426584 2006-07-28 16:01:47Z jeremias $
+ * @version $Id$
  */
 public abstract class AbstractImageWriter implements ImageWriter {
 

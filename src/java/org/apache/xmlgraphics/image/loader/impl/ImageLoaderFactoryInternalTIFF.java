@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: ImageLoaderFactoryEPS.java 606580 2007-12-23 17:45:02Z jeremias $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.image.loader.impl;
 

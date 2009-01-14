@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: PSPageDeviceDictionary.java 627367 2008-02-13 12:03:30Z maxberger $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.ps;
 
