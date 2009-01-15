@@ -34,6 +34,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Map;
 
+import org.apache.xmlgraphics.image.GraphicsConstants;
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageProcessingHints;
@@ -64,7 +65,7 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
             withAlpha = false;
         }
 
-        int resolution = 300; //default: 300dpi
+        int resolution = GraphicsConstants.DEFAULT_SAMPLE_DPI;
         Number res = (Number)hints.get(ImageProcessingHints.TARGET_RESOLUTION);
         if (res != null) {
             resolution = res.intValue();
