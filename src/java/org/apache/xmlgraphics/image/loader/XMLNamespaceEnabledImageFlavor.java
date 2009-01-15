@@ -27,7 +27,7 @@ public class XMLNamespaceEnabledImageFlavor extends RefinedImageFlavor {
     /** An XML-based SVG image in form of a W3C DOM instance */
     public static final ImageFlavor SVG_DOM = new XMLNamespaceEnabledImageFlavor(
             ImageFlavor.XML_DOM, "http://www.w3.org/2000/svg");
-    
+
     private String namespace;
 
     /**
@@ -40,10 +40,7 @@ public class XMLNamespaceEnabledImageFlavor extends RefinedImageFlavor {
         this.namespace = namespace;
     }
 
-    /**
-     * Returns the XML namespace URI associated with the image flavor.
-     * @return the XML namespace URI
-     */
+    /** {@inheritDoc} */
     public String getNamespace() {
         return this.namespace;
     }

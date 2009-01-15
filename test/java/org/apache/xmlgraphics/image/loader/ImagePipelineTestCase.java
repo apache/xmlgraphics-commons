@@ -32,6 +32,7 @@ import org.apache.xmlgraphics.image.loader.impl.imageio.ImageLoaderImageIO;
 import org.apache.xmlgraphics.image.loader.pipeline.ImageProviderPipeline;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
 import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
+import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
  * Tests for the image pipeline functionality.
@@ -39,58 +40,67 @@ import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
 public class ImagePipelineTestCase extends TestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
-    
+
     public ImagePipelineTestCase(String name) {
         super(name);
     }
-    
+
     public void testPipelineWithLoader() throws Exception {
         String uri = "bgimg72dpi.gif";
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-        
+
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
-        
+
         ImageLoader loader = new ImageLoaderImageIO(ImageFlavor.RENDERED_IMAGE);
         ImageProviderPipeline pipeline = new ImageProviderPipeline(manager.getCache(), loader);
         pipeline.addConverter(new ImageConverterRendered2PNG());
-        
+
         Image img = pipeline.execute(info, null, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_PNG, img.getFlavor());
         assertTrue(img instanceof ImageRawStream);
+
+        //Original MIME type stays the same, but the flavor MIME changes
+        assertEquals(MimeConstants.MIME_GIF, img.getInfo().getMimeType());
+        assertEquals(MimeConstants.MIME_PNG, img.getFlavor().getMimeType());
     }
-    
+
     public void testPipelineWithoutLoader() throws Exception {
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         Image original = createG2DImage();
-        
+
         ImageProviderPipeline pipeline = new ImageProviderPipeline(manager.getCache(), null);
         pipeline.addConverter(new ImageConverterG2D2Bitmap());
         pipeline.addConverter(new ImageConverterBuffered2Rendered());
         pipeline.addConverter(new ImageConverterRendered2PNG());
-        
+
         Image img = pipeline.execute(original.getInfo(), original, null,
                 sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_PNG, img.getFlavor());
         assertTrue(img instanceof ImageRawStream);
+
+        //Original MIME type stays the same, but the flavor MIME changes
+        assertNull(img.getInfo().getMimeType());
+        assertEquals(MimeConstants.MIME_PNG, img.getFlavor().getMimeType());
+
     }
-    
+
     private Image createG2DImage() {
         Graphics2DImagePainter painter = new DemoPainter();
         Dimension dim = painter.getImageSize();
-        
+
         ImageSize size = new ImageSize();
         size.setSizeInMillipoints(dim.width, dim.height);
         size.setResolution(72);
         size.calcPixelsFromSize();
-        
+
         ImageInfo info = new ImageInfo(null /*null is the intention here*/, null);
         info.setSize(size);
         ImageGraphics2D g2dImage = new ImageGraphics2D(info, painter);
@@ -99,7 +109,7 @@ public class ImagePipelineTestCase extends TestCase {
 
     public void testPipelineFromURIThroughManager() throws Exception {
         String uri = "asf-logo.png";
-        
+
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
@@ -110,25 +120,25 @@ public class ImagePipelineTestCase extends TestCase {
                 ImageFlavor.RAW_PNG, ImageFlavor.RAW_JPEG
         };
         Image img = manager.getImage(info, flavors, sessionContext);
-        
+
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_PNG, img.getFlavor());
         assertTrue(img instanceof ImageRawStream);
     }
-    
+
     public void testPipelineWithoutURIThroughManager() throws Exception {
         ImageManager manager = imageContext.getImageManager();
-        
+
         Image original = createG2DImage();
 
         ImageFlavor[] flavors = new ImageFlavor[] {
                 ImageFlavor.RAW_PNG, ImageFlavor.RAW_JPEG
         };
         Image img = manager.convertImage(original, flavors);
-        
+
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_PNG, img.getFlavor());
         assertTrue(img instanceof ImageRawStream);
     }
-    
+
 }

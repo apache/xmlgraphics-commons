@@ -54,6 +54,16 @@ public abstract class RefinedImageFlavor extends ImageFlavor {
     }
 
     /** {@inheritDoc} */
+    public String getMimeType() {
+        return this.parentFlavor.getMimeType();
+    }
+
+    /** {@inheritDoc} */
+    public String getNamespace() {
+        return this.parentFlavor.getNamespace();
+    }
+
+    /** {@inheritDoc} */
     public boolean isCompatible(ImageFlavor flavor) {
         return getParentFlavor().isCompatible(flavor)
             || super.isCompatible(flavor);
