@@ -73,7 +73,7 @@ public class ImageRawStream extends AbstractImage {
      */
     public String getMimeType() {
         if (getFlavor() instanceof MimeEnabledImageFlavor) {
-            return ((MimeEnabledImageFlavor)getFlavor()).getMIMEType();
+            return getFlavor().getMimeType();
         } else {
             //Undetermined
             return "application/octet-stream";
