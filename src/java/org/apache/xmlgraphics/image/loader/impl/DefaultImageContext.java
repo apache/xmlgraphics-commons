@@ -19,8 +19,10 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
+import org.apache.xmlgraphics.image.GraphicsConstants;
 import org.apache.xmlgraphics.image.loader.ImageContext;
 
 /**
@@ -28,13 +30,18 @@ import org.apache.xmlgraphics.image.loader.ImageContext;
  */
 public class DefaultImageContext implements ImageContext {
 
-    private float sourceResolution;
+    private final float sourceResolution;
     
     /**
      * Main constructor.
      */
     public DefaultImageContext() {
-        this.sourceResolution = Toolkit.getDefaultToolkit().getScreenResolution();
+        if (GraphicsEnvironment.isHeadless()) {
+            this.sourceResolution = GraphicsConstants.DEFAULT_DPI;
+        } else {
+            this.sourceResolution = Toolkit.getDefaultToolkit()
+                    .getScreenResolution();
+        }
     }
     
     /** {@inheritDoc} */
