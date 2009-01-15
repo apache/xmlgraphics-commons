@@ -21,6 +21,8 @@ package org.apache.xmlgraphics.image.loader;
 
 import junit.framework.TestCase;
 
+import org.apache.xmlgraphics.util.MimeConstants;
+
 /**
  * Tests for image flavors.
  */
@@ -32,10 +34,16 @@ public class ImageFlavorTestCase extends TestCase {
         f1 = ImageFlavor.RAW_JPEG;
         f2 = ImageFlavor.RAW_PNG;
         assertFalse(f1.equals(f2));
+        assertEquals(MimeConstants.MIME_JPEG, f1.getMimeType());
+        assertNull(f1.getNamespace());
+        assertEquals(MimeConstants.MIME_PNG, f2.getMimeType());
+        assertNull(f2.getNamespace());
 
         f1 = ImageFlavor.GRAPHICS2D;
         f2 = new ImageFlavor(ImageFlavor.GRAPHICS2D.getName());
         assertTrue(f1.equals(f2));
+        assertNull(f1.getMimeType());
+        assertNull(f1.getNamespace());
     }
 
     public void testRefinedFlavors() throws Exception {
@@ -47,11 +55,21 @@ public class ImageFlavorTestCase extends TestCase {
         assertTrue(f2.isCompatible(f1));
         assertFalse(f1.isCompatible(f2));
 
+        assertNull(f1.getMimeType());
+        assertNull(f1.getNamespace());
+        assertNull(f2.getMimeType());
+        assertNull(f2.getNamespace());
+
         f1 = ImageFlavor.XML_DOM;
         f2 = new XMLNamespaceEnabledImageFlavor(ImageFlavor.XML_DOM, "http://www.w3.org/2000/svg");
         assertFalse(f1.equals(f2));
         assertTrue(f2.isCompatible(f1));
         assertFalse(f1.isCompatible(f2));
+
+        assertEquals("text/xml", f1.getMimeType());
+        assertNull(f1.getNamespace());
+        assertEquals("text/xml", f2.getMimeType());
+        assertEquals("http://www.w3.org/2000/svg", f2.getNamespace());
     }
 
 }

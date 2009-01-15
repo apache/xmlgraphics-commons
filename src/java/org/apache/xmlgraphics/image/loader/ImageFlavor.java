@@ -34,8 +34,10 @@ public class ImageFlavor {
     /** An image in form of a BufferedImage instance */
     public static final ImageFlavor BUFFERED_IMAGE = new SimpleRefinedImageFlavor(
                                                             RENDERED_IMAGE, "BufferedImage");
+    /** An image in form of a W3C DOM instance */
+    private static final ImageFlavor DOM = new ImageFlavor("DOM");
     /** An XML-based image in form of a W3C DOM instance */
-    public static final ImageFlavor XML_DOM = new ImageFlavor("text/xml;form=dom");
+    public static final ImageFlavor XML_DOM = new MimeEnabledImageFlavor(DOM, "text/xml");
     /** An image in form of a raw PNG file/stream */
     public static final ImageFlavor RAW = new ImageFlavor("Raw");
     /** An image in form of a raw PNG file/stream */
@@ -71,6 +73,26 @@ public class ImageFlavor {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Returns the MIME type that the image flavor represents if a MIME type is available. This
+     * is only applicable to images which can also exist as files. For images flavors like
+     * decoded in-memory images (Rendered/BufferedImage), this method will return null.
+     * @return the MIME type or null if no MIME type can be provided (like for in-memory images)
+     */
+    public String getMimeType() {
+        return null;
+    }
+
+    /**
+     * Returns the XML namespace URI that the image flavor represents if such a namespace URI
+     * is available. This is only applicable to images in XML form. Other image types will return
+     * null.
+     * @return the XML or null if no MIME type can be provided (like for in-memory images)
+     */
+    public String getNamespace() {
+        return null;
     }
 
     /**

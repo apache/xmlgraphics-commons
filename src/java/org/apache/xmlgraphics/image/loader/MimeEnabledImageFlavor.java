@@ -36,11 +36,8 @@ public class MimeEnabledImageFlavor extends RefinedImageFlavor {
         this.mime = mime;
     }
 
-    /**
-     * Returns the MIME type associated with the image flavor.
-     * @return the MIME type
-     */
-    public String getMIMEType() {
+    /** {@inheritDoc} */
+    public String getMimeType() {
         return this.mime;
     }
 
