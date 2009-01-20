@@ -126,10 +126,20 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 //Close as the file is reopened in a more optimal way
                 IOUtils.closeQuietly(in);
                 try {
-                    //We let the OS' file system cache do the caching for us
-                    //--> lower Java memory consumption, probably no speed loss
-                    imageSource = new ImageSource(ImageIO.createImageInputStream(f),
-                            resolvedURI, true);
+                    // We let the OS' file system cache do the caching for us
+                    // --> lower Java memory consumption, probably no speed loss
+                    final ImageInputStream newInputStream = ImageIO
+                            .createImageInputStream(f);
+                    if (newInputStream == null) {
+                        log.error("Unable to create ImageInputStream for local file "
+                                        + f
+                                        + " from system identifier '"
+                                        + source.getSystemId() + "'");
+                        return null;
+                    } else {
+                        imageSource = new ImageSource(newInputStream,
+                                resolvedURI, true);
+                    }
                 } catch (IOException ioe) {
                     log.error("Unable to create ImageInputStream for local file"
                             + " from system identifier '"
@@ -207,7 +217,11 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                     filename = filename.substring(0, pos) + ch + filename.substring(pos + 3);
                 }
             }
-            return new File(filename);
+            final File f = new File(filename);
+            if (!f.isFile()) {
+                return null;
+            }
+            return f;
         }
     }
     
