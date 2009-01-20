@@ -40,6 +40,7 @@ public class ImageInputStreamAdapter extends InputStream {
      * @param iin the underlying ImageInputStream
      */
     public ImageInputStreamAdapter(ImageInputStream iin) {
+        assert iin != null : "InputStream is null";
         this.iin = iin;
     }
     

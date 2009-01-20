@@ -42,6 +42,7 @@ public class ImageSource implements Source {
      * @param fastSource true if it's a fast source (accessing local files)
      */
     public ImageSource(ImageInputStream in, String systemId, boolean fastSource) {
+        assert in != null : "InputStream is null";
         this.iin = in;
         this.systemId = systemId;
         this.fastSource = fastSource;
