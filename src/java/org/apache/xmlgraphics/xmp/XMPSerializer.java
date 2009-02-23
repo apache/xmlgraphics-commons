@@ -37,38 +37,38 @@ import org.xml.sax.SAXException;
 public class XMPSerializer {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
-    
+
     /**
      * Writes the in-memory representation of the XMP metadata to a JAXP Result.
      * @param meta the metadata
      * @param res the JAXP Result to write to
-     * @throws TransformerConfigurationException if an error occurs setting up the XML 
+     * @throws TransformerConfigurationException if an error occurs setting up the XML
      *              infrastructure.
      * @throws SAXException if a SAX-related problem occurs while writing the XML
      */
-    public static void writeXML(Metadata meta, Result res) 
+    public static void writeXML(Metadata meta, Result res)
             throws TransformerConfigurationException, SAXException {
         writeXML(meta, res, false, false);
     }
-    
+
     /**
      * Writes the in-memory representation of the XMP metadata to an OutputStream as an XMP packet.
      * @param meta the metadata
      * @param out the stream to write to
      * @param readOnlyXMP true if the generated XMP packet should be read-only
-     * @throws TransformerConfigurationException if an error occurs setting up the XML 
+     * @throws TransformerConfigurationException if an error occurs setting up the XML
      *              infrastructure.
      * @throws SAXException if a SAX-related problem occurs while writing the XML
      */
-    public static void writeXMPPacket(Metadata meta, OutputStream out, boolean readOnlyXMP) 
+    public static void writeXMPPacket(Metadata meta, OutputStream out, boolean readOnlyXMP)
             throws TransformerConfigurationException, SAXException {
         StreamResult res = new StreamResult(out);
         writeXML(meta, res, true, readOnlyXMP);
-        
+
     }
-    
-    private static void writeXML(Metadata meta, Result res, 
-                    boolean asXMPPacket, boolean readOnlyXMP) 
+
+    private static void writeXML(Metadata meta, Result res,
+                    boolean asXMPPacket, boolean readOnlyXMP)
                             throws TransformerConfigurationException, SAXException {
         SAXTransformerFactory tFactory = (SAXTransformerFactory)SAXTransformerFactory.newInstance();
         TransformerHandler handler = tFactory.newTransformerHandler();
@@ -77,11 +77,15 @@ public class XMPSerializer {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         }
         transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        try {
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        } catch (IllegalArgumentException iae) {
+            //INDENT key is not supported by implementation. That's not tragic, so just ignore.
+        }
         handler.setResult(res);
         handler.startDocument();
         if (asXMPPacket) {
-            handler.processingInstruction("xpacket", 
+            handler.processingInstruction("xpacket",
                     "begin=\"\uFEFF\" id=\"W5M0MpCehiHzreSzNTczkc9d\"");
         }
         meta.toSAX(handler);
@@ -106,5 +110,5 @@ public class XMPSerializer {
         }
         handler.endDocument();
     }
-    
+
 }
