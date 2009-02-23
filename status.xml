@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Catching IllegalArgumentException in XMPSerializer when the Transformer implementation
+        in use doesn't support the INDENT key.
+      </action>
       <action context="Code" dev="AC" type="fix" fixes-bug="46292" due-to="Jiri Kunhart">
         Added the ability to assign a string value for a key in a postscript dictionary.
       </action>
