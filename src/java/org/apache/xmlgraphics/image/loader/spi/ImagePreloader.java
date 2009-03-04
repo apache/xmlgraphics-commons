@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.spi;
 
 import java.io.IOException;
@@ -36,19 +36,22 @@ public interface ImagePreloader {
 
     /** Default priority for preloaders */
     int DEFAULT_PRIORITY = 1000;
-    
+
     /**
      * "Preloads" an image, i.e. indentifies whether the source image is supported by this
      * implementation and determines the image's intrinsic size and possibly some additional
      * information. The image is usually not fully loaded at this time to conserve memory.
-     * @param originalURI the original (unresolved) URI of the image 
+     * The method returns null if the image was not identified. An {@link ImageException} is only
+     * thrown if the image is identified but some error has happened while working on the file.
+     * @param originalURI the original (unresolved) URI of the image
      * @param src a image source the image is loaded from
      * @param context the context object that provides configuration information
-     * @return an image info object with the basic information about an image
+     * @return an image info object with the basic information about an image or null if the
+     *           image is not supported by this implementation
      * @throws ImageException if an error occurs while preloading the image
      * @throws IOException if an I/O error occurs while preloading the image
      */
-    ImageInfo preloadImage(String originalURI, 
+    ImageInfo preloadImage(String originalURI,
             Source src, ImageContext context) throws ImageException, IOException;
 
     /**
