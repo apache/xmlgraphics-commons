@@ -33,5 +33,5 @@ public interface PropertyMerger {
      * @param target the target metadata object
      */
     void merge(XMPProperty sourceProp, Metadata target);
-    
+
 }

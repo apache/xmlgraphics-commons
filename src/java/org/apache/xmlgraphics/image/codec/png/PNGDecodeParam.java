@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -224,7 +224,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
      *
      * <p> This parameter affects the decoding of all image types.
      *
-     * @throws IllegalArgumentException if <code>userExponent</code> is 
+     * @throws IllegalArgumentException if <code>userExponent</code> is
      * negative.
      */
     public void setUserExponent(float userExponent) {
@@ -273,7 +273,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
      *
      * <p> This parameter affects the decoding of all image types.
      *
-     * @throws IllegalArgumentException if <code>userExponent</code> is 
+     * @throws IllegalArgumentException if <code>userExponent</code> is
      * negative.
      */
     public void setDisplayExponent(float displayExponent) {
@@ -336,12 +336,12 @@ public class PNGDecodeParam implements ImageDecodeParam {
      * If <code>getGenerateEncodeParam()</code> is <code>true</code>,
      * this method may be called after decoding has completed, and
      * will return an instance of <code>PNGEncodeParam</code> containing
-     * information about the contents of the PNG file just decoded. 
+     * information about the contents of the PNG file just decoded.
      */
     public PNGEncodeParam getEncodeParam() {
         return encodeParam;
     }
-    
+
     /**
      * Sets the current encoder param instance.  This method is
      * intended to be called by the PNG decoder and will overwrite the

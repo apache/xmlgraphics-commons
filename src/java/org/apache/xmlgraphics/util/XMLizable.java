@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -19,7 +19,7 @@
 
 package org.apache.xmlgraphics.util;
 
-/* 
+/*
  * Copied from Apache Excalibur:
  * https://svn.apache.org/repos/asf/excalibur/trunk/components/xmlutil/
  *                                           src/java/org/apache/excalibur/xml/sax/XMLizable.java
@@ -33,12 +33,12 @@ import org.xml.sax.SAXException;
  * of their current state as SAX events.
  */
 public interface XMLizable {
-    
+
     /**
      * Generates SAX events representing the object's state.
      * @param handler ContentHandler instance to send the SAX events to
      * @throws SAXException if there's a problem generating the SAX events
      */
     void toSAX(ContentHandler handler) throws SAXException;
-    
+
 }

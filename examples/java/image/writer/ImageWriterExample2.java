@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,18 +43,18 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
         } else {
             bimg = new BufferedImage(400, 200, BufferedImage.TYPE_INT_RGB);
         }
-        
+
         Graphics2D g2d = bimg.createGraphics();
         g2d.setBackground(Color.white);
         g2d.clearRect(0, 0, 400, 200);
         g2d.setColor(Color.black);
-        
+
         //Paint something
         paintSome(g2d, pageNum);
-        
+
         return bimg;
     }
-    
+
     /**
      * Creates a bitmap file. We paint a few things on a bitmap and then save the bitmap using
      * an ImageWriter.
@@ -62,10 +62,10 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
      * @param format the target format (a MIME type, ex. "image/png")
      * @throws IOException In case of an I/O error
      */
-    public void generateBitmapUsingJava2D(File outputFile, String format) 
+    public void generateBitmapUsingJava2D(File outputFile, String format)
                 throws IOException {
-        //String compression = "CCITT T.6"; 
-        String compression = "PackBits"; 
+        //String compression = "CCITT T.6";
+        String compression = "PackBits";
 
         OutputStream out = new java.io.FileOutputStream(outputFile);
         out = new java.io.BufferedOutputStream(out);
@@ -75,17 +75,17 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
             ImageWriterParams params = new ImageWriterParams();
             params.setCompressionMethod(compression);
             params.setResolution(72);
-            
+
             if (writer.supportsMultiImageWriter()) {
                 MultiImageWriter multiWriter = writer.createMultiImageWriter(out);
                 multiWriter.writeImage(createAnImage(compression, 1), params);
                 multiWriter.writeImage(createAnImage(compression, 2), params);
                 multiWriter.close();
             } else {
-                throw new UnsupportedOperationException("multi-page images not supported for " 
+                throw new UnsupportedOperationException("multi-page images not supported for "
                         + format);
             }
-            
+
         } finally {
             IOUtils.closeQuietly(out);
         }

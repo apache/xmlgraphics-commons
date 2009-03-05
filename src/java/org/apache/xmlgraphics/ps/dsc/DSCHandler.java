@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps.dsc;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public interface DSCHandler {
      * @throws IOException In case of an I/O error
      */
     public void startDocument(String header) throws IOException;
-    
+
     /**
      * Called when the PostScript file is fully processed, i.e. after the %%EOF comment.
      * @throws IOException In case of an I/O error
@@ -64,5 +64,5 @@ public interface DSCHandler {
      * @throws IOException In case of an I/O error
      */
     public void comment(String comment) throws IOException;
-    
+
 }

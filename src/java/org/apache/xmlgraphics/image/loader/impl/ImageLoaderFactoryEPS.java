@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,16 +30,16 @@ public class ImageLoaderFactoryEPS extends AbstractImageLoaderFactory {
 
     private static final String[] MIMES = new String[] {
         MimeConstants.MIME_EPS};
-    
+
     private static final ImageFlavor[] FLAVORS = new ImageFlavor[] {
         ImageFlavor.RAW_EPS};
 
-    
+
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
         return MIMES;
     }
-    
+
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         if (MimeConstants.MIME_EPS.equals(mime)) {
@@ -47,12 +47,12 @@ public class ImageLoaderFactoryEPS extends AbstractImageLoaderFactory {
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
     }
-    
+
     /** {@inheritDoc} */
     public ImageLoader newImageLoader(ImageFlavor targetFlavor) {
         return new ImageLoaderEPS();
     }
-    
+
     /** {@inheritDoc} */
     public int getUsagePenalty(String mime, ImageFlavor flavor) {
         return 0;

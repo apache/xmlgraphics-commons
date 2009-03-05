@@ -28,7 +28,7 @@ public final class XMPArrayType {
     public static final XMPArrayType SEQ = new XMPArrayType("Seq");
     /** the alternative array */
     public static final XMPArrayType ALT = new XMPArrayType("Alt");
-    
+
     private String name;
 
     /**
@@ -43,10 +43,10 @@ public final class XMPArrayType {
     public String getName() {
         return this.name;
     }
-    
+
     /** @see java.lang.Object#toString() */
     public String toString() {
         return "rdf:" + name;
     }
-    
+
 }

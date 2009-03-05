@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -134,7 +134,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             encode(im, encodeParam, 8, true);
         }
     }
-    
+
     /**
      * Encodes a RenderedImage as part of a multi-page file and writes the output to the
      * OutputStream associated with this ImageEncoder.
@@ -154,7 +154,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             throw new IllegalStateException(
                     "Extra images may not be used when calling encodeMultiple!");
         }
-        
+
         Context c = (Context)context;
         if (c == null) {
             c = new Context();
@@ -167,7 +167,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         c.nextImage = img;
         return c;
     }
-    
+
     /**
      * Signals the encoder that you've finished sending pages for a multi-page image files.
      * @param context the context object you receive as return value to a previous call to
@@ -185,7 +185,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         //write last image
         c.ifdOffset = encode(c.nextImage, encodeParam, c.ifdOffset, true);
     }
-    
+
     private class Context {
         //TODO This approach causes always two images to be present at the same time.
         //The encoder has to be changed a little to avoid that.

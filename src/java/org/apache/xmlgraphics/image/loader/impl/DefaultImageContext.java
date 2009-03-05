@@ -31,7 +31,7 @@ import org.apache.xmlgraphics.image.loader.ImageContext;
 public class DefaultImageContext implements ImageContext {
 
     private final float sourceResolution;
-    
+
     /**
      * Main constructor.
      */
@@ -43,7 +43,7 @@ public class DefaultImageContext implements ImageContext {
                     .getScreenResolution();
         }
     }
-    
+
     /** {@inheritDoc} */
     public float getSourceResolution() {
         return this.sourceResolution;

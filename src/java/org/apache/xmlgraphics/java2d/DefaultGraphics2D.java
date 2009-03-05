@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,11 +35,11 @@ import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 
 /**
- * This concrete implementation of <tt>AbstractGraphics2D</tt> is a 
- * simple help to programmers to get started with their own 
- * implementation of <tt>Graphics2D</tt>. 
+ * This concrete implementation of <tt>AbstractGraphics2D</tt> is a
+ * simple help to programmers to get started with their own
+ * implementation of <tt>Graphics2D</tt>.
  * <tt>DefaultGraphics2D</tt> implements all the abstract methods
- * is <tt>AbstractGraphics2D</tt> and makes it easy to start 
+ * is <tt>AbstractGraphics2D</tt> and makes it easy to start
  * implementing a <tt>Graphic2D</tt> piece-meal.
  *
  * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
@@ -319,7 +319,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
     public void fill(Shape s){
         System.err.println("fill");
     }
-    
+
     /**
      * Returns the device configuration associated with this
      * <code>Graphics2D</code>.

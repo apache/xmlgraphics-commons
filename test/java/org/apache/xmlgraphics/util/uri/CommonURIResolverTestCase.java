@@ -30,7 +30,7 @@ public class CommonURIResolverTestCase extends TestCase {
 
     /**
      * Test the DataURIResolver with correct values.
-     * 
+     *
      * @throws Exception
      *             if an error occurs
      */

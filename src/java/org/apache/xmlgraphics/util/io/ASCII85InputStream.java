@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.util.io;
 
 import java.io.InputStream;
@@ -29,7 +29,7 @@ import java.io.IOException;
  * we can use the read(byte[], int, int) method from InputStream which simply
  * delegates to read(). This makes the implementation easier.
  * <p>
- * The filter is described in chapter 3.13.3 of the PostScript Language 
+ * The filter is described in chapter 3.13.3 of the PostScript Language
  * Reference (third edition).
  *
  * @version $Id$
@@ -41,7 +41,7 @@ public class ASCII85InputStream extends InputStream
     private boolean eodReached = false;
     private int[] b = new int[4]; //decoded
     private int bSize = 0;
-    private int bIndex = 0; 
+    private int bIndex = 0;
 
     /** @see java.io.FilterInputStream **/
     public ASCII85InputStream(InputStream in) {
@@ -55,7 +55,7 @@ public class ASCII85InputStream extends InputStream
         if (bIndex >= bSize) {
             if (eodReached) {
                 return -1;
-            } 
+            }
             readNextTuple();
             if (bSize == 0) {
                 if (!eodReached) {
@@ -69,7 +69,7 @@ public class ASCII85InputStream extends InputStream
         bIndex++;
         return result;
     }
-    
+
     private int filteredRead() throws IOException {
         int buf;
         while (true) {
@@ -94,7 +94,7 @@ public class ASCII85InputStream extends InputStream
             }
         }
     }
-    
+
     private void handleEOD() throws IOException {
         final int buf = in.read();
         if (buf != EOD[1]) {
@@ -104,7 +104,7 @@ public class ASCII85InputStream extends InputStream
         bSize = 0;
         bIndex = 0;
     }
-    
+
     private void readNextTuple() throws IOException {
         int buf;
         long tuple = 0;
@@ -138,7 +138,7 @@ public class ASCII85InputStream extends InputStream
                 //Violation 3
                 throw new IOException("Only one character in tuple");
             }
-            //Handle optional, trailing, incomplete tuple 
+            //Handle optional, trailing, incomplete tuple
             while (cIndex < 5) {
                 tuple += POW85[cIndex - 1];
                 cIndex++;

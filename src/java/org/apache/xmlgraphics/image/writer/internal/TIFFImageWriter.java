@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 
 /**
- * ImageWriter implementation that uses the internal TIFF codec to 
+ * ImageWriter implementation that uses the internal TIFF codec to
  * write TIFF files.
  *
  * @version $Id$
@@ -70,7 +70,7 @@ public class TIFFImageWriter extends AbstractImageWriter {
      * @param encodeParams the TIFF encoding parameters
      * @param image the image to be encoded
      */
-    private void updateParams(TIFFEncodeParam encodeParams, ImageWriterParams params, 
+    private void updateParams(TIFFEncodeParam encodeParams, ImageWriterParams params,
             RenderedImage image) {
         if (encodeParams.getCompression() == TIFFEncodeParam.COMPRESSION_JPEG_TTN2) {
             ColorModel cm = image.getColorModel();
@@ -99,18 +99,18 @@ public class TIFFImageWriter extends AbstractImageWriter {
                 colorID = JPEGEncodeParam.COLOR_ID_CMYK;
                 break;
             default:
-                //TODO Don't know how to determine whether image is PYCC or not 
+                //TODO Don't know how to determine whether image is PYCC or not
                 //(see JPEGEncodeParam)
                 colorID = JPEGEncodeParam.COLOR_ID_UNKNOWN;
             }
             JPEGEncodeParam jpegParam = JPEGCodec.getDefaultJPEGEncodeParam(
                     image.getData(), colorID);
             if (params.getJPEGQuality() != null || params.getJPEGForceBaseline() != null) {
-                float qual = (params.getJPEGQuality() != null 
+                float qual = (params.getJPEGQuality() != null
                         ? params.getJPEGQuality().floatValue() : 0.75f);
                 boolean force = (params.getJPEGForceBaseline() != null
                         ? params.getJPEGForceBaseline().booleanValue() : false);
-                jpegParam.setQuality(qual, force); 
+                jpegParam.setQuality(qual, force);
             }
             encodeParams.setJPEGEncodeParam(jpegParam);
         }
@@ -136,38 +136,38 @@ public class TIFFImageWriter extends AbstractImageWriter {
                 throw new UnsupportedOperationException("Compression method not supported: "
                         + params.getCompressionMethod());
             }
-            
+
             if (params.getResolution() != null) {
                 // Set target resolution
                 float pixSzMM = 25.4f / params.getResolution().floatValue();
                 // num Pixs in 100 Meters
-                int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5); 
+                int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5);
                 int denom = 100 * 100;  // Centimeters per 100 Meters;
                 long [] rational = {numPix, denom};
                 TIFFField [] fields = {
-                    new TIFFField(TIFFImageDecoder.TIFF_RESOLUTION_UNIT, 
-                                  TIFFField.TIFF_SHORT, 1, 
+                    new TIFFField(TIFFImageDecoder.TIFF_RESOLUTION_UNIT,
+                                  TIFFField.TIFF_SHORT, 1,
                                   new char[] {(char)3}),
-                    new TIFFField(TIFFImageDecoder.TIFF_X_RESOLUTION, 
-                                  TIFFField.TIFF_RATIONAL, 1, 
+                    new TIFFField(TIFFImageDecoder.TIFF_X_RESOLUTION,
+                                  TIFFField.TIFF_RATIONAL, 1,
                                   new long[][] {rational}),
-                    new TIFFField(TIFFImageDecoder.TIFF_Y_RESOLUTION, 
-                                  TIFFField.TIFF_RATIONAL, 1, 
-                                  new long[][] {rational}) 
+                    new TIFFField(TIFFImageDecoder.TIFF_Y_RESOLUTION,
+                                  TIFFField.TIFF_RATIONAL, 1,
+                                  new long[][] {rational})
                         };
                 encodeParams.setExtraFields(fields);
             }
         }
         return encodeParams;
     }
-    
+
     /**
      * @see ImageWriter#getMIMEType()
      */
     public String getMIMEType() {
         return "image/tiff";
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.image.writer.ImageWriter#createMultiImageWriter(
      *          java.io.OutputStream)
@@ -187,11 +187,11 @@ public class TIFFImageWriter extends AbstractImageWriter {
         private TIFFEncodeParam encodeParams;
         private TIFFImageEncoder encoder;
         private Object context;
-        
+
         public TIFFMultiImageWriter(OutputStream out) throws IOException {
             this.out = out;
         }
-        
+
         public void writeImage(RenderedImage image, ImageWriterParams params) throws IOException {
             if (encoder == null) {
                 encodeParams = createTIFFEncodeParams(params);
@@ -200,7 +200,7 @@ public class TIFFImageWriter extends AbstractImageWriter {
             }
             context = encoder.encodeMultiple(context, image);
         }
-        
+
         public void close() throws IOException {
             if (encoder != null) {
                 encoder.finishMultiple(context);
@@ -212,5 +212,5 @@ public class TIFFImageWriter extends AbstractImageWriter {
 
     }
 
-    
+
 }

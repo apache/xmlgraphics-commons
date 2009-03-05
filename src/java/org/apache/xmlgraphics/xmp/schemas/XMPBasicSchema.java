@@ -31,16 +31,16 @@ import org.apache.xmlgraphics.xmp.merge.NoReplacePropertyMerger;
  */
 public class XMPBasicSchema extends XMPSchema {
 
-    /** Namespace URI for XMP Basic */ 
+    /** Namespace URI for XMP Basic */
     public static final String NAMESPACE = XMPConstants.XMP_BASIC_NAMESPACE;
-    
+
     private static MergeRuleSet mergeRuleSet = new MergeRuleSet();
-    
+
     /** Creates a new schema instance for Dublin Core. */
     public XMPBasicSchema() {
         super(NAMESPACE, "xmp");
     }
-    
+
     static {
         //CreateDate shall be preserved if it exists
         mergeRuleSet.addRule(new QName(NAMESPACE, "CreateDate"), new NoReplacePropertyMerger());

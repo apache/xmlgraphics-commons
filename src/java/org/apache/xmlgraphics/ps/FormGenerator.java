@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.awt.geom.AffineTransform;
@@ -32,7 +32,7 @@ public abstract class FormGenerator {
     private String formName;
     private String title;
     private Dimension2D dimensions;
-    
+
     /**
      * Main constructor.
      * @param formName the form's name
@@ -44,7 +44,7 @@ public abstract class FormGenerator {
         this.title = title;
         this.dimensions = dimensions;
     }
-    
+
     /**
      * Returns the form's name.
      * @return the form's name
@@ -52,7 +52,7 @@ public abstract class FormGenerator {
     public String getFormName() {
         return this.formName;
     }
-    
+
     /**
      * Returns the form's title.
      * @return the form's title or null if there's no title
@@ -60,7 +60,7 @@ public abstract class FormGenerator {
     public String getTitle() {
         return this.title;
     }
-    
+
     /**
      * returns the form's dimensions.
      * @return the form's dimensions
@@ -68,7 +68,7 @@ public abstract class FormGenerator {
     public Dimension2D getDimensions() {
         return this.dimensions;
     }
-    
+
     /**
      * Generates the PostScript code for the PaintProc of the form.
      * @param gen the PostScript generator
@@ -85,7 +85,7 @@ public abstract class FormGenerator {
     protected void generateAdditionalDataStream(PSGenerator gen) throws IOException {
         //nop
     }
-    
+
     /**
      * Returns the matrix for use in the form.
      * @return the matrix
@@ -93,7 +93,7 @@ public abstract class FormGenerator {
     protected AffineTransform getMatrix() {
         return new AffineTransform();
     }
-    
+
     /**
      * Returns the form's bounding box.
      * @return the form's bounding box
@@ -101,7 +101,7 @@ public abstract class FormGenerator {
     protected Rectangle2D getBBox() {
         return new Rectangle2D.Double(0, 0, dimensions.getWidth(), dimensions.getHeight());
     }
-    
+
     /**
      * Generates the PostScript form.
      * @param gen the PostScript generator
@@ -120,7 +120,7 @@ public abstract class FormGenerator {
         }
         gen.writeln("/" + formName);
         gen.writeln("<< /FormType 1");
-        gen.writeln("  /BBox " + gen.formatRectangleToArray(getBBox())); 
+        gen.writeln("  /BBox " + gen.formatRectangleToArray(getBBox()));
         gen.writeln("  /Matrix " + gen.formatMatrix(getMatrix()));
         gen.writeln("  /PaintProc {");
         gen.writeln("    pop");
@@ -131,7 +131,7 @@ public abstract class FormGenerator {
         gen.writeln(">> def");
         generateAdditionalDataStream(gen);
         gen.writeDSCComment(DSCConstants.END_RESOURCE);
-        PSResource res = new PSResource(PSResource.TYPE_FORM, formName); 
+        PSResource res = new PSResource(PSResource.TYPE_FORM, formName);
         gen.getResourceTracker().registerSuppliedResource(res);
         return res;
     }

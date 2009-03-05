@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -88,7 +88,7 @@ public class ImageUtil {
      * @return the InputStream
      */
     public static InputStream needInputStream(Source src) {
-        InputStream in = getInputStream(src); 
+        InputStream in = getInputStream(src);
         if (in != null) {
             return in;
         } else {
@@ -96,7 +96,7 @@ public class ImageUtil {
                     + " or an ImageSource");
         }
     }
-    
+
     /**
      * Returns the ImageInputStream of a Source object. This method throws an
      * IllegalArgumentException if there's no ImageInputStream instance available from the
@@ -116,7 +116,7 @@ public class ImageUtil {
             throw new IllegalArgumentException("Source must be an ImageSource");
         }
     }
-    
+
     /**
      * Indicates whether the Source object has an InputStream instance.
      * @param src the Source object
@@ -124,7 +124,7 @@ public class ImageUtil {
      */
     public static boolean hasInputStream(Source src) {
         if (src instanceof StreamSource) {
-            InputStream in = ((StreamSource)src).getInputStream(); 
+            InputStream in = ((StreamSource)src).getInputStream();
             return (in != null);
         } else if (src instanceof ImageSource) {
             return hasImageInputStream(src);
@@ -144,7 +144,7 @@ public class ImageUtil {
      */
     public static boolean hasReader(Source src) {
         if (src instanceof StreamSource) {
-            Reader reader = ((StreamSource)src).getReader(); 
+            Reader reader = ((StreamSource)src).getReader();
             return (reader != null);
         } else if (src instanceof SAXSource) {
             InputSource is = ((SAXSource)src).getInputSource();
@@ -162,7 +162,7 @@ public class ImageUtil {
      */
     public static boolean hasImageInputStream(Source src) {
         if (src instanceof ImageSource) {
-            ImageInputStream in = ((ImageSource)src).getImageInputStream(); 
+            ImageInputStream in = ((ImageSource)src).getImageInputStream();
             if (in != null) {
                 return true;
             }
@@ -191,7 +191,7 @@ public class ImageUtil {
             }
         }
     }
-    
+
     /**
      * Closes the InputStreams or ImageInputStreams of Source objects. Any exception occurring
      * while closing the stream is ignored.
@@ -201,7 +201,7 @@ public class ImageUtil {
         if (src == null) {
             return;
         } else if (src instanceof StreamSource) {
-            StreamSource streamSource = (StreamSource)src; 
+            StreamSource streamSource = (StreamSource)src;
             IOUtils.closeQuietly(streamSource.getInputStream());
             streamSource.setInputStream(null);
             IOUtils.closeQuietly(streamSource.getReader());
@@ -226,7 +226,7 @@ public class ImageUtil {
             }
         }
     }
-    
+
     /**
      * Decorates an ImageInputStream so the flush*() methods are ignored and have no effect.
      * The decoration is implemented using a dynamic proxy.
@@ -253,7 +253,7 @@ public class ImageUtil {
                     }
                 });
     }
-    
+
     /**
      * GZIP header magic number bytes, like found in a gzipped
      * files, which are encoded in Intel format (i.&#x2e;e&#x2e; little indian).
@@ -277,7 +277,7 @@ public class ImageUtil {
         in.reset();
         return ((data[0] == GZIP_MAGIC[0]) && (data[1] == GZIP_MAGIC[1]));
     }
-    
+
     /**
      * Decorates an InputStream with a BufferedInputStream if it doesn't support mark()/reset().
      * @param in the InputStream
@@ -290,7 +290,7 @@ public class ImageUtil {
             return new java.io.BufferedInputStream(in);
         }
     }
-    
+
     /**
      * Automatically decorates an InputStream so it is buffered. Furthermore, it makes sure
      * it is decorated with a GZIPInputStream if the stream is GZIP compressed.
@@ -319,9 +319,9 @@ public class ImageUtil {
                 new Float(session.getTargetResolution()));
         return hints;
     }
-    
+
     private static final String PAGE_INDICATOR = "page=";
-    
+
     /**
      * Extracts page index information from a URI. The expected pattern is "page=x" where x is
      * a non-negative integer number. The page index must be specified as part of the URI fragment
@@ -370,7 +370,7 @@ public class ImageUtil {
         }
         return null;
     }
-    
+
     /**
      * Extracts page index information from a URI. The expected pattern is "page=x" where x is
      * a non-negative integer number. The page index must be specified as part of the URI fragment
@@ -392,5 +392,5 @@ public class ImageUtil {
             return 0;
         }
     }
-    
+
 }

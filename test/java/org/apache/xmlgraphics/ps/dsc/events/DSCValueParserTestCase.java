@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ public class DSCValueParserTestCase extends TestCase {
     private String[] toArray(List params) {
         return (String[])params.toArray(new String[params.size()]);
     }
-    
+
     public void testText() throws Exception {
         DSCCommentBeginResource obj = new DSCCommentBeginResource();
         String[] res = toArray(obj.splitParams("procset Test"));
@@ -43,7 +43,7 @@ public class DSCValueParserTestCase extends TestCase {
         assertEquals("procset", res[0]);
         assertEquals("Test", res[1]);
     }
-    
+
     public void testParentheseText() throws Exception {
         DSCCommentBeginResource obj = new DSCCommentBeginResource();
         String[] res = toArray(obj.splitParams("procset (Hello World!)"));
@@ -68,5 +68,5 @@ public class DSCValueParserTestCase extends TestCase {
         assertEquals("procset", res[0]);
         assertEquals("Hello (wonderful) World! blahblah", res[1]);
     }
-    
+
 }

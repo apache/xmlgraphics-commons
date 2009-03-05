@@ -34,17 +34,17 @@ import org.xml.sax.SAXException;
  */
 public class MetadataFromScratch {
 
-    private static void buildAndPrintMetadata() 
+    private static void buildAndPrintMetadata()
                 throws TransformerConfigurationException, SAXException {
         Metadata meta = new Metadata();
         DublinCoreAdapter dc = new DublinCoreAdapter(meta);
         dc.setTitle("de", "Der Herr der Ringe");
         dc.setTitle("en", "Lord of the Rings");
         dc.addDate(new Date());
-        
+
         StreamResult res = new StreamResult(System.out);
         XMPSerializer.writeXML(meta, res);
-        
+
     }
 
     /**

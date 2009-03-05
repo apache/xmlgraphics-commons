@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ public class Base64EncodeStream extends OutputStream {
     public void close () throws IOException {
         if (out != null) {
             encodeAtom();
-            out.flush();        
+            out.flush();
             if (closeOutOnClose)
                 out.close();
             out=null;
@@ -82,7 +82,7 @@ public class Base64EncodeStream extends OutputStream {
     /**
      * This can't really flush out output since that may generate
      * '=' chars which would indicate the end of the stream.
-     * Instead we flush out.  You can only be sure all output is 
+     * Instead we flush out.  You can only be sure all output is
      * writen by closing this stream.
      */
     public void flush() throws IOException {
@@ -153,14 +153,14 @@ public class Base64EncodeStream extends OutputStream {
      * than three is encodes either one or two '=' signs to indicate
      * padding characters.
      */
-    void encodeFromArray(byte[] data, int offset, int len) 
+    void encodeFromArray(byte[] data, int offset, int len)
         throws IOException{
         byte a, b, c;
         if (len == 0)
             return;
 
-        // System.out.println("atomLen: " + atomLen + 
-        //                    " len: " + len + 
+        // System.out.println("atomLen: " + atomLen +
+        //                    " len: " + len +
         //                    " offset:  " + offset);
 
         if (atomLen != 0) {
@@ -182,7 +182,7 @@ public class Base64EncodeStream extends OutputStream {
             a = data[offset++];
             b = data[offset++];
             c = data[offset++];
-            
+
             encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
             encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
             encodeBuf[2] = pem_array[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
@@ -211,6 +211,6 @@ public class Base64EncodeStream extends OutputStream {
         atomLen = len;
     }
 
-    
-    
+
+
 }

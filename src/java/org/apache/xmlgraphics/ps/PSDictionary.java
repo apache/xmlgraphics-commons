@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,14 +27,14 @@ import java.util.StringTokenizer;
  * This class is used to encapsulate postscript dictionary objects.
  */
 public class PSDictionary extends java.util.HashMap {
-    
+
     private static final long serialVersionUID = 815367222496219197L;
 
     /**
      * This class is used to parse dictionary strings.
      */
     private static class Maker {
-        
+
         /**
          * Simple token holding class
          */
@@ -43,18 +43,18 @@ public class PSDictionary extends java.util.HashMap {
              * start index in string
              */
             private int startIndex = -1;
-            
+
             /**
              * end index in string
              */
             private int endIndex = -1;
-            
+
             /**
              * token string value
              */
-            private String value;        
+            private String value;
         }
-        
+
         private static final String[][] BRACES = {
             {"<<", ">>"},
             {"[", "]"},
@@ -72,7 +72,7 @@ public class PSDictionary extends java.util.HashMap {
         /**
          * Returns a Token containing the start, end index and value of the next token
          * found in a given string
-         * 
+         *
          * @param str
          *            string to search
          * @param fromIndex
@@ -107,7 +107,7 @@ public class PSDictionary extends java.util.HashMap {
         /**
          * Returns the closing brace index from a given string searches from a
          * given index
-         * 
+         *
          * @param str
          *            string to search
          * @param braces
@@ -139,7 +139,7 @@ public class PSDictionary extends java.util.HashMap {
 
         /**
          * Strips braces from complex object string
-         * 
+         *
          * @param str
          *            String to parse
          * @param braces
@@ -173,7 +173,7 @@ public class PSDictionary extends java.util.HashMap {
 
         /**
          * Parses a dictionary string and provides a dictionary object
-         * 
+         *
          * @param str a dictionary string
          * @return A postscript dictionary object
          * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
@@ -213,7 +213,7 @@ public class PSDictionary extends java.util.HashMap {
                     valueToken.value = str.substring(valueToken.startIndex, valueToken.endIndex);
                 }
                 if (braces == null || braces == BRACES[PROCEDURE] || braces == BRACES[STRING]) {
-                    obj = valueToken.value;                        
+                    obj = valueToken.value;
                 } else if (BRACES[ARRAY] == braces) {
                     List objList = new java.util.ArrayList();
                     String objString = stripBraces(valueToken.value, braces);
@@ -221,7 +221,7 @@ public class PSDictionary extends java.util.HashMap {
                     while (tokenizer.hasMoreTokens()) {
                         objList.add(tokenizer.nextToken());
                     }
-                    obj = objList;                        
+                    obj = objList;
                 } else if (BRACES[DICTIONARY] == braces) {
                     obj = parseDictionary(valueToken.value);
                 }
@@ -229,12 +229,12 @@ public class PSDictionary extends java.util.HashMap {
                 currIndex = valueToken.endIndex + 1;
             }
             return dictionary;
-        }    
+        }
     }
-    
+
     /**
-     * Parses a given a dictionary string and returns an object 
-     * 
+     * Parses a given a dictionary string and returns an object
+     *
      * @param str dictionary string
      * @return dictionary object
      * @throws org.apache.xmlgraphics.ps.PSDictionaryFormatException
@@ -268,7 +268,7 @@ public class PSDictionary extends java.util.HashMap {
         }
         return true;
     }
-    
+
     /** {@inheritDoc} */
     public int hashCode() {
         int hashCode = 7;
@@ -298,7 +298,7 @@ public class PSDictionary extends java.util.HashMap {
                 }
                 str = str.trim();
                 str += "]";
-                sb.append(str + "\n");                
+                sb.append(str + "\n");
             } else {
                 sb.append(obj.toString() + "\n");
             }

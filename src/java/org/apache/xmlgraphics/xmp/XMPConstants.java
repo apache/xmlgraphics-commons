@@ -28,22 +28,22 @@ public interface XMPConstants {
 
     /** Namespace URI for the xml: prefix */
     String XML_NS = "http://www.w3.org/XML/1998/namespace";
-    
+
     /** Namespace URI for the xmlns: prefix */
     String XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/";
 
     /** Namespace URI for XMP */
     String XMP_NAMESPACE = "adobe:ns:meta/";
-    
+
     /** Namespace URI for RDF */
     String RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-    /** Namespace URI for Dublin Core */ 
+    /** Namespace URI for Dublin Core */
     String DUBLIN_CORE_NAMESPACE = "http://purl.org/dc/elements/1.1/";
-    
+
     /** Namespace URI for the XMP Basic Schema */
     String XMP_BASIC_NAMESPACE = "http://ns.adobe.com/xap/1.0/";
-    
+
     /** Namespace URI for the Adobe PDF Schema */
     String ADOBE_PDF_NAMESPACE = "http://ns.adobe.com/pdf/1.3/";
 
@@ -53,7 +53,7 @@ public interface XMPConstants {
      * was missing in the original ISO 19005-1:2005 specification)
      */
     String PDF_A_IDENTIFICATION = "http://www.aiim.org/pdfa/ns/id/";
-    
+
     /**
      * Namespace URI for the PDF/A Identification Schema
      * (from an older draft of ISO 19005-1, used by Adobe Acrobat)
@@ -63,8 +63,8 @@ public interface XMPConstants {
 
     /** Default language for the xml:lang property */
     String DEFAULT_LANGUAGE = "x-default";
-    
+
     /** QName for rdf:value */
     QName RDF_VALUE = new QName(RDF_NAMESPACE, "value");
-    
+
 }

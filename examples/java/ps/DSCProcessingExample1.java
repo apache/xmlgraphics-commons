@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.ps.dsc.DSCException;
 import org.apache.xmlgraphics.ps.dsc.tools.PageExtractor;
- 
+
 /**
  * Demonstrates how the DSC parser can be used to extract a series of pages from a DSC-compliant
  * PostScript file. For details how this works, please look into the PageExtractor class
@@ -60,12 +60,12 @@ public class DSCProcessingExample1 {
             IOUtils.closeQuietly(in);
         }
     }
-    
+
     private static void showInfo() {
         System.out.println(
                 "Call: DSCProcessingExample1 <source-file> <target-file> <from-page> <to-page>");
     }
-    
+
     /**
      * Command-line interface
      * @param args command-line arguments

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.util;
 
 import java.lang.ref.Reference;
@@ -39,7 +39,7 @@ public class SoftMapCache {
 
     private Map map;
     private ReferenceQueue refQueue = new ReferenceQueue();
-    
+
     /**
      * Creates a new soft cache.
      * @param synched true if the Map containing the values should by synchronized
@@ -50,7 +50,7 @@ public class SoftMapCache {
             this.map = Collections.synchronizedMap(this.map);
         }
     }
-    
+
     /**
      * Returns the value associated with the given key. If the value is not found or the value
      * has been collected, null is returned.
@@ -97,25 +97,25 @@ public class SoftMapCache {
     public void put(Object key, Object value) {
         map.put(key, wrapInReference(value, key));
     }
-    
+
     /**
      * Clears the cache.
      */
     public void clear() {
         map.clear();
     }
-    
+
     /**
      * Triggers some house-keeping, i.e. processes any pending objects in the reference queue.
      */
     public void doHouseKeeping() {
         checkReferenceQueue();
     }
-    
+
     private Reference wrapInReference(Object obj, Object key) {
         return new SoftReferenceWithKey(obj, key, refQueue);
     }
-    
+
     /**
      * Checks the reference queue if any references have been cleared and removes them from the
      * cache.

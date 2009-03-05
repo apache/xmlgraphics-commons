@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.pipeline;
 
 import java.util.Collection;
@@ -50,12 +50,12 @@ public class PipelineFactory {
     protected static Log log = LogFactory.getLog(PipelineFactory.class);
 
     private ImageManager manager;
-    
+
     private int converterEdgeDirectoryVersion = -1;
-    
+
     /** Holds the EdgeDirectory for all image conversions */
     private DefaultEdgeDirectory converterEdgeDirectory;
-    
+
     /**
      * Main constructor.
      * @param manager the ImageManager instance
@@ -63,12 +63,12 @@ public class PipelineFactory {
     public PipelineFactory(ImageManager manager) {
         this.manager = manager;
     }
-    
+
     private DefaultEdgeDirectory getEdgeDirectory() {
         ImageImplRegistry registry = manager.getRegistry();
         if (registry.getImageConverterModifications() != converterEdgeDirectoryVersion) {
             Collection converters = registry.getImageConverters();
-            
+
             //Rebuild edge directory
             DefaultEdgeDirectory dir = new DefaultEdgeDirectory();
             Iterator iter = converters.iterator();
@@ -76,13 +76,13 @@ public class PipelineFactory {
                 ImageConverter converter = (ImageConverter)iter.next();
                 dir.addEdge(new ImageConversionEdge(converter));
             }
-            
+
             converterEdgeDirectoryVersion = registry.getImageConverterModifications();
             this.converterEdgeDirectory = dir; //Replace (thread-safe)
         }
         return this.converterEdgeDirectory;
     }
-    
+
     /**
      * Creates and returns an {@link ImageProviderPipeline} that allows to load an image of the
      * given MIME type and present it in the requested image flavor.
@@ -98,7 +98,7 @@ public class PipelineFactory {
         ImageProviderPipeline pipeline = findPipeline(dir, originalImage.getFlavor(), destination);
         return pipeline;
     }
-    
+
     /**
      * Creates and returns an {@link ImageProviderPipeline} that allows to load an image of the
      * given MIME type and present it in the requested image flavor.
@@ -111,10 +111,10 @@ public class PipelineFactory {
         String originalMime = imageInfo.getMimeType();
         ImageImplRegistry registry = manager.getRegistry();
         ImageProviderPipeline pipeline = null;
-        
+
         //Get snapshot to avoid concurrent modification problems (thread-safety)
         DefaultEdgeDirectory dir = getEdgeDirectory();
-        
+
         ImageLoaderFactory[] loaderFactories = registry.getImageLoaderFactories(
                 imageInfo, targetFlavor);
         if (loaderFactories != null) {
@@ -137,7 +137,7 @@ public class PipelineFactory {
                 log.trace("No ImageLoaderFactory found that can load this format directly."
                         + " Trying ImageConverters instead...");
             }
-            
+
             ImageRepresentation destination = new ImageRepresentation(targetFlavor);
             //Get Loader for originalMIME
             // --> List of resulting flavors, possibly multiple loaders
@@ -157,7 +157,7 @@ public class PipelineFactory {
                         }
                     }
                 }
-                
+
                 //Build final pipeline
                 if (candidates.size() > 0) {
                     pipeline = (ImageProviderPipeline)candidates.first();
@@ -169,7 +169,7 @@ public class PipelineFactory {
         }
         return pipeline;
     }
-    
+
     private static class PipelineComparator implements Comparator {
 
         public int compare(Object o1, Object o2) {
@@ -178,19 +178,19 @@ public class PipelineFactory {
             //Lowest penalty first
             return p1.getConversionPenalty() - p2.getConversionPenalty();
         }
-        
+
     }
-    
+
     private ImageProviderPipeline findPipeline(DefaultEdgeDirectory dir,
             ImageFlavor originFlavor, ImageRepresentation destination) {
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(
                 dir);
-        ImageRepresentation origin = new ImageRepresentation(originFlavor); 
+        ImageRepresentation origin = new ImageRepresentation(originFlavor);
         dijkstra.execute(origin, destination);
         if (log.isTraceEnabled()) {
             log.trace("Lowest penalty: " + dijkstra.getLowestPenalty(destination));
         }
-        
+
         Vertex prev = destination;
         Vertex pred = dijkstra.getPredecessor(destination);
         if (pred == null) {
@@ -209,13 +209,13 @@ public class PipelineFactory {
             ImageProviderPipeline pipeline = new ImageProviderPipeline(manager.getCache(), null);
             Iterator iter = stops.iterator();
             while (iter.hasNext()) {
-                ImageConversionEdge edge = (ImageConversionEdge)iter.next(); 
+                ImageConversionEdge edge = (ImageConversionEdge)iter.next();
                 pipeline.addConverter(edge.getImageConverter());
             }
             return pipeline;
         }
     }
-    
+
     /**
      * Finds and returns an array of {@link ImageProviderPipeline} instances which can handle
      * the given MIME type and return one of the given {@link ImageFlavor}s.
@@ -232,7 +232,7 @@ public class PipelineFactory {
         }
         return candidates;
     }
-    
+
     /**
      * Finds and returns an array of {@link ImageProviderPipeline} instances which can handle
      * the convert the given {@link Image} and return one of the given {@link ImageFlavor}s.
@@ -249,6 +249,6 @@ public class PipelineFactory {
         }
         return candidates;
     }
-    
-    
+
+
 }

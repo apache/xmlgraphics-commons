@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ public class Base64Test extends TestCase {
 
         if (action.equals("ROUND"))
             ref = in;
-        else if (!action.equals("ENCODE") && 
+        else if (!action.equals("ENCODE") &&
                  !action.equals("DECODE")) {
             fail("Bad action string");
         }
@@ -58,7 +58,7 @@ public class Base64Test extends TestCase {
 
             // Copy the input to the Base64 Encoder (in a seperate thread).
             Thread t = new StreamCopier(inIS, os);
-          
+
             // Read that from the piped output stream.
             inIS = new PipedInputStream(pos);
             t.start();
@@ -67,21 +67,21 @@ public class Base64Test extends TestCase {
         if (action.equals("DECODE")||
             action.equals("ROUND")) {
             inIS = new Base64DecodeStream(inIS);
-        } 
+        }
 
 
         int mismatch = compareStreams(inIS, refIS, action.equals("ENCODE"));
-        
+
         if (mismatch != -1) {
             fail("Wrong result");
         }
     }
-    
+
     private void innerBase64Test(String action, String in, String ref) throws Exception {
         final String baseURL = "file:test/resources/org/apache/xmlgraphics/util/io/";
         innerBase64Test(action, new URL(baseURL + in), new URL(baseURL + ref));
     }
-    
+
     private void innerBase64Test(String in) throws Exception {
         innerBase64Test("ROUND", in, in);
     }
@@ -91,7 +91,7 @@ public class Base64Test extends TestCase {
         innerBase64Test("DECODE", name + ".64", name);
         innerBase64Test(name);
     }
-    
+
     /**
      * This method will only throw exceptions if some aspect
      * of the test's internal operation fails.
@@ -114,7 +114,7 @@ public class Base64Test extends TestCase {
      * Returns true if the contents of <tt>is1</tt> match the
      * contents of <tt>is2</tt>
      */
-    public static int compareStreams(InputStream is1, InputStream is2, 
+    public static int compareStreams(InputStream is1, InputStream is2,
                               boolean skipws) {
         byte[] data1 = new byte[100];
         byte[] data2 = new byte[100];
@@ -152,7 +152,7 @@ public class Base64Test extends TestCase {
                     // check if the rest of is2 is whitespace...
                     for (int i2 = 0; i2 < len2; i2++)
                         if ((data2[i2] != '\n') &&
-                            (data2[i2] != '\r') && 
+                            (data2[i2] != '\r') &&
                             (data2[i2] != ' '))
                             return idx + i2;
                     off1 = off2 = 0;
@@ -167,7 +167,7 @@ public class Base64Test extends TestCase {
                     // Check if rest of is1 is whitespace...
                     for (int i1 = 0; i1 < len1; i1++)
                         if ((data1[i1] != '\n') &&
-                            (data1[i1] != '\r') && 
+                            (data1[i1] != '\r') &&
                             (data1[i1] != ' '))
                             return idx + i1;
                     off1 = off2 = 0;
@@ -178,14 +178,14 @@ public class Base64Test extends TestCase {
                 int i2=0;
                 while((i1 < len1) && (i2 < len2)) {
                     if (skipws) {
-                        if ((data1[i1] == '\n') || 
-                            (data1[i1] == '\r') || 
+                        if ((data1[i1] == '\n') ||
+                            (data1[i1] == '\r') ||
                             (data1[i1] == ' ')) {
                             i1++;
                             continue;
                         }
-                        if ((data2[i2] == '\n') || 
-                            (data2[i2] == '\r') || 
+                        if ((data2[i2] == '\n') ||
+                            (data2[i2] == '\r') ||
                             (data2[i2] == ' ')) {
                             i2++;
                             continue;

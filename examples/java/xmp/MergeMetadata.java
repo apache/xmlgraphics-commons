@@ -40,16 +40,16 @@ public class MergeMetadata {
     private static void mergeMetadata() throws TransformerException, SAXException {
         URL url = MergeMetadata.class.getResource("pdf-example.xmp");
         Metadata meta1 = XMPParser.parseXMP(url);
-        
+
         Metadata meta2 = new Metadata();
         DublinCoreAdapter dc = new DublinCoreAdapter(meta2);
         dc.setTitle("de", "Der Herr der Ringe");
         dc.setTitle("en", "Lord of the Rings");
         dc.addCreator("J.R.R. Tolkien"); //Will replace creator from pdf-example.xmp
         dc.addDate(new Date());
-        
+
         meta2.mergeInto(meta1);
-        
+
         Metadata meta = meta1;
         XMPProperty prop;
         dc = new DublinCoreAdapter(meta);
@@ -68,7 +68,7 @@ public class MergeMetadata {
         System.out.println("Producer: " + prop.getValue());
         prop = meta.getProperty(XMPConstants.ADOBE_PDF_NAMESPACE, "PDFVersion");
         System.out.println("PDF version: " + prop.getValue());
-        
+
         XMPSerializer.writeXMPPacket(meta, System.out, false);
     }
 

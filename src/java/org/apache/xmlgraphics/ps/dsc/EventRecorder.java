@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps.dsc;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ import org.apache.xmlgraphics.ps.dsc.events.DSCComment;
 public class EventRecorder implements DSCHandler {
 
     private List events = new java.util.ArrayList();
-    
+
     /**
      * Replays the recorded events to a specified DSCHandler instance.
      * @param handler the DSCHandler to send the recorded events to
@@ -44,7 +44,7 @@ public class EventRecorder implements DSCHandler {
             if (obj instanceof PSLine) {
                 handler.line(((PSLine)obj).getLine());
             } else if (obj instanceof PSComment) {
-                handler.comment(((PSComment)obj).getComment()); 
+                handler.comment(((PSComment)obj).getComment());
             } else if (obj instanceof DSCComment) {
                 handler.handleDSCComment((DSCComment)obj);
             } else {
@@ -52,7 +52,7 @@ public class EventRecorder implements DSCHandler {
             }
         }
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.DSCHandler#comment(java.lang.String)
      */
@@ -92,29 +92,29 @@ public class EventRecorder implements DSCHandler {
     }
 
     private static class PSComment {
-        
+
         private String comment;
-        
+
         public PSComment(String comment) {
             this.comment = comment;
         }
-        
+
         public String getComment() {
             return this.comment;
         }
     }
-    
+
     private static class PSLine {
-        
+
         private String line;
-        
+
         public PSLine(String line) {
             this.line = line;
         }
-        
+
         public String getLine() {
             return this.line;
         }
     }
-    
+
 }

@@ -34,12 +34,12 @@ public class XMPSchemaRegistry {
 
     private static XMPSchemaRegistry instance = null;
 
-    private Map schemas = new java.util.HashMap(); 
-    
+    private Map schemas = new java.util.HashMap();
+
     private XMPSchemaRegistry() {
         init();
     }
-    
+
     /** @return the singleton instance of the XMP schema registry. */
     public static XMPSchemaRegistry getInstance() {
         if (instance == null) {
@@ -47,7 +47,7 @@ public class XMPSchemaRegistry {
         }
         return instance;
     }
-    
+
     private void init() {
         addSchema(new DublinCoreSchema());
         addSchema(new PDFAXMPSchema());
@@ -55,7 +55,7 @@ public class XMPSchemaRegistry {
         addSchema(new XMPBasicSchema());
         addSchema(new AdobePDFSchema());
     }
-    
+
     /**
      * Adds an XMP schema to the registry.
      * @param schema the XMP schema
@@ -63,7 +63,7 @@ public class XMPSchemaRegistry {
     public void addSchema(XMPSchema schema) {
         schemas.put(schema.getNamespace(), schema);
     }
-    
+
     /**
      * Returns the XMP schema object for a given namespace.
      * @param namespace the namespace URI
@@ -72,5 +72,5 @@ public class XMPSchemaRegistry {
     public XMPSchema getSchema(String namespace) {
         return (XMPSchema)schemas.get(namespace);
     }
-    
+
 }

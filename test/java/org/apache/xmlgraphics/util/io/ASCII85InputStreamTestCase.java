@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.util.io;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +34,7 @@ import junit.framework.TestCase;
  * Test case for ASCII85InputStream.
  * <p>
  * ATTENTION: Some of the tests here depend on the correct behaviour of
- * ASCII85OutputStream. If something fails here make sure 
+ * ASCII85OutputStream. If something fails here make sure
  * ASCII85OutputStreamTestCase runs!
  */
 public class ASCII85InputStreamTestCase extends TestCase {
@@ -60,7 +60,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
         System.arraycopy(ASCII85OutputStreamTestCase.DATA, 0, buf, 0, buf.length);
         return buf;
     }
-    
+
     private String encode(byte[] data, int len) throws Exception {
         ByteArrayOutputStream baout = new ByteArrayOutputStream();
         java.io.OutputStream out = new ASCII85OutputStream(baout);
@@ -68,15 +68,15 @@ public class ASCII85InputStreamTestCase extends TestCase {
         out.close();
         return new String(baout.toByteArray(), "US-ASCII");
     }
-    
-    
+
+
     private void innerTestDecode(byte[] data) throws Exception {
         String encoded = encode(data, data.length);
         if (DEBUG) {
             if (data[0] == 0) {
                 System.out.println("self-encode: " + data.length + " chunk 000102030405...");
             } else {
-                System.out.println("self-encode: " + new String(data, "US-ASCII") 
+                System.out.println("self-encode: " + new String(data, "US-ASCII")
                     + " " + HexUtil.toHex(data));
             }
             System.out.println("  ---> " + encoded);
@@ -86,13 +86,13 @@ public class ASCII85InputStreamTestCase extends TestCase {
             if (data[0] == 0) {
                 System.out.println("decoded: " + data.length + " chunk 000102030405...");
             } else {
-                System.out.println("decoded: " + new String(decoded, "US-ASCII") 
+                System.out.println("decoded: " + new String(decoded, "US-ASCII")
                     + " " + HexUtil.toHex(decoded));
             }
         }
         assertEquals(HexUtil.toHex(data), HexUtil.toHex(decoded));
     }
-    
+
     /**
      * Tests the output of ASCII85.
      * @throws Exception if an error occurs
@@ -102,7 +102,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
         innerTestDecode("1. Bodypart".getBytes("US-ASCII"));
         if (DEBUG) {
             System.out.println("===========================================");
-        } 
+        }
 
         innerTestDecode(getChunk(1));
         innerTestDecode(getChunk(2));
@@ -111,8 +111,8 @@ public class ASCII85InputStreamTestCase extends TestCase {
         innerTestDecode(getChunk(5));
         if (DEBUG) {
             System.out.println("===========================================");
-        } 
-        
+        }
+
         innerTestDecode(getChunk(10));
         innerTestDecode(getChunk(62));
         innerTestDecode(getChunk(63));
@@ -121,7 +121,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
 
         if (DEBUG) {
             System.out.println("===========================================");
-        } 
+        }
         String sz;
         sz = HexUtil.toHex(decode("zz~>"));
         assertEquals(HexUtil.toHex(new byte[] {0, 0, 0, 0, 0, 0, 0, 0}), sz);
@@ -129,7 +129,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
         assertEquals(HexUtil.toHex(new byte[] {0, 0, 0, 0, 0, 0, 0, 0}), sz);
         if (DEBUG) {
             System.out.println("===========================================");
-        } 
+        }
         try {
             decode("vz~>");
             fail("Illegal character should be detected");
@@ -147,7 +147,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
             //expected
         }*/
     }
-    
+
     private byte[] getFullASCIIRange() {
         java.io.ByteArrayOutputStream baout = new java.io.ByteArrayOutputStream(256);
         for (int i = 254; i < 256; i++) {
@@ -163,5 +163,5 @@ public class ASCII85InputStreamTestCase extends TestCase {
     public void testFullASCIIRange() throws Exception {
         innerTestDecode(getFullASCIIRange());
     }
-    
+
 }

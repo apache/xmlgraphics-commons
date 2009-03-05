@@ -25,16 +25,16 @@ package org.apache.xmlgraphics.image.loader;
 public class MockImageContext implements ImageContext {
 
     private static MockImageContext instance;
-    
+
     private ImageManager imageManager = new ImageManager(this);
-    
+
     public static MockImageContext getInstance() {
         if (instance == null) {
             instance = new MockImageContext();
         }
         return instance;
     }
-    
+
     /** {@inheritDoc} */
     public float getSourceResolution() {
         return 72;
@@ -43,7 +43,7 @@ public class MockImageContext implements ImageContext {
     public ImageManager getImageManager() {
         return this.imageManager;
     }
-    
+
     public ImageSessionContext newSessionContext() {
         return new MockImageSessionContext(this);
     }

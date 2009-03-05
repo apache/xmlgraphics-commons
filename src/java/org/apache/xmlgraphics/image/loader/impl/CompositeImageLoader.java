@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ public class CompositeImageLoader extends AbstractImageLoader {
     protected static Log log = LogFactory.getLog(CompositeImageLoader.class);
 
     private ImageLoader[] loaders;
-    
+
     /**
      * Main constructor.
      * @param loaders the contained image loaders
@@ -59,7 +59,7 @@ public class CompositeImageLoader extends AbstractImageLoader {
         }
         this.loaders = loaders;
     }
-    
+
     /** {@inheritDoc} */
     public ImageFlavor getTargetFlavor() {
         return loaders[0].getTargetFlavor();
@@ -74,7 +74,7 @@ public class CompositeImageLoader extends AbstractImageLoader {
             try {
                 Image img = loader.loadImage(info, hints, session);
                 if (img != null && firstException != null) {
-                    log.debug("First ImageLoader failed (" + firstException.getMessage() 
+                    log.debug("First ImageLoader failed (" + firstException.getMessage()
                             + "). Fallback was successful.");
                 }
                 return img;
@@ -99,5 +99,5 @@ public class CompositeImageLoader extends AbstractImageLoader {
         sb.append("]");
         return sb.toString();
     }
-    
+
 }

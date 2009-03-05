@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,14 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.io.IOException;
 
 /**
  * This class defines the basic resources (procsets) used by the Apache XML Graphics project.
- * 
+ *
  * @version $Id$
  */
 public final class PSProcSets {
@@ -32,23 +32,23 @@ public final class PSProcSets {
     public static final PSResource STD_PROCSET = new StdProcSet();
     /** the EPS procset for the XML Graphics project */
     public static final PSResource EPS_PROCSET = new EPSProcSet();
-    
+
     private static class StdProcSet extends PSProcSet {
-        
+
         public StdProcSet() {
             super("Apache XML Graphics Std ProcSet", 1.0f, 0);
         }
-        
+
         public void writeTo(PSGenerator gen) throws IOException {
-            gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, 
-                    new Object[] {TYPE_PROCSET, getName(), 
+            gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE,
+                    new Object[] {TYPE_PROCSET, getName(),
                         Float.toString(getVersion()), Integer.toString(getRevision())});
-            gen.writeDSCComment(DSCConstants.VERSION, 
+            gen.writeDSCComment(DSCConstants.VERSION,
                     new Object[] {Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2001-2003 "
                         + "The Apache Software Foundation. "
                         + "License terms: http://www.apache.org/licenses/LICENSE-2.0");
-            gen.writeDSCComment(DSCConstants.TITLE, 
+            gen.writeDSCComment(DSCConstants.TITLE,
                     "Basic set of procedures used by the XML Graphics project (Batik and FOP)");
 
             gen.writeln("/bd{bind def}bind def");
@@ -68,12 +68,12 @@ public final class PSProcSets {
             gen.writeln("/_ctm matrix def"); //Holds the current matrix
             gen.writeln("/_tm matrix def");
             //BT: save currentmatrix, set _tm to identitymatrix and move to 0/0
-            gen.writeln("/BT { _ctm currentmatrix pop matrix _tm copy pop 0 0 moveto } bd"); 
+            gen.writeln("/BT { _ctm currentmatrix pop matrix _tm copy pop 0 0 moveto } bd");
             //ET: restore last currentmatrix
             gen.writeln("/ET { _ctm setmatrix } bd");
             gen.writeln("/iTm { _ctm setmatrix _tm concat } bd");
             gen.writeln("/Tm { _tm astore pop iTm 0 0 moveto } bd");
-            
+
             gen.writeln("/ux 0.0 def");
             gen.writeln("/uy 0.0 def");
 
@@ -126,7 +126,7 @@ public final class PSProcSets {
             gen.writeln("  Tt setlinewidth stroke");
             gen.writeln("  grestore");
             gen.writeln("} bd");
-            
+
             gen.writeln("/QUADTO {");
             gen.writeln("/Y22 exch store");
             gen.writeln("/X22 exch store");
@@ -139,7 +139,7 @@ public final class PSProcSets {
             gen.writeln("/Y21 load 2 mul /Y22 load add 3 div");
             gen.writeln("/X22 load /Y22 load curveto");
             gen.writeln("} bd");
-            
+
             gen.writeln("/SSPD {");
             gen.writeln("dup length /d exch dict def");
             gen.writeln("{");
@@ -204,25 +204,25 @@ public final class PSProcSets {
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
             gen.getResourceTracker().registerSuppliedResource(this);
         }
-        
+
     }
 
     private static class EPSProcSet extends PSProcSet {
-        
+
         public EPSProcSet() {
             super("Apache XML Graphics EPS ProcSet", 1.0f, 0);
         }
-        
+
         public void writeTo(PSGenerator gen) throws IOException {
-            gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, 
-                    new Object[] {TYPE_PROCSET, getName(), 
+            gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE,
+                    new Object[] {TYPE_PROCSET, getName(),
                         Float.toString(getVersion()), Integer.toString(getRevision())});
-            gen.writeDSCComment(DSCConstants.VERSION, 
+            gen.writeDSCComment(DSCConstants.VERSION,
                     new Object[] {Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2002-2003 "
                     + "The Apache Software Foundation. "
                     + "License terms: http://www.apache.org/licenses/LICENSE-2.0");
-            gen.writeDSCComment(DSCConstants.TITLE, 
+            gen.writeDSCComment(DSCConstants.TITLE,
                     "EPS procedures used by the Apache XML Graphics project (Batik and FOP)");
 
             gen.writeln("/BeginEPSF { %def");
@@ -247,13 +247,13 @@ public final class PSProcSets {
             gen.writeln("countdictstack dict_count sub {end} repeat");
             gen.writeln("b4_Inc_state restore");
             gen.writeln("} bd");
-            
+
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
             gen.getResourceTracker().registerSuppliedResource(this);
         }
-        
+
     }
-    
+
     /**
      * Generates a resource defining standard procset with operations used by the XML Graphics
      * project.

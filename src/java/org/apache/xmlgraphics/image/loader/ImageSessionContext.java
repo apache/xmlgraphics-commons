@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader;
 
 import java.io.FileNotFoundException;
@@ -37,22 +37,22 @@ public interface ImageSessionContext {
      * @return the associated ImageContext instance
      */
     ImageContext getParentContext();
-    
+
     /**
      * Returns the resolution (in dpi) of the target device used when painting images.
      * @return the target resolution (in dpi)
      */
     float getTargetResolution();
-    
+
     /**
      * Attempts to create a Source object from the given URI. If possible this method returns
      * an ImageSource instance which provides the best possible method to access the image.
      * @param uri URI to access
      * @return A {@link javax.xml.transform.Source} object, or null if the URI
-     * cannot be resolved. 
+     * cannot be resolved.
      */
     Source newSource(String uri);
-    
+
     /**
      * Returns a Source object for a URI. This method is not guaranteed to return an instance.
      * Implementations normally return already created Sources from a pool (normally populated
@@ -61,7 +61,7 @@ public interface ImageSessionContext {
      * @return the Source object to load the image from, or null
      */
     Source getSource(String uri);
-    
+
     /**
      * Returns a Source object for a URI. This method is guaranteed to return a Source object. If
      * the image cannot be found, a {@link FileNotFoundException} is thrown.
@@ -70,7 +70,7 @@ public interface ImageSessionContext {
      * @throws FileNotFoundException if the image cannot be found
      */
     Source needSource(String uri) throws FileNotFoundException;
-    
+
     /**
      * Returns a Source object to a pool. This is provided in order to reuse a Source object
      * between the preloading and the final loading of an image. Note that not all Source objects
@@ -79,5 +79,5 @@ public interface ImageSessionContext {
      * @param src the Source object belonging to the URI
      */
     void returnSource(String uri, Source src);
-    
+
 }

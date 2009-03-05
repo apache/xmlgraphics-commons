@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,12 +27,12 @@ import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 
 /**
- * A baseline TIFF reader. The reader has some functionality in addition to 
+ * A baseline TIFF reader. The reader has some functionality in addition to
  * the baseline specifications for Bilevel images, for which the group 3 and
- * group 4 decompression schemes have been implemented. Support for LZW 
- * decompression has also been added. Support for Horizontal differencing 
- * predictor decoding is also included, when used with LZW compression. 
- * However, this support is limited to data with bitsPerSample value of 8. 
+ * group 4 decompression schemes have been implemented. Support for LZW
+ * decompression has also been added. Support for Horizontal differencing
+ * predictor decoding is also included, when used with LZW compression.
+ * However, this support is limited to data with bitsPerSample value of 8.
  * When reading in RGB images, support for alpha and extraSamples being
  * present has been added. Support for reading in images with 16 bit samples
  * has been added. Support for the SampleFormat tag (signed samples as well

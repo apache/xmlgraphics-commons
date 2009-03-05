@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public abstract class AbstractImagePreloader implements ImagePreloader {
     /**
      * Allows to read an image header (usually just a magic number). The InputStream is reset
      * to the position before the header was read.
-     * @param in the ImageInputStream to read from 
+     * @param in the ImageInputStream to read from
      * @param size the size of the header
      * @return the loaded header
      * @throws IOException if an I/O error occurs while reading the header
@@ -55,5 +55,5 @@ public abstract class AbstractImagePreloader implements ImagePreloader {
     public int getPriority() {
         return DEFAULT_PRIORITY;
     }
-    
+
 }

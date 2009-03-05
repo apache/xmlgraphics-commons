@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.cache;
 
 import java.io.FileNotFoundException;
@@ -49,12 +49,12 @@ public class ImageCache {
 
     /** logger */
     protected static Log log = LogFactory.getLog(ImageCache.class);
-    
+
     private Set invalidURIs = Collections.synchronizedSet(new java.util.HashSet());
-    
+
     private SoftMapCache imageInfos = new SoftMapCache(true);
     private SoftMapCache images = new SoftMapCache(true);
-    
+
     private ImageCacheListener cacheListener;
 
     /**
@@ -64,7 +64,7 @@ public class ImageCache {
     public void setCacheListener(ImageCacheListener listener) {
         this.cacheListener = listener;
     }
-    
+
     /**
      * Returns an ImageInfo instance for a given URI.
      * @param uri the image's URI
@@ -107,7 +107,7 @@ public class ImageCache {
             return info;
         }
     }
-    
+
     /**
      * Indicates whether a URI has previously been identified as an invalid URI.
      * @param uri the image's URI
@@ -122,7 +122,7 @@ public class ImageCache {
         }
         return false;
     }
-    
+
     /**
      * Returns an ImageInfo instance from the cache or null if none is found.
      * @param uri the image's URI
@@ -141,7 +141,7 @@ public class ImageCache {
         }
         return info;
     }
-    
+
     /**
      * Registers an ImageInfo instance with the cache.
      * @param info the ImageInfo instance
@@ -150,7 +150,7 @@ public class ImageCache {
         //An already existing ImageInfo is replaced.
         imageInfos.put(info.getOriginalURI(), info);
     }
-    
+
     /**
      * Registers a URI as invalid so getImageInfo can indicate that quickly with no I/O access.
      * @param uri the URI of the invalid image
@@ -164,7 +164,7 @@ public class ImageCache {
             invalidURIs.add(uri);
         }
     }
-    
+
     /**
      * Returns an image from the cache or null if it wasn't found.
      * @param info the ImageInfo instance representing the image
@@ -174,7 +174,7 @@ public class ImageCache {
     public Image getImage(ImageInfo info, ImageFlavor flavor) {
         return getImage(info.getOriginalURI(), flavor);
     }
-    
+
     /**
      * Returns an image from the cache or null if it wasn't found.
      * @param uri the image's URI
@@ -196,7 +196,7 @@ public class ImageCache {
         }
         return img;
     }
-    
+
     /**
      * Registers an image with the cache.
      * @param img the image
@@ -224,7 +224,7 @@ public class ImageCache {
         images.clear();
         doHouseKeeping();
     }
-    
+
     /**
      * Triggers some house-keeping, i.e. removes stale entries.
      */
@@ -232,5 +232,5 @@ public class ImageCache {
         imageInfos.doHouseKeeping();
         images.doHouseKeeping();
     }
-    
+
 }

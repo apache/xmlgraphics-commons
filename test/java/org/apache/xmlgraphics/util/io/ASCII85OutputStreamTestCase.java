@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.util.io;
 
 import java.io.OutputStream;
@@ -32,7 +32,7 @@ public class ASCII85OutputStreamTestCase extends TestCase {
 
     /** Test data */
     public static final byte[] DATA = new byte[100];
-    
+
     static {
         //Fill in some data
         for (int i = 0; i < 100; i++) {
@@ -50,7 +50,7 @@ public class ASCII85OutputStreamTestCase extends TestCase {
     private String encode(int count) throws Exception {
         return encode(DATA, count);
     }
-    
+
     private String encode(byte[] data, int len) throws Exception {
         ByteArrayOutputStream baout = new ByteArrayOutputStream();
         OutputStream out = new ASCII85OutputStream(baout);
@@ -66,20 +66,20 @@ public class ASCII85OutputStreamTestCase extends TestCase {
     public void testOutput() throws Exception {
         String sz = encode(new byte[] {0, 0, 0, 0, 0, 0, 0, 0}, 8);
         assertEquals("zz~>", sz);
-        
+
         String s3 = encode(3);
         //System.out.println(">>>" + s3 + "<<<");
         assertEquals("!!*-~>", s3);
-        
+
         String s10 = encode(10);
         //System.out.println(">>>" + s10 + "<<<");
         assertEquals("!!*-'\"9eu7#RL~>", s10);
-        
+
         String s62 = encode(62);
         //System.out.println(">>>" + s62 + "<<<");
         assertEquals("!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,"
             + "UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?W~>", s62);
-        
+
         String s63 = encode(63);
         //System.out.println(">>>" + s63 + "<<<");
         assertEquals("!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,"
@@ -89,12 +89,12 @@ public class ASCII85OutputStreamTestCase extends TestCase {
         //System.out.println(">>>" + s64 + "<<<");
         assertEquals("!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,"
             + "UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm\n~>", s64);
-        
+
         String s65 = encode(65);
         //System.out.println(">>>" + s65 + "<<<");
         assertEquals("!!*-'\"9eu7#RLhG$k3[W&.oNg'GVB\"(`=52*$$(B+<_pR,"
             + "UFcb-n-Vr/1iJ-0JP==1c70M3&s#]4?Ykm\n5Q~>", s65);
-        
+
     }
 
 }

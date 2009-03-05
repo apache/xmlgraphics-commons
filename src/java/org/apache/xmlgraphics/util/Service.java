@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ public class Service {
     public static synchronized Iterator providers(Class cls) {
         return providers(cls, true);
     }
-    
+
     /**
      * Returns an iterator where each element should implement the
      * interface (or subclass the baseclass) described by cls.  The
@@ -133,7 +133,7 @@ public class Service {
                         }
 
                         if (returnInstances) {
-                            // Try and load the class 
+                            // Try and load the class
                             Object obj = cl.loadClass(line).newInstance();
                             // stick it into our vector...
                             l.add(obj);
@@ -153,5 +153,5 @@ public class Service {
         }
         return l.iterator();
     }
-    
+
 }

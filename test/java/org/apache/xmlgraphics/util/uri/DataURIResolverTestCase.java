@@ -38,7 +38,7 @@ public class DataURIResolverTestCase extends TestCase {
 
     /**
      * Tests DataURLUtil.
-     * 
+     *
      * @throws Exception
      *             if an error occurs
      */
@@ -57,7 +57,7 @@ public class DataURIResolverTestCase extends TestCase {
     /**
      * Test the URIResolver contract if the protocol doesn't match. Resolver
      * must return null in this case.
-     * 
+     *
      * @throws Exception
      *             if an error occurs
      */
@@ -85,7 +85,7 @@ public class DataURIResolverTestCase extends TestCase {
 
     /**
      * Test the DataURIResolver with correct values.
-     * 
+     *
      * @throws Exception
      *             if an error occurs
      */
@@ -130,7 +130,7 @@ public class DataURIResolverTestCase extends TestCase {
         streamSource = (StreamSource) src;
         text = IOUtils.toString(streamSource.getReader());
         assertEquals("A brief note", text);
-        
+
         src = resolver.resolve("data:text/plain;charset=iso-8859-7,%be%f9%be", null);
         assertNotNull(src);
         streamSource = (StreamSource) src;

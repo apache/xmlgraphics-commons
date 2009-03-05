@@ -42,24 +42,24 @@ import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 public class ImageLoaderTestCase extends TestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
-    
+
     public ImageLoaderTestCase(String name) {
         super(name);
     }
-    
+
     private MyImageSessionContext createImageSessionContext() {
         return new MyImageSessionContext(imageContext);
     }
-    
+
     public void testPNG() throws Exception {
         String uri = "asf-logo.png";
-        
+
         MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
-        
+
         Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
@@ -70,19 +70,19 @@ public class ImageLoaderTestCase extends TestCase {
         info = imgRed.getInfo(); //Switch to the ImageInfo returned by the image
         assertEquals(126734, info.getSize().getWidthMpt());
         assertEquals(38245, info.getSize().getHeightMpt());
-        
+
         sessionContext.checkAllStreamsClosed();
     }
-    
+
     public void testGIF() throws Exception {
         String uri = "bgimg72dpi.gif";
-        
+
         MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
-        
+
         Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
@@ -93,19 +93,19 @@ public class ImageLoaderTestCase extends TestCase {
         info = imgRed.getInfo(); //Switch to the ImageInfo returned by the image
         assertEquals(192000, info.getSize().getWidthMpt());
         assertEquals(192000, info.getSize().getHeightMpt());
-        
+
         sessionContext.checkAllStreamsClosed();
     }
-    
+
     public void testEPSASCII() throws Exception {
         String uri = "barcode.eps";
-        
+
         MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
-        
+
         Image img = manager.getImage(info, ImageFlavor.RAW_EPS, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
@@ -122,19 +122,19 @@ public class ImageLoaderTestCase extends TestCase {
         } finally {
             IOUtils.closeQuietly(in);
         }
-        
+
         sessionContext.checkAllStreamsClosed();
     }
- 
+
     public void testEPSBinary() throws Exception {
         String uri = "img-with-tiff-preview.eps";
-        
+
         MyImageSessionContext sessionContext = createImageSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
         ImageInfo info = manager.preloadImage(uri, sessionContext);
         assertNotNull("ImageInfo must not be null", info);
-        
+
         Image img = manager.getImage(info, ImageFlavor.RAW_EPS, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
@@ -151,14 +151,14 @@ public class ImageLoaderTestCase extends TestCase {
         } finally {
             IOUtils.closeQuietly(in);
         }
-        
+
         sessionContext.checkAllStreamsClosed();
     }
- 
+
     private static class MyImageSessionContext extends MockImageSessionContext {
 
         private List streams = new java.util.ArrayList();
-        
+
         public MyImageSessionContext(ImageContext context) {
             super(context);
         }
@@ -175,7 +175,7 @@ public class ImageLoaderTestCase extends TestCase {
             }
             return src;
         }
-        
+
         /** {@inheritDoc} */
         protected Source resolveURI(String uri) {
             Source src = super.resolveURI(uri);
@@ -190,7 +190,7 @@ public class ImageLoaderTestCase extends TestCase {
             }
             return src;
         }
-        
+
         public void checkAllStreamsClosed() {
             Iterator iter = streams.iterator();
             while (iter.hasNext()) {
@@ -201,7 +201,7 @@ public class ImageLoaderTestCase extends TestCase {
                 }
             }
         }
-        
+
     }
-    
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.util;
 
 import java.lang.ref.ReferenceQueue;
@@ -27,9 +27,9 @@ import java.lang.ref.SoftReference;
  * a reference from a Map once the referenced object is collected, for example.
  */
 public class SoftReferenceWithKey extends SoftReference {
-    
+
     private Object key;
-    
+
     /**
      * Creates a new SoftReference with a key.
      * @param referent object the new soft reference will refer to
@@ -40,7 +40,7 @@ public class SoftReferenceWithKey extends SoftReference {
         super(referent, q);
         this.key = key;
     }
-    
+
     /**
      * Returns the key associated with this reference.
      * @return the key
@@ -48,5 +48,5 @@ public class SoftReferenceWithKey extends SoftReference {
     public Object getKey() {
         return this.key;
     }
-    
+
 }

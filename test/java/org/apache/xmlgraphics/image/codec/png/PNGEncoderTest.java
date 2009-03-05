@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ public class PNGEncoderTest extends TestCase {
         ig.draw(new Rectangle2D.Double(0.5, 0.5, 199, 149));
         ig.dispose();
 
-        image = image.getSubimage(50, 0, 50, 25); 
+        image = image.getSubimage(50, 0, 50, 25);
 
         // Create an output stream where the PNG data
         // will be stored.
@@ -81,7 +81,7 @@ public class PNGEncoderTest extends TestCase {
         // Now, try to decode image
         InputStream is = buildInputStream(bos);
 
-        PNGImageDecoder pngImageDecoder 
+        PNGImageDecoder pngImageDecoder
             = new PNGImageDecoder(is, new PNGDecodeParam());
 
         RenderedImage decodedRenderedImage = null;
@@ -95,7 +95,7 @@ public class PNGEncoderTest extends TestCase {
                                              decodedRenderedImage.getHeight(),
                                              BufferedImage.TYPE_INT_ARGB);
             ig = decodedImage.createGraphics();
-            ig.drawRenderedImage(decodedRenderedImage, 
+            ig.drawRenderedImage(decodedRenderedImage,
                                  new AffineTransform());
             ig.dispose();
         }
@@ -130,7 +130,7 @@ public class PNGEncoderTest extends TestCase {
     public static boolean checkIdentical(BufferedImage imgA,
                                          BufferedImage imgB) {
         boolean identical = true;
-        if (imgA.getWidth() == imgB.getWidth() 
+        if (imgA.getWidth() == imgB.getWidth()
                 && imgA.getHeight() == imgB.getHeight()){
             int w = imgA.getWidth();
             int h = imgA.getHeight();

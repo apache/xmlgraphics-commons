@@ -31,7 +31,7 @@ public class XMPSchema {
 
     private String namespace;
     private String prefix;
-    
+
     /**
      * Constructs a new XMP schema object.
      * @param namespace the namespace URI for the schema
@@ -41,17 +41,17 @@ public class XMPSchema {
         this.namespace = namespace;
         this.prefix = preferredPrefix;
     }
-    
+
     /** @return the namespace URI of the schema */
     public String getNamespace() {
         return this.namespace;
     }
-    
+
     /** @return the preferred prefix of the schema */
     public String getPreferredPrefix() {
         return this.prefix;
     }
-    
+
     /**
      * Returns the QName for a property of this schema.
      * @param propName the property name

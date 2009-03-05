@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ public interface JPEGConstants {
     int SOF2 = 0xc2;
     /** Progressive DCT only PDF 1.3 */
     int SOFA = 0xca;
-    
+
     /** Application marker, JFIF, JFXX, CIFF */
     int APP0 = 0xe0;
     /** Application marker, EXIF, XMP */
@@ -51,17 +51,17 @@ public interface JPEGConstants {
     /** Application marker, ICC, FlashPix */
     int APP2 = 0xe2;
     /** Application marker APPD/APP13, Photoshop, Adobe_CM */
-    int APPD = 0xed; 
+    int APPD = 0xed;
     /** Application marker APPE/APP14, Adobe */
-    int APPE = 0xee; 
+    int APPE = 0xee;
     /** Application marker APPF/APP15, GraphicConverter */
     int APPF = 0xef;
-    
+
     /** Start of Scan */
     int SOS = 0xda;
     /** start of Image */
-    int SOI = 0xd8; 
+    int SOI = 0xd8;
     /** end of Image */
-    int EOI = 0xd9; 
+    int EOI = 0xd9;
 
 }

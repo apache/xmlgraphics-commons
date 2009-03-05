@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ public abstract class AbstractDSCComment extends AbstractEvent implements DSCCom
     private final boolean isWhitespace(char c) {
         return c == ' ' || c == '\t';
     }
-    
+
     private int parseNextParam(String value, int pos, List lst) {
         int startPos = pos;
         pos++;
@@ -40,7 +40,7 @@ public abstract class AbstractDSCComment extends AbstractEvent implements DSCCom
         lst.add(param);
         return pos;
     }
-    
+
     private int parseNextParentheseString(String value, int pos, List lst) {
         int nestLevel = 1;
         pos++;
@@ -103,7 +103,7 @@ public abstract class AbstractDSCComment extends AbstractEvent implements DSCCom
         pos++;
         return pos;
     }
-    
+
     /**
      * Splits the params of the DSC comment value in to a List.
      * @param value the DSC comment value
@@ -126,14 +126,14 @@ public abstract class AbstractDSCComment extends AbstractEvent implements DSCCom
         }
         return lst;
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.events.DSCComment#isAtend()
      */
     public boolean isAtend() {
         return false;
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.events.AbstractEvent#asDSCComment()
      */

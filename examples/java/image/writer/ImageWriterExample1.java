@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ public class ImageWriterExample1 {
     protected void paintSome(Graphics2D g2d, int pageNum) {
         //Paint a bounding box
         g2d.drawRect(0, 0, 400, 200);
-        
+
         //A few rectangles rotated and with different color
         Graphics2D copy = (Graphics2D)g2d.create();
         int c = 12;
@@ -56,7 +56,7 @@ public class ImageWriterExample1 {
             copy.rotate(-2 * Math.PI / (double)c, 70, 90);
         }
         copy.dispose();
-        
+
         //Some text
         copy = (Graphics2D)g2d.create();
         copy.rotate(-0.25);
@@ -67,17 +67,17 @@ public class ImageWriterExample1 {
         copy.setFont(new Font("serif", Font.PLAIN, 36));
         copy.drawString("Hello world!", 140, 180);
         copy.dispose();
-        
+
         //Try attributed text
         AttributedString aString = new AttributedString("This is attributed text.");
         aString.addAttribute(TextAttribute.FAMILY, "SansSerif");
         aString.addAttribute(TextAttribute.FAMILY, "Serif", 8, 18);
         aString.addAttribute(TextAttribute.FOREGROUND, Color.orange, 8, 18);
         g2d.drawString(aString.getIterator(), 250, 170);
-        
+
         g2d.drawString("Page: " + pageNum, 250, 190);
     }
-    
+
     /**
      * Creates a bitmap file. We paint a few things on a bitmap and then save the bitmap using
      * an ImageWriter.
@@ -85,10 +85,10 @@ public class ImageWriterExample1 {
      * @param format the target format (a MIME type, ex. "image/png")
      * @throws IOException In case of an I/O error
      */
-    public void generateBitmapUsingJava2D(File outputFile, String format) 
+    public void generateBitmapUsingJava2D(File outputFile, String format)
                 throws IOException {
-        //String compression = "CCITT T.6"; 
-        String compression = "PackBits"; 
+        //String compression = "CCITT T.6";
+        String compression = "PackBits";
         boolean monochrome = compression.startsWith("CCITT"); //CCITT is for 1bit b/w only
 
         BufferedImage bimg;
@@ -97,15 +97,15 @@ public class ImageWriterExample1 {
         } else {
             bimg = new BufferedImage(400, 200, BufferedImage.TYPE_INT_RGB);
         }
-        
+
         Graphics2D g2d = bimg.createGraphics();
         g2d.setBackground(Color.white);
         g2d.clearRect(0, 0, 400, 200);
         g2d.setColor(Color.black);
-        
+
         //Paint something
         paintSome(g2d, 1);
-        
+
         OutputStream out = new java.io.FileOutputStream(outputFile);
         out = new java.io.BufferedOutputStream(out);
         try {
@@ -115,7 +115,7 @@ public class ImageWriterExample1 {
             params.setCompressionMethod(compression);
             params.setResolution(72);
             writer.writeImage(bimg, out, params);
-            
+
         } finally {
             IOUtils.closeQuietly(out);
         }

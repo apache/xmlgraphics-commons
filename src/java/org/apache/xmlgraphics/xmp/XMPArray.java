@@ -27,14 +27,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Represents an XMP array as defined by the XMP specification.
- * @todo Property qualifiers are currently not supported, yet. 
+ * @todo Property qualifiers are currently not supported, yet.
  */
 public class XMPArray extends XMPComplexValue {
 
     private XMPArrayType type;
     private List values = new java.util.ArrayList();
     private List xmllang = new java.util.ArrayList();
-    
+
     /**
      * Main constructor
      * @param type the intended type of array
@@ -42,12 +42,12 @@ public class XMPArray extends XMPComplexValue {
     public XMPArray(XMPArrayType type) {
         this.type = type;
     }
-    
+
     /** @return the type of array */
     public XMPArrayType getType() {
         return this.type;
     }
-    
+
     /**
      * Returns the value at a given position.
      * @param idx the index of the requested value
@@ -89,7 +89,7 @@ public class XMPArray extends XMPComplexValue {
         }
         return null;
     }
-    
+
     /**
      * Returns a language-dependent values (available for alternative arrays).
      * @param lang the language ("x-default" for the default value)
@@ -124,7 +124,7 @@ public class XMPArray extends XMPComplexValue {
         }
         return v;
     }
-    
+
     /**
      * Removes a language-dependent value
      * @param lang the language ("x-default" for the default value)
@@ -142,7 +142,7 @@ public class XMPArray extends XMPComplexValue {
             }
         }
     }
-    
+
     /**
      * Adds a new value to the array
      * @param value the value
@@ -166,7 +166,7 @@ public class XMPArray extends XMPComplexValue {
     public int getSize() {
         return this.values.size();
     }
-    
+
     /**
      * Converts the array to an object array.
      * @return an object array of all values in the array
@@ -182,7 +182,7 @@ public class XMPArray extends XMPComplexValue {
     /** {@inheritDoc} */
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
-        handler.startElement(XMPConstants.RDF_NAMESPACE, 
+        handler.startElement(XMPConstants.RDF_NAMESPACE,
                 type.getName(), "rdf:" + type.getName(), atts);
         for (int i = 0, c = values.size(); i < c; i++) {
             String lang = (String)xmllang.get(i);
@@ -190,7 +190,7 @@ public class XMPArray extends XMPComplexValue {
             if (lang != null) {
                 atts.addAttribute(XMPConstants.XML_NS, "lang", "xml:lang", "CDATA", lang);
             }
-            handler.startElement(XMPConstants.RDF_NAMESPACE, 
+            handler.startElement(XMPConstants.RDF_NAMESPACE,
                     "li", "rdf:li", atts);
             Object v = values.get(i);
             if (v instanceof XMPComplexValue) {
@@ -200,10 +200,10 @@ public class XMPArray extends XMPComplexValue {
                 char[] chars = value.toCharArray();
                 handler.characters(chars, 0, chars.length);
             }
-            handler.endElement(XMPConstants.RDF_NAMESPACE, 
+            handler.endElement(XMPConstants.RDF_NAMESPACE,
                     "li", "rdf:li");
         }
-        handler.endElement(XMPConstants.RDF_NAMESPACE, 
+        handler.endElement(XMPConstants.RDF_NAMESPACE,
                 type.getName(), "rdf:" + type.getName());
     }
 
@@ -212,5 +212,5 @@ public class XMPArray extends XMPComplexValue {
         return "XMP array: " + type + ", " + getSize();
     }
 
-    
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,24 +16,24 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 /**
  * This class defines constants with Strings for the DSC specification.
- * 
+ *
  * @version $Id$
  */
 public class DSCConstants {
 
     // ----==== General Header Comments ====----
-    
+
     /** Lead-in for a DSC-conformant PostScript file */
     public static final String PS_ADOBE_30       = "%!PS-Adobe-3.0";
-    
+
     /** Lead-in for an EPS file */
     public static final String EPSF_30           = "EPSF-3.0";
-    
+
     /** Bounding box for the document */
     public static final String BBOX              = "BoundingBox";
     /** High-resolution bounding box for the document */
@@ -68,39 +68,39 @@ public class DSCConstants {
     public static final String TITLE             = "Title";
     /** Version of the document */
     public static final String VERSION           = "Version";
- 
+
     // ----==== General Body Comments ====----
-    
+
     /** Indicates a continued line */
     public static final String NEXT_LINE         = "+ ";
-    
+
     //Skipping BeginBinary/EndBinary. They are deprecated.
-    
+
     /** Indicates the start of a data section*/
     public static final String BEGIN_DATA        = "BeginData";
     /** Indicates the end of a data section*/
     public static final String END_DATA          = "EndData";
-    
+
     /** Indicates the start of the defaults section */
     public static final String BEGIN_DEFAULTS    = "BeginDefaults";
     /** Indicates the end of the defaults section */
     public static final String END_DEFAULTS      = "EndDefaults";
-    
+
     /** Indicates the start of a non-PostScript section */
     public static final String BEGIN_EMULATION   = "BeginEmulation";
     /** Indicates the end of a non-PostScript section */
     public static final String END_EMULATION     = "EndEmulation";
-    
+
     /** Indicates the start of a preview section (EPS only)*/
     public static final String BEGIN_PREVIEW     = "BeginPreview";
     /** Indicates the end of a preview section (EPS only)*/
     public static final String END_PREVIEW       = "EndPreview";
-    
+
     /** Indicates the start of the prolog */
     public static final String BEGIN_PROLOG      = "BeginProlog";
     /** Indicates the end of the prolog */
     public static final String END_PROLOG        = "EndProlog";
-    
+
     /** Indicates the start of the document setup */
     public static final String BEGIN_SETUP       = "BeginSetup";
     /** Indicates the end of the document setup */
@@ -108,7 +108,7 @@ public class DSCConstants {
 
 
     // ----==== General Page Comments ====----
-    
+
     /** Indicates the start of a graphic object */
     public static final String BEGIN_OBJECT      = "BeginObject";
     /** Indicates the end of a graphic object */
@@ -128,19 +128,19 @@ public class DSCConstants {
     /** Bounding box for a page */
     public static final String PAGE_ORIENTATION  = "PageOrientation";
 
-    
+
     // ----==== General Trailer Comments ====----
 
-    /** Indicates the start of the page trailer */    
+    /** Indicates the start of the page trailer */
     public static final String PAGE_TRAILER     = "PageTrailer";
-    /** Indicates the start of the document trailer */    
+    /** Indicates the start of the document trailer */
     public static final String TRAILER          = "Trailer";
     /**
      * Indicates the end of a page (NON-STANDARD!)
      * @deprecated Shouldn't really use that. Bad idea. "Page" and "Trailer" end a page.
-     */    
+     */
     public static final String END_PAGE         = "EndPage";
-    /** Indicates the end of the document */    
+    /** Indicates the end of the document */
     public static final String EOF              = "EOF";
 
 
@@ -149,7 +149,7 @@ public class DSCConstants {
     /**@todo Add the missing comments */
     /**
      * This comment indicates all types of paper media (paper sizes, weight, color)
-     * this document requires. 
+     * this document requires.
      */
     public static final String DOCUMENT_MEDIA              = "DocumentMedia";
     /** This comment provides a list of resources the document needs */
@@ -174,36 +174,36 @@ public class DSCConstants {
     public static final String REQUIREMENTS = "Requirements";
     //Skipping %%VMlocation
     //Skipping %%VMusage
-    
+
     // ----==== Requirement Body Comments ====----
-    
+
     /** Indicates the start of an embedded document */
     public static final String BEGIN_DOCUMENT   = "BeginDocument";
     /** Indicates the end of an embedded document */
     public static final String END_DOCUMENT     = "EndDocument";
     /** Indicates a referenced embedded document */
     public static final String INCLUDE_DOCUMENT = "IncludeDocument";
-    
+
     /** Indicates the start of a PPD feature */
     public static final String BEGIN_FEATURE    = "BeginFeature";
     /** Indicates the end of a PPD feature */
     public static final String END_FEATURE      = "EndFeature";
     /** Indicates a referenced a PPD feature */
     public static final String INCLUDE_FEATURE  = "IncludeFeature";
-    
+
     //Skipping BeginFile/EndFile/IncludeFile. They are deprecated.
     //Skipping BeginFont/EndFont/IncludeFont. They are deprecated.
     //Skipping BeginProcSet/EndProcSet/IncludeProcSet. They are deprecated.
-    
+
     /** Indicates the start of a resource (font, file, procset) */
     public static final String BEGIN_RESOURCE       = "BeginResource";
     /** Indicates the end of a resource (font, file, procset) */
     public static final String END_RESOURCE         = "EndResource";
     /** Indicates a referenced a resource (font, file, procset) */
     public static final String INCLUDE_RESOURCE     = "IncludeResource";
-    
+
     // ----==== Requirement Page Comments ====----
-    
+
     //Skipping %%PageFonts -> deprecated
     //Skipping %%PageFiles -> deprecated
     /** Indicates that the paper attributes denoted by medianame are invoked on this page. */
@@ -220,24 +220,24 @@ public class DSCConstants {
     public static final String PAGE_RESOURCES    = "PageResources";
 
     // ----==== (atend) indicator ====----
-    
-    /** 
-     * Indicator for the PostScript interpreter that the value is provided 
+
+    /**
+     * Indicator for the PostScript interpreter that the value is provided
      * later in the document (mostly in the %%Trailer section).
      */
     public static final Object ATEND = new AtendIndicator();
 
     /** Used for the ATEND constant. See there. */
     private static final class AtendIndicator extends Object {
-        
+
         private AtendIndicator() {
             super();
         }
-        
+
         public String toString() {
             return "(atend)";
         }
     }
 
-    
+
 }

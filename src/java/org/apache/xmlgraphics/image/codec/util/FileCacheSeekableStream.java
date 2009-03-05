@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ public final class FileCacheSeekableStream extends SeekableStream {
      * <p> An <code>IOException</code> will be thrown if the
      * attempt to create the cache file fails for any reason.
      */
-    public FileCacheSeekableStream(InputStream stream) 
+    public FileCacheSeekableStream(InputStream stream)
         throws IOException {
         this.stream = stream;
         this.cacheFile = File.createTempFile("jai-FCSS-", ".tmp");
@@ -126,7 +126,7 @@ public final class FileCacheSeekableStream extends SeekableStream {
     }
 
     /**
-     * Returns the current offset in this file. 
+     * Returns the current offset in this file.
      *
      * @return     the offset from the beginning of the file, in bytes,
      *             at which the next read occurs.
@@ -136,13 +136,13 @@ public final class FileCacheSeekableStream extends SeekableStream {
     }
 
     /**
-     * Sets the file-pointer offset, measured from the beginning of this 
+     * Sets the file-pointer offset, measured from the beginning of this
      * file, at which the next read occurs.
      *
-     * @param      pos   the offset position, measured in bytes from the 
-     *                   beginning of the file, at which to set the file 
+     * @param      pos   the offset position, measured in bytes from the
+     *                   beginning of the file, at which to set the file
      *                   pointer.
-     * @exception  IOException  if <code>pos</code> is less than 
+     * @exception  IOException  if <code>pos</code> is less than
      *                          <code>0</code> or if an I/O error occurs.
      */
     public void seek(long pos) throws IOException {
@@ -247,7 +247,7 @@ public final class FileCacheSeekableStream extends SeekableStream {
             return -1;
         }
     }
-    
+
     /**
      * Closes this stream and releases any system resources
      * associated with the stream.

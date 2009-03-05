@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.File;
@@ -52,7 +52,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     private static Log log = LogFactory.getLog(AbstractImageSessionContext.class);
 
     private static boolean noSourceReuse = false;
-    
+
     static {
         //TODO Temporary measure to track down a problem
         //See: http://markmail.org/message/k6mno3jsxmovaz2e
@@ -60,12 +60,12 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 AbstractImageSessionContext.class.getName() + ".no-source-reuse");
         noSourceReuse = Boolean.valueOf(v).booleanValue();
     }
-    
+
     /**
      * Attempts to resolve the given URI.
      * @param uri URI to access
      * @return A {@link javax.xml.transform.Source} object, or null if the URI
-     * cannot be resolved. 
+     * cannot be resolved.
      */
     protected abstract Source resolveURI(String uri);
 
@@ -82,16 +82,16 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             //Return any non-stream Sources and let the ImageLoaders deal with them
             return source;
         }
-        
+
         ImageSource imageSource = null;
-        
+
         String resolvedURI = source.getSystemId();
         URL url;
         try {
             url = new URL(resolvedURI);
         } catch (MalformedURLException e) {
             url = null;
-        } 
+        }
         File f = /*FileUtils.*/toFile(url);
         if (f != null) {
             boolean directFileAccess = true;
@@ -121,7 +121,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                     return null;
                 }
             }
-            
+
             if (directFileAccess) {
                 //Close as the file is reopened in a more optimal way
                 IOUtils.closeQuietly(in);
@@ -147,7 +147,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 }
             }
         }
-        
+
         if (imageSource == null) {
             if (ImageUtil.hasReader(source) && !ImageUtil.hasInputStream(source)) {
                 //We don't handle Reader instances here so return the Source unchanged
@@ -159,7 +159,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 try {
                     in = url.openStream();
                 } catch (Exception ex) {
-                    log.error("Unable to obtain stream from system identifier '" 
+                    log.error("Unable to obtain stream from system identifier '"
                         + source.getSystemId() + "'");
                 }
             }
@@ -182,7 +182,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         }
         return imageSource;
     }
-    
+
     /**
      * Convert from a <code>URL</code> to a <code>File</code>.
      * <p>
@@ -224,21 +224,21 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             return f;
         }
     }
-    
+
     private SoftMapCache sessionSources = new SoftMapCache(false); //no need for synchronization
-    
+
     /** {@inheritDoc} */
     public Source getSource(String uri) {
         return (Source)sessionSources.remove(uri);
     }
-    
+
     /** {@inheritDoc} */
     public Source needSource(String uri) throws FileNotFoundException {
         Source src = getSource(uri);
         if (src == null) {
             if (log.isDebugEnabled()) {
                 log.debug("Creating new Source for " + uri);
-                
+
             }
             src = newSource(uri);
             if (src == null) {
@@ -251,7 +251,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         }
         return src;
     }
-    
+
     /** {@inheritDoc} */
     public void returnSource(String uri, Source src) {
         //Safety check to make sure the Preloaders behave
@@ -264,7 +264,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             //Ignore exception
             ImageUtil.closeQuietly(src);
         }
-        
+
         if (isReusable(src)) {
             //Only return the Source if it's reusable
             log.debug("Returning Source for " + uri);
@@ -274,7 +274,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             ImageUtil.closeQuietly(src);
         }
     }
-    
+
     /**
      * Indicates whether a Source is reusable. A Source object is reusable if it's an
      * {@link ImageSource} (containing an {@link ImageInputStream}) or a {@link DOMSource}.

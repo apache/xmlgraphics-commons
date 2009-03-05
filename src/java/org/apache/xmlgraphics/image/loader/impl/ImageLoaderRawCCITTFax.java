@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,7 +77,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         long stripOffset;
         long stripLength;
         TIFFDirectory dir;
-        
+
         Source src = session.needSource(info.getOriginalURI());
         ImageInputStream in = ImageUtil.needImageInputStream(src);
         in.mark();
@@ -85,7 +85,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
             SeekableStream seekable = new SeekableStreamAdapter(in);
             dir = new TIFFDirectory(seekable, 0);
             TIFFField fld;
-            
+
             fld = dir.getField(TIFFImageDecoder.TIFF_COMPRESSION);
             if (fld != null) {
                 compression = fld.getAsInt(0);
@@ -123,7 +123,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         } finally {
             in.reset();
         }
-        
+
         in.seek(stripOffset);
         InputStream subin = new SubInputStream(ImageUtil.needInputStream(src), stripLength, true);
         if (fillOrder == 2) {
@@ -135,7 +135,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         ImageUtil.removeStreams(src);
         return rawImage;
     }
-    
+
     private static class FillOrderChangeInputStream extends FilterInputStream {
 
         protected FillOrderChangeInputStream(InputStream in) {
@@ -163,7 +163,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
                 return FLIP_TABLE[b] & 0xff;
             }
         }
-        
+
         // Table to be used when fillOrder = 2, for flipping bytes.
         // Copied from XML Graphics Commons' TIFFFaxDecoder class
         private static final byte[] FLIP_TABLE = {
