@@ -67,7 +67,7 @@ public class ImageCacheLoggingStatistics extends ImageCacheStatistics {
         super.cacheMissImageInfo(uri);
         log.info("ImageInfo Cache MISS: " + uri);
     }
-    
-    
+
+
 
 }

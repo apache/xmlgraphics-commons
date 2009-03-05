@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,13 +24,13 @@ import org.apache.xmlgraphics.util.dijkstra.Vertex;
 
 /**
  * This class represents a combination of MIME type and an image flavor.
- * It is used in conjunction with Dijkstra's algorithm to find and construct a 
+ * It is used in conjunction with Dijkstra's algorithm to find and construct a
  * conversion pipeline for images.
  */
 public class ImageRepresentation implements Vertex {
 
     private ImageFlavor flavor;
-    
+
     /**
      * Main constructor
      * @param flavor the image flavor
@@ -41,7 +41,7 @@ public class ImageRepresentation implements Vertex {
         }
         this.flavor = flavor;
     }
-    
+
     /**
      * Returns the image flavor.
      * @return the image flavor
@@ -64,10 +64,10 @@ public class ImageRepresentation implements Vertex {
     public int compareTo(Object obj) {
         return toString().compareTo(((ImageRepresentation)obj).toString());
     }
-    
+
     /** {@inheritDoc} */
     public String toString() {
         return getFlavor().toString();
     }
-    
+
 }

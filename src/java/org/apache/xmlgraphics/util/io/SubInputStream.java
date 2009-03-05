@@ -35,13 +35,13 @@ public class SubInputStream extends FilterInputStream {
 
     /** Indicates the number of bytes remaining to be read from the underlying InputStream. */
     private long bytesToRead;
-    
+
     /**
      * Indicates whether the underlying stream should be closed when the {@link #close()} method
      * is called.
-     */ 
+     */
     private boolean closeUnderlying = false;
-    
+
     /**
      * Creates a new SubInputStream.
      * @param in the InputStream to read from
@@ -80,7 +80,7 @@ public class SubInputStream extends FilterInputStream {
             return -1;
         }
     }
-    
+
     /** {@inheritDoc} */
     public int read(byte[] b, int off, int len) throws IOException {
         if (bytesToRead == 0) {
@@ -88,14 +88,14 @@ public class SubInputStream extends FilterInputStream {
         }
         int effRead = (int)Math.min(bytesToRead, len);
         //cast to int is safe because len can never be bigger than Integer.MAX_VALUE
-        
+
         int result = super.read(b, off, effRead);
         if (result >= 0) {
             bytesToRead -= result;
         }
         return result;
     }
-    
+
     /** {@inheritDoc} */
     public long skip(long n) throws IOException {
         long effRead = Math.min(bytesToRead, n);

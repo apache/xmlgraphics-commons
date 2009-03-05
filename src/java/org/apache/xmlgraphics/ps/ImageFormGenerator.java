@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.awt.Dimension;
@@ -33,15 +33,15 @@ public class ImageFormGenerator extends FormGenerator {
 
     //Mode 1 (RenderedImage)
     private RenderedImage image;
-    
+
     //Mode 2 (ImageEncoder)
     private ImageEncoder encoder;
     private ColorSpace colorSpace;
     private int bitsPerComponent = 8;
-    
+
     private boolean invertImage;
     private Dimension pixelDimensions;
-    
+
     /**
      * Main constructor.
      * @param formName the form's name
@@ -59,7 +59,7 @@ public class ImageFormGenerator extends FormGenerator {
         this.invertImage = invertImage;
         this.pixelDimensions = new Dimension(image.getWidth(), image.getHeight());
     }
-    
+
     /**
      * Main constructor.
      * @param formName the form's name
@@ -82,7 +82,7 @@ public class ImageFormGenerator extends FormGenerator {
         this.bitsPerComponent = bitsPerComponent;
         this.invertImage = invertImage;
     }
-    
+
     /**
      * Main constructor.
      * @param formName the form's name
@@ -99,7 +99,7 @@ public class ImageFormGenerator extends FormGenerator {
             ColorSpace colorSpace, boolean invertImage) {
         this(formName, title, dimensions, dimensionsPx, encoder, colorSpace, 8, invertImage);
     }
-    
+
     /**
      * Returns the name of the data segment associated with this image form.
      * @return the data segment name
@@ -107,9 +107,9 @@ public class ImageFormGenerator extends FormGenerator {
     protected String getDataName() {
         return getFormName() + ":Data";
     }
-    
+
     private String getAdditionalFilters(PSGenerator gen) {
-        String implicitFilter = encoder.getImplicitFilter(); 
+        String implicitFilter = encoder.getImplicitFilter();
         if (implicitFilter != null) {
             return "/ASCII85Decode filter " + implicitFilter + " filter";
         } else {
@@ -120,7 +120,7 @@ public class ImageFormGenerator extends FormGenerator {
             }
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void generatePaintProc(PSGenerator gen) throws IOException {
         if (gen.getPSLevel() == 2) {
@@ -148,7 +148,7 @@ public class ImageFormGenerator extends FormGenerator {
                     gen);
         }
     }
-    
+
     /** {@inheritDoc} */
     protected void generateAdditionalDataStream(PSGenerator gen) throws IOException {
         gen.writeln("/" + getDataName() + " currentfile");
@@ -163,5 +163,5 @@ public class ImageFormGenerator extends FormGenerator {
         PSImageUtils.compressAndWriteBitmap(encoder, gen);
         gen.writeln("def");
     }
-    
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,19 +29,19 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
 
     /** MIME type for EMF (Windows Enhanced Metafile) */
-    public static final String MIME_EMF = "image/x-emf"; 
-    
+    public static final String MIME_EMF = "image/x-emf";
+
     private static final String[] MIMES = new String[] {
         MimeConstants.MIME_PNG,
         MimeConstants.MIME_JPEG,
         MIME_EMF};
-    
+
     private static final ImageFlavor[][] FLAVORS = new ImageFlavor[][] {
         {ImageFlavor.RAW_PNG},
         {ImageFlavor.RAW_JPEG},
         {ImageFlavor.RAW_EMF}};
 
-    
+
     /**
      * Returns the MIME type for a given ImageFlavor if it is from a format that is consumed
      * without being undecoded. If the ImageFlavor is no raw flavor, an IllegalArgumentException
@@ -64,7 +64,7 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
     public String[] getSupportedMIMETypes() {
         return MIMES;
     }
-    
+
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         for (int i = 0, c = MIMES.length; i < c; i++) {
@@ -74,7 +74,7 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
     }
-    
+
     /** {@inheritDoc} */
     public ImageLoader newImageLoader(ImageFlavor targetFlavor) {
         if (targetFlavor.equals(ImageFlavor.RAW_JPEG)) {
@@ -83,7 +83,7 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
             return new ImageLoaderRaw(targetFlavor);
         }
     }
-    
+
     /** {@inheritDoc} */
     public int getUsagePenalty(String mime, ImageFlavor flavor) {
         return 0;

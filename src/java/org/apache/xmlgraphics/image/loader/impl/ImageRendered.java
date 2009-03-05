@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ public class ImageRendered extends AbstractImage {
 
     private RenderedImage red;
     private Color transparentColor;
-    
+
     /**
      * Main constructor.
      * @param info the image info object
@@ -47,7 +47,7 @@ public class ImageRendered extends AbstractImage {
         this.red = red;
         this.transparentColor = transparentColor;
     }
-    
+
     /** {@inheritDoc} */
     public ImageFlavor getFlavor() {
         return ImageFlavor.RENDERED_IMAGE;
@@ -57,7 +57,7 @@ public class ImageRendered extends AbstractImage {
     public boolean isCacheable() {
         return true;
     }
-    
+
     /**
      * Returns the contained RenderedImage instance.
      * @return the RenderedImage instance
@@ -80,7 +80,7 @@ public class ImageRendered extends AbstractImage {
         }
         return null;
     }
-    
+
     /**
      * Returns the transparent color if available.
      * @return the transparent color or null
@@ -88,5 +88,5 @@ public class ImageRendered extends AbstractImage {
     public Color getTransparentColor() {
         return this.transparentColor;
     }
-    
+
 }

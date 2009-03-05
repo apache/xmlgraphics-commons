@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.awt.Color;
@@ -47,9 +47,9 @@ public class PSGenerator {
      * Default postscript language level
      */
     public static final int DEFAULT_LANGUAGE_LEVEL = 3;
-    
-    /** 
-     * Indicator for the PostScript interpreter that the value is provided 
+
+    /**
+     * Indicator for the PostScript interpreter that the value is provided
      * later in the document (mostly in the %%Trailer section).
      * @deprecated Please use DSCConstants.ATEND. This constant was in the wrong place.
      */
@@ -57,11 +57,11 @@ public class PSGenerator {
 
     /** Line feed used by PostScript */
     public static final char LF = '\n';
-    
+
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean commentsEnabled = true;
-    
+
     private Stack graphicsStateStack = new Stack();
     private PSState currentState;
     //private DecimalFormat df3 = new DecimalFormat("0.000", new DecimalFormatSymbols(Locale.US));
@@ -79,7 +79,7 @@ public class PSGenerator {
         this.currentState = new PSState();
         //this.graphicsStateStack.push(this.currentState);
     }
-    
+
     /**
      * Returns the OutputStream the PSGenerator writes to.
      * @return the OutputStream
@@ -89,13 +89,13 @@ public class PSGenerator {
     }
 
     /**
-     * Returns the selected PostScript level. 
+     * Returns the selected PostScript level.
      * @return the PostScript level
      */
     public int getPSLevel() {
-        return this.psLevel; 
+        return this.psLevel;
     }
-    
+
     /**
      * Sets the PostScript level that is used to generate the current document.
      * @param level the PostScript level (currently 1, 2 and 3 are known)
@@ -103,21 +103,21 @@ public class PSGenerator {
     public void setPSLevel(int level) {
         this.psLevel = level;
     }
-    
+
     /**
      * Attempts to resolve the given URI. PSGenerator should be subclasses to provide more
      * sophisticated URI resolution.
      * @param uri URI to access
      * @return A {@link javax.xml.transform.Source} object, or null if the URI
-     * cannot be resolved. 
+     * cannot be resolved.
      */
     public Source resolveURI(String uri) {
         return new javax.xml.transform.stream.StreamSource(uri);
     }
-    
+
     /**
      * Writes a newline character to the OutputStream.
-     * 
+     *
      * @throws IOException In case of an I/O problem
      */
     public final void newLine() throws IOException {
@@ -126,7 +126,7 @@ public class PSGenerator {
 
     /**
      * Formats a double value for PostScript output.
-     * 
+     *
      * @param value value to format
      * @return the formatted value
      */
@@ -136,7 +136,7 @@ public class PSGenerator {
 
     /**
      * Formats a double value for PostScript output (higher resolution).
-     * 
+     *
      * @param value value to format
      * @return the formatted value
      */
@@ -170,9 +170,9 @@ public class PSGenerator {
     }
 
     /**
-     * Writes a comment to the stream and ends the line. Output of comments can 
-     * be disabled to reduce the size of the generated file. 
-     * 
+     * Writes a comment to the stream and ends the line. Output of comments can
+     * be disabled to reduce the size of the generated file.
+     *
      * @param comment          comment to write
      * @exception IOException  In case of an I/O problem
      */
@@ -192,11 +192,11 @@ public class PSGenerator {
         out.write(cmd);
         newLine();
     }
-    
-    
+
+
     /**
      * Flushes the OutputStream.
-     * 
+     *
      * @exception IOException In case of an I/O problem
      */
     public void flush() throws IOException {
@@ -241,7 +241,7 @@ public class PSGenerator {
                     target.append('?');
                 } else if (c < 32 || c > 127) {
                     target.append('\\');
-                   
+
                     target.append((char)('0' + (c >> 6)));
                     target.append((char)('0' + ((c >> 3) % 8)));
                     target.append((char)('0' + (c % 8)));
@@ -277,7 +277,7 @@ public class PSGenerator {
      * @param forceParentheses Force the use of parentheses
      * @return String The resulting String
      */
-    public static final String convertStringToDSC(String text, 
+    public static final String convertStringToDSC(String text,
                                                   boolean forceParentheses) {
         if ((text == null) || (text.length() == 0)) {
             return "()";
@@ -316,7 +316,7 @@ public class PSGenerator {
 
 
     /**
-     * Writes a DSC comment to the output stream. The parameter to the DSC 
+     * Writes a DSC comment to the output stream. The parameter to the DSC
      * comment can be any object. The object is converted to a String as
      * necessary.
      * @param name Name of the DSC comment
@@ -325,12 +325,12 @@ public class PSGenerator {
      * @see org.apache.xmlgraphics.ps.DSCConstants
      */
     public void writeDSCComment(String name, Object param) throws IOException {
-        writeDSCComment(name, new Object[] {param});    
+        writeDSCComment(name, new Object[] {param});
     }
 
-        
+
     /**
-     * Writes a DSC comment to the output stream. The parameters to the DSC 
+     * Writes a DSC comment to the output stream. The parameters to the DSC
      * comment can be any object. The objects are converted to Strings as
      * necessary. Please see the source code to find out what parameters are
      * currently supported.
@@ -349,7 +349,7 @@ public class PSGenerator {
                 if (i > 0) {
                     tempBuffer.append(" ");
                 }
-                
+
                 if (params[i] instanceof String) {
                     tempBuffer.append(convertStringToDSC((String)params[i]));
                 } else if (params[i] == DSCConstants.ATEND) {
@@ -364,28 +364,28 @@ public class PSGenerator {
                 } else if (params[i] instanceof PSResource) {
                     tempBuffer.append(((PSResource)params[i]).getResourceSpecification());
                 } else {
-                    throw new IllegalArgumentException("Unsupported parameter type: " 
+                    throw new IllegalArgumentException("Unsupported parameter type: "
                             + params[i].getClass().getName());
                 }
             }
         }
         writeln(tempBuffer.toString());
     }
-    
-    
+
+
     /**
      * Saves the graphics state of the rendering engine.
      * @exception IOException In case of an I/O problem
      */
     public void saveGraphicsState() throws IOException {
         writeln("gsave");
-        
+
         PSState state = new PSState(this.currentState, false);
         this.graphicsStateStack.push(this.currentState);
         this.currentState = state;
     }
-    
-    /** 
+
+    /**
      * Restores the last graphics state of the rendering engine.
      * @return true if the state was restored, false if there's a stack underflow.
      * @exception IOException In case of an I/O problem
@@ -399,8 +399,8 @@ public class PSGenerator {
             return false;
         }
     }
-    
-    
+
+
     /**
      * Returns the current graphics state.
      * @return the current graphics state
@@ -420,21 +420,21 @@ public class PSGenerator {
      * @exception IOException In case of an I/O problem
      */
     public void concatMatrix(double a, double b,
-            double c, double d, 
+            double c, double d,
             double e, double f) throws IOException {
         AffineTransform at = new AffineTransform(a, b, c, d, e, f);
         concatMatrix(at);
-        
+
     }
-    
+
     /**
      * Concats the transformations matrix.
      * @param matrix Matrix to use
      * @exception IOException In case of an I/O problem
      */
     public void concatMatrix(double[] matrix) throws IOException {
-        concatMatrix(matrix[0], matrix[1], 
-                     matrix[2], matrix[3], 
+        concatMatrix(matrix[0], matrix[1],
+                     matrix[2], matrix[3],
                      matrix[4], matrix[5]);
     }
 
@@ -453,7 +453,7 @@ public class PSGenerator {
             + formatDouble5(matrix[4]) + " "
             + formatDouble5(matrix[5]) + "]";
     }
-    
+
     /**
      * Concats the transformations matric.
      * @param at the AffineTransform whose matrix to use
@@ -463,7 +463,7 @@ public class PSGenerator {
         getCurrentState().concatMatrix(at);
         writeln(formatMatrix(at) + " concat");
     }
-               
+
     /**
      * Formats a Rectangle2D to an array.
      * @param rect the rectangle
@@ -475,7 +475,7 @@ public class PSGenerator {
         + formatDouble(rect.getWidth()) + " "
         + formatDouble(rect.getHeight()) + "]";
     }
-    
+
     /**
      * Adds a rectangle to the current path.
      * @param x upper left corner
@@ -484,15 +484,15 @@ public class PSGenerator {
      * @param h height
      * @exception IOException In case of an I/O problem
      */
-    public void defineRect(double x, double y, double w, double h) 
+    public void defineRect(double x, double y, double w, double h)
                 throws IOException {
-        writeln(formatDouble(x) 
-            + " " + formatDouble(y) 
-            + " " + formatDouble(w) 
-            + " " + formatDouble(h) 
+        writeln(formatDouble(x)
+            + " " + formatDouble(y)
+            + " " + formatDouble(w)
+            + " " + formatDouble(h)
             + " re");
     }
-    
+
     /**
      * Establishes the specified line cap style.
      * @param linecap the line cap style (0, 1 or 2) as defined by the setlinecap command.
@@ -503,7 +503,7 @@ public class PSGenerator {
             writeln(linecap + " setlinecap");
         }
     }
-                                
+
     /**
      * Establishes the specified line width.
      * @param width the line width as defined by the setlinewidth command.
@@ -514,7 +514,7 @@ public class PSGenerator {
             writeln(formatDouble(width) + " setlinewidth");
         }
     }
-                                
+
     /**
      * Establishes the specified dash pattern.
      * @param pattern the dash pattern as defined by the setdash command.
@@ -537,7 +537,7 @@ public class PSGenerator {
      */
     public void useRGBColor(Color col) throws IOException {
         useColor(col);
-    }        
+    }
 
     /**
      * Establishes the specified color.
@@ -549,15 +549,15 @@ public class PSGenerator {
             writeln(convertColorToPS(col));
         }
     }
-    
+
     private String convertColorToPS(Color col) {
         StringBuffer p = new StringBuffer();
         float[] comps = col.getColorComponents(null);
-        
+
         if (col.getColorSpace().getType() == ColorSpace.TYPE_RGB) {
             // according to pdfspec 12.1 p.399
             // if the colors are the same then just use the g or G operator
-            boolean same = (comps[0] == comps[1] 
+            boolean same = (comps[0] == comps[1]
                         && comps[0] == comps[2]);
             // output RGB
             if (same) {
@@ -592,7 +592,7 @@ public class PSGenerator {
         }
         return p.toString();
     }
-    
+
     /**
      * Establishes the specified font and size.
      * @param name name of the font for the "F" command (see FOP Std Proc Set)
@@ -604,9 +604,9 @@ public class PSGenerator {
             writeln(name + " " + formatDouble(size) + " F");
         }
     }
-    
+
     private ResourceTracker resTracker = new ResourceTracker();
-    
+
     /**
      * Resturns the ResourceTracker instance associated with this PSGenerator.
      * @return the ResourceTracker instance or null if none is assigned
@@ -614,7 +614,7 @@ public class PSGenerator {
     public ResourceTracker getResourceTracker() {
         return this.resTracker;
     }
-    
+
     /**
      * Sets the ResourceTracker instance to be associated with this PSGenerator.
      * @param resTracker the ResourceTracker instance
@@ -622,30 +622,30 @@ public class PSGenerator {
     public void setResourceTracker(ResourceTracker resTracker) {
         this.resTracker = resTracker;
     }
-    
-    /**      
-     * Notifies the generator that a new page has been started and that the page resource    
+
+    /**
+     * Notifies the generator that a new page has been started and that the page resource
      * set can be cleared.
      * @deprecated Use the notifyStartNewPage() on ResourceTracker instead.
-     */      
+     */
     public void notifyStartNewPage() {
         getResourceTracker().notifyStartNewPage();
     }
 
-    /**      
-     * Notifies the generator about the usage of a resource on the current page.     
-     * @param res the resource being used    
-     * @param needed true if this is a needed resource, false for a supplied resource    
+    /**
+     * Notifies the generator about the usage of a resource on the current page.
+     * @param res the resource being used
+     * @param needed true if this is a needed resource, false for a supplied resource
      * @deprecated Use the notifyResourceUsageOnPage() on ResourceTracker instead
-     */      
+     */
     public void notifyResourceUsage(PSResource res, boolean needed) {
         getResourceTracker().notifyResourceUsageOnPage(res);
     }
-    
+
     /**
      * Writes a DSC comment for the accumulated used resources, either at page level or
      * at document level.
-     * @param pageLevel true if the DSC comment for the page level should be generated, 
+     * @param pageLevel true if the DSC comment for the page level should be generated,
      *                  false for the document level (in the trailer)
      * @exception IOException In case of an I/O problem
      * @deprecated Use the writeResources() on ResourceTracker instead.
@@ -653,7 +653,7 @@ public class PSGenerator {
     public void writeResources(boolean pageLevel) throws IOException {
         getResourceTracker().writeResources(pageLevel, this);
     }
-    
+
     /**
      * Indicates whether a particular resource is supplied, rather than needed.
      * @param res the resource

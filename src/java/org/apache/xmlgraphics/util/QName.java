@@ -24,18 +24,18 @@ import java.io.Serializable;
 /**
  * Represents a qualified name of an XML element or an XML attribute.
  * <p>
- * Note: This class allows to carry a namespace prefix but it is not used in the equals() and 
+ * Note: This class allows to carry a namespace prefix but it is not used in the equals() and
  * hashCode() methods.
  */
 public class QName implements Serializable {
 
     private static final long serialVersionUID = -5225376740044770690L;
-    
+
     private String namespaceURI;
     private String localName;
     private String prefix;
     private int hashCode;
-    
+
     /**
      * Main constructor.
      * @param namespaceURI the namespace URI
@@ -54,7 +54,7 @@ public class QName implements Serializable {
         this.localName = localName;
         this.hashCode = toHashString().hashCode();
     }
-    
+
     /**
      * Main constructor.
      * @param namespaceURI the namespace URI
@@ -78,22 +78,22 @@ public class QName implements Serializable {
         }
         this.hashCode = toHashString().hashCode();
     }
-    
+
     /** @return the namespace URI */
     public String getNamespaceURI() {
         return this.namespaceURI;
     }
-    
+
     /** @return the namespace prefix */
     public String getPrefix() {
         return this.prefix;
     }
-    
+
     /** @return the local name */
     public String getLocalName() {
         return this.localName;
     }
-    
+
     /** @return the fully qualified name */
     public String getQName() {
         return getPrefix() != null ? getPrefix() + ':' + getLocalName() : getLocalName();
@@ -130,8 +130,8 @@ public class QName implements Serializable {
     }
 
     private String toHashString() {
-        return (namespaceURI != null 
-                ? ("{" + namespaceURI + "}" + localName) 
+        return (namespaceURI != null
+                ? ("{" + namespaceURI + "}" + localName)
                 : localName);
     }
 

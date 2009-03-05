@@ -44,36 +44,36 @@ import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
 public class ImageViewer {
 
     private ImageManager imageManager;
-    
+
     public ImageViewer() {
         //The ImageManager is set up for the whole application
         this.imageManager = new ImageManager(new DefaultImageContext());
     }
-    
+
     public void display(File f) throws IOException {
         //The ImageSessionContext might for each processing run
         ImageSessionContext sessionContext = new DefaultImageSessionContext(
                 this.imageManager.getImageContext(), null);
-        
+
         //Construct URI from filename
         String uri = f.toURI().toASCIIString();
-        
+
         ImageGraphics2D g2dImage = null;
         try {
             //Preload image
             ImageInfo info = this.imageManager.getImageInfo(uri, sessionContext);
-            
+
             //Load image and request Graphics2D image
             g2dImage = (ImageGraphics2D)this.imageManager.getImage(
                     info, ImageFlavor.GRAPHICS2D, sessionContext);
-            
+
         } catch (ImageException e) {
             e.printStackTrace();
-            
+
             //Create "error image" if the image cannot be displayed
             g2dImage = createErrorImage();
         }
-        
+
         //Display frame with image
         ViewerFrame frame = new ViewerFrame(g2dImage);
         frame.setVisible(true);
@@ -105,20 +105,20 @@ public class ImageViewer {
                 g2d.drawLine(0, 0, imageSize.width, imageSize.height);
                 g2d.drawLine(0, imageSize.height, imageSize.width, 0);
             }
-            
+
         };
         Dimension dim = painter.getImageSize();
-        
+
         ImageSize size = new ImageSize();
         size.setSizeInMillipoints(dim.width, dim.height);
         size.setResolution(imageManager.getImageContext().getSourceResolution());
         size.calcPixelsFromSize();
-        
+
         ImageInfo info = new ImageInfo(null, null);
         info.setSize(size);
         return new ImageGraphics2D(info, painter);
     }
-    
+
     /**
      * The application's main method.
      * @param args the command-line arguments

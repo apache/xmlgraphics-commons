@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.ps;
 
 import java.io.IOException;
@@ -27,24 +27,24 @@ import java.awt.geom.AffineTransform;
 
 /**
  * This class holds the current state of the PostScript interpreter.
- * 
+ *
  * @version $Id$
  */
 public class PSState implements Serializable {
 
     /** Default for setdash */
-    public static final String DEFAULT_DASH = "[] 0"; 
+    public static final String DEFAULT_DASH = "[] 0";
     /** Default color in PostScript */
-    public static final Color DEFAULT_RGB_COLOR = Color.black; 
-    
+    public static final Color DEFAULT_RGB_COLOR = Color.black;
+
     private AffineTransform transform = new AffineTransform();
     private List transformConcatList = new java.util.ArrayList();
- 
+
     private int linecap = 0;
     private double linewidth = 1.0f;
     private String dashpattern = DEFAULT_DASH;
     private Color color = DEFAULT_RGB_COLOR;
-    
+
     //Font state
     private String fontname;
     private float fontsize;
@@ -73,7 +73,7 @@ public class PSState implements Serializable {
         this.fontname = org.fontname;
         this.fontsize = org.fontsize;
     }
- 
+
     /**
      * Returns the transform.
      * @return the current transformation matrix
@@ -94,7 +94,7 @@ public class PSState implements Serializable {
     public boolean checkTransform(AffineTransform tf) {
         return !tf.equals(this.transform);
     }
-    
+
     /**
      * Concats the given transformation matrix with the current one.
      * @param transform The new transformation matrix
@@ -117,7 +117,7 @@ public class PSState implements Serializable {
             return false;
         }
     }
-    
+
     /**
      * Establishes the specified line width.
      * @param value line width as defined by the setlinewidth command
@@ -131,7 +131,7 @@ public class PSState implements Serializable {
             return false;
         }
     }
-    
+
     /**
      * Establishes the specified dash.
      * @param pattern dash pattern as defined by the setdash command
@@ -145,7 +145,7 @@ public class PSState implements Serializable {
             return false;
         }
     }
-    
+
     /**
      * Establishes the specified color (RGB).
      * @param value color as defined by the setrgbcolor command
@@ -159,7 +159,7 @@ public class PSState implements Serializable {
             return false;
         }
     }
-    
+
     /**
      * Establishes the specified font and size.
      * @param name name of the font for the "F" command (see FOP Std Proc Set)
@@ -178,7 +178,7 @@ public class PSState implements Serializable {
             return false;
         }
     }
-    
+
     /**
      * Reestablishes the graphics state represented by this instance by issueing the
      * necessary commands.
@@ -197,5 +197,5 @@ public class PSState implements Serializable {
             gen.useFont(fontname, fontsize);
         }
     }
-    
+
 }

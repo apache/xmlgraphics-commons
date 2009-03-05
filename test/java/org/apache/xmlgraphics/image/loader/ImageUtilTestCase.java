@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ public class ImageUtilTestCase extends TestCase {
      */
     public void testNeedPageIndex() throws Exception {
         int pageIndex;
-        
+
         pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif");
         assertEquals(0, pageIndex);
         pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
@@ -61,23 +61,23 @@ public class ImageUtilTestCase extends TestCase {
         pageIndex = ImageUtil.needPageIndexFromURI("file:///C:/images/scan1.tif#page=44");
         assertEquals(43, pageIndex);
     }
-    
+
     /**
      * Tests {@link ImageUtil.getPageIndexFromURI(String)}.
      * @throws Exception if an error occurs
      */
     public void testGetPageIndex() throws Exception {
         Integer pageIndex;
-        
+
         pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif");
         assertNull(pageIndex);
         pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif#page=3");
         assertEquals(2, pageIndex.intValue());
         //Note: no detailed test anymore as this is tested through needPageIndexFromURI().
-        
+
         //getPageIndexFromURI only works on URIs, so ignore anything that doesn't have a '#'
         pageIndex = ImageUtil.getPageIndexFromURI("C:\\Temp\\scan1.tif");
         assertNull(pageIndex);
     }
-    
+
 }

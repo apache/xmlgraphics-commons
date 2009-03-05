@@ -29,16 +29,16 @@ import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
  */
 public class PDFAXMPSchema extends XMPSchema {
 
-    /** Namespace URI for Dublin Core */ 
+    /** Namespace URI for Dublin Core */
     public static final String NAMESPACE = XMPConstants.PDF_A_IDENTIFICATION;
-    
+
     private static MergeRuleSet mergeRuleSet = new MergeRuleSet();
-    
+
     /** Creates a new schema instance for Dublin Core. */
     public PDFAXMPSchema() {
         super(NAMESPACE, "pdfaid");
     }
-    
+
     /**
      * Creates and returns an adapter for this schema around the given metadata object.
      * @param meta the metadata object
@@ -52,5 +52,5 @@ public class PDFAXMPSchema extends XMPSchema {
     public MergeRuleSet getDefaultMergeRuleSet() {
         return mergeRuleSet;
     }
-    
+
 }

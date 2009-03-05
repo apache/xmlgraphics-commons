@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,9 +32,9 @@ import org.apache.xmlgraphics.image.writer.ImageWriterParams;
  */
 public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
 
-    private static final String SUN_TIFF_NATIVE_FORMAT 
+    private static final String SUN_TIFF_NATIVE_FORMAT
             = "com_sun_media_imageio_plugins_tiff_image_1.0";
-    
+
     /**
      * Main constructor.
      */
@@ -53,20 +53,20 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
         //that happens.
         if (params.getResolution() != null) {
             if (SUN_TIFF_NATIVE_FORMAT.equals(meta.getNativeMetadataFormatName())) {
-    
+
                 //IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(SUN_TIFF_NATIVE_FORMAT);
                 IIOMetadataNode root = new IIOMetadataNode(SUN_TIFF_NATIVE_FORMAT);
-                
+
                 IIOMetadataNode ifd = getChildNode(root, "TIFFIFD");
                 if (ifd == null) {
                     ifd = new IIOMetadataNode("TIFFIFD");
-                    ifd.setAttribute("tagSets", 
+                    ifd.setAttribute("tagSets",
                                 "com.sun.media.imageio.plugins.tiff.BaselineTIFFTagSet");
                     root.appendChild(ifd);
                 }
                 ifd.appendChild(createResolutionField(282, "XResolution", params));
                 ifd.appendChild(createResolutionField(283, "YResolution", params));
-                
+
                 //ResolutionUnit
                 IIOMetadataNode field, arrayNode, valueNode;
                 field = new IIOMetadataNode("TIFFField");
@@ -78,11 +78,11 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
                 valueNode.setAttribute("value", Integer.toString(3));
                 valueNode.setAttribute("description", "Centimeter");
                 arrayNode.appendChild(valueNode);
-                
+
                 try {
                     meta.mergeTree(SUN_TIFF_NATIVE_FORMAT, root);
                 } catch (IIOInvalidTreeException e) {
-                    throw new RuntimeException("Cannot update image metadata: " 
+                    throw new RuntimeException("Cannot update image metadata: "
                                 + e.getMessage(), e);
                 }
             }
@@ -104,7 +104,7 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
         // Set target resolution
         float pixSzMM = 25.4f / params.getResolution().floatValue();
         // num Pixs in 100 Meters
-        int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5); 
+        int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5);
         int denom = 100 * 100;  // Centimeters per 100 Meters;
         valueNode.setAttribute("value", numPix + "/" + denom);
         return field;

@@ -26,14 +26,14 @@ import java.io.IOException;
  */
 public interface PSTextHandler extends org.apache.xmlgraphics.java2d.TextHandler {
     /**
-     * Is called by when the "Setup" or "Prolog" of the PostScript document is generated. 
+     * Is called by when the "Setup" or "Prolog" of the PostScript document is generated.
      * Subclasses can do font registration, for example.
      * @throws IOException In case of an I/O error
      */
     void writeSetup() throws IOException;
 
     /**
-     * Is called by when a "PageSetup" section of the PostScript document is generated. 
+     * Is called by when a "PageSetup" section of the PostScript document is generated.
      * Subclasses can do some font initialization if necessary.
      * @throws IOException In case of an I/O error
      */

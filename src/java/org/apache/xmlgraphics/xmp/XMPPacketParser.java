@@ -35,14 +35,14 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  * it finds and parses it.
  * <p>
  * Important: Before you use this class to look for an XMP packet in some random file, please read
- * the chapter on "Scanning Files for XMP Packets" in the XMP specification! 
+ * the chapter on "Scanning Files for XMP Packets" in the XMP specification!
  */
 public class XMPPacketParser {
 
     private static final byte[] PACKET_HEADER;
     private static final byte[] PACKET_HEADER_END;
     private static final byte[] PACKET_TRAILER;
-    
+
     static {
         try {
             PACKET_HEADER = "<?xpacket begin=".getBytes("US-ASCII");
@@ -52,7 +52,7 @@ public class XMPPacketParser {
             throw new RuntimeException("Incompatible JVM! US-ASCII encoding not supported.");
         }
     }
-    
+
     /**
      * Locates an XMP packet in a stream, parses it and returns the XMP metadata. If no
      * XMP packet is found until the stream ends, null is returned. Note: This method
@@ -82,16 +82,16 @@ public class XMPPacketParser {
         if (!skipAfter(in, PACKET_TRAILER, baout)) {
             throw new IOException("XMP packet not properly terminated!");
         }
-        
+
         Metadata metadata = XMPParser.parseXMP(
                 new StreamSource(new ByteArrayInputStream(baout.toByteArray())));
         return metadata;
     }
-    
+
     private static boolean skipAfter(InputStream in, byte[] match) throws IOException {
         return skipAfter(in, match, null);
     }
-    
+
     private static boolean skipAfter(InputStream in, byte[] match, OutputStream out)
             throws IOException {
         int found = 0;
@@ -115,5 +115,5 @@ public class XMPPacketParser {
         }
         return false;
     }
-    
+
 }

@@ -41,7 +41,7 @@ public class ImageWriterUtil {
                 throws IOException {
         saveAsPNG(bitmap, 96, outputFile);
     }
-    
+
     /**
      * Saves a RenderedImage as a PNG file.
      * @param bitmap the bitmap to encode
@@ -53,7 +53,7 @@ public class ImageWriterUtil {
                 throws IOException {
         saveAsFile(bitmap, resolution, outputFile, "image/png");
     }
-    
+
     /**
      * Saves a RenderedImage as a file. The image format is given through the MIME type
      * @param bitmap the bitmap to encode
@@ -75,5 +75,5 @@ public class ImageWriterUtil {
             IOUtils.closeQuietly(out);
         }
     }
-    
+
 }

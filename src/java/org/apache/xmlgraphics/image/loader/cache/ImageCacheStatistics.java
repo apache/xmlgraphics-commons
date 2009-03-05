@@ -34,7 +34,7 @@ public class ImageCacheStatistics implements ImageCacheListener {
     private int imageCacheMisses;
     private Map imageCacheHitMap;
     private Map imageCacheMissMap;
-    
+
     /**
      * Main constructor.
      * @param detailed true if the cache hits/misses for each Image instance should be recorded.
@@ -45,7 +45,7 @@ public class ImageCacheStatistics implements ImageCacheListener {
             imageCacheMissMap = new java.util.HashMap();
         }
     }
-    
+
     /**
      * Reset the gathered statistics information.
      */
@@ -54,7 +54,7 @@ public class ImageCacheStatistics implements ImageCacheListener {
         this.imageInfoCacheMisses = 0;
         this.invalidHits = 0;
     }
-    
+
     /** {@inheritDoc} */
     public void invalidHit(String uri) {
         invalidHits++;
@@ -87,7 +87,7 @@ public class ImageCacheStatistics implements ImageCacheListener {
             increaseEntry(imageCacheHitMap, key);
         }
     }
-    
+
     /** {@inheritDoc} */
     public void cacheMissImage(ImageKey key) {
         imageCacheMisses++;
@@ -151,5 +151,5 @@ public class ImageCacheStatistics implements ImageCacheListener {
     public Map getImageCacheMissMap() {
         return Collections.unmodifiableMap(imageCacheMissMap);
     }
-    
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -318,7 +318,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
 
     private void encodePass(OutputStream os, Raster ras,
                             int xOffset,     int yOffset,
-                            int xSkip,       int ySkip) 
+                            int xSkip,       int ySkip)
         throws IOException {
         int minX   = ras.getMinX();
         int minY   = ras.getMinY();
@@ -436,19 +436,19 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         // you get back here appears larger than it should.
         // This solves that problem by bounding the raster to the
         // image's bounds...
-        Raster ras = image.getData(new Rectangle(image.getMinX(), 
+        Raster ras = image.getData(new Rectangle(image.getMinX(),
                                                  image.getMinY(),
                                                  image.getWidth(),
                                                  image.getHeight()));
-        // System.out.println("Image: [" + 
-        //                    image.getMinY()  + ", " + 
-        //                    image.getMinX()  + ", " + 
-        //                    image.getWidth()  + ", " + 
+        // System.out.println("Image: [" +
+        //                    image.getMinY()  + ", " +
+        //                    image.getMinX()  + ", " +
+        //                    image.getWidth()  + ", " +
         //                    image.getHeight() + "]");
-        // System.out.println("Ras: [" + 
-        //                    ras.getMinX()  + ", " + 
-        //                    ras.getMinY()  + ", " + 
-        //                    ras.getWidth()  + ", " + 
+        // System.out.println("Ras: [" +
+        //                    ras.getMinX()  + ", " +
+        //                    ras.getMinY()  + ", " +
+        //                    ras.getWidth()  + ", " +
         //                    ras.getHeight() + "]");
 
         if (skipAlpha) {

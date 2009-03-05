@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class PreloaderBMP extends AbstractImagePreloader {
 
     /** Length of the BMP header */
     protected static final int BMP_SIG_LENGTH = 2;
-    
+
     /** offset to width */
     private static final int WIDTH_OFFSET = 18;
 
@@ -69,15 +69,15 @@ public class PreloaderBMP extends AbstractImagePreloader {
         ByteOrder oldByteOrder = in.getByteOrder();
         try {
             ImageSize size = new ImageSize();
-            
+
             // BMP uses little endian notation!
             in.setByteOrder(ByteOrder.LITTLE_ENDIAN);
-            
+
             in.skipBytes(WIDTH_OFFSET);
             int width = in.readInt();
             int height = in.readInt();
             size.setSizeInPixels(width, height);
-            
+
             in.skipBytes(12);
             int xRes = in.readInt();
             double xResDPI = UnitConv.in2mm(xRes / 1000d);
@@ -90,7 +90,7 @@ public class PreloaderBMP extends AbstractImagePreloader {
             if (yResDPI == 0) {
                 yResDPI = context.getSourceResolution();
             }
-            
+
             size.setResolution(xResDPI, yResDPI);
             size.calcSizeFromPixels();
             return size;

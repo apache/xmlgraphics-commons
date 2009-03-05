@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,7 +58,7 @@ public class ImageInfo {
      * Example: The DOM of an XML document.
      */
     private Map customObjects = new java.util.HashMap();
-    
+
     /**
      * Main constructor.
      * @param originalURI the original URI that was specified by the user (not the resolved URI!)
@@ -100,7 +100,7 @@ public class ImageInfo {
     public void setSize(ImageSize size) {
         this.size = size;
     }
-    
+
     /**
      * Returns a Map of custom objects associated with this instance.
      * @return the Map of custom objects
@@ -108,14 +108,14 @@ public class ImageInfo {
     public Map getCustomObjects() {
         return this.customObjects;
     }
-    
+
     /**
      * Returns the original Image instance if such an Image instance is created while building
      * this ImageInfo object. Some images cannot be "preloaded". They have to be fully loaded
      * in order to determine the intrinsic image size. This method allows access to that fully
      * loaded image so no additional re-loading has to be done later.
      * <p>
-     * This method is short for: (Image)this.customObjects.get(ORIGINAL_IMAGE); 
+     * This method is short for: (Image)this.customObjects.get(ORIGINAL_IMAGE);
      * @return the original Image instance or null if none is set
      * @see #ORIGINAL_IMAGE
      */
@@ -127,5 +127,5 @@ public class ImageInfo {
     public String toString() {
         return getOriginalURI() + " (" + getMimeType() + ")";
     }
-    
+
 }

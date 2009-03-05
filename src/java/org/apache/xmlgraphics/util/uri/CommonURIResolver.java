@@ -35,7 +35,7 @@ import org.apache.xmlgraphics.util.Service;
  * <p>
  * This resolver will try all resolvers registered as an {@link URIResolver}
  * class. For proper operation, the registers URIResolvers must return null if
- * they cannot handle the given URI and fail fast. 
+ * they cannot handle the given URI and fail fast.
  */
 public class CommonURIResolver implements URIResolver {
 
@@ -60,7 +60,7 @@ public class CommonURIResolver implements URIResolver {
 
     /**
      * Retrieve the default resolver instance.
-     * 
+     *
      * @return the default resolver instance.
      */
     public static CommonURIResolver getDefaultURIResolver() {
@@ -88,7 +88,7 @@ public class CommonURIResolver implements URIResolver {
 
     /**
      * Register a given {@link URIResolver} while the software is running.
-     * 
+     *
      * @param uriResolver
      *            the resolver to register.
      */
@@ -100,7 +100,7 @@ public class CommonURIResolver implements URIResolver {
 
     /**
      * Unregister a given {@link URIResolver} while the software is running.
-     * 
+     *
      * @param uriResolver
      *            the resolver to unregister.
      */

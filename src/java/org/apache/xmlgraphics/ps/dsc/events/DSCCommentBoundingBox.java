@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.apache.xmlgraphics.ps.PSGenerator;
 public class DSCCommentBoundingBox extends AbstractDSCComment {
 
     private Rectangle2D bbox;
-    
+
     /**
      * Creates a new instance.
      */
@@ -47,7 +47,7 @@ public class DSCCommentBoundingBox extends AbstractDSCComment {
     public DSCCommentBoundingBox(Rectangle2D bbox) {
         setBoundingBox(bbox);
     }
-    
+
     /**
      * Returns the bounding box.
      * @return the bounding box
@@ -55,7 +55,7 @@ public class DSCCommentBoundingBox extends AbstractDSCComment {
     public Rectangle2D getBoundingBox() {
         return this.bbox;
     }
-    
+
     /**
      * Sets the bounding box.
      * @param bbox the bounding box
@@ -85,7 +85,7 @@ public class DSCCommentBoundingBox extends AbstractDSCComment {
         double y2 = Double.parseDouble((String)iter.next());
         this.bbox = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
     }
-    
+
     /** {@inheritDoc} */
     public void generate(PSGenerator gen) throws IOException {
         if (getBoundingBox() != null) {

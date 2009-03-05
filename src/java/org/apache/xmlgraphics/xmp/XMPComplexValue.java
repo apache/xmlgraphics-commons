@@ -32,5 +32,5 @@ public abstract class XMPComplexValue implements XMLizable {
      *          because the value is an array and has multiple entries.
      */
     public abstract Object getSimpleValue();
-    
+
 }

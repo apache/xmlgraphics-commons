@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,7 @@ public class JPEGFile implements JPEGConstants {
     protected static Log log = LogFactory.getLog(JPEGFile.class);
 
     private DataInput in;
-    
+
     /**
      * Constructor for ImageInputStreams.
      * @param in the input stream to read the image from
@@ -45,7 +45,7 @@ public class JPEGFile implements JPEGConstants {
     public JPEGFile(ImageInputStream in) {
         this.in = in;
     }
-    
+
     /**
      * Constructor for InputStreams.
      * @param in the input stream to read the image from
@@ -53,7 +53,7 @@ public class JPEGFile implements JPEGConstants {
     public JPEGFile(InputStream in) {
         this.in = new java.io.DataInputStream(in);
     }
-    
+
     /**
      * Returns the {@link DataInput} instance this object operates on.
      * @return the data input instance
@@ -61,7 +61,7 @@ public class JPEGFile implements JPEGConstants {
     public DataInput getDataInput() {
         return this.in;
     }
-    
+
     /**
      * Reads the next marker segment identifier and returns it.
      * @return the marker segment identifier
@@ -92,7 +92,7 @@ public class JPEGFile implements JPEGConstants {
         int reclen = in.readUnsignedShort();
         return reclen;
     }
-    
+
     /**
      * Skips the current marker segment.
      * The method assumes the file cursor is right after the segment header.
@@ -102,5 +102,5 @@ public class JPEGFile implements JPEGConstants {
         int reclen = readSegmentLength();
         in.skipBytes(reclen - 2);
     }
-    
+
 }

@@ -32,7 +32,7 @@ public class MergeRuleSet {
 
     private Map rules = new java.util.HashMap();
     private PropertyMerger defaultMerger = new ReplacePropertyMerger();
-    
+
     /** Main constructor. */
     public MergeRuleSet() {
     }
@@ -46,7 +46,7 @@ public class MergeRuleSet {
         PropertyMerger merger = (PropertyMerger)rules.get(prop.getName());
         return (merger != null ? merger : defaultMerger);
     }
-    
+
     /**
      * Adds a merge rule to this set.
      * @param propName the name of the property
@@ -55,5 +55,5 @@ public class MergeRuleSet {
     public void addRule(QName propName, PropertyMerger merger) {
         rules.put(propName, merger);
     }
-    
+
 }

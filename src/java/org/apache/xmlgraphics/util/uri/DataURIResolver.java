@@ -43,7 +43,7 @@ public class DataURIResolver implements URIResolver {
     /** logger */
     private static Log LOG = LogFactory.getLog(URIResolver.class);
 
-    
+
     /**
      * {@inheritDoc}
      */

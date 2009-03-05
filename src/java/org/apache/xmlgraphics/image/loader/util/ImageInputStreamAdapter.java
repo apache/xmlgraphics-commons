@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,15 +26,15 @@ import javax.imageio.stream.ImageInputStream;
 
 /**
  * Decorates an ImageInputStream with an InputStream interface. The methods <code>mark()</code>
- * and <code>reset()</code> are fully supported. The method <code>available()</code> will 
+ * and <code>reset()</code> are fully supported. The method <code>available()</code> will
  * always return 0.
  */
 public class ImageInputStreamAdapter extends InputStream {
 
     private ImageInputStream iin;
-    
+
     private long lastMarkPosition;
-    
+
     /**
      * Creates a new ImageInputStreamAdapter.
      * @param iin the underlying ImageInputStream
@@ -43,7 +43,7 @@ public class ImageInputStreamAdapter extends InputStream {
         assert iin != null : "InputStream is null";
         this.iin = iin;
     }
-    
+
     /** {@inheritDoc} */
     public int read(byte[] b, int off, int len) throws IOException {
         return iin.read(b, off, len);

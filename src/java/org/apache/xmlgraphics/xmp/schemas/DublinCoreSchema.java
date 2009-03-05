@@ -31,22 +31,22 @@ import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
  */
 public class DublinCoreSchema extends XMPSchema {
 
-    /** Namespace URI for Dublin Core */ 
+    /** Namespace URI for Dublin Core */
     public static final String NAMESPACE = XMPConstants.DUBLIN_CORE_NAMESPACE;
 
     private static MergeRuleSet dcMergeRuleSet;
-    
+
     static {
         dcMergeRuleSet = new MergeRuleSet();
         //Dates are added up not replaced
         dcMergeRuleSet.addRule(new QName(NAMESPACE, "date"), new ArrayAddPropertyMerger());
     }
-    
+
     /** Creates a new schema instance for Dublin Core. */
     public DublinCoreSchema() {
         super(NAMESPACE, "dc");
     }
-    
+
     /**
      * Creates and returns an adapter for this schema around the given metadata object.
      * @param meta the metadata object
@@ -60,5 +60,5 @@ public class DublinCoreSchema extends XMPSchema {
     public MergeRuleSet getDefaultMergeRuleSet() {
         return dcMergeRuleSet;
     }
-    
+
 }

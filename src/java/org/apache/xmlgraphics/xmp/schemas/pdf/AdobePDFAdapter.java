@@ -44,7 +44,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
     public String getKeywords() {
         return getValue(KEYWORDS);
     }
-    
+
     /**
      * Sets the keywords.
      * @param value the keywords
@@ -57,7 +57,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
     public String getPDFVersion() {
         return getValue(PDFVERSION);
     }
-    
+
     /**
      * Sets the PDF version
      * @param value the PDF version (ex. "1.4")
@@ -70,7 +70,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
     public String getProducer() {
         return getValue(PRODUCER);
     }
-    
+
     /**
      * Sets the name of the tool that produced the PDF document
      * @param value the producer

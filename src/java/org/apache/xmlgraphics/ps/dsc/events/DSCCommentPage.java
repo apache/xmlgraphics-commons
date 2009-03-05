@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ public class DSCCommentPage extends AbstractDSCComment {
 
     private String pageName;
     private int pagePosition = -1;
-    
+
     /**
      * Creates a new instance.
      */
@@ -49,7 +49,7 @@ public class DSCCommentPage extends AbstractDSCComment {
         setPageName(pageName);
         setPagePosition(pagePosition);
     }
-    
+
     /**
      * Creates a new instance. The page name will be set to the same value as the page position.
      * @param pagePosition the position of the page within the file (1-based)
@@ -65,7 +65,7 @@ public class DSCCommentPage extends AbstractDSCComment {
     public String getPageName() {
         return this.pageName;
     }
-    
+
     /**
      * Sets the page name.
      * @param name the page name
@@ -81,7 +81,7 @@ public class DSCCommentPage extends AbstractDSCComment {
     public int getPagePosition() {
         return this.pagePosition;
     }
-    
+
     /**
      * Sets the page position.
      * @param position the page position (1-based)
@@ -116,13 +116,13 @@ public class DSCCommentPage extends AbstractDSCComment {
         this.pageName = (String)iter.next();
         this.pagePosition = Integer.parseInt((String)iter.next());
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.events.DSCEvent#generate(
      *          org.apache.xmlgraphics.ps.PSGenerator)
      */
     public void generate(PSGenerator gen) throws IOException {
-        gen.writeDSCComment(getName(), 
+        gen.writeDSCComment(getName(),
                 new Object[] {getPageName(), new Integer(getPagePosition())});
     }
 

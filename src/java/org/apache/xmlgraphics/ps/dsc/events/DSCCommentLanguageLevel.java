@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import org.apache.xmlgraphics.ps.PSGenerator;
 public class DSCCommentLanguageLevel extends AbstractDSCComment {
 
     private int level;
-    
+
     /**
      * Creates a new instance.
      */
@@ -44,7 +44,7 @@ public class DSCCommentLanguageLevel extends AbstractDSCComment {
     public DSCCommentLanguageLevel(int level) {
         this.level = level;
     }
-    
+
     /**
      * Returns the PostScript language level (usually 2 or 3).
      * @return the language level
@@ -52,7 +52,7 @@ public class DSCCommentLanguageLevel extends AbstractDSCComment {
     public int getLanguageLevel() {
         return this.level;
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.events.DSCComment#getName()
      */
@@ -73,7 +73,7 @@ public class DSCCommentLanguageLevel extends AbstractDSCComment {
     public void parseValue(String value) {
         this.level = Integer.parseInt(value);
     }
-    
+
     /**
      * @see org.apache.xmlgraphics.ps.dsc.events.DSCEvent#generate(org.apache.xmlgraphics.ps.PSGenerator)
      */

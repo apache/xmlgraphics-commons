@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,11 +28,11 @@ import java.util.TreeSet;
 /**
  * This is an implementation of Dijkstra's algorithm to find the shortest path for a directed
  * graph with non-negative edge weights.
- * @see <a href="http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">WikiPedia on Dijkstra's 
+ * @see <a href="http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">WikiPedia on Dijkstra's
  *      Algorithm</a>
  */
 public class DijkstraAlgorithm {
-    
+
     /** Infinity value for distances. */
     public static final int INFINITE = Integer.MAX_VALUE;
 
@@ -117,7 +117,7 @@ public class DijkstraAlgorithm {
         if (start == null || destination == null) {
             throw new NullPointerException("start and destination may not be null");
         }
-        
+
         reset();
         setShortestDistance(start, 0);
         priorityQueue.add(start);
@@ -129,7 +129,7 @@ public class DijkstraAlgorithm {
         while (priorityQueue.size() > 0) {
             u = (Vertex)priorityQueue.first();
             priorityQueue.remove(u);
-            
+
             if (destination.equals(u)) {
                 //Destination reached
                 break;

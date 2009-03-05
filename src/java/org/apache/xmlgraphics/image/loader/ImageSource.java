@@ -30,7 +30,7 @@ import org.apache.xmlgraphics.image.loader.util.ImageInputStreamAdapter;
  * Acts as a holder for the input to image loading operations.
  */
 public class ImageSource implements Source {
-    
+
     private String systemId;
     private ImageInputStream iin;
     private boolean fastSource;
@@ -67,7 +67,7 @@ public class ImageSource implements Source {
     public ImageInputStream getImageInputStream() {
         return this.iin;
     }
-    
+
     /**
      * Sets the ImageInputStream.
      * @param in the ImageInputStream
@@ -75,7 +75,7 @@ public class ImageSource implements Source {
     public void setImageInputStream(ImageInputStream in) {
         this.iin = in;
     }
-    
+
     /** {@inheritDoc} */
     public String getSystemId() {
         return this.systemId;
@@ -85,7 +85,7 @@ public class ImageSource implements Source {
     public void setSystemId(String systemId) {
         this.systemId = systemId;
     }
-    
+
     /**
      * Indicates whether this ImageSource is a fast source, i.e. accesses local files rather than
      * network resources.
@@ -100,5 +100,5 @@ public class ImageSource implements Source {
         return (isFastSource() ? "FAST " : "") + "ImageSource: "
             + getSystemId() + " " + getImageInputStream();
     }
-    
+
 }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.java2d.ps;
 
 import java.io.IOException;
@@ -55,17 +55,17 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
         //PostScript Header
         gen.writeln(DSCConstants.PS_ADOBE_30 + " " + DSCConstants.EPSF_30);
-        gen.writeDSCComment(DSCConstants.CREATOR, 
-                    new String[] {"Apache XML Graphics Commons" 
+        gen.writeDSCComment(DSCConstants.CREATOR,
+                    new String[] {"Apache XML Graphics Commons"
                         + ": EPS Generator for Java2D"});
-        gen.writeDSCComment(DSCConstants.CREATION_DATE, 
+        gen.writeDSCComment(DSCConstants.CREATION_DATE,
                     new Object[] {new java.util.Date()});
         gen.writeDSCComment(DSCConstants.PAGES, DSCConstants.ATEND);
         gen.writeDSCComment(DSCConstants.BBOX, new Object[]
                 {ZERO, ZERO, pagewidth, pageheight});
         gen.writeDSCComment(DSCConstants.LANGUAGE_LEVEL, new Integer(gen.getPSLevel()));
         gen.writeDSCComment(DSCConstants.END_COMMENTS);
-        
+
         //Prolog
         gen.writeDSCComment(DSCConstants.BEGIN_PROLOG);
         PSProcSets.writeStdProcSet(gen);
@@ -78,7 +78,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
     protected void writePageHeader() throws IOException {
         Integer pageNumber = new Integer(this.pagecount);
-        gen.writeDSCComment(DSCConstants.PAGE, new Object[] 
+        gen.writeDSCComment(DSCConstants.PAGE, new Object[]
                 {pageNumber.toString(), pageNumber});
         gen.writeDSCComment(DSCConstants.PAGE_BBOX, new Object[]
                 {ZERO, ZERO, new Integer(width), new Integer(height)});
@@ -87,7 +87,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
             ((PSTextHandler)customTextHandler).writePageSetup();
         }
     }
-    
+
     protected void writePageTrailer() throws IOException {
         //nop, no DSC PageTrailer needed
     }

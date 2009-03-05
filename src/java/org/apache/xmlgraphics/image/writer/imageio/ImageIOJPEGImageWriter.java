@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,14 +39,14 @@ import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
 
     private static final String JPEG_NATIVE_FORMAT = "javax_imageio_jpeg_image_1.0";
-    
+
     /**
      * Main constructor.
      */
     public ImageIOJPEGImageWriter() {
         super("image/jpeg");
     }
- 
+
     /**
      * @see ImageIOImageWriter#updateMetadata(javax.imageio.metadata.IIOMetadata, ImageWriterParams)
      */
@@ -57,7 +57,7 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
 
             IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(JPEG_NATIVE_FORMAT);
             //IIOMetadataNode root = new IIOMetadataNode(jpegmeta);
-            
+
             IIOMetadataNode jv = getChildNode(root, "JPEGvariety");
             if (jv == null) {
                 jv = new IIOMetadataNode("JPEGvariety");
@@ -80,33 +80,33 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
                 child.setAttribute("Ydensity", params.getResolution().toString());
                 child.setAttribute("thumbWidth", null);
                 child.setAttribute("thumbHeight", null);
-                
+
             }
-            
+
             /*
             IIOMetadataNode ms = getChildNode(root, "markerSequence");
             if (ms == null) {
                 ms = new IIOMetadataNode("markerSequence");
                 root.appendChild(ms);
             }*/
-            
+
             try {
                 meta.setFromTree(JPEG_NATIVE_FORMAT, root);
                 //meta.mergeTree(JPEG_NATIVE_FORMAT, root);
             } catch (IIOInvalidTreeException e) {
-                throw new RuntimeException("Cannot update image metadata: " 
+                throw new RuntimeException("Cannot update image metadata: "
                             + e.getMessage(), e);
             }
 
             //ImageIODebugUtil.dumpMetadata(meta);
-            
+
             //meta = super.updateMetadata(meta, params);
             //ImageIODebugUtil.dumpMetadata(meta);
         }
-        
+
         return meta;
     }
-    
+
     private static IIOMetadata addAdobeTransform(IIOMetadata meta) {
         // add the adobe transformation (transform 1 -> to YCbCr)
         IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(JPEG_NATIVE_FORMAT);
@@ -132,12 +132,12 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
         try {
             meta.setFromTree(JPEG_NATIVE_FORMAT, root);
         } catch (IIOInvalidTreeException e) {
-            throw new RuntimeException("Cannot update image metadata: " 
+            throw new RuntimeException("Cannot update image metadata: "
                         + e.getMessage(), e);
         }
         return meta;
-    }    
-    
+    }
+
     /**
      * @see ImageIOImageWriter#getDefaultWriteParam(javax.imageio.ImageWriter, java.awt.image.RenderedImage, ImageWriterParams)
      */
@@ -158,6 +158,6 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
         */
         return param;
     }
-    
-    
+
+
 }

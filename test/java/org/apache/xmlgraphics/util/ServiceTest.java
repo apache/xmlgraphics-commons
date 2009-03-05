@@ -39,13 +39,13 @@ public class ServiceTest extends TestCase {
         boolean found = false;
         Object writer1 = null;
         Object writer2 = null;
-        
+
         //First run: Find a writer implementation (one of the two must be available)
         Iterator iter = Service.providers(cls);
         while (iter.hasNext()) {
             Object obj = iter.next();
             assertNotNull(obj);
-            String className = obj.getClass().getName(); 
+            String className = obj.getClass().getName();
             if ("org.apache.xmlgraphics.image.writer.internal.PNGImageWriter".equals(className)) {
                 writer1 = obj;
                 found = true;
@@ -64,7 +64,7 @@ public class ServiceTest extends TestCase {
         while (iter.hasNext()) {
             Object obj = iter.next();
             assertNotNull(obj);
-            String className = obj.getClass().getName(); 
+            String className = obj.getClass().getName();
             if ("org.apache.xmlgraphics.image.writer.internal.PNGImageWriter".equals(className)) {
                 assertTrue(obj == writer1);
                 break;
@@ -75,7 +75,7 @@ public class ServiceTest extends TestCase {
             }
         }
     }
-    
+
     /**
      * Tests the mode where Service returns class names.
      * @throws Exception in case of an error
@@ -104,5 +104,5 @@ public class ServiceTest extends TestCase {
             assertTrue("Returned object must be a class name", obj instanceof String);
         }
     }
-    
+
 }

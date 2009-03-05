@@ -36,7 +36,7 @@ import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 public class ImageCacheTestCase extends TestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
-    
+
     /**
      * Tests the ImageInfo cache.
      * @throws Exception if an error occurs
@@ -45,33 +45,33 @@ public class ImageCacheTestCase extends TestCase {
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-        
+
         String invalid1 = "invalid1.jpg";
         String invalid2 = "invalid2.jpg";
         String valid1 = "bgimg300dpi.bmp";
         String valid2 = "big-image.png";
-        
+
         ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
         manager.getCache().setCacheListener(statistics);
-        
+
         ImageInfo info1, info2;
         info1 = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info1);
         assertEquals(valid1, info1.getOriginalURI());
-        
+
         try {
             manager.getImageInfo(invalid1, sessionContext);
             fail("Expected FileNotFoundException for invalid URI");
         } catch (FileNotFoundException e) {
             //expected
         }
-        
+
         //2 requests:
         assertEquals(0, statistics.getImageInfoCacheHits());
         assertEquals(2, statistics.getImageInfoCacheMisses());
         assertEquals(0, statistics.getInvalidHits());
         statistics.reset();
-        
+
         //Cache Hit
         info1 = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info1);
@@ -81,7 +81,7 @@ public class ImageCacheTestCase extends TestCase {
         info2 = manager.getImageInfo(valid2, sessionContext);
         assertNotNull(info2);
         assertEquals(valid2, info2.getOriginalURI());
-        
+
         try {
             //Invalid Hit
             manager.getImageInfo(invalid1, sessionContext);
@@ -96,13 +96,13 @@ public class ImageCacheTestCase extends TestCase {
         } catch (FileNotFoundException e) {
             //expected
         }
-        
+
         //4 requests:
         assertEquals(1, statistics.getImageInfoCacheHits());
         assertEquals(2, statistics.getImageInfoCacheMisses());
         assertEquals(1, statistics.getInvalidHits());
         statistics.reset();
-        
+
     }
 
     /**
@@ -112,31 +112,31 @@ public class ImageCacheTestCase extends TestCase {
     public void testImageCache1() throws Exception {
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-        
+
         String valid1 = "bgimg72dpi.gif";
-        
+
         ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
         manager.getCache().setCacheListener(statistics);
-        
+
         ImageInfo info = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info);
-        
+
         ImageBuffered img1 = (ImageBuffered)manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         assertNotNull(img1);
         assertNotNull(img1.getBufferedImage());
-        
+
         ImageBuffered img2 = (ImageBuffered)manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         //ImageBuffered does not have to be the same instance but we want at least the
         //BufferedImage to be reused.
         assertTrue("BufferedImage must be reused",
                 img1.getBufferedImage() == img2.getBufferedImage());
-        
+
         assertEquals(1, statistics.getImageCacheHits());
         assertEquals(1, statistics.getImageCacheMisses());
     }
-    
+
     /**
      * Tests the image cache reusing a cacheable Image created by one of the ImageConverters in
      * a converter pipeline.
@@ -145,20 +145,20 @@ public class ImageCacheTestCase extends TestCase {
     public void DISABLEDtestImageCache2() throws Exception {
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-        
+
         String valid1 = "test/resources/images/img-w-size.svg";
-        
+
         ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
         manager.getCache().setCacheListener(statistics);
-        
+
         ImageInfo info = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info);
-        
+
         ImageBuffered img1 = (ImageBuffered)manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         assertNotNull(img1);
         assertNotNull(img1.getBufferedImage());
-        
+
         ImageBuffered img2 = (ImageBuffered)manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         //ImageBuffered does not have to be the same instance but we want at least the
@@ -169,5 +169,5 @@ public class ImageCacheTestCase extends TestCase {
         assertEquals(1, statistics.getImageCacheHits()); //1=BufferedImage
         assertEquals(3, statistics.getImageCacheMisses()); //3=BufferedImage,Graphics2DImage,DOM
     }
-    
+
 }

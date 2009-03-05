@@ -29,16 +29,16 @@ import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
  */
 public class AdobePDFSchema extends XMPSchema {
 
-    /** Namespace URI for the Adobe PDF XMP schema */ 
+    /** Namespace URI for the Adobe PDF XMP schema */
     public static final String NAMESPACE = XMPConstants.ADOBE_PDF_NAMESPACE;
-    
+
     private static MergeRuleSet mergeRuleSet = new MergeRuleSet();
-    
+
     /** Creates a new schema instance for Dublin Core. */
     public AdobePDFSchema() {
         super(NAMESPACE, "pdf");
     }
-    
+
     /**
      * Creates and returns an adapter for this schema around the given metadata object.
      * @param meta the metadata object

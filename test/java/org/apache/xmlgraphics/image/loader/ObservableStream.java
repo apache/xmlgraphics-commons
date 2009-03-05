@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader;
 
 import java.lang.reflect.InvocationHandler;
@@ -39,30 +39,30 @@ public interface ObservableStream {
      * @return true if the stream is closed
      */
     boolean isClosed();
-    
+
     /**
      * Returns the system ID for the stream being observed.
      * @return the system ID
      */
     String getSystemID();
-    
+
     public static class Factory {
-        
+
         public static ImageInputStream observe(ImageInputStream iin, String systemID) {
             return (ImageInputStream)Proxy.newProxyInstance(
                     Factory.class.getClassLoader(),
                     new Class[] {ImageInputStream.class, ObservableStream.class},
                     new ObservingImageInputStreamInvocationHandler(iin, systemID));
         }
-        
+
     }
-    
+
     public static class ObservingImageInputStreamInvocationHandler
             implements InvocationHandler, ObservableStream {
 
         /** logger */
         protected static Log log = LogFactory.getLog(ObservableInputStream.class);
-        
+
         private ImageInputStream iin;
         private boolean closed;
         private String systemID;
@@ -71,7 +71,7 @@ public interface ObservableStream {
             this.iin = iin;
             this.systemID = systemID;
         }
-        
+
         /** {@inheritDoc} */
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getDeclaringClass().equals(ObservableStream.class)) {
@@ -105,5 +105,5 @@ public interface ObservableStream {
         }
 
     }
-    
+
 }

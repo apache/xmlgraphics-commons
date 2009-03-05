@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.awt.geom.Rectangle2D;
@@ -49,7 +49,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
     public static final Object EPS_BINARY_HEADER = EPSBinaryFileHeader.class;
     /** Key for bounding box used in custom objects of the ImageInfo class. */
     public static final Object EPS_BOUNDING_BOX = Rectangle2D.class;
-    
+
     /** {@inheritDoc} */
     public ImageInfo preloadImage(String uri, Source src, ImageContext context)
             throws IOException {
@@ -73,7 +73,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
                 in.reset();
                 in.mark(); //Mark start of file again
                 in.seek(binaryHeader.psStart);
-                
+
             } else if (magic == 0x53502125L) { //"%!PS" in little endian
                 supported = true; //ascii EPS
                 in.reset();
@@ -81,7 +81,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
             } else {
                 in.reset();
             }
-            
+
             if (supported) {
                 ImageInfo info = new ImageInfo(uri, MimeConstants.MIME_EPS);
                 boolean success = determineSize(in, context, info);
@@ -115,7 +115,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         offsets.tiffLength = in.readUnsignedInt();
         return offsets;
     }
-    
+
     private boolean determineSize(ImageInputStream in, ImageContext context, ImageInfo info)
             throws IOException {
 
@@ -158,7 +158,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
             } catch (DSCException e) {
                 throw new IOException("Error while parsing EPS file: " + e.getMessage());
             }
-            
+
             ImageSize size = new ImageSize();
             size.setSizeInMillipoints(
                     (int)Math.round(bbox.getWidth() * 1000),
@@ -177,7 +177,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
      * Holder class for various pointers to the contents of the EPS file.
      */
     public static class EPSBinaryFileHeader {
-        
+
         private long psStart = 0;
         private long psLength = 0;
         private long wmfStart = 0;
@@ -192,7 +192,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getPSStart() {
             return psStart;
         }
-        
+
         /**
          * Returns the length of the PostScript section.
          * @return the length of the PostScript section (in bytes)
@@ -200,7 +200,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getPSLength() {
             return psLength;
         }
-        
+
         /**
          * Indicates whether the EPS has a WMF preview.
          * @return true if there is a WMF preview
@@ -208,7 +208,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public boolean hasWMFPreview() {
             return (wmfStart != 0);
         }
-        
+
         /**
          * Returns the start offset of the WMF preview.
          * @return the start offset (or 0 if there's no WMF preview)
@@ -216,7 +216,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getWMFStart() {
             return wmfStart;
         }
-        
+
         /**
          * Returns the length of the WMF preview.
          * @return the length of the WMF preview (in bytes)
@@ -224,7 +224,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getWMFLength() {
             return wmfLength;
         }
-        
+
         /**
          * Indicates whether the EPS has a TIFF preview.
          * @return true if there is a TIFF preview
@@ -232,7 +232,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public boolean hasTIFFPreview() {
             return (tiffStart != 0);
         }
-        
+
         /**
          * Returns the start offset of the TIFF preview.
          * @return the start offset (or 0 if there's no TIFF preview)
@@ -240,7 +240,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getTIFFStart() {
             return tiffStart;
         }
-        
+
         /**
          * Returns the length of the TIFF preview.
          * @return the length of the TIFF preview (in bytes)
@@ -248,7 +248,7 @@ public class PreloaderEPS extends AbstractImagePreloader {
         public long getTIFFLength() {
             return tiffLength;
         }
-        
+
     }
-    
+
 }

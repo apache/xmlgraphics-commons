@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.spi;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public interface ImageConverter {
     int MINIMAL_CONVERSION_PENALTY = 1;
     /** Default/Medium conversion penalty (if there's some effort to convert the image format) */
     int MEDIUM_CONVERSION_PENALTY = 10;
-    
+
     /**
      * Converts an image into a different representation.
      * @param src the source image
@@ -47,23 +47,23 @@ public interface ImageConverter {
      * @throws IOException if an I/O error occurs while converting the image
      */
     Image convert(Image src, Map hints) throws ImageException, IOException;
-    
+
     /**
      * Returns the flavor that this converter converts images into.
      * @return the target flavor
      */
     ImageFlavor getTargetFlavor();
-    
+
     /**
      * Returns the flavor that this converter expects.
      * @return the source flavor
      */
     ImageFlavor getSourceFlavor();
-    
+
     /**
      * Returns the conversion penalty for the conversion that this implementation supports.
      * @return the conversion penalty (must be a non-negative integer)
      */
     int getConversionPenalty();
-    
+
 }

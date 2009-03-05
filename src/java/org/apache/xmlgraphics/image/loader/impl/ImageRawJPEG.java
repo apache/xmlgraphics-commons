@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 
 /**
  * This class is an implementation of the Image interface exposing a JPEG file. It provides an
- * InputStream to access the JPEG content and some additional information on the image. 
+ * InputStream to access the JPEG content and some additional information on the image.
  */
 public class ImageRawJPEG extends ImageRawStream {
 
@@ -35,7 +35,7 @@ public class ImageRawJPEG extends ImageRawStream {
     private ColorSpace colorSpace;
     private ICC_Profile iccProfile;
     private boolean invertImage = false;
-    
+
     /**
      * Main constructor.
      * @param info the image info object
@@ -53,7 +53,7 @@ public class ImageRawJPEG extends ImageRawStream {
         this.iccProfile = iccProfile;
         this.invertImage = invertImage;
     }
-    
+
     /**
      * Returns the SOFn identifier of the image which describes the coding format of the image.
      * @return the SOFn identifier
@@ -61,7 +61,7 @@ public class ImageRawJPEG extends ImageRawStream {
     public int getSOFType() {
         return this.sofType;
     }
-    
+
     /**
      * Returns the ICC color profile if one is associated with the JPEG image.
      * @return the ICC color profile or null if there's no profile
@@ -69,7 +69,7 @@ public class ImageRawJPEG extends ImageRawStream {
     public ICC_Profile getICCProfile() {
         return this.iccProfile;
     }
-    
+
     /**
      * Indicates whether the image should be inverted when interpreting it.
      * @return true if the image is to be inverted
@@ -85,5 +85,5 @@ public class ImageRawJPEG extends ImageRawStream {
     public ColorSpace getColorSpace() {
         return this.colorSpace;
     }
-    
+
 }

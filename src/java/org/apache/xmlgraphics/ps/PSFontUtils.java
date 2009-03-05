@@ -88,7 +88,7 @@ public class PSFontUtils {
     /** the PSResource representing the WinAnsiEncoding. */
     public static final PSResource WINANSI_ENCODING_RESOURCE
             = new PSResource(PSResource.TYPE_ENCODING, "WinAnsiEncoding");
-    
+
     /**
      * Defines the WinAnsi encoding for use in PostScript files.
      * @param gen the PostScript generator
@@ -127,7 +127,7 @@ public class PSFontUtils {
      * @param encoding the new encoding (must be predefined in the PS file)
      * @throws IOException In case of an I/O problem
      */
-    public static void redefineFontEncoding(PSGenerator gen, String fontName, String encoding) 
+    public static void redefineFontEncoding(PSGenerator gen, String fontName, String encoding)
                 throws IOException {
         gen.writeln("/" + fontName + " findfont");
         gen.writeln("dup length dict begin");

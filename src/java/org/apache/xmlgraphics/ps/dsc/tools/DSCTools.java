@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,16 +77,16 @@ public class DSCTools implements DSCParserConstants {
         if (event.getEventType() == HEADER_COMMENT) {
             DSCHeaderComment header = (DSCHeaderComment)event;
             if (!header.isPSAdobe30()) {
-                throw new DSCException("PostScript file does not start with '" 
+                throw new DSCException("PostScript file does not start with '"
                         + DSCConstants.PS_ADOBE_30 + "'");
             }
             return header;
         } else {
-            throw new DSCException("PostScript file does not start with '" 
+            throw new DSCException("PostScript file does not start with '"
                     + DSCConstants.PS_ADOBE_30 + "'");
         }
     }
-    
+
     /**
      * Advances the parser to the next page or to the trailer or the end of file comment.
      * @param parser the DSC parser

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,15 +27,15 @@ import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 
 /**
- * An instance of <code>ImageEncodeParam</code> for encoding images in 
+ * An instance of <code>ImageEncodeParam</code> for encoding images in
  * the TIFF format.
  *
  * <p> This class allows for the specification of encoding parameters. By
  * default, the image is encoded without any compression, and is written
- * out consisting of strips, not tiles. The particular compression scheme 
+ * out consisting of strips, not tiles. The particular compression scheme
  * to be used can be specified by using the <code>setCompression()</code>
- * method. The compression scheme specified will be honored only if it is 
- * compatible with the type of image being written out. For example, 
+ * method. The compression scheme specified will be honored only if it is
+ * compatible with the type of image being written out. For example,
  * Group3 and Group4 compressions can only be used with Bilevel images.
  * Writing of tiled TIFF images can be enabled by calling the
  * <code>setWriteTiled()</code> method.
@@ -82,7 +82,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
     public static final int COMPRESSION_JPEG_BROKEN   = 6;
 
     /**
-     * <a href="ftp://ftp.sgi.com/graphics/tiff/TTN2.draft.txt"> 
+     * <a href="ftp://ftp.sgi.com/graphics/tiff/TTN2.draft.txt">
      * JPEG-in-TIFF</a> compression.
      */
     public static final int COMPRESSION_JPEG_TTN2     = 7;
@@ -91,7 +91,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
     public static final int COMPRESSION_PACKBITS      = 32773;
 
     /**
-     * <a href="http://info.internet.isi.edu:80/in-notes/rfc/files/rfc1951.txt"> 
+     * <a href="http://info.internet.isi.edu:80/in-notes/rfc/files/rfc1951.txt">
      * DEFLATE</a> lossless compression (also known as "Zip-in-TIFF").
      */
     public static final int COMPRESSION_DEFLATE       = 32946;
@@ -111,7 +111,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
 
     private int deflateLevel = Deflater.DEFAULT_COMPRESSION;
 
-    /** 
+    /**
      * Constructs a TIFFEncodeParam object with default values for
      * all parameters.
      */
@@ -158,7 +158,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
     }
 
     /**
-     * Returns the value of the writeTiled parameter. 
+     * Returns the value of the writeTiled parameter.
      */
     public boolean getWriteTiled() {
         return writeTiled;
@@ -168,7 +168,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * If set, the data will be written out in tiled format, instead of
      * in strips.
      *
-     * @param writeTiled     Specifies whether the image data should be 
+     * @param writeTiled     Specifies whether the image data should be
      *                       wriiten out in tiled format.
      */
     public void setWriteTiled(boolean writeTiled) {
@@ -191,7 +191,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      *
      * <p> If JPEG compession is being used, the dimensions of the strips or
      * tiles may be modified to conform to the JPEG-in-TIFF specification.
-     * 
+     *
      * @param tileWidth The tile width; ignored if strips are used.
      * @param tileHeight The tile height or number of rows per strip.
      */

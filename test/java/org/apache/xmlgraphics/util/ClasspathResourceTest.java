@@ -32,7 +32,7 @@ public class ClasspathResourceTest extends TestCase {
 
     /**
      * Tests whether the file /sample.txt with mime-type text/plain exists.
-     * 
+     *
      * @throws Exception
      *             in case of an error
      */
@@ -52,7 +52,7 @@ public class ClasspathResourceTest extends TestCase {
 
     /**
      * Tests the mode where Service returns class names.
-     * 
+     *
      * @throws Exception
      *             in case of an error
      */

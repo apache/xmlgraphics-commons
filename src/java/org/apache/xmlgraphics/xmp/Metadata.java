@@ -44,33 +44,33 @@ public class Metadata implements XMLizable, PropertyAccess {
     public void setProperty(XMPProperty prop) {
         properties.put(prop.getName(), prop);
     }
-    
+
     /** {@inheritDoc} */
     public XMPProperty getProperty(String uri, String localName) {
         return getProperty(new QName(uri, localName));
     }
-    
+
     /** {@inheritDoc} */
     public XMPProperty getProperty(QName name) {
         XMPProperty prop = (XMPProperty)properties.get(name);
         return prop;
     }
-    
+
     /** {@inheritDoc} */
     public XMPProperty getValueProperty() {
         return getProperty(XMPConstants.RDF_VALUE);
     }
-    
+
     /** {@inheritDoc} */
     public int getPropertyCount() {
         return this.properties.size();
     }
-    
+
     /** {@inheritDoc} */
     public Iterator iterator() {
         return this.properties.keySet().iterator();
     }
-    
+
     /**
      * Merges this metadata object into a given target metadata object. The merge rule set provided
      * by each schema is used for the merge.
@@ -87,7 +87,7 @@ public class Metadata implements XMLizable, PropertyAccess {
             merger.merge(prop, target);
         }
     }
-    
+
     /** {@inheritDoc} */
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
@@ -111,7 +111,7 @@ public class Metadata implements XMLizable, PropertyAccess {
 
             boolean first = true;
             boolean empty = true;
-            
+
             Iterator props = properties.values().iterator();
             while (props.hasNext()) {
                 XMPProperty prop = (XMPProperty)props.next();
@@ -141,7 +141,7 @@ public class Metadata implements XMLizable, PropertyAccess {
                 }
             }
         }
-        
+
         handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:RDF");
         handler.endPrefixMapping("rdf");
         handler.endElement(XMPConstants.XMP_NAMESPACE, "xmpmeta", "x:xmpmeta");

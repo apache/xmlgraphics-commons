@@ -62,11 +62,11 @@ public class ParseMetadata {
         System.out.println("Producer: " + prop.getValue());
         prop = meta.getProperty(XMPConstants.ADOBE_PDF_NAMESPACE, "PDFVersion");
         System.out.println("PDF version: " + prop.getValue());
-        
+
         DublinCoreAdapter dc = DublinCoreSchema.getAdapter(meta);
         System.out.println("Default title: " + dc.getTitle());
         System.out.println("German title: " + dc.getTitle("de"));
-        
+
         StreamResult res = new StreamResult(System.out);
         XMPSerializer.writeXML(meta, res);
     }

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import java.util.jar.Manifest;
  * them to the classpath.
  * <p>
  * Example:<br>
- * 
+ *
  * <pre>
  * Name: test.txt
  * Content-Type: text/plain
@@ -69,7 +69,7 @@ public final class ClasspathResource {
 
     /**
      * Retrieve the singleton instance of this class.
-     * 
+     *
      * @return the ClassPathResource instance.
      */
     public static synchronized ClasspathResource getInstance() {
@@ -164,7 +164,7 @@ public final class ClasspathResource {
 
     /**
      * Retrieve a list of resources known to have the given mime-type.
-     * 
+     *
      * @param mimeType
      *            the mime-type to search for.
      * @return a List&lt;URL&gt;, guaranteed to be != null.

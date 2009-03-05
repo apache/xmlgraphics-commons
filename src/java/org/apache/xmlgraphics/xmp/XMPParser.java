@@ -42,7 +42,7 @@ public class XMPParser {
     public static Metadata parseXMP(URL url) throws TransformerException {
         return parseXMP(new StreamSource(url.toExternalForm()));
     }
-    
+
     /**
      * Parses an XMP file.
      * @param src a JAXP Source object where the XMP file can be loaded from
@@ -65,5 +65,5 @@ public class XMPParser {
     public static XMPHandler createXMPHandler() {
         return new XMPHandler();
     }
-    
+
 }

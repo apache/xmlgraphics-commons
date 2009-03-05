@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,7 +82,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         //PostScript Header
         gen.writeln(DSCConstants.PS_ADOBE_30);
         gen.writeDSCComment(DSCConstants.CREATOR,
-                    new String[] {"Apache XML Graphics Commons" 
+                    new String[] {"Apache XML Graphics Commons"
                         + ": PostScript Generator for Java2D"});
         gen.writeDSCComment(DSCConstants.CREATION_DATE,
                     new Object[] {new java.util.Date()});
@@ -91,15 +91,15 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
                 {ZERO, ZERO, pagewidth, pageheight});
         gen.writeDSCComment(DSCConstants.LANGUAGE_LEVEL, new Integer(gen.getPSLevel()));
         gen.writeDSCComment(DSCConstants.END_COMMENTS);
-        
+
         //Defaults
         gen.writeDSCComment(DSCConstants.BEGIN_DEFAULTS);
         gen.writeDSCComment(DSCConstants.END_DEFAULTS);
-        
+
         //Prolog
         gen.writeDSCComment(DSCConstants.BEGIN_PROLOG);
         gen.writeDSCComment(DSCConstants.END_PROLOG);
-        
+
         //Setup
         gen.writeDSCComment(DSCConstants.BEGIN_SETUP);
         PSProcSets.writeStdProcSet(gen);
@@ -112,7 +112,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
     protected void writePageHeader() throws IOException {
         Integer pageNumber = new Integer(this.pagecount);
-        gen.writeDSCComment(DSCConstants.PAGE, new Object[] 
+        gen.writeDSCComment(DSCConstants.PAGE, new Object[]
                 {pageNumber.toString(), pageNumber});
         gen.writeDSCComment(DSCConstants.PAGE_BBOX, new Object[]
                 {ZERO, ZERO, new Integer(width), new Integer(height)});
@@ -125,11 +125,11 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
             ((PSTextHandler)customTextHandler).writePageSetup();
         }
     }
-    
+
     protected void writePageTrailer() throws IOException {
-        gen.writeln("showpage");        
+        gen.writeln("showpage");
     }
-    
+
     /**
      * This constructor supports the create method
      * @param g the PostScript document graphics to make a copy of

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.java2d.ps;
 
 import java.awt.Color;
@@ -40,10 +40,10 @@ import org.apache.xmlgraphics.ps.PSGenerator;
 public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
 
     protected static final Integer ZERO = new Integer(0);
-    
+
     protected int width;
     protected int height;
-    
+
     protected float viewportWidth;
     protected float viewportHeight;
 
@@ -53,7 +53,7 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
     protected Shape initialClip;
     protected AffineTransform initialTransform;
 
-    
+
     /**
      * Create a new AbstractPSDocumentGraphics2D.
      * This is used to create a new PostScript document, the height,
@@ -85,10 +85,10 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
 
         //Setup for PostScript generation
         setPSGenerator(new PSGenerator(stream));
-        
+
         writeFileHeader();
     }
-    
+
     protected abstract void writeFileHeader() throws IOException;
 
     /**
@@ -150,7 +150,7 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         currentStream.write("Q\n");
         */
     }
-    
+
     public int getPageCount() {
         return this.pagecount;
     }
@@ -165,21 +165,21 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         }
         //Finish page
         writePageTrailer();
-        this.pagePending = false;         
+        this.pagePending = false;
     }
-    
+
     /**
      * Writes the page header for a page.
      * @throws IOException In case an I/O error occurs
      */
     protected abstract void writePageHeader() throws IOException;
-    
+
     /**
      * Writes the page trailer for a page.
      * @throws IOException In case an I/O error occurs
      */
     protected abstract void writePageTrailer() throws IOException;
-    
+
 
     /** {@inheritDoc} */
     public void preparePainting() {
@@ -199,23 +199,23 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         }
         //Start page
         this.pagecount++;
-        
+
         if (this.initialTransform == null) {
             //Save initial transformation matrix
             this.initialTransform = getTransform();
-            this.initialClip = getClip();      
+            this.initialClip = getClip();
         } else {
             //Reset transformation matrix
             setTransform(this.initialTransform);
             setClip(this.initialClip);
         }
-          
+
         writePageHeader();
-        if ((this.viewportWidth != this.width 
+        if ((this.viewportWidth != this.width
                 || this.viewportHeight != this.height)
                 && (this.viewportWidth > 0) && (this.viewportHeight > 0)){
-            gen.concatMatrix(this.width / this.viewportWidth, 0, 
-                       0, -1 * (this.height / this.viewportHeight), 
+            gen.concatMatrix(this.width / this.viewportWidth, 0,
+                       0, -1 * (this.height / this.viewportHeight),
                        0, this.height);
         } else {
             gen.concatMatrix(1, 0, 0, -1, 0, this.height);
@@ -236,14 +236,14 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         if (this.pagePending) {
             closePage();
         }
-        
+
         //Finish document
         gen.writeDSCComment(DSCConstants.TRAILER);
         gen.writeDSCComment(DSCConstants.PAGES, new Integer(this.pagecount));
         gen.writeDSCComment(DSCConstants.EOF);
         gen.flush();
     }
-    
+
     /**
      * This constructor supports the create method
      * @param g the PostScript document graphics to make a copy of

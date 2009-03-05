@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
 
     private static final int TIFF_SIG_LENGTH = 8;
 
-    /** {@inheritDoc} 
+    /** {@inheritDoc}
      * @throws ImageException */
     public ImageInfo preloadImage(String uri, Source src, ImageContext context)
             throws IOException, ImageException {
@@ -79,7 +79,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
         }
 
         if (supported) {
-            ImageInfo info = createImageInfo(uri, in, context); 
+            ImageInfo info = createImageInfo(uri, in, context);
             return info;
         } else {
             return null;
@@ -92,7 +92,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
         in.mark();
         try {
             int pageIndex = ImageUtil.needPageIndexFromURI(uri);
-            
+
             SeekableStream seekable = new SeekableStreamAdapter(in);
             TIFFDirectory dir;
             try {
@@ -136,20 +136,20 @@ public class PreloaderTIFF extends AbstractImagePreloader {
 
             info = new ImageInfo(uri, MimeConstants.MIME_TIFF);
             info.setSize(size);
-            
+
             TIFFField fld;
-            
+
             fld = dir.getField(TIFFImageDecoder.TIFF_COMPRESSION);
             if (fld != null) {
                 int compression = fld.getAsInt(0);
                 info.getCustomObjects().put("TIFF_COMPRESSION", new Integer(compression));
             }
-            
+
             fld = dir.getField(TIFFImageDecoder.TIFF_TILE_WIDTH);
             if (fld != null) {
                 info.getCustomObjects().put("TIFF_TILED", Boolean.TRUE);
             }
-            
+
             int stripCount;
             fld = dir.getField(TIFFImageDecoder.TIFF_ROWS_PER_STRIP);
             if (fld == null) {
@@ -158,7 +158,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                 stripCount = (int)(size.getHeightPx() / fld.getAsLong(0));
             }
             info.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(stripCount));
-            
+
             try {
                 //Check if there is a next page
                 new TIFFDirectory(seekable, pageIndex + 1);

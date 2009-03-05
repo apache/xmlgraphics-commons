@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import java.io.OutputStream;
  * be removed or changed in future releases of JAI.</b>
  */
 public abstract class ImageEncoderImpl implements ImageEncoder {
-    
+
     /** The OutputStream associcted with this ImageEncoder. */
     protected OutputStream output;
 
@@ -62,7 +62,7 @@ public abstract class ImageEncoderImpl implements ImageEncoder {
     }
 
     /**
-     * Sets the current parameters to an instance of the 
+     * Sets the current parameters to an instance of the
      * ImageEncodeParam interface.  Concrete implementations
      * of ImageEncoder may throw a RuntimeException if the
      * params argument is not an instance of the appropriate
@@ -77,7 +77,7 @@ public abstract class ImageEncoderImpl implements ImageEncoder {
     public OutputStream getOutputStream() {
         return output;
     }
-    
+
     /**
      * Encodes a Raster with a given ColorModel and writes the output
      * to the OutputStream associated with this ImageEncoder.

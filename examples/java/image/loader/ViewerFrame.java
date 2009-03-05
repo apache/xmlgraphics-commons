@@ -39,14 +39,14 @@ import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
 public class ViewerFrame extends Frame {
 
     public static final String TITLE = "Very Simple Image Viewer";
-    
+
     public ViewerFrame(ImageGraphics2D g2dImage) {
         super(TITLE);
         addWindowListener(new WindowHandler());
         buildGUI(g2dImage);
         setSize(500, 400);
     }
-    
+
     private void buildGUI(final ImageGraphics2D g2dImage) {
         JPanel imagePanel = new JPanel() {
             /** {@inheritDoc} */
@@ -64,7 +64,7 @@ public class ViewerFrame extends Frame {
                     double sx = paintRect.getWidth() / dim.getWidth();
                     double sy = paintRect.getHeight() / dim.getHeight();
                     //g2d.scale(sx, sy);
-                    
+
                     /*
                     Rectangle2D targetRect = new Rectangle2D.Double(
                             paintRect.x * sx, paintRect.y * sy,
@@ -73,8 +73,8 @@ public class ViewerFrame extends Frame {
                     Rectangle2D targetRect = new Rectangle2D.Double(
                             paintRect.x, paintRect.y,
                             paintRect.width, paintRect.height);
-                    
-                    
+
+
                     g2d.draw(targetRect);
                     painter.paint(g2d, targetRect);
                 } finally {
@@ -84,7 +84,7 @@ public class ViewerFrame extends Frame {
         };
         add("Center", imagePanel);
     }
-    
+
     private class WindowHandler extends WindowAdapter {
         public void windowClosing(WindowEvent we) {
             System.exit(0);

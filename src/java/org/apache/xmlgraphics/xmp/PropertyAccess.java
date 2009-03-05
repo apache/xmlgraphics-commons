@@ -54,7 +54,7 @@ public interface PropertyAccess {
      * @return the rdf:value property or null if it's no available
      */
     XMPProperty getValueProperty();
-    
+
     /**
      * Returns the number of properties.
      * @return the number of properties in this metadata object.

@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class PreloaderEMF extends AbstractImagePreloader {
 
     /** Length of the EMF header */
     protected static final int EMF_SIG_LENGTH = 88;
-    
+
     /** offset to signature */
     private static final int SIGNATURE_OFFSET = 40;
     /** offset to width */
@@ -63,7 +63,7 @@ public class PreloaderEMF extends AbstractImagePreloader {
         }
         ImageInputStream in = ImageUtil.needImageInputStream(src);
         byte[] header = getHeader(in, EMF_SIG_LENGTH);
-        boolean supported 
+        boolean supported
             = ( (header[SIGNATURE_OFFSET + 0] == (byte) 0x20)
             && (header[SIGNATURE_OFFSET + 1] == (byte) 0x45)
             && (header[SIGNATURE_OFFSET + 2] == (byte) 0x4D)
@@ -84,15 +84,15 @@ public class PreloaderEMF extends AbstractImagePreloader {
         ByteOrder oldByteOrder = in.getByteOrder();
         try {
             ImageSize size = new ImageSize();
-            
+
             // BMP uses little endian notation!
             in.setByteOrder(ByteOrder.LITTLE_ENDIAN);
-            
+
             //resolution
             in.skipBytes(WIDTH_OFFSET);
             int width = (int)in.readUnsignedInt();
             int height = (int)in.readUnsignedInt();
-            
+
             in.skipBytes(HRES_PIXEL_OFFSET - WIDTH_OFFSET - 8);
             long hresPixel = in.readUnsignedInt();
             long vresPixel = in.readUnsignedInt();
@@ -101,12 +101,12 @@ public class PreloaderEMF extends AbstractImagePreloader {
             double resHorz = hresPixel / UnitConv.mm2in(hresMM);
             double resVert = vresPixel / UnitConv.mm2in(vresMM);
             size.setResolution(resHorz, resVert);
-            
+
             width = (int)Math.round(UnitConv.mm2mpt(width / 100f));
             height = (int)Math.round(UnitConv.mm2mpt(height / 100f));
             size.setSizeInMillipoints(width, height);
             size.calcPixelsFromSize();
-            
+
             return size;
         } finally {
             in.setByteOrder(oldByteOrder);

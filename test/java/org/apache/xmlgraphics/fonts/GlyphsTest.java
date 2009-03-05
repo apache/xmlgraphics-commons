@@ -5,9 +5,9 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
  */
 
 /* $Id$ */
- 
+
 package org.apache.xmlgraphics.fonts;
 
 import junit.framework.TestCase;
@@ -29,7 +29,7 @@ public class GlyphsTest extends TestCase {
     public void testGetUnicodeSequenceForGlyphName() throws Exception {
         String glyph;
         String unicodes;
-        
+
         glyph = "Omega";
         unicodes = Glyphs.getUnicodeSequenceForGlyphName(glyph);
         assertEquals(1, unicodes.length());
@@ -47,7 +47,7 @@ public class GlyphsTest extends TestCase {
         assertEquals(1, unicodes.length());
         assertEquals("Must contain 0041 - LATIN CAPITAL LETTER A",
                 unicodes.charAt(0), '\u0041');
-        
+
         glyph = "rehyehaleflamarabic";
         unicodes = Glyphs.getUnicodeSequenceForGlyphName(glyph);
         assertEquals(4, unicodes.length());
@@ -59,7 +59,7 @@ public class GlyphsTest extends TestCase {
                 unicodes.charAt(2), '\uFE8E');
         assertEquals("Expected 0644 - ARABIC LETTER LAM at position 3",
                 unicodes.charAt(3), '\u0644');
-        
+
         glyph = "Lcommaaccent_uni20AC0308_u20AC";
         unicodes = Glyphs.getUnicodeSequenceForGlyphName(glyph);
         assertEquals(4, unicodes.length());
@@ -71,12 +71,12 @@ public class GlyphsTest extends TestCase {
                 unicodes.charAt(2), '\u0308');
         assertEquals("Must contain 20AC",
                 unicodes.charAt(3), '\u20AC');
-        
+
         glyph = "blah";
         unicodes = Glyphs.getUnicodeSequenceForGlyphName(glyph);
         assertNull(unicodes);
     }
-    
+
     public void testGetCharNameAlternativesFor() throws Exception {
         String[] alts = Glyphs.getCharNameAlternativesFor("Omega");
         assertEquals(1, alts.length);
