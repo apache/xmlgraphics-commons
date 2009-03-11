@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * This class handles looking up service providers on the class path.
  * It implements the system described in:
@@ -94,11 +96,17 @@ public class Service {
             // Ooops! can't get his class loader.
         }
         // Can always request your own class loader. But it might be 'null'.
-        if (cl == null) cl = Service.class.getClassLoader();
-        if (cl == null) cl = ClassLoader.getSystemClassLoader();
+        if (cl == null) {
+            cl = Service.class.getClassLoader();
+        }
+        if (cl == null) {
+            cl = ClassLoader.getSystemClassLoader();
+        }
 
         // No class loader so we can't find 'serviceFile'.
-        if (cl == null) return l.iterator();
+        if (cl == null) {
+            return l.iterator();
+        }
 
         Enumeration e;
         try {
@@ -114,36 +122,41 @@ public class Service {
                 InputStream    is = u.openStream();
                 Reader         r  = new InputStreamReader(is, "UTF-8");
                 BufferedReader br = new BufferedReader(r);
+                try {
+                    String line = br.readLine();
+                    while (line != null) {
+                        try {
+                            // First strip any comment...
+                            int idx = line.indexOf('#');
+                            if (idx != -1) {
+                                line = line.substring(0, idx);
+                            }
 
-                String line = br.readLine();
-                while (line != null) {
-                    try {
-                        // First strip any comment...
-                        int idx = line.indexOf('#');
-                        if (idx != -1)
-                            line = line.substring(0, idx);
+                            // Trim whitespace.
+                            line = line.trim();
 
-                        // Trim whitespace.
-                        line = line.trim();
+                            // If nothing left then loop around...
+                            if (line.length() == 0) {
+                                line = br.readLine();
+                                continue;
+                            }
 
-                        // If nothing left then loop around...
-                        if (line.length() == 0) {
-                            line = br.readLine();
-                            continue;
+                            if (returnInstances) {
+                                // Try and load the class
+                                Object obj = cl.loadClass(line).newInstance();
+                                // stick it into our vector...
+                                l.add(obj);
+                            } else {
+                                l.add(line);
+                            }
+                        } catch (Exception ex) {
+                            // Just try the next line
                         }
-
-                        if (returnInstances) {
-                            // Try and load the class
-                            Object obj = cl.loadClass(line).newInstance();
-                            // stick it into our vector...
-                            l.add(obj);
-                        } else {
-                            l.add(line);
-                        }
-                    } catch (Exception ex) {
-                        // Just try the next line
+                        line = br.readLine();
                     }
-                    line = br.readLine();
+                } finally {
+                    IOUtils.closeQuietly(br);
+                    IOUtils.closeQuietly(is);
                 }
             } catch (Exception ex) {
                 // Just try the next file...
