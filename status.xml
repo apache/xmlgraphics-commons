@@ -41,6 +41,9 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Bugfix: Streams were not closed in Service class.
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Catching IllegalArgumentException in XMPSerializer when the Transformer implementation
         in use doesn't support the INDENT key.
       </action>
