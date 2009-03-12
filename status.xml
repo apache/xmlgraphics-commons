@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add" fixes-bug="46583" due-to="Jiří Kunhart">
+        Added TexturePaint support for PSGraphics2D (PostScript tiling patterns).
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix: Streams were not closed in Service class.
       </action>
@@ -47,7 +50,7 @@
         Catching IllegalArgumentException in XMPSerializer when the Transformer implementation
         in use doesn't support the INDENT key.
       </action>
-      <action context="Code" dev="AC" type="fix" fixes-bug="46292" due-to="Jiri Kunhart">
+      <action context="Code" dev="AC" type="fix" fixes-bug="46292" due-to="Jiří Kunhart">
         Added the ability to assign a string value for a key in a postscript dictionary.
       </action>
       <action context="Code" dev="JM" type="fix" fixes-bug="45789">

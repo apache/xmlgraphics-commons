@@ -477,7 +477,22 @@ public class PSGraphics2D extends AbstractGraphics2D {
         if (paint instanceof GradientPaint) {
             System.err.println("NYI: Gradient paint");
         } else if (paint instanceof TexturePaint) {
-            System.err.println("NYI: texture paint");
+            if (fill) {
+                try {
+                    // create pattern with texture and use it for filling of a graphics object
+                    PSTilingPattern psTilingPattern = new PSTilingPattern(null,
+                            (TexturePaint)paint, 0, 0, 3, null);
+                    if (!gen.getPatternStorage().checkAndStore(psTilingPattern)) {
+                        //TODO This violates the DSC specification!
+                        gen.write(psTilingPattern.toString());
+                    }
+                    gen.writeln("/Pattern setcolorspace");
+                    gen.writeln(psTilingPattern.getName() + " setcolor");
+                }
+                catch (IOException ioe) {
+                    handleIOException(ioe);
+                }
+            }
         }
     }
 

@@ -67,6 +67,14 @@ License labeling (according to http://www.apache.org/legal/3party.html):
 - No Reciprocity Required
 
 ==============================================================================
+  KNOWN ISSUES
+==============================================================================
+
+- PostScript output: When TexturePaint is used with PSGraphics2D, the output
+  violates the DSC specification. Extracting single pages from a multi-page
+  PostScript file can result in errors.
+
+==============================================================================
   RELEASE NOTES
 ==============================================================================
 
