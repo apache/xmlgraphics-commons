@@ -25,7 +25,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="year" value="1999-2008"/>
+  <property name="year" value="1999-2009"/>
 
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
@@ -189,6 +189,15 @@
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
+  <target name="compile" depends="compile-java, compile-copy-resources" description="Compiles the source code"/>
+
+  <target name="compile-copy-resources" description="Copies the resource files into the build directory">
+    <mkdir dir="${build.classes.dir}"/>
+    <copy todir="${build.classes.dir}">
+      <fileset dir="${src.res.dir}"/>
+    </copy>
+  </target>
+
   <target name="compile-pattern-with-codecs" depends="init" unless="internal-codecs.eff.disabled">
     <echo message="Internal codecs will be compiled."/>
     <patternset id="compile-pattern">
@@ -204,7 +213,7 @@
       <exclude name="**/image/writer/internal/TIFFImageWriter*.java"/>
     </patternset>
   </target>
-  <target name="compile-java" depends="init, compile-pattern-with-codecs, compile-pattern-without-codecs" description="Compiles the source code">
+  <target name="compile-java" depends="init, compile-pattern-with-codecs, compile-pattern-without-codecs">
     <!-- create directories -->
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}" fork="${javac.fork}" debug="${javac.debug}"
@@ -214,22 +223,19 @@
       <patternset refid="compile-pattern"/>
       <classpath refid="libs-build-classpath"/>
     </javac>
-    <copy todir="${build.classes.dir}">
-      <fileset dir="${src.res.dir}"/>
-    </copy>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates JAR files                                                   -->
   <!-- =================================================================== -->
 
-  <target name="uptodate-jar-main" depends="compile-java">
+  <target name="uptodate-jar-main" depends="compile">
     <uptodate property="jar.main.uptodate" targetfile="${build.dir}/${name}.jar">
       <srcfiles dir= "${build.classes.dir}"/>
     </uptodate>
   </target>
 
-  <target name="jar-main" depends="compile-java,uptodate-jar-main" description="Generates the main jar file" unless="jar.main.uptodate">
+  <target name="jar-main" depends="compile,uptodate-jar-main" description="Generates the main jar file" unless="jar.main.uptodate">
     <jar jarfile="${build.dir}/${name}-${version}.jar" basedir="${build.classes.dir}">
       <manifest>
         <attribute name="Implementation-Title" value="${Name}"/>
