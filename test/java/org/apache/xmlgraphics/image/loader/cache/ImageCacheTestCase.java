@@ -35,24 +35,33 @@ import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
  */
 public class ImageCacheTestCase extends TestCase {
 
+    private static final boolean DEBUG = false;
+
     private MockImageContext imageContext = MockImageContext.getInstance();
+    private ImageSessionContext sessionContext = imageContext.newSessionContext();
+    private ImageManager manager = imageContext.getImageManager();
+    private ImageCacheStatistics statistics = (DEBUG
+                ? new ImageCacheLoggingStatistics(true) : new ImageCacheStatistics(true));
+
+    /** {@inheritDoc} */
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        manager.getCache().clearCache();
+        statistics.reset();
+        manager.getCache().setCacheListener(statistics);
+    }
 
     /**
      * Tests the ImageInfo cache.
      * @throws Exception if an error occurs
      */
     public void testImageInfoCache() throws Exception {
-
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
-        ImageManager manager = imageContext.getImageManager();
-
         String invalid1 = "invalid1.jpg";
         String invalid2 = "invalid2.jpg";
         String valid1 = "bgimg300dpi.bmp";
         String valid2 = "big-image.png";
 
-        ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
-        manager.getCache().setCacheListener(statistics);
 
         ImageInfo info1, info2;
         info1 = manager.getImageInfo(valid1, sessionContext);
@@ -102,7 +111,44 @@ public class ImageCacheTestCase extends TestCase {
         assertEquals(2, statistics.getImageInfoCacheMisses());
         assertEquals(1, statistics.getInvalidHits());
         statistics.reset();
+    }
 
+    public void testInvalidURIExpiration() throws Exception {
+        MockTimeStampProvider provider = new MockTimeStampProvider();
+        ImageCache cache = new ImageCache(provider, new DefaultExpirationPolicy(2));
+        cache.setCacheListener(statistics);
+
+        String invalid1 = "invalid1.jpg";
+        String invalid2 = "invalid2.jpg";
+        String valid1 = "valid1.jpg";
+
+        provider.setTimeStamp(1000);
+        cache.registerInvalidURI(invalid1);
+        provider.setTimeStamp(1100);
+        cache.registerInvalidURI(invalid2);
+
+        assertEquals(0, statistics.getInvalidHits());
+
+        //not expired, yet
+        provider.setTimeStamp(1200);
+        assertFalse(cache.isInvalidURI(valid1));
+        assertTrue(cache.isInvalidURI(invalid1));
+        assertTrue(cache.isInvalidURI(invalid2));
+        assertEquals(2, statistics.getInvalidHits());
+
+        //first expiration time reached
+        provider.setTimeStamp(3050);
+        assertFalse(cache.isInvalidURI(valid1));
+        assertFalse(cache.isInvalidURI(invalid1));
+        assertTrue(cache.isInvalidURI(invalid2));
+        assertEquals(3, statistics.getInvalidHits());
+
+        //second expiration time reached
+        provider.setTimeStamp(3200);
+        assertFalse(cache.isInvalidURI(valid1));
+        assertFalse(cache.isInvalidURI(invalid1));
+        assertFalse(cache.isInvalidURI(invalid2));
+        assertEquals(3, statistics.getInvalidHits());
     }
 
     /**
@@ -110,13 +156,7 @@ public class ImageCacheTestCase extends TestCase {
      * @throws Exception if an error occurs
      */
     public void testImageCache1() throws Exception {
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
-        ImageManager manager = imageContext.getImageManager();
-
         String valid1 = "bgimg72dpi.gif";
-
-        ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
-        manager.getCache().setCacheListener(statistics);
 
         ImageInfo info = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info);
@@ -135,39 +175,6 @@ public class ImageCacheTestCase extends TestCase {
 
         assertEquals(1, statistics.getImageCacheHits());
         assertEquals(1, statistics.getImageCacheMisses());
-    }
-
-    /**
-     * Tests the image cache reusing a cacheable Image created by one of the ImageConverters in
-     * a converter pipeline.
-     * @throws Exception if an error occurs
-     */
-    public void DISABLEDtestImageCache2() throws Exception {
-        ImageSessionContext sessionContext = imageContext.newSessionContext();
-        ImageManager manager = imageContext.getImageManager();
-
-        String valid1 = "test/resources/images/img-w-size.svg";
-
-        ImageCacheStatistics statistics = new ImageCacheLoggingStatistics(true);
-        manager.getCache().setCacheListener(statistics);
-
-        ImageInfo info = manager.getImageInfo(valid1, sessionContext);
-        assertNotNull(info);
-
-        ImageBuffered img1 = (ImageBuffered)manager.getImage(
-                info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
-        assertNotNull(img1);
-        assertNotNull(img1.getBufferedImage());
-
-        ImageBuffered img2 = (ImageBuffered)manager.getImage(
-                info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
-        //ImageBuffered does not have to be the same instance but we want at least the
-        //BufferedImage to be reused.
-        assertTrue("BufferedImage must be reused",
-                img1.getBufferedImage() == img2.getBufferedImage());
-
-        assertEquals(1, statistics.getImageCacheHits()); //1=BufferedImage
-        assertEquals(3, statistics.getImageCacheMisses()); //3=BufferedImage,Graphics2DImage,DOM
     }
 
 }

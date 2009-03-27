@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add">
+        Added 60 seconds expiration for invalid URIs in the image cache to recover from
+        temporarily unavailable images.
+      </action>
       <action context="Code" dev="JM" type="add" fixes-bug="46583" due-to="Jiří Kunhart">
         Added TexturePaint support for PSGraphics2D (PostScript tiling patterns).
       </action>

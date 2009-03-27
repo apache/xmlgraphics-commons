@@ -22,7 +22,8 @@ package org.apache.xmlgraphics.image.loader.cache;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.transform.Source;
 
@@ -44,18 +45,47 @@ import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
  * <p>
  * Don't use one ImageCache instance in the context of multiple base URIs because relative URIs
  * would not work correctly anymore.
+ * <p>
+ * By default, the URIs of inaccessible images are remembered but these entries are discarded
+ * after 60 seconds (which causes a retry next time the same URI is requested). This allows
+ * to counteract performance loss when accessing invalid or temporarily unavailable images
+ * over slow connections.
  */
 public class ImageCache {
 
     /** logger */
     protected static Log log = LogFactory.getLog(ImageCache.class);
 
-    private Set invalidURIs = Collections.synchronizedSet(new java.util.HashSet());
+    //Handling of invalid URIs
+    private Map invalidURIs = Collections.synchronizedMap(new java.util.HashMap());
+    private ExpirationPolicy invalidURIExpirationPolicy;
 
+    //Actual image cache
     private SoftMapCache imageInfos = new SoftMapCache(true);
     private SoftMapCache images = new SoftMapCache(true);
 
     private ImageCacheListener cacheListener;
+    private TimeStampProvider timeStampProvider;
+    private long lastHouseKeeping;
+
+    /**
+     * Default constructor with default settings.
+     */
+    public ImageCache() {
+        this(new TimeStampProvider(), new DefaultExpirationPolicy());
+    }
+
+    /**
+     * Constructor for customized behaviour and testing.
+     * @param timeStampProvider the time stamp provider to use
+     * @param invalidURIExpirationPolicy the expiration policy for invalid URIs
+     */
+    public ImageCache(TimeStampProvider timeStampProvider,
+            ExpirationPolicy invalidURIExpirationPolicy) {
+        this.timeStampProvider = timeStampProvider;
+        this.invalidURIExpirationPolicy = invalidURIExpirationPolicy;
+        this.lastHouseKeeping = this.timeStampProvider.getTimeStamp();
+    }
 
     /**
      * Sets an ImageCacheListener instance so the events in the image cache can be observed.
@@ -114,13 +144,26 @@ public class ImageCache {
      * @return true if the URI is invalid
      */
     public boolean isInvalidURI(String uri) {
-        if (invalidURIs.contains(uri)) {
-            if (cacheListener != null) {
-                cacheListener.invalidHit(uri);
+        Long timestamp = (Long)invalidURIs.get(uri);
+        if (timestamp != null) {
+            boolean expired = removeInvalidURIIfExpired(uri, timestamp.longValue());
+            if (!expired) {
+                if (cacheListener != null) {
+                    cacheListener.invalidHit(uri);
+                }
+                return true;
             }
-            return true;
         }
         return false;
+    }
+
+    private boolean removeInvalidURIIfExpired(String uri, long timestamp) {
+        boolean expired = this.invalidURIExpirationPolicy.isExpired(
+                this.timeStampProvider, timestamp);
+        if (expired) {
+            this.invalidURIs.remove(uri);
+        }
+        return expired;
     }
 
     /**
@@ -151,18 +194,16 @@ public class ImageCache {
         imageInfos.put(info.getOriginalURI(), info);
     }
 
+    private static final long ONE_HOUR = 60 * 60 * 1000;
+
     /**
      * Registers a URI as invalid so getImageInfo can indicate that quickly with no I/O access.
      * @param uri the URI of the invalid image
      */
-    private void registerInvalidURI(String uri) {
-        synchronized (invalidURIs) {
-            // cap size of invalid list
-            if (invalidURIs.size() > 100) {
-                invalidURIs.clear();
-            }
-            invalidURIs.add(uri);
-        }
+    void registerInvalidURI(String uri) {
+        invalidURIs.put(uri, new Long(timeStampProvider.getTimeStamp()));
+
+        considerHouseKeeping();
     }
 
     /**
@@ -225,12 +266,35 @@ public class ImageCache {
         doHouseKeeping();
     }
 
+    private void considerHouseKeeping() {
+        long ts = timeStampProvider.getTimeStamp();
+        if (this.lastHouseKeeping + ONE_HOUR > ts) {
+            //Housekeeping is only triggered through registration of an invalid URI at the moment.
+            //Depending on the environment this could be triggered next to never.
+            //Doing this check for every image access could be relatively costly.
+            //The only alternative is a cleanup thread which is rather heavy-weight.
+            this.lastHouseKeeping = ts;
+            doHouseKeeping();
+        }
+    }
+
     /**
      * Triggers some house-keeping, i.e. removes stale entries.
      */
     public void doHouseKeeping() {
         imageInfos.doHouseKeeping();
         images.doHouseKeeping();
+        doInvalidURIHouseKeeping();
+    }
+
+    private void doInvalidURIHouseKeeping() {
+        synchronized(this.invalidURIs) {
+            Iterator iter = this.invalidURIs.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                removeInvalidURIIfExpired((String)entry.getKey(), ((Long)entry.getValue()).longValue());
+            }
+        }
     }
 
 }
