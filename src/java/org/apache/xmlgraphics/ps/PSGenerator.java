@@ -511,6 +511,28 @@ public class PSGenerator {
     }
 
     /**
+     * Establishes the specified line join style.
+     * @param linejoin the line join style (0, 1 or 2) as defined by the setlinejoin command.
+     * @exception IOException In case of an I/O problem
+     */
+    public void useLineJoin(int linejoin) throws IOException {
+        if (getCurrentState().useLineJoin(linejoin)) {
+            writeln(linejoin + " setlinejoin");
+        }
+    }
+
+    /**
+     * Establishes the specified miter limit.
+     * @param miterlimit the miter limit as defined by the setmiterlimit command.
+     * @exception IOException In case of an I/O problem
+     */
+    public void useMiterLimit(float miterlimit) throws IOException {
+        if (getCurrentState().useMiterLimit(miterlimit)) {
+            writeln(miterlimit + " setmiterlimit");
+        }
+    }
+
+    /**
      * Establishes the specified line width.
      * @param width the line width as defined by the setlinewidth command.
      * @exception IOException In case of an I/O problem

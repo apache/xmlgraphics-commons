@@ -19,11 +19,11 @@
 
 package org.apache.xmlgraphics.ps;
 
+import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.awt.Color;
-import java.awt.geom.AffineTransform;
 
 /**
  * This class holds the current state of the PostScript interpreter.
@@ -41,6 +41,8 @@ public class PSState implements Serializable {
     private List transformConcatList = new java.util.ArrayList();
 
     private int linecap = 0;
+    private int linejoin = 0;
+    private float miterLimit = 0;
     private double linewidth = 1.0f;
     private String dashpattern = DEFAULT_DASH;
     private Color color = DEFAULT_RGB_COLOR;
@@ -112,6 +114,34 @@ public class PSState implements Serializable {
     public boolean useLineCap(int value) {
         if (linecap != value) {
             linecap = value;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Establishes the specified line join.
+     * @param value line join (0, 1 or 2) as defined by the setlinejoin command
+     * @return true if the line join changed compared to the previous setting
+     */
+    public boolean useLineJoin(int value) {
+        if (linejoin != value) {
+            linejoin = value;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Establishes the specified miter limit.
+     * @param value the miter limit as defined by the setmiterlimit command
+     * @return true if the miter limit changed compared to the previous setting
+     */
+    public boolean useMiterLimit(float value) {
+        if (miterLimit != value) {
+            miterLimit = value;
             return true;
         } else {
             return false;
