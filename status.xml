@@ -40,6 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="VH" type="fix">
+        Bugfix: glyph names starting with ‘u’ but not in the ‘official’ glyph list could cause a 
+        StringIndexOutOfBoundsException because they were parsed as u1234-like unicode values.
+      </action>
       <action context="Code" dev="JM" type="add">
         Added 60 seconds expiration for invalid URIs in the image cache to recover from
         temporarily unavailable images.

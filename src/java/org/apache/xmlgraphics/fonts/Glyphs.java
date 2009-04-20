@@ -393,8 +393,16 @@ public class Glyphs {
                         pos += 4;
                     }
                 } else if (token.startsWith("u")) {
-                    if (token.length() > 7) {
+                    if (token.length() > 5) {
                         //TODO: Unicode scalar values greater than FFFF are currently not supported
+                        return null;
+                    }
+                    if (token.length() < 5) {
+                        /*
+                         * This is not in the form of 'u1234' --probably a
+                         * non-official glyph name that isn't listed in the
+                         * unicode map.
+                         */
                         return null;
                     }
                     try {
