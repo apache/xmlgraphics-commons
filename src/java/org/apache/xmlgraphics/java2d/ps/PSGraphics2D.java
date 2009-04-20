@@ -503,56 +503,74 @@ public class PSGraphics2D extends AbstractGraphics2D {
     protected void applyStroke(Stroke stroke) {
         preparePainting();
         try {
-            if (stroke instanceof BasicStroke) {
-                BasicStroke bs = (BasicStroke)stroke;
-
-                float[] da = bs.getDashArray();
-                if (da != null) {
-                    gen.write("[");
-                    for (int count = 0; count < da.length; count++) {
-                        gen.write(gen.formatDouble(da[count]));
-                        if (count < da.length - 1) {
-                            gen.write(" ");
-                        }
-                    }
-                    gen.write("] ");
-                    float offset = bs.getDashPhase();
-                    gen.writeln(gen.formatDouble(offset) + " setdash");
-                }
-                int ec = bs.getEndCap();
-                switch (ec) {
-                case BasicStroke.CAP_BUTT:
-                    gen.writeln("0 setlinecap");
-                    break;
-                case BasicStroke.CAP_ROUND:
-                    gen.writeln("1 setlinecap");
-                    break;
-                case BasicStroke.CAP_SQUARE:
-                    gen.writeln("2 setlinecap");
-                    break;
-                default: System.err.println("Unsupported line cap: " + ec);
-                }
-
-                int lj = bs.getLineJoin();
-                switch (lj) {
-                case BasicStroke.JOIN_MITER:
-                    gen.writeln("0 setlinejoin");
-                    float ml = bs.getMiterLimit();
-                    gen.writeln(gen.formatDouble(ml >= -1 ? ml : 1) + " setmiterlimit");
-                    break;
-                case BasicStroke.JOIN_ROUND:
-                    gen.writeln("1 setlinejoin");
-                    break;
-                case BasicStroke.JOIN_BEVEL:
-                    gen.writeln("2 setlinejoin");
-                    break;
-                default: System.err.println("Unsupported line join: " + lj);
-                }
-                float lw = bs.getLineWidth();
-                gen.writeln(gen.formatDouble(lw) + " setlinewidth");
-            }
+            applyStroke(stroke, gen);
         } catch (IOException ioe) {
             handleIOException(ioe);
+        }
+    }
+
+    /**
+     * Applies a new Stroke object.
+     * @param stroke the Stroke instance
+     * @param gen the PS generator
+     * @throws IOException if an I/O error occurs
+     */
+    public static void applyStroke(Stroke stroke, final PSGenerator gen)
+            throws IOException {
+        if (stroke instanceof BasicStroke) {
+            BasicStroke basicStroke = (BasicStroke)stroke;
+
+            float[] da = basicStroke.getDashArray();
+            if (da != null) {
+                StringBuffer sb = new StringBuffer("[");
+                for (int count = 0; count < da.length; count++) {
+                    sb.append(gen.formatDouble(da[count]));
+                    if (count < da.length - 1) {
+                        sb.append(" ");
+                    }
+                }
+                sb.append("] ");
+                float offset = basicStroke.getDashPhase();
+                sb.append(gen.formatDouble(offset));
+                gen.useDash(sb.toString());
+            } else {
+                gen.useDash(null);
+            }
+            int ec = basicStroke.getEndCap();
+            switch (ec) {
+            case BasicStroke.CAP_BUTT:
+                gen.useLineCap(0);
+                break;
+            case BasicStroke.CAP_ROUND:
+                gen.useLineCap(1);
+                break;
+            case BasicStroke.CAP_SQUARE:
+                gen.useLineCap(2);
+                break;
+            default: System.err.println("Unsupported line cap: " + ec);
+            }
+
+            int lj = basicStroke.getLineJoin();
+            switch (lj) {
+            case BasicStroke.JOIN_MITER:
+                gen.useLineJoin(0);
+                float ml = basicStroke.getMiterLimit();
+                gen.useMiterLimit(ml >= -1 ? ml : 1);
+                break;
+            case BasicStroke.JOIN_ROUND:
+                gen.useLineJoin(1);
+                gen.writeln("1 setlinejoin");
+                break;
+            case BasicStroke.JOIN_BEVEL:
+                gen.useLineJoin(2);
+                gen.writeln("2 setlinejoin");
+                break;
+            default: System.err.println("Unsupported line join: " + lj);
+            }
+            float lw = basicStroke.getLineWidth();
+            gen.useLineWidth(lw);
+        } else {
+            System.err.println("Stroke not supported: " + stroke.toString());
         }
     }
 
