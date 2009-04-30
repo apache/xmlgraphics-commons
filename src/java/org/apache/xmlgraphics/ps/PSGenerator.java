@@ -82,8 +82,14 @@ public class PSGenerator {
      */
     public PSGenerator(OutputStream out) {
         this.out = out;
+        resetGraphicsState();
+    }
+
+    private void resetGraphicsState() {
+        if (!this.graphicsStateStack.isEmpty()) {
+            throw new IllegalStateException("Graphics state stack should be empty at this point");
+        }
         this.currentState = new PSState();
-        //this.graphicsStateStack.push(this.currentState);
     }
 
     /**
@@ -413,6 +419,15 @@ public class PSGenerator {
      */
     public PSState getCurrentState() {
         return this.currentState;
+    }
+
+    /**
+     * Issues the "showpage" command and resets the painting state accordingly.
+     * @exception IOException In case of an I/O problem
+     */
+    public void showPage() throws IOException {
+        writeln("showpage");
+        resetGraphicsState();
     }
 
     /**

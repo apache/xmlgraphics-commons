@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix: reset graphic state when a page is finished in PostScript.
+      </action>
       <action context="Code" dev="VH" type="fix">
         Bugfix: glyph names starting with ‘u’ but not in the ‘official’ glyph list could cause a 
         StringIndexOutOfBoundsException because they were parsed as u1234-like unicode values.

@@ -49,6 +49,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         super(textAsShapes);
     }
 
+    /** {@inheritDoc} */
     protected void writeFileHeader() throws IOException {
         final Long pagewidth = new Long(this.width);
         final Long pageheight = new Long(this.height);
@@ -76,6 +77,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.END_PROLOG);
     }
 
+    /** {@inheritDoc} */
     protected void writePageHeader() throws IOException {
         Integer pageNumber = new Integer(this.pagecount);
         gen.writeDSCComment(DSCConstants.PAGE, new Object[]
@@ -88,6 +90,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         }
     }
 
+    /** {@inheritDoc} */
     protected void writePageTrailer() throws IOException {
         //nop, no DSC PageTrailer needed
     }
