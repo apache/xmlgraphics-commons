@@ -71,10 +71,12 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         setupDocument(stream, width, height);
     }
 
+    /** {@inheritDoc} */
     public void nextPage() throws IOException {
         closePage();
     }
 
+    /** {@inheritDoc} */
     protected void writeFileHeader() throws IOException {
         final Long pagewidth = new Long(this.width);
         final Long pageheight = new Long(this.height);
@@ -110,6 +112,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.END_SETUP);
     }
 
+    /** {@inheritDoc} */
     protected void writePageHeader() throws IOException {
         Integer pageNumber = new Integer(this.pagecount);
         gen.writeDSCComment(DSCConstants.PAGE, new Object[]
@@ -126,8 +129,9 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         }
     }
 
+    /** {@inheritDoc} */
     protected void writePageTrailer() throws IOException {
-        gen.writeln("showpage");
+        gen.showPage();
     }
 
     /**
