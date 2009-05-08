@@ -41,7 +41,7 @@ import org.apache.xmlgraphics.image.GraphicsUtil;
 public class ImageEncodingHelper {
 
     private static final ColorModel DEFAULT_RGB_COLOR_MODEL = new ComponentColorModel(
-            ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB),
+            ColorSpace.getInstance(ColorSpace.CS_sRGB),
             false, false, ColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
 
     private final RenderedImage image;
