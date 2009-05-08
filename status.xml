@@ -41,6 +41,10 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Switched from linear RGB to sRGB for the fallback color model, in order to avoid trouble 
+        with some images (CMYK TIFF, for example).
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Bugfix: reset graphic state when a page is finished in PostScript.
       </action>
       <action context="Code" dev="VH" type="fix">
