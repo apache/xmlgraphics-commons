@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -173,7 +176,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 //Buffer and uncompress if necessary
                 in = ImageUtil.autoDecorateInputStream(in);
                 imageSource = new ImageSource(
-                        ImageIO.createImageInputStream(in), source.getSystemId(), false);
+                        createImageInputStream(in), source.getSystemId(), false);
             } catch (IOException ioe) {
                 log.error("Unable to create ImageInputStream for InputStream"
                         + " from system identifier '"
@@ -181,6 +184,42 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             }
         }
         return imageSource;
+    }
+
+    protected ImageInputStream createImageInputStream(InputStream in) throws IOException {
+        ImageInputStream iin = ImageIO.createImageInputStream(in);
+        return (ImageInputStream)Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[] {ImageInputStream.class},
+                new ObservingImageInputStreamInvocationHandler(iin, in));
+    }
+
+    private static class ObservingImageInputStreamInvocationHandler
+        implements InvocationHandler {
+
+        private ImageInputStream iin;
+        private InputStream in;
+
+        public ObservingImageInputStreamInvocationHandler(ImageInputStream iin,
+                InputStream underlyingStream) {
+            this.iin = iin;
+            this.in = underlyingStream;
+        }
+
+        /** {@inheritDoc} */
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if ("close".equals(method.getName())) {
+                try {
+                    return method.invoke(iin, args);
+                } finally {
+                    IOUtils.closeQuietly(this.in);
+                    this.in = null;
+                }
+            } else {
+                return method.invoke(iin, args);
+            }
+        }
+
     }
 
     /**
