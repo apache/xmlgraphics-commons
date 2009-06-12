@@ -32,17 +32,19 @@ import java.io.IOException;
 public class FlateEncodeOutputStream extends java.util.zip.DeflaterOutputStream
             implements Finalizable {
 
-
     /** @see java.util.zip.DeflaterOutputStream **/
     public FlateEncodeOutputStream(OutputStream out) {
         super(out);
     }
 
-
     /** @see Finalizable **/
     public void finalizeStream() throws IOException {
         finish();
         flush();
+
+		// ensure that Deflater resources are released
+        def.end();
+
         if (out instanceof Finalizable) {
             ((Finalizable)out).finalizeStream();
         }
