@@ -19,8 +19,8 @@
 
 package org.apache.xmlgraphics.util.io;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This class applies a FlateEncode filter to the stream. It is basically the
@@ -42,7 +42,7 @@ public class FlateEncodeOutputStream extends java.util.zip.DeflaterOutputStream
         finish();
         flush();
 
-		// ensure that Deflater resources are released
+        // ensure that Deflater resources are released
         def.end();
 
         if (out instanceof Finalizable) {
