@@ -241,26 +241,24 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         if (url == null || !url.getProtocol().equals("file")) {
             return null;
         } else {
-            String filename = "";
-            if (url.getHost() != null) {
-                filename += Character.toString(File.separatorChar)
-                        + Character.toString(File.separatorChar)
-                        + url.getHost();
-            }
-            filename += url.getFile().replace('/', File.separatorChar);
-            int pos = 0;
-            while ((pos = filename.indexOf('%', pos)) >= 0) {
-                if (pos + 2 < filename.length()) {
-                    String hexStr = filename.substring(pos + 1, pos + 3);
-                    char ch = (char) Integer.parseInt(hexStr, 16);
-                    filename = filename.substring(0, pos) + ch + filename.substring(pos + 3);
+            try {
+                String filename = "";
+                if (url.getHost() != null) {
+                    filename += Character.toString(File.separatorChar)
+                            + Character.toString(File.separatorChar)
+                            + url.getHost();
                 }
-            }
-            final File f = new File(filename);
-            if (!f.isFile()) {
+                filename += url.getFile().replace('/', File.separatorChar);
+                filename = java.net.URLDecoder.decode(filename, "UTF-8");
+                final File f = new File(filename);
+                if (!f.isFile()) {
+                    return null;
+                }
+                return f;
+            } catch (java.io.UnsupportedEncodingException uee) {
+                assert false;
                 return null;
             }
-            return f;
         }
     }
 
