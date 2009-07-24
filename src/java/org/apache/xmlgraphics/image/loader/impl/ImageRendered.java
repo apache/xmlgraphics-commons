@@ -49,8 +49,8 @@ public class ImageRendered extends AbstractImage {
         super(info);
         this.red = red;
         this.transparentColor = transparentColor;
-        this.colorSpace = red.getColorModel().getColorSpace();
         if (iccProfile == null) {
+            this.colorSpace = red.getColorModel().getColorSpace();
             if (this.colorSpace instanceof ICC_ColorSpace) {
                 ICC_ColorSpace icccs = (ICC_ColorSpace)this.colorSpace;
                 this.iccProfile = icccs.getProfile();
@@ -59,6 +59,7 @@ public class ImageRendered extends AbstractImage {
             }            
         } else {
             this.iccProfile = iccProfile;
+            this.colorSpace = new ICC_ColorSpace(this.iccProfile);
         }
     }
 
