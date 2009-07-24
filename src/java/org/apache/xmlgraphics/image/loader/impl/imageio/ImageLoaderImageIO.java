@@ -172,7 +172,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         if (cm instanceof IndexColorModel) {
             //transparent color will be extracted later from the image
         } else {
-            ImageIOUtil.dumpMetadataToSystemOut(iiometa);
+            //ImageIOUtil.dumpMetadataToSystemOut(iiometa);
             //Retrieve the transparent color from the metadata
             if (iiometa != null && iiometa.isStandardMetadataFormatSupported()) {
                 Element metanode = (Element)iiometa.getAsTree(
