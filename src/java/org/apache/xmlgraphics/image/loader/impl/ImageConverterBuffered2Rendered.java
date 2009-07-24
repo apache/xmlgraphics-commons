@@ -34,7 +34,9 @@ public class ImageConverterBuffered2Rendered extends AbstractImageConverter {
     public Image convert(Image src, Map hints) {
         checkSourceFlavor(src);
         ImageBuffered buffered = (ImageBuffered)src;
-        return new ImageRendered(buffered.getInfo(), buffered.getRenderedImage(), null);
+        return new ImageRendered(buffered.getInfo(), buffered
+                .getRenderedImage(), buffered.getTransparentColor(), buffered
+                .getICCProfile());
     }
 
     /** {@inheritDoc} */

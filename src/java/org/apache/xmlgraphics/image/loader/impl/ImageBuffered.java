@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.awt.Color;
+import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
 
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
@@ -35,9 +36,10 @@ public class ImageBuffered extends ImageRendered {
      * @param info the image info object
      * @param buffered the BufferedImage instance
      * @param transparentColor the transparent color or null
+     * @param iccProfile an ICC color profile or null if no profile is associated
      */
-    public ImageBuffered(ImageInfo info, BufferedImage buffered, Color transparentColor) {
-        super(info, buffered, transparentColor);
+    public ImageBuffered(ImageInfo info, BufferedImage buffered, Color transparentColor, ICC_Profile iccProfile) {
+        super(info, buffered, transparentColor, iccProfile);
     }
 
     /** {@inheritDoc} */
