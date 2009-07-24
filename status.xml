@@ -40,7 +40,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
-      <action context="Code" dev="JM" type="fix">
+      <action context="Code" dev="MB" type="add">
+        Support loading of ICC Profiles from PNG and JPEG when used through ImageIO.
+      </action>
+       <action context="Code" dev="JM" type="fix">
         Switched from linear RGB to sRGB for the fallback color model, in order to avoid trouble 
         with some images (CMYK TIFF, for example).
       </action>

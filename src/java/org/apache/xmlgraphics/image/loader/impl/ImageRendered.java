@@ -33,19 +33,33 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
  */
 public class ImageRendered extends AbstractImage {
 
-    private RenderedImage red;
-    private Color transparentColor;
+    private final RenderedImage red;
+    private final Color transparentColor;
+    private final ColorSpace colorSpace;
+    private final ICC_Profile iccProfile;
 
     /**
      * Main constructor.
      * @param info the image info object
      * @param red the RenderedImage instance
      * @param transparentColor the transparent color or null
+     * @param iccProfile an ICC color profile or null if no profile is associated
      */
-    public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor) {
+    public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor, ICC_Profile iccProfile) {
         super(info);
         this.red = red;
         this.transparentColor = transparentColor;
+        this.colorSpace = red.getColorModel().getColorSpace();
+        if (iccProfile == null) {
+            if (this.colorSpace instanceof ICC_ColorSpace) {
+                ICC_ColorSpace icccs = (ICC_ColorSpace)this.colorSpace;
+                this.iccProfile = icccs.getProfile();
+            } else {
+                this.iccProfile = null;
+            }            
+        } else {
+            this.iccProfile = iccProfile;
+        }
     }
 
     /** {@inheritDoc} */
@@ -68,17 +82,12 @@ public class ImageRendered extends AbstractImage {
 
     /** {@inheritDoc} */
     public ColorSpace getColorSpace() {
-        return getRenderedImage().getColorModel().getColorSpace();
+        return this.colorSpace;
     }
 
     /** {@inheritDoc} */
     public ICC_Profile getICCProfile() {
-        ColorSpace cs = getColorSpace();
-        if (cs instanceof ICC_ColorSpace) {
-            ICC_ColorSpace icccs = (ICC_ColorSpace)cs;
-            return icccs.getProfile();
-        }
-        return null;
+        return this.iccProfile;
     }
 
     /**

@@ -20,30 +20,33 @@
 package org.apache.xmlgraphics.image.loader.impl.imageio;
 
 import java.awt.Color;
+import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataFormatImpl;
+import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
-import org.w3c.dom.Element;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
@@ -53,6 +56,7 @@ import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.w3c.dom.Element;
 
 /**
  * An ImageLoader implementation based on ImageIO for loading bitmap images.
@@ -63,6 +67,10 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     protected static Log log = LogFactory.getLog(ImageLoaderImageIO.class);
 
     private ImageFlavor targetFlavor;
+    
+    private static final String PNG_METADATA_NODE = "javax_imageio_png_1.0";
+    
+    private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
 
     /**
      * Main constructor.
@@ -156,13 +164,15 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
             throw new ImageException("No ImageIO ImageReader found .");
         }
 
+        ICC_Profile iccProf = null;
+        
         ColorModel cm = imageData.getColorModel();
 
         Color transparentColor = null;
         if (cm instanceof IndexColorModel) {
             //transparent color will be extracted later from the image
         } else {
-            //ImageIOUtil.dumpMetadataToSystemOut(iiometa);
+            ImageIOUtil.dumpMetadataToSystemOut(iiometa);
             //Retrieve the transparent color from the metadata
             if (iiometa != null && iiometa.isStandardMetadataFormatSupported()) {
                 Element metanode = (Element)iiometa.getAsTree(
@@ -187,16 +197,88 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         }
                     }
                 }
+                iccProf = tryToExctractICCProfile(iiometa);
             }
         }
 
         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
-            return new ImageBuffered(info, (BufferedImage)imageData, transparentColor);
+            return new ImageBuffered(info, (BufferedImage)imageData, transparentColor, iccProf);
         } else {
-            return new ImageRendered(info, imageData, transparentColor);
+            return new ImageRendered(info, imageData, transparentColor, iccProf);
         }
     }
 
+    /**
+     * Extract ICC Profile from ImageIO Metadata. This method currently only
+     * supports PNG and JPEG metadata.
+     * 
+     * @param iiometa
+     *            The ImageIO Metadata
+     * @return an ICC Profile or null.
+     */
+    private ICC_Profile tryToExctractICCProfile(IIOMetadata iiometa) {
+        ICC_Profile iccProf = null;
+        String supportedFormats[] = iiometa.getMetadataFormatNames();
+        for (int i = 0; i < supportedFormats.length; i++) {
+            String format = supportedFormats[i];
+            Element root = (Element) iiometa.getAsTree(format);
+            if (PNG_METADATA_NODE.equals(format)) {
+                iccProf = this
+                        .tryToExctractICCProfileFromPNGMetadataNode(root);
+            } else if (JPEG_METADATA_NODE.equals(format)) {
+                iccProf = this.tryToExctractICCProfileFromJPEGMetadataNode(root);
+            }
+        }
+        return iccProf;
+    }
+    
+    private ICC_Profile tryToExctractICCProfileFromPNGMetadataNode(
+            Element pngNode) {
+        ICC_Profile iccProf = null;
+        Element iccpNode = ImageIOUtil.getChild(pngNode, "iCCP");
+        if (iccpNode instanceof IIOMetadataNode) {
+            IIOMetadataNode imn = (IIOMetadataNode) iccpNode;
+            byte[] prof = (byte[]) imn.getUserObject();
+            String comp = imn.getAttribute("compressionMethod");
+            if ("deflate".equalsIgnoreCase(comp)) {
+                Inflater decompresser = new Inflater();
+                decompresser.setInput(prof);
+                byte[] result = new byte[100];
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                while (!decompresser.finished()) {
+                    try {
+                        int resultLength = decompresser.inflate(result);
+                        bos.write(result, 0, resultLength);
+                    } catch (DataFormatException e) {
+                        log.debug("Failed to deflate ICC Profile", e);
+                    }
+                }
+                decompresser.end();
+                try {
+                    iccProf = ICC_Profile.getInstance(bos.toByteArray());
+                } catch (IllegalArgumentException e) {
+                    log.debug("Failed to interpret embedded ICC Profile", e);
+                    iccProf = null;
+                }
+            }
+        }
+        return iccProf;
+    }
+
+    private ICC_Profile tryToExctractICCProfileFromJPEGMetadataNode(
+            Element jpgNode) {
+        ICC_Profile iccProf = null;
+        Element jfifNode = ImageIOUtil.getChild(jpgNode, "app0JFIF");
+        if (jfifNode != null) {
+            Element app2iccNode = ImageIOUtil.getChild(jfifNode, "app2ICC");
+            if (app2iccNode instanceof IIOMetadataNode) {
+                IIOMetadataNode imn = (IIOMetadataNode) app2iccNode;
+                iccProf = (ICC_Profile) imn.getUserObject();
+            }
+        }
+        return iccProf;
+    }
+    
     private BufferedImage getFallbackBufferedImage(ImageReader reader,
             int pageIndex, ImageReadParam param) throws IOException {
         //Work-around found at: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4799903

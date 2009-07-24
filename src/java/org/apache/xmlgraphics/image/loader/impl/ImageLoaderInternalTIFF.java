@@ -70,8 +70,8 @@ public class ImageLoaderInternalTIFF extends AbstractImageLoader {
         org.apache.xmlgraphics.image.codec.tiff.TIFFImage img
             = new org.apache.xmlgraphics.image.codec.tiff.TIFFImage
                 (seekStream, null, 0);
-
-        return new ImageRendered(info, img, null);
+        // TODO: This may ignore ICC Profiles stored in TIFF images.
+        return new ImageRendered(info, img, null, null);
     }
 
 }
