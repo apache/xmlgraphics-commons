@@ -28,8 +28,11 @@ import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -38,10 +41,10 @@ import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
-import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataFormatImpl;
 import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.spi.IIOServiceProvider;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
@@ -72,6 +75,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     
     private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
 
+    private static final Set providersIgnoringICC = new HashSet();
+    
     /**
      * Main constructor.
      * @param targetFlavor the target flavor
@@ -98,6 +103,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         IIOMetadata iiometa = (IIOMetadata)info.getCustomObjects().get(
                 ImageIOUtil.IMAGEIO_METADATA);
         boolean ignoreMetadata = (iiometa != null);
+        boolean providerIgnoresICC = false;
 
         Source src = session.needSource(info.getOriginalURI());
         ImageInputStream imgStream = ImageUtil.needImageInputStream(src);
@@ -123,6 +129,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         if (iiometa == null) {
                             iiometa = reader.getImageMetadata(pageIndex);
                         }
+                        providerIgnoresICC = checkProviderIgnoresICC(reader
+                                .getOriginatingProvider());
                         break; //Quit early, we have the image
                     } catch (IndexOutOfBoundsException indexe) {
                         throw new ImageException("Page does not exist. Invalid image index: "
@@ -197,7 +205,9 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         }
                     }
                 }
-                iccProf = tryToExctractICCProfile(iiometa);
+                if (providerIgnoresICC) {
+                    iccProf = tryToExctractICCProfile(iiometa);
+                }
             }
         }
 
@@ -206,6 +216,27 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         } else {
             return new ImageRendered(info, imageData, transparentColor, iccProf);
         }
+    }
+
+    /**
+     * Checks if the provider ignores the ICC color profile. This method will
+     * assume providers work correctly, and return false if the provider is
+     * unknown. This ensures backward-compatibility.
+     * 
+     * @param provider
+     *            the ImageIO Provider
+     * @return true if we know the provider to be broken and ignore ICC
+     *         profiles.
+     */
+    private boolean checkProviderIgnoresICC(IIOServiceProvider provider) {
+        // TODO: This information could be cached.
+        StringBuffer b = new StringBuffer(provider.getDescription(Locale.ENGLISH));
+        b.append('/').append(provider.getVendorName());
+        b.append('/').append(provider.getVersion());
+        if (log.isDebugEnabled()) {
+            log.debug("Image Provider: " + b.toString());
+        }
+        return ImageLoaderImageIO.providersIgnoringICC.contains(b.toString());
     }
 
     /**
@@ -313,5 +344,18 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         return bi;
     }
 
+    static {
+        // TODO: This list could be kept in a resource file.
+        providersIgnoringICC
+                .add("Java Advanced Imaging Image I/O Tools natively-accelerated PNG Image Reader/"
+                        + "Sun Microsystems, Inc./" + "1.1");
+        providersIgnoringICC
+                .add("Java Advanced Imaging Image I/O Tools natively-accelerated JPEG Image Reader/"
+                        + "Sun Microsystems, Inc./" + "1.1");
 
+        providersIgnoringICC
+                .add("Standard PNG image reader/Sun Microsystems, Inc./1.0");
+        providersIgnoringICC
+                .add("Standard JPEG Image Reader/Sun Microsystems, Inc./0.5");
+    }
 }
