@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Bugfix: Clip area got lost while cloning GraphicContext.
+      </action>
       <action context="Code" dev="MB" type="add">
         Support loading of ICC Profiles from PNG and JPEG when used through ImageIO.
       </action>

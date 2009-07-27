@@ -180,7 +180,7 @@ public class GraphicContext implements Cloneable{
         this.composite = template.composite;
 
         // Clip
-        if (clip != null) {
+        if (template.clip != null) {
             this.clip = new GeneralPath(template.clip);
         } else {
             this.clip = null;
