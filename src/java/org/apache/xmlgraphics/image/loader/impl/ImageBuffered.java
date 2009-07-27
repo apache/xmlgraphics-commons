@@ -38,8 +38,19 @@ public class ImageBuffered extends ImageRendered {
      * @param transparentColor the transparent color or null
      * @param iccProfile an ICC color profile or null if no profile is associated
      */
-    public ImageBuffered(ImageInfo info, BufferedImage buffered, Color transparentColor, ICC_Profile iccProfile) {
+    public ImageBuffered(ImageInfo info, BufferedImage buffered, Color transparentColor,
+            ICC_Profile iccProfile) {
         super(info, buffered, transparentColor, iccProfile);
+    }
+
+    /**
+     * Main constructor.
+     * @param info the image info object
+     * @param buffered the BufferedImage instance
+     * @param transparentColor the transparent color or null
+     */
+    public ImageBuffered(ImageInfo info, BufferedImage buffered, Color transparentColor) {
+        super(info, buffered, transparentColor, null);
     }
 
     /** {@inheritDoc} */
