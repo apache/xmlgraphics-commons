@@ -45,33 +45,17 @@ public class ImageRendered extends AbstractImage {
      * @param transparentColor the transparent color or null
      * @param iccProfile an ICC color profile or null if no profile is associated
      */
-    public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor,
-            ICC_Profile iccProfile) {
+    public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor) {
         super(info);
         this.red = red;
         this.transparentColor = transparentColor;
-        if (iccProfile == null) {
-            this.colorSpace = red.getColorModel().getColorSpace();
-            if (this.colorSpace instanceof ICC_ColorSpace) {
-                ICC_ColorSpace icccs = (ICC_ColorSpace)this.colorSpace;
-                this.iccProfile = icccs.getProfile();
-            } else {
-                this.iccProfile = null;
-            }
+        this.colorSpace = red.getColorModel().getColorSpace();
+        if (this.colorSpace instanceof ICC_ColorSpace) {
+            ICC_ColorSpace icccs = (ICC_ColorSpace) this.colorSpace;
+            this.iccProfile = icccs.getProfile();
         } else {
-            this.iccProfile = iccProfile;
-            this.colorSpace = new ICC_ColorSpace(this.iccProfile);
+            this.iccProfile = null;
         }
-    }
-
-    /**
-     * Main constructor.
-     * @param info the image info object
-     * @param red the RenderedImage instance
-     * @param transparentColor the transparent color or null
-     */
-    public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor) {
-        this(info, red, transparentColor, null);
     }
 
     /** {@inheritDoc} */

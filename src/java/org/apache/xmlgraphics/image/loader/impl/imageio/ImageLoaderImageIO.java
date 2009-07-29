@@ -20,12 +20,15 @@
 package org.apache.xmlgraphics.image.loader.impl.imageio;
 
 import java.awt.Color;
+import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -172,16 +175,32 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
             throw new ImageException("No ImageIO ImageReader found .");
         }
 
-        ICC_Profile iccProf = null;
-        
         ColorModel cm = imageData.getColorModel();
 
         Color transparentColor = null;
         if (cm instanceof IndexColorModel) {
             //transparent color will be extracted later from the image
         } else {
-            //ImageIOUtil.dumpMetadataToSystemOut(iiometa);
-            //Retrieve the transparent color from the metadata
+            if (providerIgnoresICC && cm instanceof ComponentColorModel) {
+                // Apply ICC Profile to Image by creating a new image with a new
+                // color model.
+                ICC_Profile iccProf = tryToExctractICCProfile(iiometa);
+                if (iccProf != null) {
+                    ColorModel cm2 = new ComponentColorModel(
+                            new ICC_ColorSpace(iccProf), cm.hasAlpha(), cm
+                                    .isAlphaPremultiplied(), cm
+                                    .getTransparency(), cm.getTransferType());
+                    WritableRaster wr = Raster.createWritableRaster(imageData
+                            .getSampleModel(), null);
+                    imageData.copyData(wr);
+                    BufferedImage bi = new BufferedImage(cm2, wr, cm2
+                            .isAlphaPremultiplied(), null);
+                    imageData = bi;
+                    cm = cm2;
+                }
+            }
+            // ImageIOUtil.dumpMetadataToSystemOut(iiometa);
+            // Retrieve the transparent color from the metadata
             if (iiometa != null && iiometa.isStandardMetadataFormatSupported()) {
                 Element metanode = (Element)iiometa.getAsTree(
                         IIOMetadataFormatImpl.standardMetadataFormatName);
@@ -205,16 +224,13 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         }
                     }
                 }
-                if (providerIgnoresICC) {
-                    iccProf = tryToExctractICCProfile(iiometa);
-                }
             }
         }
 
         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
-            return new ImageBuffered(info, (BufferedImage)imageData, transparentColor, iccProf);
+            return new ImageBuffered(info, (BufferedImage)imageData, transparentColor);
         } else {
-            return new ImageRendered(info, imageData, transparentColor, iccProf);
+            return new ImageRendered(info, imageData, transparentColor);
         }
     }
 
@@ -346,13 +362,6 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
 
     static {
         // TODO: This list could be kept in a resource file.
-        providersIgnoringICC
-                .add("Java Advanced Imaging Image I/O Tools natively-accelerated PNG Image Reader/"
-                        + "Sun Microsystems, Inc./" + "1.1");
-        providersIgnoringICC
-                .add("Java Advanced Imaging Image I/O Tools natively-accelerated JPEG Image Reader/"
-                        + "Sun Microsystems, Inc./" + "1.1");
-
         providersIgnoringICC
                 .add("Standard PNG image reader/Sun Microsystems, Inc./1.0");
         providersIgnoringICC
