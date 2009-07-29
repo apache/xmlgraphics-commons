@@ -19,9 +19,11 @@
 
 package org.apache.xmlgraphics.image.loader;
 
+import java.awt.color.ICC_Profile;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,9 +34,11 @@ import javax.xml.transform.stream.StreamSource;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.loader.impl.ImageRawStream;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
+import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
+import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
+import org.apache.xmlgraphics.image.loader.spi.ImageLoaderFactory;
 
 /**
  * Tests for bundled ImageLoader implementations.
@@ -153,6 +157,62 @@ public class ImageLoaderTestCase extends TestCase {
         }
 
         sessionContext.checkAllStreamsClosed();
+    }
+
+    public void testICCProfiles() throws Exception {
+        MyImageSessionContext sessionContext = createImageSessionContext();
+        List/* <ICC_Profile> */profiles = new ArrayList();
+
+        runReaders(profiles, sessionContext, "iccTest.png", "image/png",
+                ImageFlavor.RAW_PNG);
+        runReaders(profiles, sessionContext, "iccTest.jpg", "image/jpeg",
+                ImageFlavor.RAW_JPEG);
+
+        ICC_Profile first = (ICC_Profile) profiles.get(0);
+        byte[] firstData = first.getData();
+        for (int i = 1; i < profiles.size(); i++) {
+            ICC_Profile icc = (ICC_Profile) profiles.get(i);
+            byte[] data = icc.getData();
+            assertEquals("Embedded ICC Profiles are not the same size!",
+                    firstData.length, data.length);
+            for (int j = 0; j < firstData.length; j++) {
+                assertEquals("Embedded ICC Profiles differ at index " + j,
+                        firstData[j], data[j]);
+            }
+        }
+    }
+    
+    private void runReaders(List profiles, ImageSessionContext isc, String uri,
+            String mime, ImageFlavor rawFlavor) throws Exception {
+        ImageLoaderFactory ilfs[] = ImageImplRegistry.getDefaultInstance()
+                .getImageLoaderFactories(mime);
+        if (ilfs != null)
+            for (int i = 0; i < ilfs.length; i++) {
+                ImageLoaderFactory ilf = ilfs[i];
+                try {
+                    final ImageLoader il = ilf.newImageLoader(rawFlavor);
+                    final ImageInfo im = new ImageInfo(uri, mime);
+                    final Image img = il.loadImage(im, isc);
+                    final ICC_Profile icc = img.getICCProfile();
+                    // Assume the profile can only be correct if the image could
+                    // actually be interpreted.
+                    if (img.getColorSpace() != null) {
+                        profiles.add(icc);
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Ignore. This imageLoader does not support RAW
+                }
+                try {
+                    final ImageLoader il = ilf
+                            .newImageLoader(ImageFlavor.BUFFERED_IMAGE);
+                    final ImageInfo im = new ImageInfo(uri, mime);
+                    final Image img = il.loadImage(im, isc);
+                    final ICC_Profile icc = img.getICCProfile();
+                    profiles.add(icc);
+                } catch (IllegalArgumentException e) {
+                    // Ignore. This imageLoader does not support Buffered.
+                }
+            }
     }
 
     private static class MyImageSessionContext extends MockImageSessionContext {
