@@ -480,12 +480,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
             if (fill) {
                 try {
                     // create pattern with texture and use it for filling of a graphics object
-                    PSTilingPattern psTilingPattern = new PSTilingPattern(null,
+                    PSTilingPattern psTilingPattern = new PSTilingPattern("Pattern1",
                             (TexturePaint)paint, 0, 0, 3, null);
-                    if (!gen.getPatternStorage().checkAndStore(psTilingPattern)) {
-                        //TODO This violates the DSC specification!
-                        gen.write(psTilingPattern.toString());
-                    }
+                    gen.write(psTilingPattern.toString());
                     gen.writeln("/Pattern setcolorspace");
                     gen.writeln(psTilingPattern.getName() + " setcolor");
                 }
