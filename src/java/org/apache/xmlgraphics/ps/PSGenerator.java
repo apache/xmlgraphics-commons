@@ -71,12 +71,6 @@ public class PSGenerator {
     private StringBuffer tempBuffer = new StringBuffer(256);
 
     /**
-     * The pattern storage which allows to define pattern only once but use it how many
-     * times we need in PS document.
-     */
-    private PSPatternStorage patternStorage = new PSPatternStorage();
-
-    /**
      * Creates a new instance.
      * @param out the OutputStream to write the generated PostScript code to
      */
@@ -707,13 +701,4 @@ public class PSGenerator {
         return getResourceTracker().isResourceSupplied(res);
     }
 
-    /**
-     * Gets a pattern storage.
-     * <p>
-     * IMPORTANT: To be treated as provisional! The current approach violates the DSC specification!
-     * @return the pattern storage
-     */
-    public PSPatternStorage getPatternStorage() {
-        return patternStorage;
-    }
-}
+ }
