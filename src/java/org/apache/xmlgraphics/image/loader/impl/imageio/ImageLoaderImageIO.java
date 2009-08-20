@@ -292,12 +292,21 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 decompresser.setInput(prof);
                 byte[] result = new byte[100];
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                while (!decompresser.finished()) {
+                boolean failed = false;
+				while ((!decompresser.finished()) && (!failed)) {
                     try {
                         int resultLength = decompresser.inflate(result);
                         bos.write(result, 0, resultLength);
+						if (resultLength == 0) {
+							// this means more data or an external dictionary is
+							// needed. Both of which are not available, so we
+							// fail.
+	                        log.debug("Failed to deflate ICC Profile");
+							failed = true;
+                        }
                     } catch (DataFormatException e) {
                         log.debug("Failed to deflate ICC Profile", e);
+                        failed = true;
                     }
                 }
                 decompresser.end();
