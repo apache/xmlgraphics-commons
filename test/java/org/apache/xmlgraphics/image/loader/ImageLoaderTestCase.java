@@ -215,6 +215,26 @@ public class ImageLoaderTestCase extends TestCase {
             }
     }
 
+    public void testBrokenIccPng() throws Exception {
+        String uri = "corrupt-icc.png";
+
+        MyImageSessionContext sessionContext = createImageSessionContext();
+        ImageManager manager = imageContext.getImageManager();
+
+        ImageInfo info = manager.preloadImage(uri, sessionContext);
+        assertNotNull("ImageInfo must not be null", info);
+
+        Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
+        assertNotNull("Image must not be null", img);
+        assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
+        ImageRendered imgRed = (ImageRendered)img;
+        assertNotNull(imgRed.getRenderedImage());
+        assertEquals(400, imgRed.getRenderedImage().getWidth());
+        assertEquals(300, imgRed.getRenderedImage().getHeight());
+
+        sessionContext.checkAllStreamsClosed();
+    }
+
     private static class MyImageSessionContext extends MockImageSessionContext {
 
         private List streams = new java.util.ArrayList();
