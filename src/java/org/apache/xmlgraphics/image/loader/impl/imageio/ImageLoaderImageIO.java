@@ -53,6 +53,8 @@ import javax.xml.transform.Source;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
+
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
@@ -62,7 +64,6 @@ import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
-import org.w3c.dom.Element;
 
 /**
  * An ImageLoader implementation based on ImageIO for loading bitmap images.
@@ -73,13 +74,13 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     protected static Log log = LogFactory.getLog(ImageLoaderImageIO.class);
 
     private ImageFlavor targetFlavor;
-    
+
     private static final String PNG_METADATA_NODE = "javax_imageio_png_1.0";
-    
+
     private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
 
     private static final Set providersIgnoringICC = new HashSet();
-    
+
     /**
      * Main constructor.
      * @param targetFlavor the target flavor
@@ -238,7 +239,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
      * Checks if the provider ignores the ICC color profile. This method will
      * assume providers work correctly, and return false if the provider is
      * unknown. This ensures backward-compatibility.
-     * 
+     *
      * @param provider
      *            the ImageIO Provider
      * @return true if we know the provider to be broken and ignore ICC
@@ -258,7 +259,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     /**
      * Extract ICC Profile from ImageIO Metadata. This method currently only
      * supports PNG and JPEG metadata.
-     * 
+     *
      * @param iiometa
      *            The ImageIO Metadata
      * @return an ICC Profile or null.
@@ -278,7 +279,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         }
         return iccProf;
     }
-    
+
     private ICC_Profile tryToExctractICCProfileFromPNGMetadataNode(
             Element pngNode) {
         ICC_Profile iccProf = null;
@@ -293,16 +294,16 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 byte[] result = new byte[100];
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 boolean failed = false;
-				while ((!decompresser.finished()) && (!failed)) {
+                while (!decompresser.finished() && !failed) {
                     try {
                         int resultLength = decompresser.inflate(result);
                         bos.write(result, 0, resultLength);
-						if (resultLength == 0) {
-							// this means more data or an external dictionary is
-							// needed. Both of which are not available, so we
-							// fail.
-	                        log.debug("Failed to deflate ICC Profile");
-							failed = true;
+                        if (resultLength == 0) {
+                            // this means more data or an external dictionary is
+                            // needed. Both of which are not available, so we
+                            // fail.
+                            log.debug("Failed to deflate ICC Profile");
+                            failed = true;
                         }
                     } catch (DataFormatException e) {
                         log.debug("Failed to deflate ICC Profile", e);
@@ -334,7 +335,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         }
         return iccProf;
     }
-    
+
     private BufferedImage getFallbackBufferedImage(ImageReader reader,
             int pageIndex, ImageReadParam param) throws IOException {
         //Work-around found at: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4799903
