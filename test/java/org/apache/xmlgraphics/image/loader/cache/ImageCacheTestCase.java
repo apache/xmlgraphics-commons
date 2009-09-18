@@ -177,4 +177,21 @@ public class ImageCacheTestCase extends TestCase {
         assertEquals(1, statistics.getImageCacheMisses());
     }
 
+    
+    /**
+     * Test to check if doInvalidURIHouseKeeping() throws a
+     * ConcurrentModificationException.
+     */
+    public void testImageCacheHouseKeeping() {
+        ImageCache imageCache = new ImageCache(new TimeStampProvider(),
+                new DefaultExpirationPolicy(1));
+        imageCache.registerInvalidURI("invalid");
+        imageCache.registerInvalidURI("invalid2");
+        try {
+            Thread.sleep(1200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        imageCache.doHouseKeeping();
+    }
 }
