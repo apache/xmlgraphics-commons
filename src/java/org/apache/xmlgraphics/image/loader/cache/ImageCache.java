@@ -22,8 +22,10 @@ package org.apache.xmlgraphics.image.loader.cache;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.transform.Source;
 
@@ -144,22 +146,22 @@ public class ImageCache {
      * @return true if the URI is invalid
      */
     public boolean isInvalidURI(String uri) {
-        Long timestamp = (Long)invalidURIs.get(uri);
-        if (timestamp != null) {
-            boolean expired = removeInvalidURIIfExpired(uri, timestamp.longValue());
-            if (!expired) {
-                if (cacheListener != null) {
-                    cacheListener.invalidHit(uri);
-                }
-                return true;
+        boolean expired = removeInvalidURIIfExpired(uri);
+        if (expired) {
+            return false;
+        } else {
+            if (cacheListener != null) {
+                cacheListener.invalidHit(uri);
             }
+            return true;
         }
-        return false;
     }
 
-    private boolean removeInvalidURIIfExpired(String uri, long timestamp) {
-        boolean expired = this.invalidURIExpirationPolicy.isExpired(
-                this.timeStampProvider, timestamp);
+    private boolean removeInvalidURIIfExpired(String uri) {
+        Long timestamp = (Long) invalidURIs.get(uri);
+        boolean expired = (timestamp == null)
+                || this.invalidURIExpirationPolicy.isExpired(
+                        this.timeStampProvider, timestamp.longValue());
         if (expired) {
             this.invalidURIs.remove(uri);
         }
@@ -288,12 +290,11 @@ public class ImageCache {
     }
 
     private void doInvalidURIHouseKeeping() {
-        synchronized(this.invalidURIs) {
-            Iterator iter = this.invalidURIs.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry)iter.next();
-                removeInvalidURIIfExpired((String)entry.getKey(), ((Long)entry.getValue()).longValue());
-            }
+        final Set currentEntries = new HashSet(this.invalidURIs.keySet());
+        final Iterator iter = currentEntries.iterator();
+        while (iter.hasNext()) {
+            final String key = (String) iter.next();
+            removeInvalidURIIfExpired(key);
         }
     }
 
