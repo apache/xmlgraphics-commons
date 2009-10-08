@@ -189,7 +189,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     protected ImageInputStream createImageInputStream(InputStream in) throws IOException {
         ImageInputStream iin = ImageIO.createImageInputStream(in);
         return (ImageInputStream)Proxy.newProxyInstance(
-                getClass().getClassLoader(),
+                ImageInputStream.class.getClassLoader(),
                 new Class[] {ImageInputStream.class},
                 new ObservingImageInputStreamInvocationHandler(iin, in));
     }
