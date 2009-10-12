@@ -35,6 +35,27 @@ public final class UnitConv {
     /** conversion factory from inches to points. */
     public static final int IN2PT = 72;
 
+    /** Describes the unit pica. */
+    public static final String PICA = "pc";
+
+    /** Describes the unit point. */
+    public static final String POINT = "pt";
+
+    /** Describes the unit millimeter. */
+    public static final String MM = "mm";
+
+    /** Describes the unit centimeter. */
+    public static final String CM = "cm";
+
+    /** Describes the unit inch. */
+    public static final String INCH = "in";
+
+    /** Describes the unit millipoint. */
+    public static final String MPT = "mpt";
+
+        /** Describes the unit pixel. */
+    public static final String PX = "px";
+
     /**
      * Converts millimeters (mm) to points (pt)
      * @param mm the value in mm
@@ -155,4 +176,44 @@ public final class UnitConv {
         return new AffineTransform(matrix);
     }
 
+    /**
+     * Convert the given unit length to a dimensionless integer representing
+     * a whole number of base units (milli-points).
+     *
+     * @param value input unit value
+     * @return int millipoints
+     */
+    public static int convert(String value) {
+        double retValue = 0;
+        if (value != null) {
+            if (value.toLowerCase().indexOf(PX) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 1000;
+            }
+            else if (value.toLowerCase().indexOf(INCH) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 72000;
+            }
+            else if (value.toLowerCase().indexOf(CM) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 28346.4567;
+            }
+            else if (value.toLowerCase().indexOf(MM) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 2834.64567;
+            }
+            else if (value.toLowerCase().indexOf(MPT) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 3));
+            }
+            else if (value.toLowerCase().indexOf(POINT) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 1000;
+            }
+            else if (value.toLowerCase().indexOf(PICA) > 0) {
+                retValue = Double.parseDouble(value.substring(0, value.length() - 2));
+                retValue *= 12000;
+            }
+        }
+        return (int)retValue;
+    }
 }
