@@ -243,7 +243,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         } else {
             try {
                 String filename = "";
-                if (url.getHost() != null) {
+                if (url.getHost() != null && url.getHost().length() > 0) {
                     filename += Character.toString(File.separatorChar)
                             + Character.toString(File.separatorChar)
                             + url.getHost();
