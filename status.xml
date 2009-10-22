@@ -41,6 +41,9 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="fix">
+        Bugfix: Properly handle file URLs where URL.getHost() is an empty string.
+      </action>
+      <action context="Code" dev="JM" type="fix">
         Bugfix: Clip area got lost while cloning GraphicContext.
       </action>
       <action context="Code" dev="MB" type="add">
