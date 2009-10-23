@@ -46,12 +46,17 @@ public class ImageFlavor {
     /** An image in form of a raw JPEG/JFIF file/stream */
     public static final ImageFlavor RAW_JPEG = new MimeEnabledImageFlavor(RAW,
                                                         MimeConstants.MIME_JPEG);
+    /** An image in form of a raw TIFF file/stream */
+    public static final ImageFlavor RAW_TIFF = new MimeEnabledImageFlavor(RAW,
+                                                        MimeConstants.MIME_TIFF);
     /** An image in form of a raw EMF (Windows Enhanced Metafile) file/stream */
     public static final ImageFlavor RAW_EMF = new MimeEnabledImageFlavor(RAW,
                                                         MimeConstants.MIME_EMF);
     /** An image in form of a raw EPS (Encapsulated PostScript) file/stream */
     public static final ImageFlavor RAW_EPS = new MimeEnabledImageFlavor(RAW,
                                                         MimeConstants.MIME_EPS);
+    /** An image in form of a raw LZW file/stream */
+    public static final ImageFlavor RAW_LZW = new ImageFlavor("RawLZW");
     /** An image in form of a raw CCITTFax stream */
     public static final ImageFlavor RAW_CCITTFAX = new ImageFlavor("RawCCITTFax");
     /** An image in form of a Graphics2DImage (can be painted on a Graphics2D interface) */
