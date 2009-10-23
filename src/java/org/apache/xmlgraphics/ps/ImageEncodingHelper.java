@@ -22,16 +22,17 @@ package org.apache.xmlgraphics.ps;
 import java.awt.color.ColorSpace;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
+import java.awt.image.ComponentSampleModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
+import java.awt.image.MultiPixelPackedSampleModel;
 import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
@@ -47,13 +48,24 @@ public class ImageEncodingHelper {
     private final RenderedImage image;
     private ColorModel encodedColorModel;
     private boolean firstTileDump;
+    private boolean enableCMYK;
 
     /**
      * Main constructor
      * @param image the image
      */
     public ImageEncodingHelper(RenderedImage image) {
+        this(image, false);
+    }
+
+    /**
+     * Main constructor
+     * @param image the image
+     * @param enableCMYK true to enable CMYK, false to disable
+     */
+    public ImageEncodingHelper(RenderedImage image, boolean enableCMYK) {
         this.image = image;
+        this.enableCMYK = enableCMYK;
         determineEncodedColorModel();
     }
 
@@ -261,11 +273,24 @@ public class ImageEncodingHelper {
                 }
             } else if (cm instanceof IndexColorModel) {
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE) {
+                    Raster raster = image.getTile(0, 0);
+                    SampleModel sm = raster.getSampleModel();
+                    if (sm.getNumBands() > 1) {
+                        return;
+                    }
+                    if (sm instanceof ComponentSampleModel) {
+                        ComponentSampleModel csm = (ComponentSampleModel)sm;
+                        if (csm.getPixelStride() < csm.getSampleSize(0)) {
+                            return;
+                        }
+                    } else if (!(sm instanceof MultiPixelPackedSampleModel)) {
+                        return;
+                    }
                     this.firstTileDump = true;
                     this.encodedColorModel = cm;
                 }
             } else if (cm instanceof ComponentColorModel
-                    && numComponents == 3
+                    && (numComponents == 3 || (enableCMYK && numComponents == 4))
                     && !cm.hasAlpha()) {
                 Raster raster = image.getTile(0, 0);
                 DataBuffer buffer = raster.getDataBuffer();
@@ -273,10 +298,13 @@ public class ImageEncodingHelper {
                 if (sampleModel instanceof PixelInterleavedSampleModel) {
                     PixelInterleavedSampleModel piSampleModel;
                     piSampleModel = (PixelInterleavedSampleModel)sampleModel;
-                    final int[] expectedOffsets = new int[] {0, 1, 2};
                     int[] offsets = piSampleModel.getBandOffsets();
-                    if (!Arrays.equals(offsets, expectedOffsets)) {
-                        return;
+                    for (int i = 0; i < offsets.length; i++) {
+                        if (offsets[i] != i) {
+                            //Don't encode directly as samples are not next to each other
+                            //i.e. offsets are not 012 (RGB) or 0123 (CMYK)
+                            return;
+                        }
                     }
                 }
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE
