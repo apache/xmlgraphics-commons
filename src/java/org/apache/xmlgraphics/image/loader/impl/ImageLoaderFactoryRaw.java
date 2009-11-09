@@ -34,11 +34,13 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
     private static final String[] MIMES = new String[] {
         MimeConstants.MIME_PNG,
         MimeConstants.MIME_JPEG,
+        MimeConstants.MIME_TIFF,
         MIME_EMF};
 
     private static final ImageFlavor[][] FLAVORS = new ImageFlavor[][] {
         {ImageFlavor.RAW_PNG},
         {ImageFlavor.RAW_JPEG},
+        {ImageFlavor.RAW_TIFF},
         {ImageFlavor.RAW_EMF}};
 
 
