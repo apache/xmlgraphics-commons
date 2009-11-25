@@ -345,7 +345,7 @@ public class ImageEncodingHelper {
      */
     public static void encodePackedColorComponents(RenderedImage image, OutputStream out)
                 throws IOException {
-        ImageEncodingHelper helper = new ImageEncodingHelper(image);
+        ImageEncodingHelper helper = new ImageEncodingHelper(image, true);
         helper.encode(out);
     }
 

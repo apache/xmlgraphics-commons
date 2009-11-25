@@ -281,7 +281,7 @@ public class PSImageUtils {
 
     static void writeImageCommand(RenderedImage img,
             PSDictionary imageDict, PSGenerator gen) throws IOException {
-        ImageEncodingHelper helper = new ImageEncodingHelper(img);
+        ImageEncodingHelper helper = new ImageEncodingHelper(img, true);
         ColorModel cm = helper.getEncodedColorModel();
         populateImageDictionary(helper, imageDict);
 

@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add" fixes-bug="48264" due-to="Venkat Reddy">
+        Enabled native encoding of CMYK images for PostScript output.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Bugfix: Properly handle file URLs where URL.getHost() is an empty string.
       </action>
