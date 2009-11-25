@@ -22,11 +22,9 @@ package org.apache.xmlgraphics.ps;
 import java.awt.color.ColorSpace;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
-import java.awt.image.ComponentSampleModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
-import java.awt.image.MultiPixelPackedSampleModel;
 import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
@@ -273,19 +271,6 @@ public class ImageEncodingHelper {
                 }
             } else if (cm instanceof IndexColorModel) {
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE) {
-                    Raster raster = image.getTile(0, 0);
-                    SampleModel sm = raster.getSampleModel();
-                    if (sm.getNumBands() > 1) {
-                        return;
-                    }
-                    if (sm instanceof ComponentSampleModel) {
-                        ComponentSampleModel csm = (ComponentSampleModel)sm;
-                        if (csm.getPixelStride() < csm.getSampleSize(0)) {
-                            return;
-                        }
-                    } else if (!(sm instanceof MultiPixelPackedSampleModel)) {
-                        return;
-                    }
                     this.firstTileDump = true;
                     this.encodedColorModel = cm;
                 }
