@@ -155,7 +155,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
             if (fld == null) {
                 stripCount = 1;
             } else {
-                stripCount = (int)(size.getHeightPx() / fld.getAsLong(0));
+                stripCount = (int)Math.ceil(size.getHeightPx() / (double)fld.getAsLong(0));
             }
             info.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(stripCount));
 
