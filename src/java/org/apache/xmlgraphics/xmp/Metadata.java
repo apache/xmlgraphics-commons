@@ -57,6 +57,11 @@ public class Metadata implements XMLizable, PropertyAccess {
     }
 
     /** {@inheritDoc} */
+    public XMPProperty removeProperty(QName name) {
+        return (XMPProperty)properties.remove(name);
+    }
+
+    /** {@inheritDoc} */
     public XMPProperty getValueProperty() {
         return getProperty(XMPConstants.RDF_VALUE);
     }

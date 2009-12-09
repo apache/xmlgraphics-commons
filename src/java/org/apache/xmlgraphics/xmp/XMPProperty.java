@@ -76,6 +76,14 @@ public class XMPProperty implements XMLizable {
     }
 
     /**
+     * Resets this property to no value.
+     */
+    public void clear() {
+        setValue(null);
+        setXMLLang(null);
+    }
+
+    /**
      * Sets the xml:lang value for this property
      * @param lang the language ("x-default" for the default language, null to make the value
      *             language-independent)
@@ -91,9 +99,17 @@ public class XMPProperty implements XMLizable {
         return this.xmllang;
     }
 
+    /**
+     * Indicates whether the property is an array.
+     * @return true if the property is an array
+     */
+    public boolean isArray() {
+        return value instanceof XMPArray;
+    }
+
     /** @return the XMPArray for an array or null if the value is not an array. */
     public XMPArray getArrayValue() {
-        return (value instanceof XMPArray ? (XMPArray)value : null);
+        return (isArray() ? (XMPArray)value : null);
     }
 
     /**

@@ -33,12 +33,21 @@ import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
  */
 public class DublinCoreAdapter extends XMPSchemaAdapter {
 
+    private static final String CONTRIBUTOR = "contributor";
+    private static final String COVERAGE = "coverage";
     private static final String CREATOR = "creator";
     private static final String DATE = "date";
+    private static final String DESCRIPTION = "description";
+    private static final String FORMAT = "format";
+    private static final String IDENTIFIER = "identifier";
+    private static final String LANGUAGE = "language";
+    private static final String PUBLISHER = "publisher";
+    private static final String RELATION = "relation";
+    private static final String RIGHTS = "rights";
+    private static final String SOURCE = "source";
     private static final String SUBJECT = "subject";
     private static final String TITLE = "title";
-    private static final String DESCRIPTION = "description";
-    private static final String LANGUAGE = "language";
+    private static final String TYPE = "type";
 
     /**
      * Constructs a new adapter for Dublin Core around the given metadata object.
@@ -49,6 +58,47 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     }
 
     /**
+     * Adds a new entry to the list of contributors (other than the authors).
+     * @param value the new value
+     */
+    public void addContributor(String value) {
+        addStringToBag(CONTRIBUTOR, value);
+    }
+
+    /**
+     * Removes an entry from the list of contributors.
+     * @param value the value to be removed
+     * @return the removed entry
+     */
+    public boolean removeContributor(String value) {
+        return removeStringFromArray(CONTRIBUTOR, value);
+    }
+
+    /**
+     * Returns an array of all contributors.
+     * @return a String array of all contributors (or null if not set)
+     */
+    public String[] getContributors() {
+        return getStringArray(CONTRIBUTOR);
+    }
+
+    /**
+     * Sets the extent or scope of the resource.
+     * @param value the new value.
+     */
+    public void setCoverage(String value) {
+        setValue(COVERAGE, value);
+    }
+
+    /**
+     * Returns the extent or scope of the resource.
+     * @return the property value (or null if not set)
+     */
+    public String getCoverage() {
+        return getValue(COVERAGE);
+    }
+
+    /**
      * Adds a new entry to the list of creators (authors of the resource).
      * @param value the new value
      */
@@ -56,7 +106,19 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         addStringToSeq(CREATOR, value);
     }
 
-    /** @return a String array of all creators */
+    /**
+     * Removes an entry from the list of creators (authors of the resource).
+     * @param value the value to be removed
+     * @return the removed entry
+     */
+    public boolean removeCreator(String value) {
+        return removeStringFromArray(CREATOR, value);
+    }
+
+    /**
+     * Returns an array of all creators.
+     * @return a String array of all creators (or null if not set)
+     */
     public String[] getCreators() {
         return getStringArray(CREATOR);
     }
@@ -101,6 +163,156 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     }
 
     /**
+     * Sets the description of the content of the resource.
+     * @param lang the language of the value ("x-default" or null for the default language)
+     * @param value the new value
+     */
+    public void setDescription(String lang, String value) {
+        setLangAlt(DESCRIPTION, lang, value);
+    }
+
+    /**
+     * Returns the description of the content of the resource (in the default language).
+     * @return the description of the content of the resource (or null if not set)
+     */
+    public String getDescription() {
+        return getDescription(null);
+    }
+
+    /**
+     * Returns the description of the content of the resource in a language-dependant way.
+     * @param lang the language ("x-default" or null for the default language)
+     * @return the language-dependent value (or null if not set)
+     */
+    public String getDescription(String lang) {
+        return getLangAlt(lang, DESCRIPTION);
+    }
+
+    /**
+     * Sets the file format used when saving the resource. Tools and
+     * applications should set this property to the save format of the
+     * data. It may include appropriate qualifiers.
+     * @param value a MIME type
+     */
+    public void setFormat(String value) {
+        setValue(FORMAT, value);
+    }
+
+    /**
+     * Returns the file format used when saving this resource.
+     * @return the MIME type of the file format (or null if not set)
+     */
+    public String getFormat() {
+        return getValue(FORMAT);
+    }
+
+    /**
+     * Sets the unique identifier of the resource.
+     * @param value the new value
+     */
+    public void setIdentifier(String value) {
+        setValue(IDENTIFIER, value);
+    }
+
+    /**
+     * Returns the unique identifier of the resource.
+     * @return the unique identifier (or null if not set)
+     */
+    public String getIdentifier() {
+        return getValue(IDENTIFIER);
+    }
+
+    /**
+     * Adds a new entry to the list of languages (RFC 3066).
+     * @param value the new value
+     */
+    public void addLanguage(String value) {
+        addStringToBag(LANGUAGE, value);
+    }
+
+    /**
+     * Returns an array of languages.
+     * @return a String array of all languages (or null if not set)
+     */
+    public String[] getLanguages() {
+        return getStringArray(LANGUAGE);
+    }
+
+    /**
+     * Adds a new entry to the list of publishers.
+     * @param value the new value
+     */
+    public void addPublisher(String value) {
+        addStringToBag(PUBLISHER, value);
+    }
+
+    /**
+     * Returns an array of publishers.
+     * @return a String array of all publishers (or null if not set)
+     */
+    public String[] getPublisher() {
+        return getStringArray(PUBLISHER);
+    }
+
+    /**
+     * Adds a new entry to the list of relationships to other documents.
+     * @param value the new value
+     */
+    public void addRelation(String value) {
+        addStringToBag(RELATION, value);
+    }
+
+    /**
+     * Returns an array of all relationship to other documents.
+     * @return a String array of all relationships (or null if none are set)
+     */
+    public String[] getRelations() {
+        return getStringArray(RELATION);
+    }
+
+    /**
+     * Sets the informal rights statement.
+     * @param lang the language of the value ("x-default" or null for the default language)
+     * @param value the new value
+     */
+    public void setRights(String lang, String value) {
+        setLangAlt(RIGHTS, lang, value);
+    }
+
+    /**
+     * Returns the informal rights statement.
+     * @return the informal right statement (or null if not set)
+     */
+    public String getRights() {
+        return getRights(null);
+    }
+
+    /**
+     * Returns the informal rights statement in a language-dependant way.
+     * @param lang the language ("x-default" or null for the default language)
+     * @return the language-dependent value (or null if not set)
+     */
+    public String getRights(String lang) {
+        return getLangAlt(lang, RIGHTS);
+    }
+
+    /**
+     * Sets the unique identifier of the work from which this resource was derived.
+     * @param value the new value
+     */
+    public void setSource(String value) {
+        setValue(SOURCE, value);
+    }
+
+    /**
+     * Returns unique identifier of the work from which this resource was derived.
+     * @return the source (or null if not set)
+     */
+    public String getSource() {
+        return getValue(SOURCE);
+    }
+
+    /**
      * Adds a new entry to the list of subjects (descriptive phrases or keywords that
      * specify the topic of the content of the resource).
      * @param value the new value
@@ -109,7 +321,10 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         addStringToBag(SUBJECT, value);
     }
 
-    /** @return a String array of all subjects */
+    /**
+     * Returns an array of all subjects.
+     * @return a String array of all subjects
+     */
     public String[] getSubjects() {
         return getStringArray(SUBJECT);
     }
@@ -131,7 +346,10 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         setLangAlt(TITLE, lang, value);
     }
 
-    /** @return the title of the resource (in the default language) */
+    /**
+     * Returns the title of the resource (in the default language).
+     * @return the title of the resource (in the default language)
+     */
     public String getTitle() {
         return getTitle(null);
     }
@@ -139,46 +357,36 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     /**
      * Returns the title of the resource in a language-dependant way.
      * @param lang the language ("x-default" or null for the default language)
-     * @return the language-dependent value.
+     * @return the language-dependent value (or null if not set)
      */
     public String getTitle(String lang) {
         return getLangAlt(lang, TITLE);
     }
 
     /**
-     * Sets the description of the content of the resource.
-     * @param lang the language of the value ("x-default" or null for the default language)
-     * @param value the new value
+     * Removes a title of the resource.
+     * @param lang the language variant to be removed
+     * @return the previously set value or null if this language variant wasn't set
      */
-    public void setDescription(String lang, String value) {
-        setLangAlt(DESCRIPTION, lang, value);
-    }
-
-    /** @return the description of the content of the resource (in the default language) */
-    public String getDescription() {
-        return getDescription(null);
+    public String removeTitle(String lang) {
+        return removeLangAlt(lang, TITLE);
     }
 
     /**
-     * Returns the description of the content of the resource in a language-dependant way.
-     * @param lang the language ("x-default" or null for the default language)
-     * @return the language-dependent value.
+     * Adds a new entry to the list of document types (for example: novel, poem or working paper).
+     * @param value the new value
      */
-    public String getDescription(String lang) {
-        return getLangAlt(lang, DESCRIPTION);
+    public void addType(String value) {
+        addStringToBag(TYPE, value);
     }
 
     /**
-     * Adds a new entry to the list of languages (RFC 3066).
-     * @param value the new value
+     * Returns an array of all document types.
+     * @return a String array of all document types (or null if not set)
      */
-    public void addLanguage(String value) {
-        addStringToBag(LANGUAGE, value);
+    public String[] getTypess() {
+        return getStringArray(TYPE);
     }
 
-    /** @return a String array of all language */
-    public String[] getLanguages() {
-        return getStringArray(LANGUAGE);
-    }
 
 }

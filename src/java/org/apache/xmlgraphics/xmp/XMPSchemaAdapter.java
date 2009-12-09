@@ -75,6 +75,9 @@ public class XMPSchemaAdapter {
      * @param arrayType the type of array to operate on
      */
     private void addStringToArray(String propName, String value, XMPArrayType arrayType) {
+        if (value == null || value.length() == 0) {
+            throw new IllegalArgumentException("Value must not be empty");
+        }
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);
         XMPArray array;
@@ -87,6 +90,37 @@ public class XMPSchemaAdapter {
             prop.convertSimpleValueToArray(arrayType);
             prop.getArrayValue().add(value);
         }
+    }
+
+    /**
+     * Removes a value from an array.
+     * @param propName the name of the property
+     * @param value the value to be removed
+     * @return true if the value was removed, false if it was not found
+     */
+    protected boolean removeStringFromArray(String propName, String value) {
+        if (value == null) {
+            return false;
+        }
+        QName name = getQName(propName);
+        XMPProperty prop = meta.getProperty(name);
+        if (prop != null) {
+            if (prop.isArray()) {
+                XMPArray arr = prop.getArrayValue();
+                boolean removed = arr.remove(value);
+                if (arr.getSize() == 0) {
+                    meta.removeProperty(name);
+                }
+                return removed;
+            } else {
+                Object currentValue = prop.getValue();
+                if (value.equals(currentValue)) {
+                    meta.removeProperty(name);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -272,11 +306,13 @@ public class XMPSchemaAdapter {
     protected void setValue(String propName, String value) {
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);
-        if (prop == null) {
+        if (prop == null && value != null && value.length() > 0) {
             prop = new XMPProperty(name, value);
             meta.setProperty(prop);
-        } else {
+        } else if (value != null) {
             prop.setValue(value);
+        } else {
+            meta.removeProperty(name);
         }
     }
 
@@ -299,21 +335,29 @@ public class XMPSchemaAdapter {
      * Removes a language-dependent value from an alternative array.
      * @param lang the language ("x-default" for the default language)
      * @param propName the property name
+     * @return the removed value
      */
-    protected void removeLangAlt(String lang, String propName) {
-        XMPProperty prop = meta.getProperty(getQName(propName));
+    protected String removeLangAlt(String lang, String propName) {
+        QName name = getQName(propName);
+        XMPProperty prop = meta.getProperty(name);
         XMPArray array;
         if (prop != null && lang != null) {
             array = prop.getArrayValue();
             if (array != null) {
-                array.removeLangValue(lang);
-            } else {
-                if (lang.equals(prop.getXMLLang())) {
-                    prop.setValue(null);
-                    prop.setXMLLang(null);
+                String removed = array.removeLangValue(lang);
+                if (array.getSize() == 0) {
+                    meta.removeProperty(name);
                 }
+                return removed;
+            } else {
+                String removed = prop.getValue().toString();
+                if (lang.equals(prop.getXMLLang())) {
+                    prop.clear();
+                }
+                return removed;
             }
         }
+        return null;
     }
 
     /**
