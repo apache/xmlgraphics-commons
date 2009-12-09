@@ -128,19 +128,21 @@ public class XMPArray extends XMPComplexValue {
     /**
      * Removes a language-dependent value
      * @param lang the language ("x-default" for the default value)
+     * @return the removed value (or null if no value was set)
      */
-    public void removeLangValue(String lang) {
+    public String removeLangValue(String lang) {
         if (lang == null && "".equals(lang)) {
-            return;
+            return null;
         }
         for (int i = 0, c = values.size(); i < c; i++) {
             String l = (String)xmllang.get(i);
             if (lang.equals(l)) {
-                values.remove(i);
+                String value = (String)values.remove(i);
                 xmllang.remove(i);
-                return;
+                return value;
             }
         }
+        return null;
     }
 
     /**
@@ -153,6 +155,22 @@ public class XMPArray extends XMPComplexValue {
     }
 
     /**
+     * Removes a value from the array. If the value doesn't exist, nothing happens.
+     * @param value the value to be removed
+     * @return true if the value was removed, false if it wasn't found
+     */
+    public boolean remove(String value) {
+        int idx = values.indexOf(value);
+        if (idx >= 0) {
+            values.remove(idx);
+            xmllang.remove(idx);
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
      * Adds a language-dependent value to the array. Make sure not to add the same language twice.
      * @param value the value
      * @param lang the language ("x-default" for the default value)
@@ -162,7 +180,10 @@ public class XMPArray extends XMPComplexValue {
         xmllang.add(lang);
     }
 
-    /** @return the current number of value in the array */
+    /**
+     * Returns the current number of values in the array.
+     * @return the current number of values in the array
+     */
     public int getSize() {
         return this.values.size();
     }
@@ -211,6 +232,5 @@ public class XMPArray extends XMPComplexValue {
     public String toString() {
         return "XMP array: " + type + ", " + getSize();
     }
-
 
 }

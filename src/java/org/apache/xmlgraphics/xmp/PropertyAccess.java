@@ -50,6 +50,13 @@ public interface PropertyAccess {
     XMPProperty getProperty(QName name);
 
     /**
+     * Removes a property and returns it if it was found.
+     * @param name the name of the property
+     * @return the removed property or null if it was not found
+     */
+    XMPProperty removeProperty(QName name);
+
+    /**
      * Returns the rdf:value property. This is a shortcut for getProperty(XMPConstants.RDF_VALUE).
      * @return the rdf:value property or null if it's no available
      */

@@ -68,6 +68,11 @@ public class XMPStructure extends XMPComplexValue implements PropertyAccess {
     }
 
     /** {@inheritDoc} */
+    public XMPProperty removeProperty(QName name) {
+        return (XMPProperty)properties.remove(name);
+    }
+
+    /** {@inheritDoc} */
     public int getPropertyCount() {
         return this.properties.size();
     }
