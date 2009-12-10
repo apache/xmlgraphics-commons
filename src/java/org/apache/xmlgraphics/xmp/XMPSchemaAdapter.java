@@ -401,7 +401,7 @@ public class XMPSchemaAdapter {
     }
 
     /**
-     * Returns a String array representation of the property's values. Complex values to converted
+     * Returns a String array representation of the property's values. Complex values are converted
      * to Strings using the toString() method.
      * @param propName the property name
      * @return the String array or null if the property isn't set

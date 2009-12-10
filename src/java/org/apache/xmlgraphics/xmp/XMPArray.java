@@ -131,7 +131,7 @@ public class XMPArray extends XMPComplexValue {
      * @return the removed value (or null if no value was set)
      */
     public String removeLangValue(String lang) {
-        if (lang == null && "".equals(lang)) {
+        if (lang == null || "".equals(lang)) {
             return null;
         }
         for (int i = 0, c = values.size(); i < c; i++) {
