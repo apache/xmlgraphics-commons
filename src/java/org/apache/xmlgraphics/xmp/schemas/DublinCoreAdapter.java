@@ -384,7 +384,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
      * Returns an array of all document types.
      * @return a String array of all document types (or null if not set)
      */
-    public String[] getTypess() {
+    public String[] getTypes() {
         return getStringArray(TYPE);
     }
 
