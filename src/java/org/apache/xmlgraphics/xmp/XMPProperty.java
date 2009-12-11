@@ -76,14 +76,6 @@ public class XMPProperty implements XMLizable {
     }
 
     /**
-     * Resets this property to no value.
-     */
-    public void clear() {
-        setValue(null);
-        setXMLLang(null);
-    }
-
-    /**
      * Sets the xml:lang value for this property
      * @param lang the language ("x-default" for the default language, null to make the value
      *             language-independent)

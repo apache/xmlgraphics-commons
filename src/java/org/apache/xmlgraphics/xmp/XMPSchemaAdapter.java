@@ -80,11 +80,8 @@ public class XMPSchemaAdapter {
         }
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);
-        XMPArray array;
         if (prop == null) {
-            array = new XMPArray(arrayType);
-            array.add(value);
-            prop = new XMPProperty(name, array);
+            prop = new XMPProperty(name, value);
             meta.setProperty(prop);
         } else {
             prop.convertSimpleValueToArray(arrayType);
@@ -108,7 +105,7 @@ public class XMPSchemaAdapter {
             if (prop.isArray()) {
                 XMPArray arr = prop.getArrayValue();
                 boolean removed = arr.remove(value);
-                if (arr.getSize() == 0) {
+                if (arr.isEmpty()) {
                     meta.removeProperty(name);
                 }
                 return removed;
@@ -287,14 +284,22 @@ public class XMPSchemaAdapter {
         XMPProperty prop = meta.getProperty(name);
         XMPArray array;
         if (prop == null) {
-            array = new XMPArray(XMPArrayType.ALT);
-            array.add(value, lang);
-            prop = new XMPProperty(name, array);
-            meta.setProperty(prop);
+            if (value != null && value.length() > 0) {
+                prop = new XMPProperty(name, value);
+                prop.setXMLLang(lang);
+                meta.setProperty(prop);
+            }
         } else {
             prop.convertSimpleValueToArray(XMPArrayType.ALT);
-            removeLangAlt(lang, propName);
-            prop.getArrayValue().add(value, lang);
+            array = prop.getArrayValue();
+            array.removeLangValue(lang);
+            if (value != null && value.length() > 0) {
+                array.add(value, lang);
+            } else {
+                if (array.isEmpty()) {
+                    meta.removeProperty(name);
+                }
+            }
         }
     }
 
@@ -306,13 +311,17 @@ public class XMPSchemaAdapter {
     protected void setValue(String propName, String value) {
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);
-        if (prop == null && value != null && value.length() > 0) {
-            prop = new XMPProperty(name, value);
-            meta.setProperty(prop);
-        } else if (value != null) {
-            prop.setValue(value);
+        if (value != null && value.length() > 0) {
+            if (prop != null) {
+                prop.setValue(value);
+            } else {
+                prop = new XMPProperty(name, value);
+                meta.setProperty(prop);
+            }
         } else {
-            meta.removeProperty(name);
+            if (prop != null) {
+                meta.removeProperty(name);
+            }
         }
     }
 
@@ -345,14 +354,14 @@ public class XMPSchemaAdapter {
             array = prop.getArrayValue();
             if (array != null) {
                 String removed = array.removeLangValue(lang);
-                if (array.getSize() == 0) {
+                if (array.isEmpty()) {
                     meta.removeProperty(name);
                 }
                 return removed;
             } else {
                 String removed = prop.getValue().toString();
                 if (lang.equals(prop.getXMLLang())) {
-                    prop.clear();
+                    meta.removeProperty(name);
                 }
                 return removed;
             }

@@ -189,6 +189,14 @@ public class XMPArray extends XMPComplexValue {
     }
 
     /**
+     * Indicates whether the array is empty or not.
+     * @return true if the array is empty
+     */
+    public boolean isEmpty() {
+        return getSize() == 0;
+    }
+
+    /**
      * Converts the array to an object array.
      * @return an object array of all values in the array
      */

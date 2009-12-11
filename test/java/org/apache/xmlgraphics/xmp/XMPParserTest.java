@@ -164,4 +164,19 @@ public class XMPParserTest extends TestCase {
         assertEquals(cal.getTime(), dcAdapter.getDate());
     }
 
+    public void testParseEmptyValues() throws Exception {
+        URL url = getClass().getResource("empty-values.xmp");
+        Metadata meta = XMPParser.parseXMP(url);
+
+        DublinCoreAdapter dc = DublinCoreSchema.getAdapter(meta);
+        String title = dc.getTitle();
+        assertEquals("empty", title);
+
+        title = dc.getTitle("fr"); //Does not exist
+        assertNull(title);
+
+        title = dc.getTitle("de");
+        assertNull(title); //Empty value treated same as not existant
+    }
+
 }

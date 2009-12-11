@@ -24,10 +24,11 @@ import java.util.Date;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.stream.StreamResult;
 
+import org.xml.sax.SAXException;
+
 import org.apache.xmlgraphics.xmp.Metadata;
 import org.apache.xmlgraphics.xmp.XMPSerializer;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
-import org.xml.sax.SAXException;
 
 /**
  * This example shows how to build an XMP metadata file from scratch in Java.
@@ -41,6 +42,8 @@ public class MetadataFromScratch {
         dc.setTitle("de", "Der Herr der Ringe");
         dc.setTitle("en", "Lord of the Rings");
         dc.addDate(new Date());
+        dc.setFormat("application/pdf");
+        dc.addCreator("J.R.R. Tolkien");
 
         StreamResult res = new StreamResult(System.out);
         XMPSerializer.writeXML(meta, res);
