@@ -107,8 +107,9 @@ public class XMPProperty implements XMLizable {
     /**
      * Converts a simple value to an array of a given type if the value is not already an array.
      * @param type the desired type of array
+     * @return the array value
      */
-    public void convertSimpleValueToArray(XMPArrayType type) {
+    public XMPArray convertSimpleValueToArray(XMPArrayType type) {
         if (getArrayValue() == null) {
             XMPArray array = new XMPArray(type);
             if (getXMLLang() != null) {
@@ -118,6 +119,9 @@ public class XMPProperty implements XMLizable {
             }
             setValue(array);
             setXMLLang(null);
+            return array;
+        } else {
+            return getArrayValue();
         }
     }
 
@@ -139,7 +143,7 @@ public class XMPProperty implements XMLizable {
     public boolean isQualifiedProperty() {
         PropertyAccess props = getStructureValue();
         if (props != null) {
-            XMPProperty rdfValue = props.getProperty(XMPConstants.RDF_VALUE);
+            XMPProperty rdfValue = props.getValueProperty();
             return (rdfValue != null);
         } else {
             return hasPropertyQualifiers();
@@ -149,14 +153,13 @@ public class XMPProperty implements XMLizable {
     public void simplify() {
         PropertyAccess props = getStructureValue();
         if (props != null) {
-            XMPProperty rdfValue = props.getProperty(XMPConstants.RDF_VALUE);
+            XMPProperty rdfValue = props.getValueProperty();
             if (rdfValue != null) {
                 if (hasPropertyQualifiers()) {
                     throw new IllegalStateException("Illegal internal state"
                             + " (qualifiers present on non-simplified property)");
                 }
-                Object value = props.getProperty(XMPConstants.RDF_VALUE);
-                XMPProperty prop = new XMPProperty(getName(), value);
+                XMPProperty prop = new XMPProperty(getName(), rdfValue);
                 Iterator iter = props.iterator();
                 while (iter.hasNext()) {
                     QName name = (QName)iter.next();

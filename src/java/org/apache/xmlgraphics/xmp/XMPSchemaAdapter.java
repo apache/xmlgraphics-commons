@@ -65,7 +65,7 @@ public class XMPSchemaAdapter {
      * @return the resulting QName
      */
     protected QName getQName(String propName) {
-        return new QName(getSchema().getNamespace(), propName);
+        return new QName(getSchema().getNamespace(), getSchema().getPreferredPrefix(), propName);
     }
 
     /**
@@ -77,6 +77,19 @@ public class XMPSchemaAdapter {
     private void addStringToArray(String propName, String value, XMPArrayType arrayType) {
         if (value == null || value.length() == 0) {
             throw new IllegalArgumentException("Value must not be empty");
+        }
+        addObjectToArray(propName, value, arrayType);
+    }
+
+    /**
+     * Adds a String value to an array.
+     * @param propName the property name
+     * @param value the String value
+     * @param arrayType the type of array to operate on
+     */
+    protected void addObjectToArray(String propName, Object value, XMPArrayType arrayType) {
+        if (value == null) {
+            throw new IllegalArgumentException("Value must not be null");
         }
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);
@@ -392,6 +405,60 @@ public class XMPSchemaAdapter {
     }
 
     /**
+     * Finds a structure that matches a given qualifier.
+     * @param propName the property name
+     * @param qualifier the qualifier
+     * @param qualifierValue the qualifier value
+     * @return the structure if a match was found (or null if no match was found)
+     */
+    protected PropertyAccess findQualifiedStructure(String propName,
+            QName qualifier, String qualifierValue) {
+        XMPProperty prop = meta.getProperty(getQName(propName));
+        XMPArray array;
+        if (prop != null) {
+            array = prop.getArrayValue();
+            if (array != null) {
+                for (int i = 0, c = array.getSize(); i < c; i++) {
+                    Object value = array.getValue(i);
+                    if (value instanceof PropertyAccess) {
+                        PropertyAccess pa = (PropertyAccess)value;
+                        XMPProperty q = pa.getProperty(qualifier);
+                        if (q != null && q.getValue().equals(qualifierValue)) {
+                            return pa;
+                        }
+                    }
+                }
+            } else if (prop.getStructureValue() != null) {
+                PropertyAccess pa = prop.getStructureValue();
+                XMPProperty q = pa.getProperty(qualifier);
+                if (q != null && q.getValue().equals(qualifierValue)) {
+                    return pa;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds a value that matches a given qualifier.
+     * @param propName the property name
+     * @param qualifier the qualifier
+     * @param qualifierValue the qualifier value
+     * @return the value if a match was found (or null if no match was found)
+     */
+    protected Object findQualifiedValue(String propName,
+            QName qualifier, String qualifierValue) {
+        PropertyAccess pa = findQualifiedStructure(propName, qualifier, qualifierValue);
+        if (pa != null) {
+            XMPProperty rdfValue = pa.getValueProperty();
+            if (rdfValue != null) {
+                return rdfValue.getValue();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns an object array representation of the property's values.
      * @param propName the property name
      * @return the object array or null if the property isn't set
@@ -422,7 +489,13 @@ public class XMPSchemaAdapter {
         }
         String[] res = new String[arr.length];
         for (int i = 0, c = res.length; i < c; i++) {
-            res[i] = arr[i].toString();
+            Object o = arr[i];
+            if (o instanceof PropertyAccess) {
+                XMPProperty prop = ((PropertyAccess)o).getValueProperty();
+                res[i] = prop.getValue().toString();
+            } else {
+                res[i] = o.toString();
+            }
         }
         return res;
     }

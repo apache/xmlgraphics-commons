@@ -22,18 +22,29 @@ package org.apache.xmlgraphics.xmp.schemas;
 import java.util.Date;
 
 import org.apache.xmlgraphics.xmp.Metadata;
+import org.apache.xmlgraphics.xmp.XMPArrayType;
+import org.apache.xmlgraphics.xmp.XMPConstants;
+import org.apache.xmlgraphics.xmp.XMPProperty;
 import org.apache.xmlgraphics.xmp.XMPSchemaAdapter;
 import org.apache.xmlgraphics.xmp.XMPSchemaRegistry;
+import org.apache.xmlgraphics.xmp.XMPStructure;
 
 /**
  * Schema adapter implementation for the XMP Basic schema.
  */
 public class XMPBasicAdapter extends XMPSchemaAdapter {
 
-    private static final String CREATOR_TOOL = "CreatorTool";
+    private static final String ADVISORY = "Advisory";
+    private static final String BASE_URL = "BaseURL";
     private static final String CREATE_DATE = "CreateDate";
-    private static final String MODIFY_DATE = "ModifyDate";
+    private static final String CREATOR_TOOL = "CreatorTool";
+    private static final String IDENTIFIER = "Identifier";
+    private static final String LABEL = "Label";
     private static final String METADATA_DATE = "MetadataDate";
+    private static final String MODIFY_DATE = "ModifyDate";
+    private static final String NICKNAME = "Nickname";
+    private static final String RATING = "Rating";
+    private static final String THUMBNAILS = "Thumbnails";
 
     /**
      * Constructs a new adapter for XMP Basic around the given metadata object.
@@ -41,6 +52,35 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
      */
     public XMPBasicAdapter(Metadata meta, String namespace) {
         super(meta, XMPSchemaRegistry.getInstance().getSchema(namespace));
+    }
+
+    /**
+     * Sets the base URL for relative URLs in the document content.
+     * @param value the base URL
+     */
+    public void setBaseUrl(String value) {
+        setValue(BASE_URL, value);
+    }
+
+    /**
+     * Returns the base URL for relative URLs in the document content.
+     * @return the base URL
+     */
+    public String getBaseUrl() {
+        return getValue(BASE_URL);
+    }
+
+    /**
+     * Sets the date and time the resource was originally created.
+     * @param creationDate the creation date
+     */
+    public void setCreateDate(Date creationDate) {
+        setDateValue(CREATE_DATE, creationDate);
+    }
+
+    /** @return the date and time the resource was originally created */
+    public Date getCreateDate() {
+        return getDateValue(CREATE_DATE);
     }
 
     /**
@@ -57,16 +97,43 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
     }
 
     /**
-     * Sets the date and time the resource was originally created.
-     * @param creationDate the creation date
+     * Adds an identifier that unambiguously identify the resource within a given context.
+     * @param value the identifier value
      */
-    public void setCreateDate(Date creationDate) {
-        setDateValue(CREATE_DATE, creationDate);
+    public void addIdentifier(String value) {
+        addStringToBag(IDENTIFIER, value);
     }
 
-    /** @return the date and time the resource was originally created */
-    public Date getCreateDate() {
-        return getDateValue(CREATE_DATE);
+    /**
+     * Adds a qualified identifier that unambiguously identify the resource within a given context.
+     * As qualifier, <code>xmpidq:Scheme</code> is used.
+     * @param value the identifier value
+     */
+    public void addIdentifier(String value, String qualifier) {
+        XMPStructure struct = new XMPStructure();
+        struct.setProperty(new XMPProperty(XMPConstants.RDF_VALUE, value));
+        struct.setProperty(new XMPProperty(XMPBasicSchema.SCHEME_QUALIFIER, qualifier));
+        addObjectToArray(IDENTIFIER, struct, XMPArrayType.BAG);
+    }
+
+    /**
+     * Returns an array of all identifiers that unambiguously identify the resource within a
+     * given context.
+     * @return a String array of all identifiers (or null if not set)
+     */
+    public String[] getIdentifiers() {
+        return getStringArray(IDENTIFIER);
+    }
+
+    /**
+     * Returns an identifier that matches a given qualifier.
+     * As qualifier, <code>xmpidq:Scheme</code> is used.
+     * @param qualifier the qualifier
+     * @return the identifier (or null if no matching value was found)
+     */
+    public String getIdentifier(String qualifier) {
+        Object value = findQualifiedValue(IDENTIFIER, XMPBasicSchema.SCHEME_QUALIFIER, qualifier);
+        return (value != null ? value.toString() : null);
     }
 
     /**

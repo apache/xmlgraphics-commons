@@ -65,6 +65,6 @@ public interface XMPConstants {
     String DEFAULT_LANGUAGE = "x-default";
 
     /** QName for rdf:value */
-    QName RDF_VALUE = new QName(RDF_NAMESPACE, "value");
+    QName RDF_VALUE = new QName(RDF_NAMESPACE, "rdf", "value");
 
 }

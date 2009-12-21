@@ -19,9 +19,11 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
@@ -133,6 +135,24 @@ public class XMPPropertyTest extends TestCase {
         basic.setCreateDate(dt);
         Date dt2 = basic.getCreateDate();
         assertEquals(dt2, dt);
+    }
+
+    public void testQualifiers() throws Exception {
+        Metadata xmp = new Metadata();
+        XMPBasicAdapter basic = XMPBasicSchema.getAdapter(xmp);
+
+        basic.addIdentifier("x123");
+        basic.addIdentifier("id1", "system1");
+        basic.addIdentifier("12345", "system2");
+
+        String[] ids = basic.getIdentifiers();
+        assertEquals(3, ids.length);
+        Set set = new java.util.HashSet(Arrays.asList(ids));
+        assertTrue(set.contains("x123"));
+        assertTrue(set.contains("id1"));
+        assertTrue(set.contains("12345"));
+
+        assertEquals("id1", basic.getIdentifier("system1"));
     }
 
 }
