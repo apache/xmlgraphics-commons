@@ -39,8 +39,7 @@ public class ArrayAddPropertyMerger implements PropertyMerger {
             //simply copy over
             target.setProperty(sourceProp);
         } else {
-            existing.convertSimpleValueToArray(XMPArrayType.SEQ);
-            XMPArray array = existing.getArrayValue();
+            XMPArray array = existing.convertSimpleValueToArray(XMPArrayType.SEQ);
             XMPArray otherArray = sourceProp.getArrayValue();
             if (otherArray == null) {
                 if (sourceProp.getXMLLang() != null) {

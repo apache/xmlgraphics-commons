@@ -34,11 +34,20 @@ public class XMPBasicSchema extends XMPSchema {
     /** Namespace URI for XMP Basic */
     public static final String NAMESPACE = XMPConstants.XMP_BASIC_NAMESPACE;
 
+    /** Preferred prefix for XMP Basic */
+    public static final String PREFERRED_PREFIX = "xmp";
+
+    /** Namespace URI for the qualifier for xmp:Identifier */
+    public static final String QUALIFIER_NAMESPACE = "http://ns.adobe.com/xmp/Identifier/qual/1.0/";
+
+    /** The qualified name for the qualifier for xmp:Identifier */
+    public static final QName SCHEME_QUALIFIER = new QName(QUALIFIER_NAMESPACE, "xmpidq:Scheme");
+
     private static MergeRuleSet mergeRuleSet = new MergeRuleSet();
 
     /** Creates a new schema instance for Dublin Core. */
     public XMPBasicSchema() {
-        super(NAMESPACE, "xmp");
+        super(NAMESPACE, PREFERRED_PREFIX);
     }
 
     static {
