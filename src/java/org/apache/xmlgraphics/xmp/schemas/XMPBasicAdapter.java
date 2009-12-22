@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.xmp.schemas;
 import java.util.Date;
 
 import org.apache.xmlgraphics.xmp.Metadata;
+import org.apache.xmlgraphics.xmp.PropertyAccess;
 import org.apache.xmlgraphics.xmp.XMPArrayType;
 import org.apache.xmlgraphics.xmp.XMPConstants;
 import org.apache.xmlgraphics.xmp.XMPProperty;
@@ -105,15 +106,22 @@ public class XMPBasicAdapter extends XMPSchemaAdapter {
     }
 
     /**
-     * Adds a qualified identifier that unambiguously identify the resource within a given context.
+     * Sets a qualified identifier that unambiguously identify the resource within a given context.
      * As qualifier, <code>xmpidq:Scheme</code> is used.
      * @param value the identifier value
+     * @param qualifier the qualifier value (for xmpidq:Scheme)
      */
-    public void addIdentifier(String value, String qualifier) {
-        XMPStructure struct = new XMPStructure();
-        struct.setProperty(new XMPProperty(XMPConstants.RDF_VALUE, value));
-        struct.setProperty(new XMPProperty(XMPBasicSchema.SCHEME_QUALIFIER, qualifier));
-        addObjectToArray(IDENTIFIER, struct, XMPArrayType.BAG);
+    public void setIdentifier(String value, String qualifier) {
+        PropertyAccess pa = findQualifiedStructure(IDENTIFIER,
+                XMPBasicSchema.SCHEME_QUALIFIER, qualifier);
+        if (pa != null) {
+            pa.setProperty(new XMPProperty(XMPConstants.RDF_VALUE, value));
+        } else {
+            XMPStructure struct = new XMPStructure();
+            struct.setProperty(new XMPProperty(XMPConstants.RDF_VALUE, value));
+            struct.setProperty(new XMPProperty(XMPBasicSchema.SCHEME_QUALIFIER, qualifier));
+            addObjectToArray(IDENTIFIER, struct, XMPArrayType.BAG);
+        }
     }
 
     /**
