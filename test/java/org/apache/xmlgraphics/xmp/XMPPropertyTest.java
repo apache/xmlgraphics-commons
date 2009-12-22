@@ -167,8 +167,8 @@ public class XMPPropertyTest extends TestCase {
         XMPBasicAdapter basic = XMPBasicSchema.getAdapter(xmp);
 
         basic.addIdentifier("x123");
-        basic.addIdentifier("id1", "system1");
-        basic.addIdentifier("12345", "system2");
+        basic.setIdentifier("id1", "system1");
+        basic.setIdentifier("12345", "system2");
 
         String[] ids = basic.getIdentifiers();
         assertEquals(3, ids.length);
@@ -178,6 +178,9 @@ public class XMPPropertyTest extends TestCase {
         assertTrue(set.contains("12345"));
 
         assertEquals("id1", basic.getIdentifier("system1"));
+        basic.setIdentifier("id2", "system1");
+        assertEquals("id2", basic.getIdentifier("system1"));
+        assertEquals(3, basic.getIdentifiers().length);
     }
 
 }
