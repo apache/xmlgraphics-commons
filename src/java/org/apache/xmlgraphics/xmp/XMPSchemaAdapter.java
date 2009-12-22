@@ -82,9 +82,9 @@ public class XMPSchemaAdapter {
     }
 
     /**
-     * Adds a String value to an array.
+     * Adds a Object value to an array.
      * @param propName the property name
-     * @param value the String value
+     * @param value the Object value
      * @param arrayType the type of array to operate on
      */
     protected void addObjectToArray(String propName, Object value, XMPArrayType arrayType) {
