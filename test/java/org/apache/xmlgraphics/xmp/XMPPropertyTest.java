@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,8 +27,12 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import junit.framework.TestCase;
 
+import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
 import org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter;
@@ -80,6 +85,26 @@ public class XMPPropertyTest extends TestCase {
         assertEquals("Der Titel", title);
         title = dc.removeTitle("de");
         assertNull(title);
+    }
+
+    public void testReplaceLangAlt() throws Exception {
+        Metadata xmp = new Metadata();
+        DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
+        dc.setTitle("Default title");
+        StringWriter writer = new StringWriter();
+        XMPSerializer.writeXML(xmp, new StreamResult(writer));
+        String xmpString = writer.toString();
+        xmp = XMPParser.parseXMP(new StreamSource(new java.io.StringReader(xmpString)));
+        dc = DublinCoreSchema.getAdapter(xmp);
+        assertEquals("Default title", dc.getTitle());
+        dc.setTitle("Updated title");
+        XMPProperty prop = xmp.getProperty(new QName(DublinCoreSchema.NAMESPACE, "title"));
+        XMPArray array = prop.getArrayValue();
+        assertNotNull(array);
+        //Check that only one title is present. There used to be a bug that didn't set the
+        //non-qualified value equal to the value qualified with "x-default".
+        assertEquals(1, array.getSize());
+        assertEquals("Updated title", array.getValue(0));
     }
 
     public void testPropertyValues() throws Exception {

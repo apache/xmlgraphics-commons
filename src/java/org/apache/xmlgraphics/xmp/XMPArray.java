@@ -126,17 +126,17 @@ public class XMPArray extends XMPComplexValue {
     }
 
     /**
-     * Removes a language-dependent value
+     * Removes a language-dependent value.
      * @param lang the language ("x-default" for the default value)
      * @return the removed value (or null if no value was set)
      */
     public String removeLangValue(String lang) {
         if (lang == null || "".equals(lang)) {
-            return null;
+            lang = XMPConstants.DEFAULT_LANGUAGE;
         }
         for (int i = 0, c = values.size(); i < c; i++) {
             String l = (String)xmllang.get(i);
-            if (lang.equals(l)) {
+            if ((XMPConstants.DEFAULT_LANGUAGE.equals(lang) && l == null) || lang.equals(l)) {
                 String value = (String)values.remove(i);
                 xmllang.remove(i);
                 return value;
