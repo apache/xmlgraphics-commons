@@ -20,10 +20,11 @@
 package org.apache.xmlgraphics.image.loader.pipeline;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.SortedSet;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -143,7 +144,8 @@ public class PipelineFactory {
             // --> List of resulting flavors, possibly multiple loaders
             loaderFactories = registry.getImageLoaderFactories(originalMime);
             if (loaderFactories != null) {
-                SortedSet candidates = new java.util.TreeSet(new PipelineComparator());
+                List candidates = new java.util.ArrayList();
+
                 //Find best pipeline -> best loader
                 for (int i = 0, ci = loaderFactories.length; i < ci; i++) {
                     ImageLoaderFactory loaderFactory = loaderFactories[i];
@@ -158,9 +160,10 @@ public class PipelineFactory {
                     }
                 }
 
+                Collections.sort(candidates, new PipelineComparator());
                 //Build final pipeline
                 if (candidates.size() > 0) {
-                    pipeline = (ImageProviderPipeline)candidates.first();
+                    pipeline = (ImageProviderPipeline)candidates.get(0);
                 }
             }
         }
