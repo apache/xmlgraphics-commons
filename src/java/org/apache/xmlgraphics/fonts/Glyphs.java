@@ -219,6 +219,251 @@ public class Glyphs {
     };
 
     /**
+     * The characters in AdobeStandardCyrillicEncoding
+     */
+    public static final char[] ADOBECYRILLIC_ENCODING = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ' ',        //space
+        '\u0021',    //exclam
+        '\"',        //quotedbl
+        '\u0023',    //numbersign
+        '$',        //dollar
+        '%',        //percent
+        '&',        //ampersand
+        '\'',        //quotesingle
+        '(',        //parenleft
+        ')',        //parenright
+        '*',        //asterisk
+        '+',        //plus
+        ',',        //comma
+        '\u002d',    //hyphen
+        '\u002e',    //period
+        '/',        //slash
+
+        '0',        //zero
+        '1',        //one
+        '2',        //two
+        '3',        //three
+        '4',        //four
+        '5',        //five
+        '6',        //six
+        '7',        //seven
+        '8',        //eight
+        '9',        //nine
+        ':',        //colon
+        ';',        //semicolon
+        '<',        //less
+        '=',        //equal
+        '>',        //greater
+        '?',        //question
+
+        '@',        //at
+        'A',        //A
+        'B',        //B
+        'C',        //C
+        'D',        //D
+        'E',        //E
+        'F',        //F
+        'G',        //G
+        'H',        //H
+        'I',        //I
+        'J',        //J
+        'K',        //K
+        'L',        //L
+        'M',        //M
+        'N',        //N
+        'O',        //O
+
+        'P',        //P
+        'Q',        //Q
+        'R',        //R
+        'S',        //S
+        'T',        //T
+        'U',        //U
+        'V',        //V
+        'W',        //W
+        'X',        //X
+        'Y',        //Y
+        'Z',        //Z
+        '\u005b',    //bracketleft
+        '\\',        //backslash
+        '\u005d',    //bracketright
+        '^',        //asciicircum
+        '_',        //underscore
+
+        '\u0060',    //grave
+        'a',        //a
+        'b',        //b
+        'c',        //c
+        'd',        //d
+        'e',        //e
+        'f',        //f
+        'g',        //g
+        'h',        //h
+        'i',        //i
+        'j',        //j
+        'k',        //k
+        'l',        //l
+        'm',        //m
+        'n',        //n
+        'o',        //o
+
+        'p',        //p
+        'q',        //q
+        'r',        //r
+        's',        //s
+        't',        //t
+        'u',        //u
+        'v',        //v
+        'w',        //w
+        'x',        //x
+        'y',        //y
+        'z',        //z
+        '\u007b',    //braceleft
+        '\u007c',    //bar
+        '\u007d',    //braceright
+        '\u007e',    //asciitilde
+        0,
+
+        '\u0402',    //afii10051
+        '\u0403',    //afii10052
+        '\u201a',    //quotesinglebase
+        '\u0453',    //afii10100
+        '\u201e',    //quotedblbase
+        '\u2026',    //ellipsis
+        '\u2020',    //dagger
+        '\u2021',    //daggerdbl
+        '\u20ac',    //euro
+        '\u2030',    //perthousand
+        '\u0409',    //afii10058
+        '\u2039',    //guilsignlleft
+        '\u040a',    //afii10059
+        '\u040c',    //afii10061
+        '\u040b',    //afii10060
+        '\u040f',    //afii10045
+
+        '\u0452',    //afii10099
+        '\u2018',    //quoteleft
+        '\u2019',    //quoteright
+        '\u201c',    //quotedblleft
+        '\u201d',    //quotedblright
+        '\u2022',    //bullet
+        '\u2013',    //endash
+        '\u2014',    //emdash
+        0,
+        '\u2122',    //trademark
+        '\u0459',    //afii10106
+        '\u203a',    //guilsinglright
+        '\u045a',    //afii10107
+        '\u045c',    //afii10109
+        '\u045b',    //afii10108
+        '\u045f',    //afii10193
+
+        '\u00a0',    //nbspace
+        '\u040e',    //afii10062
+        '\u045e',    //afii10110
+        '\u0408',    //afii10057
+        '\u00a4',    //currency
+        '\u0490',    //afii10050
+        '\u00a6',    //brokenbar
+        '\u00a7',    //section
+        '\u0401',    //afii10023
+        '\u00a9',    //copyright
+        '\u0404',    //afii10053
+        '\u00ab',    //guillemotleft
+        '\u00ac',    //logicalnot
+        '\u00ad',    //softhyphen
+        '\u00ae',    //registered
+        '\u0407',    //afii10056
+
+        '\u00b0',    //degree
+        '\u00b1',    //plusminus
+        '\u0406',    //afii10055
+        '\u0456',    //afii10103
+        '\u0491',    //afii10098
+        '\u00b5',    //mu
+        '\u00b6',    //paragraph
+        '\u00b7',    //periodcentered
+        '\u0451',    //afii10071
+        '\u2116',    //afii61352
+        '\u0454',    //afii10101
+        '\u00bb',    //guillemotright
+        '\u0458',    //afii10105
+        '\u0405',    //afii10054
+        '\u0455',    //afii10102
+        '\u0457',    //afii10104
+
+        '\u0410',    //afii10017
+        '\u0411',    //afii10018
+        '\u0412',    //afii10019
+        '\u0413',    //afii10020
+        '\u0414',    //afii10021
+        '\u0415',    //afii10022
+        '\u0416',    //afii10024
+        '\u0417',    //afii10025
+        '\u0418',    //afii10026
+        '\u0419',    //afii10027
+        '\u041a',    //afii10028
+        '\u041b',    //afii10029
+        '\u041c',    //afii10030
+        '\u041d',    //afii10031
+        '\u041e',    //afii10032
+        '\u041f',    //afii10033
+
+        '\u0420',    //afii10034
+        '\u0421',    //afii10035
+        '\u0422',    //afii10036
+        '\u0423',    //afii10037
+        '\u0424',    //afii10038
+        '\u0425',    //afii10039
+        '\u0426',    //afii10040
+        '\u0427',    //afii10041
+        '\u0428',    //afii10042
+        '\u0429',    //afii10043
+        '\u042a',    //afii10044
+        '\u042b',    //afii10045
+        '\u042c',    //afii10046
+        '\u042d',    //afii10047
+        '\u042e',    //afii10048
+        '\u042f',    //afii10049
+
+        '\u0430',    //afii10065
+        '\u0431',    //afii10066
+        '\u0432',    //afii10067
+        '\u0433',    //afii10068
+        '\u0434',    //afii10069
+        '\u0435',    //afii10070
+        '\u0436',    //afii10072
+        '\u0437',    //afii10073
+        '\u0438',    //afii10074
+        '\u0439',    //afii10075
+        '\u043a',    //afii10076
+        '\u043b',    //afii10077
+        '\u043c',    //afii10078
+        '\u043d',    //afii10079
+        '\u043e',    //afii10080
+        '\u043f',    //afii10081
+
+        '\u0440',    //afii10082
+        '\u0441',    //afii10083
+        '\u0442',    //afii10084
+        '\u0443',    //afii10085
+        '\u0444',    //afii10086
+        '\u0445',    //afii10087
+        '\u0446',    //afii10088
+        '\u0447',    //afii10089
+        '\u0448',    //afii10090
+        '\u0449',    //afii10091
+        '\u044a',    //afii10092
+        '\u044b',    //afii10093
+        '\u044c',    //afii10094
+        '\u044d',    //afii10095
+        '\u044e',    //afii10096
+        '\u044f',    //afii10097
+    };
+
+    /**
      * List of unicode glyphs
      */
     private static final String[] UNICODE_GLYPHS;
@@ -272,6 +517,113 @@ public class Glyphs {
         //map currency signs from and to their respective "oldstyle" variant
         addAlternatives(map, new String[] {"cent", "centoldstyle"});
         addAlternatives(map, new String[] {"dollar", "dollaroldstyle"});
+
+        //Cyrillic names according Adobe Techninal Note #5013 aka Adobe Standard Cyrillic Font Specification
+        addAlternatives(map, new String[] {"Acyrillic",        "afii10017"});
+        addAlternatives(map, new String[] {"Becyrillic",    "afii10018"});
+        addAlternatives(map, new String[] {"Vecyrillic",    "afii10019"});
+        addAlternatives(map, new String[] {"Gecyrillic",    "afii10020"});
+        addAlternatives(map, new String[] {"Decyrillic",    "afii10021"});
+        addAlternatives(map, new String[] {"Iecyrillic",    "afii10022"});
+        addAlternatives(map, new String[] {"Iocyrillic",    "afii10023"});
+        addAlternatives(map, new String[] {"Zhecyrillic",    "afii10024"});
+        addAlternatives(map, new String[] {"Zecyrillic",    "afii10025"});
+        addAlternatives(map, new String[] {"Iicyrillic",    "afii10026"});
+        addAlternatives(map, new String[] {"Iishortcyrillic",    "afii10027"});
+        addAlternatives(map, new String[] {"Kacyrillic",    "afii10028"});
+        addAlternatives(map, new String[] {"Elcyrillic",    "afii10029"});
+        addAlternatives(map, new String[] {"Emcyrillic",    "afii10030"});
+        addAlternatives(map, new String[] {"Encyrillic",    "afii10031"});
+        addAlternatives(map, new String[] {"Ocyrillic",        "afii10032"});
+        addAlternatives(map, new String[] {"Pecyrillic",    "afii10033"});
+        addAlternatives(map, new String[] {"Ercyrillic",    "afii10034"});
+        addAlternatives(map, new String[] {"Escyrillic",    "afii10035"});
+        addAlternatives(map, new String[] {"Tecyrillic",    "afii10036"});
+        addAlternatives(map, new String[] {"Ucyrillic",        "afii10037"});
+        addAlternatives(map, new String[] {"Efcyrillic",    "afii10038"});
+        addAlternatives(map, new String[] {"Khacyrillic",    "afii10039"});
+        addAlternatives(map, new String[] {"Tsecyrillic",    "afii10040"});
+        addAlternatives(map, new String[] {"Checyrillic",    "afii10041"});
+        addAlternatives(map, new String[] {"Shacyrillic",    "afii10042"});
+        addAlternatives(map, new String[] {"Shchacyrillic",    "afii10043"});
+        addAlternatives(map, new String[] {"Hardsigncyrillic",    "afii10044"});
+        addAlternatives(map, new String[] {"Yericyrillic",    "afii10045"});
+        addAlternatives(map, new String[] {"Softsigncyrillic",    "afii10046"});
+        addAlternatives(map, new String[] {"Ereversedcyrillic",    "afii10047"});
+        addAlternatives(map, new String[] {"IUcyrillic",    "afii10048"});
+        addAlternatives(map, new String[] {"IAcyrillic",    "afii10049"});
+
+        addAlternatives(map, new String[] {"acyrillic",        "afii10065"});
+        addAlternatives(map, new String[] {"becyrillic",    "afii10066"});
+        addAlternatives(map, new String[] {"vecyrillic",    "afii10067"});
+        addAlternatives(map, new String[] {"gecyrillic",    "afii10068"});
+        addAlternatives(map, new String[] {"decyrillic",    "afii10069"});
+        addAlternatives(map, new String[] {"iecyrillic",    "afii10070"});
+        addAlternatives(map, new String[] {"iocyrillic",    "afii10071"});
+        addAlternatives(map, new String[] {"zhecyrillic",    "afii10072"});
+        addAlternatives(map, new String[] {"zecyrillic",    "afii10073"});
+        addAlternatives(map, new String[] {"iicyrillic",    "afii10074"});
+        addAlternatives(map, new String[] {"iishortcyrillic",    "afii10075"});
+        addAlternatives(map, new String[] {"kacyrillic",    "afii10076"});
+        addAlternatives(map, new String[] {"elcyrillic",    "afii10077"});
+        addAlternatives(map, new String[] {"emcyrillic",    "afii10078"});
+        addAlternatives(map, new String[] {"encyrillic",    "afii10079"});
+        addAlternatives(map, new String[] {"ocyrillic",        "afii10080"});
+        addAlternatives(map, new String[] {"pecyrillic",    "afii10081"});
+        addAlternatives(map, new String[] {"ercyrillic",    "afii10082"});
+        addAlternatives(map, new String[] {"escyrillic",    "afii10083"});
+        addAlternatives(map, new String[] {"tecyrillic",    "afii10084"});
+        addAlternatives(map, new String[] {"ucyrillic",        "afii10085"});
+        addAlternatives(map, new String[] {"efcyrillic",    "afii10086"});
+        addAlternatives(map, new String[] {"khacyrillic",    "afii10087"});
+        addAlternatives(map, new String[] {"tsecyrillic",    "afii10088"});
+        addAlternatives(map, new String[] {"checyrillic",    "afii10089"});
+        addAlternatives(map, new String[] {"shacyrillic",    "afii10090"});
+        addAlternatives(map, new String[] {"shchacyrillic",    "afii10091"});
+        addAlternatives(map, new String[] {"hardsigncyrillic",    "afii10092"});
+        addAlternatives(map, new String[] {"yericyrillic",    "afii10093"});
+        addAlternatives(map, new String[] {"softsigncyrillic",    "afii10094"});
+        addAlternatives(map, new String[] {"ereversedcyrillic",    "afii10095"});
+        addAlternatives(map, new String[] {"iucyrillic",    "afii10096"});
+        addAlternatives(map, new String[] {"iacyrillic",    "afii10097"});
+
+        addAlternatives(map, new String[] {"Gheupturncyrillic",    "afii10050"});
+        addAlternatives(map, new String[] {"Djecyrillic",    "afii10051"});
+        addAlternatives(map, new String[] {"Gjecyrillic",    "afii10052"});
+        addAlternatives(map, new String[] {"Ecyrillic",        "afii10053"});
+        addAlternatives(map, new String[] {"Dzecyrillic",    "afii10054"});
+        addAlternatives(map, new String[] {"Icyrillic",        "afii10055"});
+        addAlternatives(map, new String[] {"Yicyrillic",    "afii10056"});
+        addAlternatives(map, new String[] {"Jecyrillic",    "afii10057"});
+        addAlternatives(map, new String[] {"Ljecyrillic",    "afii10058"});
+        addAlternatives(map, new String[] {"Njecyrillic",    "afii10059"});
+        addAlternatives(map, new String[] {"Tshecyrillic",    "afii10060"});
+        addAlternatives(map, new String[] {"Kjecyrillic",    "afii10061"});
+        addAlternatives(map, new String[] {"Ushortcyrillic",    "afii10062"});
+
+        addAlternatives(map, new String[] {"Dzhecyrillic",    "afii10145"});
+        addAlternatives(map, new String[] {"Yatcyrillic",    "afii10146"});
+        addAlternatives(map, new String[] {"Fitacyrillic",    "afii10147"});
+        addAlternatives(map, new String[] {"Izhitsacyrillic",    "afii10148"});
+
+        addAlternatives(map, new String[] {"gheupturncyrillic",    "afii10098"});
+        addAlternatives(map, new String[] {"djecyrillic",    "afii10099"});
+        addAlternatives(map, new String[] {"gjecyrillic",    "afii10100"});
+        addAlternatives(map, new String[] {"ecyrillic",        "afii10101"});
+        addAlternatives(map, new String[] {"dzecyrillic",    "afii10102"});
+        addAlternatives(map, new String[] {"icyrillic",        "afii10103"});
+        addAlternatives(map, new String[] {"yicyrillic",    "afii10104"});
+        addAlternatives(map, new String[] {"jecyrillic",    "afii10105"});
+        addAlternatives(map, new String[] {"ljecyrillic",    "afii10106"});
+        addAlternatives(map, new String[] {"njecyrillic",    "afii10107"});
+        addAlternatives(map, new String[] {"tshecyrillic",    "afii10108"});
+        addAlternatives(map, new String[] {"kjecyrillic",    "afii10109"});
+        addAlternatives(map, new String[] {"ushortcyrillic",    "afii10110"});
+
+        addAlternatives(map, new String[] {"dzhecyrillic",    "afii10193"});
+        addAlternatives(map, new String[] {"yatcyrillic",    "afii10194"});
+        addAlternatives(map, new String[] {"fitacyrillic",    "afii10195"});
+        addAlternatives(map, new String[] {"izhitsacyrillic",    "afii10196"});
 
         CHARNAME_ALTERNATIVES = Collections.unmodifiableMap(map);
     }
@@ -475,4 +827,3 @@ public class Glyphs {
     }
 
 }
-

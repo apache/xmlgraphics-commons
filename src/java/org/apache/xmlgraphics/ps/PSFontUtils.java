@@ -120,6 +120,42 @@ public class PSFontUtils {
         gen.getResourceTracker().registerSuppliedResource(WINANSI_ENCODING_RESOURCE);
     }
 
+    /** the PSResource representing the AdobeStandardCyrillicEncoding. */
+    public static final PSResource ADOBECYRILLIC_ENCODING_RESOURCE
+            = new PSResource(PSResource.TYPE_ENCODING, "AdobeStandardCyrillicEncoding");
+
+    /**
+     * Defines the AdobeStandardCyrillic encoding for use in PostScript files.
+     * @param gen the PostScript generator
+     * @throws IOException In case of an I/O problem
+     */
+    public static void defineAdobeCyrillicEncoding(PSGenerator gen) throws IOException {
+        gen.writeDSCComment(DSCConstants.BEGIN_RESOURCE, ADOBECYRILLIC_ENCODING_RESOURCE);
+        gen.writeln("/AdobeStandardCyrillicEncoding [");
+        for (int i = 0; i < Glyphs.ADOBECYRILLIC_ENCODING.length; i++) {
+            if (i > 0) {
+                if ((i % 5) == 0) {
+                    gen.newLine();
+                } else {
+                    gen.write(" ");
+                }
+            }
+            final char ch = Glyphs.ADOBECYRILLIC_ENCODING[i];
+            final String glyphname = Glyphs.charToGlyphName(ch);
+            if ("".equals(glyphname)) {
+                gen.write("/" + Glyphs.NOTDEF);
+            } else {
+                gen.write("/");
+                gen.write(glyphname);
+            }
+        }
+        gen.newLine();
+        gen.writeln("] def");
+        gen.writeDSCComment(DSCConstants.END_RESOURCE);
+        gen.getResourceTracker().registerSuppliedResource(ADOBECYRILLIC_ENCODING_RESOURCE);
+    }
+
+
     /**
      * Redefines the encoding of a font.
      * @param gen the PostScript generator
