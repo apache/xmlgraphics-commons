@@ -37,11 +37,12 @@ import javax.xml.transform.Source;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 
 /**
- * This class is used to output PostScript code to an OutputStream.
+ * This class is used to output PostScript code to an OutputStream. This class assumes that
+ * the {@link PSProcSets#STD_PROCSET} has been added to the PostScript file.
  *
  * @version $Id$
  */
-public class PSGenerator {
+public class PSGenerator implements PSCommandMap {
 
     /**
      * Default postscript language level
@@ -61,6 +62,8 @@ public class PSGenerator {
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean commentsEnabled = true;
+    private boolean compactMode = true;
+    private PSCommandMap commandMap = PSProcSets.STD_COMMAND_MAP;
 
     private Stack graphicsStateStack = new Stack();
     private PSState currentState;
@@ -77,6 +80,26 @@ public class PSGenerator {
     public PSGenerator(OutputStream out) {
         this.out = out;
         resetGraphicsState();
+    }
+
+    /**
+     * Indicates whether this instance is in compact mode. See {@link #setCompactMode(boolean)}
+     * for details.
+     * @return true if compact mode is enabled (the default)
+     */
+    public boolean isCompactMode() {
+        return this.compactMode;
+    }
+
+    /**
+     * Controls whether this instance shall produce compact PostScript (omitting comments and
+     * using short macros). Enabling this mode requires that the standard procset
+     * ({@link PSProcSets#STD_PROCSET}) is included in the PostScript file. Setting this to
+     * false produces more verbose PostScript suitable for debugging.
+     * @param value true to enable compact mode, false for verbose mode
+     */
+    public void setCompactMode(boolean value) {
+        this.compactMode = value;
     }
 
     private void resetGraphicsState() {
@@ -185,6 +208,15 @@ public class PSGenerator {
     public void commentln(String comment) throws IOException {
         if (this.commentsEnabled) {
             writeln(comment);
+        }
+    }
+
+    /** {@inheritDoc} */
+    public String mapCommand(String command) {
+        if (isCompactMode()) {
+            return this.commandMap.mapCommand(command);
+        } else {
+            return command;
         }
     }
 
@@ -384,7 +416,7 @@ public class PSGenerator {
      * @exception IOException In case of an I/O problem
      */
     public void saveGraphicsState() throws IOException {
-        writeln("gsave");
+        writeln(mapCommand("gsave"));
 
         PSState state = new PSState(this.currentState, false);
         this.graphicsStateStack.push(this.currentState);
@@ -398,7 +430,7 @@ public class PSGenerator {
      */
     public boolean restoreGraphicsState() throws IOException {
         if (this.graphicsStateStack.size() > 0) {
-            writeln("grestore");
+            writeln(mapCommand("grestore"));
             this.currentState = (PSState)this.graphicsStateStack.pop();
             return true;
         } else {
@@ -476,7 +508,7 @@ public class PSGenerator {
      */
     public void concatMatrix(AffineTransform at) throws IOException {
         getCurrentState().concatMatrix(at);
-        writeln(formatMatrix(at) + " concat");
+        writeln(formatMatrix(at) + " " + mapCommand("concat"));
     }
 
     /**
@@ -515,7 +547,7 @@ public class PSGenerator {
      */
     public void useLineCap(int linecap) throws IOException {
         if (getCurrentState().useLineCap(linecap)) {
-            writeln(linecap + " setlinecap");
+            writeln(linecap + " " + mapCommand("setlinecap"));
         }
     }
 
@@ -526,7 +558,7 @@ public class PSGenerator {
      */
     public void useLineJoin(int linejoin) throws IOException {
         if (getCurrentState().useLineJoin(linejoin)) {
-            writeln(linejoin + " setlinejoin");
+            writeln(linejoin + " " + mapCommand("setlinejoin"));
         }
     }
 
@@ -537,7 +569,7 @@ public class PSGenerator {
      */
     public void useMiterLimit(float miterlimit) throws IOException {
         if (getCurrentState().useMiterLimit(miterlimit)) {
-            writeln(miterlimit + " setmiterlimit");
+            writeln(miterlimit + " " + mapCommand("setmiterlimit"));
         }
     }
 
@@ -548,7 +580,7 @@ public class PSGenerator {
      */
     public void useLineWidth(double width) throws IOException {
         if (getCurrentState().useLineWidth(width)) {
-            writeln(formatDouble(width) + " setlinewidth");
+            writeln(formatDouble(width) + " " + mapCommand("setlinewidth"));
         }
     }
 
@@ -562,7 +594,7 @@ public class PSGenerator {
             pattern = PSState.DEFAULT_DASH;
         }
         if (getCurrentState().useDash(pattern)) {
-            writeln(pattern + " setdash");
+            writeln(pattern + " " + mapCommand("setdash"));
         }
     }
 
@@ -608,9 +640,9 @@ public class PSGenerator {
                 }
             }
             if (same) {
-                p.append(" setgray");
+                p.append(" ").append(mapCommand("setgray"));
             } else {
-                p.append(" setrgbcolor");
+                p.append(" ").append(mapCommand("setrgbcolor"));
             }
         } else if (col.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
             // colorspace is CMYK
@@ -620,12 +652,12 @@ public class PSGenerator {
                 }
                 p.append(formatDouble(comps[i]));
             }
-            p.append(" setcmykcolor");
+            p.append(" ").append(mapCommand("setcmykcolor"));
         } else {
             // means we're in DeviceGray or Unknown.
             // assume we're in DeviceGray, because otherwise we're screwed.
             p.append(formatDouble(comps[0]));
-            p.append(" setgray");
+            p.append(" ").append(mapCommand("setgray"));
         }
         return p.toString();
     }

@@ -70,7 +70,8 @@ public class PSGraphics2D extends AbstractGraphics2D {
     /** the PostScript generator being created */
     protected PSGenerator gen;
 
-    private boolean clippingDisabled = false;
+    /** Disable or enable clipping */
+    protected boolean clippingDisabled = false;
 
     /** Fallback text handler */
 
@@ -371,27 +372,27 @@ public class PSGraphics2D extends AbstractGraphics2D {
                                  + gen.formatDouble(vals[2]) + " "
                                  + gen.formatDouble(vals[3]) + " "
                                  + gen.formatDouble(vals[4]) + " "
-                                 + gen.formatDouble(vals[5])
-                                 + " curveto");
+                                 + gen.formatDouble(vals[5]) + " "
+                                 + gen.mapCommand("curveto"));
                 break;
             case PathIterator.SEG_LINETO:
                 gen.writeln(gen.formatDouble(vals[0]) + " "
-                                 + gen.formatDouble(vals[1])
-                                 + " lineto");
+                                 + gen.formatDouble(vals[1]) + " "
+                                 + gen.mapCommand("lineto"));
                 break;
             case PathIterator.SEG_MOVETO:
                 gen.writeln(gen.formatDouble(vals[0]) + " "
-                                 + gen.formatDouble(vals[1])
-                                 + " M");
+                                 + gen.formatDouble(vals[1]) + " "
+                                 + gen.mapCommand("moveto"));
                 break;
             case PathIterator.SEG_QUADTO:
                 gen.writeln(gen.formatDouble(vals[0]) + " "
                           + gen.formatDouble(vals[1]) + " "
                           + gen.formatDouble(vals[2]) + " "
-                          + gen.formatDouble(vals[3]) + " QUADTO ");
+                          + gen.formatDouble(vals[3]) + " QT");
                 break;
             case PathIterator.SEG_CLOSE:
-                gen.writeln("closepath");
+                gen.writeln(gen.mapCommand("closepath"));
                 break;
             default:
                 break;
@@ -435,7 +436,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             applyPaint(getPaint(), false);
             applyStroke(getStroke());
 
-            gen.writeln("newpath");
+            gen.writeln(gen.mapCommand("newpath"));
             PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
             processPathIterator(iter);
             doDrawing(false, true, false);
@@ -456,11 +457,11 @@ public class PSGraphics2D extends AbstractGraphics2D {
         if (!this.clippingDisabled) {
             preparePainting();
             try {
-                gen.writeln("newpath");
+                gen.writeln(gen.mapCommand("newpath"));
                 PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
                 processPathIterator(iter);
                 // clip area
-                gen.writeln("clip");
+                gen.writeln(gen.mapCommand("clip"));
             } catch (IOException ioe) {
                 handleIOException(ioe);
             }
@@ -483,8 +484,8 @@ public class PSGraphics2D extends AbstractGraphics2D {
                     PSTilingPattern psTilingPattern = new PSTilingPattern("Pattern1",
                             (TexturePaint)paint, 0, 0, 3, null);
                     gen.write(psTilingPattern.toString());
-                    gen.writeln("/Pattern setcolorspace");
-                    gen.writeln(psTilingPattern.getName() + " setcolor");
+                    gen.writeln("/Pattern " + gen.mapCommand("setcolorspace"));
+                    gen.writeln(psTilingPattern.getName() + " " + gen.mapCommand("setcolor"));
                 }
                 catch (IOException ioe) {
                     handleIOException(ioe);
@@ -556,11 +557,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 break;
             case BasicStroke.JOIN_ROUND:
                 gen.useLineJoin(1);
-                gen.writeln("1 setlinejoin");
                 break;
             case BasicStroke.JOIN_BEVEL:
                 gen.useLineJoin(2);
-                gen.writeln("2 setlinejoin");
                 break;
             default: System.err.println("Unsupported line join: " + lj);
             }
@@ -722,7 +721,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
 
             applyPaint(getPaint(), true);
 
-            gen.writeln("newpath");
+            gen.writeln(gen.mapCommand("newpath"));
             PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
             processPathIterator(iter);
             doDrawing(true, false,
@@ -746,20 +745,26 @@ public class PSGraphics2D extends AbstractGraphics2D {
         if (fill) {
             if (stroke) {
                 if (!nonzero) {
-                    gen.writeln("gsave fill grestore stroke");
+                    gen.writeln(gen.mapCommand("gsave") + " "
+                            + gen.mapCommand("fill") + " "
+                            + gen.mapCommand("grestore") + " "
+                            + gen.mapCommand("stroke"));
                 } else {
-                    gen.writeln("gsave eofill grestore stroke");
+                    gen.writeln(gen.mapCommand("gsave") + " "
+                            + gen.mapCommand("eofill") + " "
+                            + gen.mapCommand("grestore") + " "
+                            + gen.mapCommand("stroke"));
                 }
             } else {
                 if (!nonzero) {
-                    gen.writeln("fill");
+                    gen.writeln(gen.mapCommand("fill"));
                 } else {
-                    gen.writeln("eofill");
+                    gen.writeln(gen.mapCommand("eofill"));
                 }
             }
         } else {
             // if(stroke)
-            gen.writeln("stroke");
+            gen.writeln(gen.mapCommand("stroke"));
         }
     }
 

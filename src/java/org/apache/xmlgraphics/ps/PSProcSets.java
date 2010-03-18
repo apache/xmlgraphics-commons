@@ -20,6 +20,9 @@
 package org.apache.xmlgraphics.ps;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This class defines the basic resources (procsets) used by the Apache XML Graphics project.
@@ -29,14 +32,54 @@ import java.io.IOException;
 public final class PSProcSets {
 
     /** the standard procset for the XML Graphics project */
-    public static final PSResource STD_PROCSET = new StdProcSet();
+    public static final PSResource STD_PROCSET;
     /** the EPS procset for the XML Graphics project */
     public static final PSResource EPS_PROCSET = new EPSProcSet();
 
-    private static class StdProcSet extends PSProcSet {
+    /** the standard command map matching the {@link #STD_PROCSET}. */
+    public static final PSCommandMap STD_COMMAND_MAP;
+
+    static {
+        StdProcSet stdProcSet = new StdProcSet();
+        STD_PROCSET = stdProcSet;
+        STD_COMMAND_MAP = stdProcSet;
+    }
+
+    /**
+     * The standard procset used by XML Graphics Commons.
+     */
+    private static class StdProcSet extends PSProcSet implements PSCommandMap {
+
+        /** A Map<String, String> of standard shorthand macros defined in the {@link StdProcSet}. */
+        private static final Map STANDARD_MACROS;
+
+        static {
+            Map macros = new java.util.HashMap();
+            macros.put("moveto", "M");
+            macros.put("rmoveto", "RM");
+            macros.put("curveto", "C");
+            macros.put("lineto", "L");
+            macros.put("show", "t");
+            macros.put("ashow", "A");
+            macros.put("closepath", "cp");
+            macros.put("setrgbcolor", "RC");
+            macros.put("setgray", "GC");
+            macros.put("setcmykcolor", "CC");
+            macros.put("newpath", "N");
+            macros.put("setmiterlimit", "ML");
+            macros.put("setlinewidth", "LC");
+            macros.put("setlinewidth", "LW");
+            macros.put("setlinejoin", "LJ");
+            macros.put("grestore", "GR");
+            macros.put("gsave", "GS");
+            macros.put("fill", "f");
+            macros.put("stroke", "S");
+            macros.put("concat", "CT");
+            STANDARD_MACROS = Collections.unmodifiableMap(macros);
+        }
 
         public StdProcSet() {
-            super("Apache XML Graphics Std ProcSet", 1.0f, 0);
+            super("Apache XML Graphics Std ProcSet", 1.1f, 0);
         }
 
         public void writeTo(PSGenerator gen) throws IOException {
@@ -45,7 +88,7 @@ public final class PSProcSets {
                         Float.toString(getVersion()), Integer.toString(getRevision())});
             gen.writeDSCComment(DSCConstants.VERSION,
                     new Object[] {Float.toString(getVersion()), Integer.toString(getRevision())});
-            gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2001-2003 "
+            gen.writeDSCComment(DSCConstants.COPYRIGHT, "Copyright 2001-2003,2010 "
                         + "The Apache Software Foundation. "
                         + "License terms: http://www.apache.org/licenses/LICENSE-2.0");
             gen.writeDSCComment(DSCConstants.TITLE,
@@ -53,11 +96,11 @@ public final class PSProcSets {
 
             gen.writeln("/bd{bind def}bind def");
             gen.writeln("/ld{load def}bd");
-            gen.writeln("/M/moveto ld");
-            gen.writeln("/RM/rmoveto ld");
-            gen.writeln("/t/show ld");
-            gen.writeln("/A/ashow ld");
-            gen.writeln("/cp/closepath ld");
+            Iterator iter = STANDARD_MACROS.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                gen.writeln("/" + entry.getValue() + "/" + entry.getKey()+" ld");
+            }
 
             gen.writeln("/re {4 2 roll M"); //define rectangle
             gen.writeln("1 index 0 rlineto");
@@ -127,7 +170,7 @@ public final class PSProcSets {
             gen.writeln("  grestore");
             gen.writeln("} bd");
 
-            gen.writeln("/QUADTO {");
+            gen.writeln("/QT {");
             gen.writeln("/Y22 exch store");
             gen.writeln("/X22 exch store");
             gen.writeln("/Y21 exch store");
@@ -203,6 +246,12 @@ public final class PSProcSets {
 
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
             gen.getResourceTracker().registerSuppliedResource(this);
+        }
+
+        /** {@inheritDoc} */
+        public String mapCommand(String command) {
+            String mapped = (String)STANDARD_MACROS.get(command);
+            return (mapped != null ? mapped : command);
         }
 
     }

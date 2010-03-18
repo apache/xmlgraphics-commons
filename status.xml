@@ -40,6 +40,12 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add" fixes-bug="48797">
+        Added option to enable/disable the generation of compact vs. verbose PostScript code.
+      </action>
+      <action context="Code" dev="JM" type="add" fixes-bug="48797" due-to="Calixte Denizet">
+        Added shorthands for many PostScript commands to get more compact PostScript files.
+      </action>
       <action context="Code" dev="JM" type="add" fixes-bug="48395" due-to="Andrey Koltunov">
         Added code for supporting the AdobeStandardCyrillic encoding.
       </action>
