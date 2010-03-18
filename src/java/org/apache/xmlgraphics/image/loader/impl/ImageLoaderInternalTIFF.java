@@ -35,8 +35,6 @@ import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
-import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
-import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 
 /**
@@ -72,6 +70,11 @@ public class ImageLoaderInternalTIFF extends AbstractImageLoader {
                 (seekStream, null, 0);
         // TODO: This may ignore ICC Profiles stored in TIFF images.
         return new ImageRendered(info, img, null);
+    }
+
+    /** {@inheritDoc} */
+    public int getUsagePenalty() {
+        return 1000; //Provide this only as a fallback
     }
 
 }

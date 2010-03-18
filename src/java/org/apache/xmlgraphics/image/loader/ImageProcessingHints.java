@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.image.loader;
 /**
  * This interface defines some standard hints to be used for image processing in this package.
  * They are provided for convenience. You can define your own hints as you like.
+ * Generally, consumers should not rely on the presence of any hint!
  */
 public interface ImageProcessingHints {
 
@@ -29,6 +30,22 @@ public interface ImageProcessingHints {
     Object SOURCE_RESOLUTION = "SOURCE_RESOLUTION"; //Value: Number (unit dpi)
     /** Used to send a hint about the target resolution (of the final output format). */
     Object TARGET_RESOLUTION = "TARGET_RESOLUTION"; //Value: Number (unit dpi)
+
+    /**
+     * Used to pass in the {@link ImageSessionContext}. A consumer can use this to load embedded
+     * images over the same mechanism as the main image (ex. JPEG images referenced in an
+     * SVG image).
+     * @since 1.4
+     */
+    Object IMAGE_SESSION_CONTEXT = "IMAGE_SESSION_CONTEXT"; //Value: ImageSessionContext instance
+
+    /**
+     * Used to pass in the {@link ImageManager}. A consumer can use this to load embedded
+     * images over the same mechanism as the main image (ex. JPEG images referenced in an
+     * SVG image).
+     * @since 1.4
+     */
+    Object IMAGE_MANAGER = "IMAGE_MANAGER"; //Value: ImageManager instance
 
     /** Used to tell the image loader to ignore any color profile in the image. */
     Object IGNORE_COLOR_PROFILE = "IGNORE_COLOR_PROFILE"; //Value: Boolean

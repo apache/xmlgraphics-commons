@@ -19,8 +19,8 @@
 
 package org.apache.xmlgraphics.image.loader.pipeline;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,6 +38,7 @@ import org.apache.xmlgraphics.image.loader.spi.ImageConverter;
 import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoaderFactory;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 import org.apache.xmlgraphics.util.dijkstra.DefaultEdgeDirectory;
 import org.apache.xmlgraphics.util.dijkstra.DijkstraAlgorithm;
 import org.apache.xmlgraphics.util.dijkstra.Vertex;
@@ -75,7 +76,10 @@ public class PipelineFactory {
             Iterator iter = converters.iterator();
             while (iter.hasNext()) {
                 ImageConverter converter = (ImageConverter)iter.next();
-                dir.addEdge(new ImageConversionEdge(converter));
+                Penalty penalty = Penalty.toPenalty(converter.getConversionPenalty());
+                penalty = penalty.add(
+                        registry.getAdditionalPenalty(converter.getClass().getName()));
+                dir.addEdge(new ImageConversionEdge(converter, penalty));
             }
 
             converterEdgeDirectoryVersion = registry.getImageConverterModifications();
@@ -109,9 +113,34 @@ public class PipelineFactory {
      */
     public ImageProviderPipeline newImageConverterPipeline(
                 ImageInfo imageInfo, ImageFlavor targetFlavor) {
+        ImageProviderPipeline[] candidates = determineCandidatePipelines(imageInfo, targetFlavor);
+
+        //Choose best pipeline
+        if (candidates.length > 0) {
+            Arrays.sort(candidates, new PipelineComparator());
+            ImageProviderPipeline pipeline = (ImageProviderPipeline)candidates[0];
+            if (pipeline != null && log.isDebugEnabled()) {
+                log.debug("Pipeline: " + pipeline
+                        + " with penalty " + pipeline.getConversionPenalty());
+            }
+            return pipeline;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Determines all possible pipelines for the given image that can produce the requested
+     * target flavor.
+     * @param imageInfo the image information
+     * @param targetFlavor the target flavor
+     * @return the candidate pipelines
+     */
+    public ImageProviderPipeline[] determineCandidatePipelines(
+                ImageInfo imageInfo, ImageFlavor targetFlavor) {
         String originalMime = imageInfo.getMimeType();
         ImageImplRegistry registry = manager.getRegistry();
-        ImageProviderPipeline pipeline = null;
+        List candidates = new java.util.ArrayList();
 
         //Get snapshot to avoid concurrent modification problems (thread-safety)
         DefaultEdgeDirectory dir = getEdgeDirectory();
@@ -131,12 +160,13 @@ public class PipelineFactory {
                 }
                 loader = new CompositeImageLoader(loaders);
             }
-            pipeline = new ImageProviderPipeline(manager.getCache(), loader);
+            ImageProviderPipeline pipeline = new ImageProviderPipeline(manager.getCache(), loader);
+            candidates.add(pipeline);
         } else {
             //Need to use ImageConverters
             if (log.isTraceEnabled()) {
-                log.trace("No ImageLoaderFactory found that can load this format directly."
-                        + " Trying ImageConverters instead...");
+                log.trace("No ImageLoaderFactory found that can load this format ("
+                        + targetFlavor + ") directly. Trying ImageConverters instead...");
             }
 
             ImageRepresentation destination = new ImageRepresentation(targetFlavor);
@@ -144,14 +174,13 @@ public class PipelineFactory {
             // --> List of resulting flavors, possibly multiple loaders
             loaderFactories = registry.getImageLoaderFactories(originalMime);
             if (loaderFactories != null) {
-                List candidates = new java.util.ArrayList();
 
                 //Find best pipeline -> best loader
                 for (int i = 0, ci = loaderFactories.length; i < ci; i++) {
                     ImageLoaderFactory loaderFactory = loaderFactories[i];
                     ImageFlavor[] flavors = loaderFactory.getSupportedFlavors(originalMime);
                     for (int j = 0, cj = flavors.length; j < cj; j++) {
-                        pipeline = findPipeline(dir, flavors[j], destination);
+                        ImageProviderPipeline pipeline = findPipeline(dir, flavors[j], destination);
                         if (pipeline != null) {
                             ImageLoader loader = loaderFactory.newImageLoader(flavors[j]);
                             pipeline.setImageLoader(loader);
@@ -159,20 +188,13 @@ public class PipelineFactory {
                         }
                     }
                 }
-
-                Collections.sort(candidates, new PipelineComparator());
-                //Build final pipeline
-                if (candidates.size() > 0) {
-                    pipeline = (ImageProviderPipeline)candidates.get(0);
-                }
             }
         }
-        if (pipeline != null && log.isDebugEnabled()) {
-            log.debug("Pipeline: " + pipeline + " with penalty " + pipeline.getConversionPenalty());
-        }
-        return pipeline;
+        return (ImageProviderPipeline[])candidates.toArray(
+                new ImageProviderPipeline[candidates.size()]);
     }
 
+    /** Compares two pipelines based on their conversion penalty. */
     private static class PipelineComparator implements Comparator {
 
         public int compare(Object o1, Object o2) {
@@ -228,12 +250,21 @@ public class PipelineFactory {
      */
     public ImageProviderPipeline[] determineCandidatePipelines(ImageInfo imageInfo,
             ImageFlavor[] flavors) {
+        List candidates = new java.util.ArrayList();
         int count = flavors.length;
-        ImageProviderPipeline[] candidates = new ImageProviderPipeline[count];
         for (int i = 0; i < count; i++) {
-            candidates[i] = newImageConverterPipeline(imageInfo, flavors[i]);
+            //Find the best pipeline for each flavor
+            ImageProviderPipeline pipeline = newImageConverterPipeline(imageInfo, flavors[i]);
+            if (pipeline == null) {
+                continue; //No suitable pipeline found for flavor
+            }
+            Penalty p = pipeline.getConversionPenalty(this.manager.getRegistry());
+            if (!p.isInfinitePenalty()) {
+                candidates.add(pipeline);
+            }
         }
-        return candidates;
+        return (ImageProviderPipeline[])candidates.toArray(
+                new ImageProviderPipeline[candidates.size()]);
     }
 
     /**
@@ -245,12 +276,17 @@ public class PipelineFactory {
      */
     public ImageProviderPipeline[] determineCandidatePipelines(Image sourceImage,
             ImageFlavor[] flavors) {
+        List candidates = new java.util.ArrayList();
         int count = flavors.length;
-        ImageProviderPipeline[] candidates = new ImageProviderPipeline[count];
         for (int i = 0; i < count; i++) {
-            candidates[i] = newImageConverterPipeline(sourceImage, flavors[i]);
+            //Find the best pipeline for each flavor
+            ImageProviderPipeline pipeline = newImageConverterPipeline(sourceImage, flavors[i]);
+            if (pipeline != null) {
+                candidates.add(pipeline);
+            }
         }
-        return candidates;
+        return (ImageProviderPipeline[])candidates.toArray(
+                new ImageProviderPipeline[candidates.size()]);
     }
 
 

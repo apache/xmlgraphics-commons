@@ -317,5 +317,44 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
         </p>
       </section>
     </section>
+    <section id="customization">
+      <title>Customization</title>
+      <section id="source-reuse">
+        <title>Disabling Source Re-use</title>
+        <p>
+          By default, the Source object being used during the pre-loading stage is re-used when
+          the image is fully loaded later (assuming an ImageSessionContext is used that descends
+          from AbstractImageSessionContext). That means that a stream is only opened once and
+          the image loading framework tries to re-wind the stream when it has to re-read portions
+          of the stream when loading the complete image.
+        </p>
+        <p>
+          In some situations, this behavior may be undesired. Therefore, it can be disabled
+          through a system property 
+          (<code>org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext.no-source-reuse</code>).
+          Set it to "true" and that feature will be disabled.
+        </p>
+      </section>
+      <section id="plugin-penalties">
+        <title>Adjusting plug-in penalties</title>
+        <p>
+          Every image loader plug-in has a hard-coded usage penalty that influences which solution
+          is chosen if there are multiple possibilities to load an image. Sometimes, though, these
+          penalties need to be tweaked. The <code>ImageImplRegistry</code> (reachable through
+          <code>ImageManager.getRegistry()</code>) supports storing additional penalty values.
+          An example:
+        </p>
+        <source><![CDATA[ImageImplRegistry registry = imageManager.getRegistry();
+registry.setAdditionalPenalty(
+    "org.apache.xmlgraphics.image.loader.impl.ImageLoaderRawCCITTFax",
+    Penalty.toPenalty(10000));]]></source>
+        <p>
+          This increases the penalty for the raw CCITT loader significantly so it will only be
+          used if no other solutions exist. You can also set <code>Penalty.INFINITE_PENALTY</code>
+          to disable the plug-in altogether. Negative penalties are possible to promote a plug-in
+          but a negative penalty sum will be treated as zero penalty in most cases.
+        </p>
+      </section>
+    </section>
   </body>
 </document>

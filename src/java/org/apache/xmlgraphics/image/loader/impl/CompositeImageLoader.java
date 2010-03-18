@@ -66,6 +66,15 @@ public class CompositeImageLoader extends AbstractImageLoader {
     }
 
     /** {@inheritDoc} */
+    public int getUsagePenalty() {
+        int maxPenalty = NO_LOADING_PENALTY;
+        for (int i = 1, c = loaders.length; i < c; i++) {
+            maxPenalty = Math.max(maxPenalty, loaders[i].getUsagePenalty());
+        }
+        return maxPenalty;
+    }
+
+    /** {@inheritDoc} */
     public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
             throws ImageException, IOException {
         ImageException firstException = null;

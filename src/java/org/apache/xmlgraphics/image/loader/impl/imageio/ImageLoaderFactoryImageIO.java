@@ -50,11 +50,6 @@ public class ImageLoaderFactoryImageIO extends AbstractImageLoaderFactory {
     }
 
     /** {@inheritDoc} */
-    public int getUsagePenalty(String mime, ImageFlavor flavor) {
-        return 0;
-    }
-
-    /** {@inheritDoc} */
     public boolean isAvailable() {
         return (getSupportedMIMETypes().length > 0);
     }

@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 import org.apache.xmlgraphics.util.Service;
 
 /**
@@ -42,6 +43,9 @@ public class ImageImplRegistry {
 
     /** logger */
     protected static Log log = LogFactory.getLog(ImageImplRegistry.class);
+
+    /** Infinite penalty value which shall force any implementation to become ineligible. */
+    public static final int INFINITE_PENALTY = Integer.MAX_VALUE;
 
     /** Holds the list of preloaders */
     private List preloaders = new java.util.ArrayList();
@@ -59,15 +63,29 @@ public class ImageImplRegistry {
 
     private int converterModifications;
 
+    /** A Map (key: implementation classes) with additional penalties to fine-tune the registry. */
+    private Map additionalPenalties = new java.util.HashMap(); //<String, Penalty>
+    //Note: String as key chosen to avoid possible class-unloading leaks
+
     /** Singleton instance */
     private static ImageImplRegistry defaultInstance;
+
+    /**
+     * Main constructor. This constructor allows to disable plug-in discovery for testing purposes.
+     * @param discover true if implementation classes shall automatically be discovered.
+     */
+    public ImageImplRegistry(boolean discover) {
+        if (discover) {
+            discoverClasspathImplementations();
+        }
+    }
 
     /**
      * Main constructor.
      * @see #getDefaultInstance()
      */
     public ImageImplRegistry() {
-        discoverClasspathImplementations();
+        this(true);
     }
 
     /**
@@ -123,7 +141,8 @@ public class ImageImplRegistry {
         return holder;
     }
 
-    private class PreloaderHolder {
+    /** Holder class for registered {@link ImagePreloader} instances. */
+    private static class PreloaderHolder {
         private ImagePreloader preloader;
         private int identifier;
 
@@ -138,10 +157,14 @@ public class ImageImplRegistry {
 
                 public int compare(Object o1, Object o2) {
                     PreloaderHolder h1 = (PreloaderHolder)o1;
+                    long p1 = h1.preloader.getPriority();
+                    p1 += getAdditionalPenalty(h1.preloader.getClass().getName()).getValue();
+
                     PreloaderHolder h2 = (PreloaderHolder)o2;
-                    int p1 = h1.preloader.getPriority();
                     int p2 = h2.preloader.getPriority();
-                    int diff = p1 - p2;
+                    p2 += getAdditionalPenalty(h2.preloader.getClass().getName()).getValue();
+
+                    int diff = Penalty.truncate(p1 - p2);
                     if (diff != 0) {
                         return diff;
                     } else {
@@ -278,7 +301,8 @@ public class ImageImplRegistry {
                     if (!factory.isSupported(imageInfo)) {
                         continue;
                     }
-                    int penalty = factory.getUsagePenalty(mime, flavor);
+                    ImageLoader loader = factory.newImageLoader(flavor);
+                    int penalty = loader.getUsagePenalty();
                     if (penalty < bestPenalty) {
                         bestPenalty = penalty;
                         bestFactory = factory;
@@ -299,7 +323,7 @@ public class ImageImplRegistry {
      */
     public ImageLoaderFactory[] getImageLoaderFactories(ImageInfo imageInfo, ImageFlavor flavor) {
         String mime = imageInfo.getMimeType();
-        Collection matches = new java.util.TreeSet(new ImageLoaderFactoryComparator(mime, flavor));
+        Collection matches = new java.util.TreeSet(new ImageLoaderFactoryComparator(flavor));
         Map flavorMap = (Map)loaders.get(mime);
         if (flavorMap != null) {
             Iterator flavorIter = flavorMap.keySet().iterator();
@@ -326,21 +350,28 @@ public class ImageImplRegistry {
         }
     }
 
-    private static class ImageLoaderFactoryComparator implements Comparator {
+    /** Comparator for {@link ImageLoaderFactory} classes. */
+    private class ImageLoaderFactoryComparator implements Comparator {
 
-        private String mime;
         private ImageFlavor targetFlavor;
 
-        public ImageLoaderFactoryComparator(String mime, ImageFlavor targetFlavor) {
-            this.mime = mime;
+        public ImageLoaderFactoryComparator(ImageFlavor targetFlavor) {
             this.targetFlavor = targetFlavor;
         }
 
         public int compare(Object o1, Object o2) {
             ImageLoaderFactory f1 = (ImageLoaderFactory)o1;
+            ImageLoader l1 = f1.newImageLoader(targetFlavor);
+            long p1 = l1.getUsagePenalty();
+            p1 += getAdditionalPenalty(l1.getClass().getName()).getValue();
+
             ImageLoaderFactory f2 = (ImageLoaderFactory)o2;
+            ImageLoader l2 = f2.newImageLoader(targetFlavor);
+            long p2 = l2.getUsagePenalty();
+            p2 = getAdditionalPenalty(l2.getClass().getName()).getValue();
+
             //Lowest penalty first
-            return f1.getUsagePenalty(mime, targetFlavor) - f2.getUsagePenalty(mime, targetFlavor);
+            return Penalty.truncate(p1 - p2);
         }
 
     }
@@ -368,6 +399,33 @@ public class ImageImplRegistry {
             }
         }
         return null;
+    }
+
+    /**
+     * Sets an additional penalty for a particular implementation class for any of the interface
+     * administered by this registry class. No checking is performed to verify if the className
+     * parameter is valid.
+     * @param className the fully qualified class name of the implementation class
+     * @param penalty the additional penalty or null to clear any existing value
+     */
+    public void setAdditionalPenalty(String className, Penalty penalty) {
+        if (penalty != null) {
+            this.additionalPenalties.put(className, penalty);
+        } else {
+            this.additionalPenalties.remove(className);
+        }
+        this.lastPreloaderSort = -1; //Force resort, just in case this was a preloader
+    }
+
+    /**
+     * Returns the additional penalty value set for a particular implementation class.
+     * If no such value is set, 0 is returned.
+     * @param className the fully qualified class name of the implementation class
+     * @return the additional penalty value
+     */
+    public Penalty getAdditionalPenalty(String className) {
+        Penalty p = (Penalty)this.additionalPenalties.get(className);
+        return (p != null ? p : Penalty.ZERO_PENALTY);
     }
 
 }

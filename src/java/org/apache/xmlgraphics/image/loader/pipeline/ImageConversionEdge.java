@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.image.loader.pipeline;
 
 import org.apache.xmlgraphics.image.loader.spi.ImageConverter;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 import org.apache.xmlgraphics.util.dijkstra.Edge;
 import org.apache.xmlgraphics.util.dijkstra.Vertex;
 
@@ -27,21 +28,23 @@ import org.apache.xmlgraphics.util.dijkstra.Vertex;
  * Represents an image conversion. The class basically wraps an ImageConverter so it can be
  * used with Dijkstra's shortest route algorithm to build image conversion pipelines.
  */
-public class ImageConversionEdge implements Edge {
+class ImageConversionEdge implements Edge {
 
     private ImageRepresentation source;
     private ImageRepresentation target;
     private ImageConverter converter;
+    private int penalty;
 
     /**
      * Main constructor.
      * @param converter the image converter
+     * @param penalty the penalty for this edge
      */
-    public ImageConversionEdge(
-            ImageConverter converter) {
+    public ImageConversionEdge(ImageConverter converter, Penalty penalty) {
         this.converter = converter;
         this.source = new ImageRepresentation(converter.getSourceFlavor());
         this.target = new ImageRepresentation(converter.getTargetFlavor());
+        this.penalty = Math.max(0, penalty.getValue());
     }
 
     /**
@@ -54,7 +57,7 @@ public class ImageConversionEdge implements Edge {
 
     /** {@inheritDoc} */
     public int getPenalty() {
-        return getImageConverter().getConversionPenalty();
+        return this.penalty;
     }
 
     /** {@inheritDoc} */

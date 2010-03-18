@@ -19,6 +19,9 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.xmlgraphics.image.codec.tiff.TIFFImage;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
@@ -29,6 +32,9 @@ import org.apache.xmlgraphics.util.MimeConstants;
  * Factory class for the ImageLoader for raw/undecoded CCITT encoded images.
  */
 public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
+
+    /** logger */
+    private transient Log log = LogFactory.getLog(ImageLoaderFactoryRawCCITTFax.class);
 
     private static final String[] MIMES = new String[] {
         MimeConstants.MIME_TIFF};
@@ -80,11 +86,6 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
     }
 
     /** {@inheritDoc} */
-    public int getUsagePenalty(String mime, ImageFlavor flavor) {
-        return 0;
-    }
-
-    /** {@inheritDoc} */
     public boolean isAvailable() {
         return true;
     }
@@ -94,6 +95,7 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
         Boolean tiled = (Boolean)imageInfo.getCustomObjects().get("TIFF_TILED");
         if (Boolean.TRUE.equals(tiled)) {
             //We don't support tiled images
+            log.trace("Raw CCITT loading not supported for tiled TIFF image");
             return false;
         }
         Integer compression = (Integer)imageInfo.getCustomObjects().get("TIFF_COMPRESSION");
@@ -105,7 +107,11 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
         case TIFFImage.COMP_FAX_G3_2D:
         case TIFFImage.COMP_FAX_G4_2D:
             Integer stripCount = (Integer)imageInfo.getCustomObjects().get("TIFF_STRIP_COUNT");
-            return (stripCount != null && stripCount.intValue() == 1);
+            boolean supported = (stripCount != null && stripCount.intValue() == 1);
+            if (!supported) {
+                log.trace("Raw CCITT loading not supported for multi-strip TIFF image");
+            }
+            return supported;
         default:
             return false;
         }
