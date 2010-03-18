@@ -70,6 +70,7 @@ public interface ImageLoaderFactory {
      * @param mime the MIME type
      * @param flavor the target image flavor
      * @return the usage penalty (must be a non-negative integer)
+     * @deprecated Redundancy with {@link ImageLoader#getUsagePenalty()}
      */
     int getUsagePenalty(String mime, ImageFlavor flavor);
 

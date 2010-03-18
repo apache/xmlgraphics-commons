@@ -54,11 +54,6 @@ public class ImageLoaderFactoryInternalTIFF extends AbstractImageLoaderFactory {
     }
 
     /** {@inheritDoc} */
-    public int getUsagePenalty(String mime, ImageFlavor flavor) {
-        return 10000; //Provide this only as a fallback
-    }
-
-    /** {@inheritDoc} */
     public boolean isAvailable() {
         return true;
     }

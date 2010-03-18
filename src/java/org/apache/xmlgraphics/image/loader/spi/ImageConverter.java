@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
+import org.apache.xmlgraphics.image.loader.ImageInfo;
 
 /**
  * Defines an image converter that can convert one image representation into another.
@@ -40,6 +41,8 @@ public interface ImageConverter {
 
     /**
      * Converts an image into a different representation.
+     * <p> The new image returned shall preserve the original {@link ImageInfo} instance.
+     * Consumers can get the effective MIME type (if any) from the associated {@link ImageFlavor}.
      * @param src the source image
      * @param hints the conversion hints
      * @return the converted image

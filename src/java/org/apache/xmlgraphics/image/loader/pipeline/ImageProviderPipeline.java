@@ -39,7 +39,9 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.cache.ImageCache;
 import org.apache.xmlgraphics.image.loader.impl.ImageRawStream;
 import org.apache.xmlgraphics.image.loader.spi.ImageConverter;
+import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 
 /**
  * Represents a pipeline of ImageConverters with an ImageLoader at the beginning of the
@@ -272,14 +274,32 @@ public class ImageProviderPipeline {
      * @return the overall penalty (a non-negative integer)
      */
     public int getConversionPenalty() {
-        int penalty = 0;
+        return getConversionPenalty(null).getValue();
+    }
+
+    /**
+     * Returns the overall conversion penalty for the pipeline. This can be used to choose among
+     * different possible pipelines.
+     * @param registry the image implementation registry
+     * @return the overall penalty (a non-negative integer)
+     */
+    public Penalty getConversionPenalty(ImageImplRegistry registry) {
+        Penalty penalty = Penalty.ZERO_PENALTY;
         if (loader != null) {
-            penalty += loader.getUsagePenalty();
+            penalty = penalty.add(loader.getUsagePenalty());
+            if (registry != null) {
+                penalty = penalty.add(
+                        registry.getAdditionalPenalty(loader.getClass().getName()));
+            }
         }
         Iterator iter = converters.iterator();
         while (iter.hasNext()) {
             ImageConverter converter = (ImageConverter)iter.next();
-            penalty += converter.getConversionPenalty();
+            penalty = penalty.add(converter.getConversionPenalty());
+            if (registry != null) {
+                penalty = penalty.add(
+                        registry.getAdditionalPenalty(converter.getClass().getName()));
+            }
         }
         return penalty;
     }

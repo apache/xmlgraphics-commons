@@ -317,6 +317,7 @@ public class ImageUtil {
                 new Float(session.getParentContext().getSourceResolution()));
         hints.put(ImageProcessingHints.TARGET_RESOLUTION,
                 new Float(session.getTargetResolution()));
+        hints.put(ImageProcessingHints.IMAGE_SESSION_CONTEXT, session);
         return hints;
     }
 

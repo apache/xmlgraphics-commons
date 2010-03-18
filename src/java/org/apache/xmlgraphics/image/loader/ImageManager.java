@@ -20,7 +20,6 @@
 package org.apache.xmlgraphics.image.loader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -35,6 +34,7 @@ import org.apache.xmlgraphics.image.loader.pipeline.PipelineFactory;
 import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.apache.xmlgraphics.image.loader.spi.ImagePreloader;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 
 /**
  * ImageManager is the central starting point for image access.
@@ -45,7 +45,7 @@ public class ImageManager {
     protected static Log log = LogFactory.getLog(ImageManager.class);
 
     /** Holds all registered interface implementations for the image package */
-    private ImageImplRegistry registry = ImageImplRegistry.getDefaultInstance();
+    private ImageImplRegistry registry;
 
     /** Provides session-independent information */
     private ImageContext imageContext;
@@ -60,6 +60,16 @@ public class ImageManager {
      * @param context the session-independent context information
      */
     public ImageManager(ImageContext context) {
+        this(ImageImplRegistry.getDefaultInstance(), context);
+    }
+
+    /**
+     * Constructor for testing purposes.
+     * @param registry the implementation registry with all plug-ins
+     * @param context the session-independent context information
+     */
+    public ImageManager(ImageImplRegistry registry, ImageContext context) {
+        this.registry = registry;
         this.imageContext = context;
     }
 
@@ -171,6 +181,22 @@ public class ImageManager {
                 + uri);
     }
 
+    private Map prepareHints(Map hints, ImageSessionContext sessionContext) {
+        Map newHints = new java.util.HashMap();
+        if (hints != null) {
+            newHints.putAll(hints); //Copy in case an unmodifiable map is passed in
+        }
+        if (!newHints.containsKey(ImageProcessingHints.IMAGE_SESSION_CONTEXT)
+                && sessionContext != null) {
+            newHints.put(ImageProcessingHints.IMAGE_SESSION_CONTEXT, sessionContext);
+
+        }
+        if (!newHints.containsKey(ImageProcessingHints.IMAGE_MANAGER)) {
+            newHints.put(ImageProcessingHints.IMAGE_MANAGER, this);
+        }
+        return newHints;
+    }
+
     /**
      * Loads an image. The caller can indicate what kind of image flavor is requested. When this
      * method is called the code looks for a suitable ImageLoader and, if necessary, builds
@@ -192,9 +218,7 @@ public class ImageManager {
     public Image getImage(ImageInfo info, ImageFlavor flavor, Map hints,
                 ImageSessionContext session)
             throws ImageException, IOException {
-        if (hints == null) {
-            hints = Collections.EMPTY_MAP;
-        }
+        hints = prepareHints(hints, session);
 
         Image img = null;
         ImageProviderPipeline pipeline = getPipelineFactory().newImageConverterPipeline(
@@ -233,9 +257,7 @@ public class ImageManager {
     public Image getImage(ImageInfo info, ImageFlavor[] flavors, Map hints,
                         ImageSessionContext session)
                 throws ImageException, IOException {
-        if (hints == null) {
-            hints = Collections.EMPTY_MAP;
-        }
+        hints = prepareHints(hints, session);
 
         Image img = null;
         ImageProviderPipeline[] candidates = getPipelineFactory().determineCandidatePipelines(
@@ -309,9 +331,7 @@ public class ImageManager {
      */
     public Image convertImage(Image image, ImageFlavor[] flavors, Map hints)
                 throws ImageException, IOException {
-        if (hints == null) {
-            hints = Collections.EMPTY_MAP;
-        }
+        hints = prepareHints(hints, null);
         ImageInfo info = image.getInfo();
 
         Image img = null;
@@ -362,14 +382,27 @@ public class ImageManager {
         ImageProviderPipeline pipeline = null;
         int minPenalty = Integer.MAX_VALUE;
         int count = candidates.length;
+        if (log.isTraceEnabled()) {
+            log.trace("Candidate Pipelines:");
+            for (int i = 0; i < count; i++) {
+                if (candidates[i] == null) {
+                    continue;
+                }
+                log.trace("  " + i + ": "
+                        + candidates[i].getConversionPenalty(getRegistry()) + " for " + candidates[i]);
+            }
+        }
         for (int i = count - 1; i >= 0; i--) {
             if (candidates[i] == null) {
                 continue;
             }
-            int penalty = candidates[i].getConversionPenalty();
-            if (penalty <= minPenalty) {
+            Penalty penalty = candidates[i].getConversionPenalty(getRegistry());
+            if (penalty.isInfinitePenalty()) {
+                continue; //Exclude candidate on infinite penalty
+            }
+            if (penalty.getValue() <= minPenalty) {
                 pipeline = candidates[i];
-                minPenalty = penalty;
+                minPenalty = penalty.getValue();
             }
         }
         if (log.isDebugEnabled()) {

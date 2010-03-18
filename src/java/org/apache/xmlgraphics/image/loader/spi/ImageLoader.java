@@ -34,6 +34,11 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
  */
 public interface ImageLoader {
 
+    /** Used if the loading penalty is negligible (image doesn't need to be decoded). */
+    int NO_LOADING_PENALTY = 0;
+    /** Default/Medium conversion penalty (if there's some effort to load the image format) */
+    int MEDIUM_LOADING_PENALTY = 10;
+
     /**
      * Loads and returns an image.
      * @param info the image info object indicating the image

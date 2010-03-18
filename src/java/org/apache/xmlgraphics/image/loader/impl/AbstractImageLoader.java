@@ -42,7 +42,7 @@ public abstract class AbstractImageLoader implements ImageLoader {
 
     /** {@inheritDoc} */
     public int getUsagePenalty() {
-        return 0;
+        return NO_LOADING_PENALTY;
     }
 
     /**
