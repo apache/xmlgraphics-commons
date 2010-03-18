@@ -89,6 +89,19 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         writeFileHeader();
     }
 
+    /**
+     * Disable clipping on each draw command.
+     *
+     * @param b set to true to disable all clipping.
+     */
+    public void disableClipping(boolean b) {
+        this.clippingDisabled = b;
+    }
+
+    /**
+     * Writes the file header.
+     * @throws IOException if an I/O error occurs
+     */
     protected abstract void writeFileHeader() throws IOException;
 
     /**
@@ -151,14 +164,26 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         */
     }
 
+    /**
+     * Returns the number of pages generated so far.
+     * @return the number of pages
+     */
     public int getPageCount() {
         return this.pagecount;
     }
 
+    /**
+     * Closes the current page and prepares to start a new one.
+     * @throws IOException if an I/O error occurs
+     */
     public void nextPage() throws IOException {
         closePage();
     }
 
+    /**
+     * Closes the current page.
+     * @throws IOException if an I/O error occurs
+     */
     protected void closePage() throws IOException {
         if (!this.pagePending) {
             return; //ignore
@@ -193,6 +218,10 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         }
     }
 
+    /**
+     * Starts a new page.
+     * @throws IOException if an I/O error occurs
+     */
     protected void startPage() throws IOException {
         if (this.pagePending) {
             throw new IllegalStateException("Close page first before starting another");
