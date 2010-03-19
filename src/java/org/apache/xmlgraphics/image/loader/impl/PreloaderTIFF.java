@@ -25,6 +25,9 @@ import java.text.MessageFormat;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.xmlgraphics.image.codec.tiff.TIFFDirectory;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFField;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFImageDecoder;
@@ -46,6 +49,8 @@ import org.apache.xmlgraphics.util.UnitConv;
  * access to the TIFF directory.
  */
 public class PreloaderTIFF extends AbstractImagePreloader {
+
+    private static Log log = LogFactory.getLog(PreloaderTIFF.class);
 
     private static final int TIFF_SIG_LENGTH = 8;
 
@@ -133,6 +138,9 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                 size.setResolution(context.getSourceResolution());
             }
             size.calcSizeFromPixels();
+            if (log.isTraceEnabled()) {
+                log.trace("TIFF image detected: " + size);
+            }
 
             info = new ImageInfo(uri, MimeConstants.MIME_TIFF);
             info.setSize(size);
@@ -142,11 +150,17 @@ public class PreloaderTIFF extends AbstractImagePreloader {
             fld = dir.getField(TIFFImageDecoder.TIFF_COMPRESSION);
             if (fld != null) {
                 int compression = fld.getAsInt(0);
+                if (log.isTraceEnabled()) {
+                    log.trace("TIFF compression: " + compression);
+                }
                 info.getCustomObjects().put("TIFF_COMPRESSION", new Integer(compression));
             }
 
             fld = dir.getField(TIFFImageDecoder.TIFF_TILE_WIDTH);
             if (fld != null) {
+                if (log.isTraceEnabled()) {
+                    log.trace("TIFF is tiled");
+                }
                 info.getCustomObjects().put("TIFF_TILED", Boolean.TRUE);
             }
 
@@ -157,12 +171,18 @@ public class PreloaderTIFF extends AbstractImagePreloader {
             } else {
                 stripCount = (int)Math.ceil(size.getHeightPx() / (double)fld.getAsLong(0));
             }
+            if (log.isTraceEnabled()) {
+                log.trace("TIFF has " + stripCount + " strips.");
+            }
             info.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(stripCount));
 
             try {
                 //Check if there is a next page
                 new TIFFDirectory(seekable, pageIndex + 1);
                 info.getCustomObjects().put(ImageInfo.HAS_MORE_IMAGES, Boolean.TRUE);
+                if (log.isTraceEnabled()) {
+                    log.trace("TIFF is multi-page.");
+                }
             } catch (IllegalArgumentException iae) {
                 info.getCustomObjects().put(ImageInfo.HAS_MORE_IMAGES, Boolean.FALSE);
             }
