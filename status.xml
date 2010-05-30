@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="add" fixes-bug="49250" due-to="Julien Aymé">
+        Added getter and setter for enabling/disabling comments in PSGenerator.
+      </action>
       <action context="Code" dev="JM" type="add" fixes-bug="49056" due-to="Calixte Denizet">
         Small optimization which only generates code for a clipping area if an element is not
         fully inside the clipping area.

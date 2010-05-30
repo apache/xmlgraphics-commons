@@ -102,6 +102,24 @@ public class PSGenerator implements PSCommandMap {
         this.compactMode = value;
     }
 
+    /**
+     * Indicates whether this instance allows to write comments. See
+     * {@link #setCommentsEnabled(boolean)} for details.
+     * @return true if comments are enabled (the default)
+     */
+    public boolean isCommentsEnabled() {
+        return this.commentsEnabled;
+    }
+
+    /**
+     * Controls whether this instance allows to write comments using the {@link #commentln(String)}
+     * method.
+     * @param value true to enable comments, false to disable them
+     */
+    public void setCommentsEnabled(boolean value) {
+        this.commentsEnabled = value;
+    }
+
     private void resetGraphicsState() {
         if (!this.graphicsStateStack.isEmpty()) {
             throw new IllegalStateException("Graphics state stack should be empty at this point");
@@ -206,7 +224,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException  In case of an I/O problem
      */
     public void commentln(String comment) throws IOException {
-        if (this.commentsEnabled) {
+        if (isCommentsEnabled()) {
             writeln(comment);
         }
     }
