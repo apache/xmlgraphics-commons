@@ -450,10 +450,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
     }
 
     /**
-     * Determinates if a shape is included into a clipping region
+     * Determines if a shape interacts with a clipping region.
      * @param clip Shape defining the clipping region
      * @param s Shape to be drawn
-     * @return a boolean
+     * @return true if code for a clipping region needs to be generated.
      */
     public boolean shouldBeClipped(Shape clip, Shape s) {
         if (clip == null || s == null) {
