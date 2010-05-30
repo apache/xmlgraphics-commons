@@ -36,6 +36,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -430,7 +431,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 gen.concatMatrix(trans);
             }
             Shape imclip = getClip();
-            writeClip(imclip);
+            if (shouldBeClipped(imclip, s)) {
+                writeClip(imclip);
+            }
             establishColor(getColor());
 
             applyPaint(getPaint(), false);
@@ -444,6 +447,22 @@ public class PSGraphics2D extends AbstractGraphics2D {
         } catch (IOException ioe) {
             handleIOException(ioe);
         }
+    }
+
+    /**
+     * Determinates if a shape is included into a clipping region
+     * @param clip Shape defining the clipping region
+     * @param s Shape to be drawn
+     * @return a boolean
+     */
+    public boolean shouldBeClipped(Shape clip, Shape s) {
+        if (clip == null || s == null) {
+            return false;
+        }
+        Area as = new Area(s);
+        Area imclip = new Area(clip);
+        imclip.intersect(as);
+        return !imclip.equals(as);
     }
 
     /**
@@ -715,7 +734,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
                 gen.concatMatrix(trans);
             }
             Shape imclip = getClip();
-            writeClip(imclip);
+            if (shouldBeClipped(imclip, s)) {
+                writeClip(imclip);
+            }
 
             establishColor(getColor());
 
