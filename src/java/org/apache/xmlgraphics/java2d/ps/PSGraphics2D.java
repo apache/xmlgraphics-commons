@@ -38,6 +38,7 @@ import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.RenderedImage;
@@ -367,7 +368,26 @@ public class PSGraphics2D extends AbstractGraphics2D {
     }
 
     /**
-     * Processes a path iterator generating the nexessary painting operations.
+     * Processes a Shape generating the necessary painting operations.
+     * @param s Shape to process
+     * @return the winding rule of the path defining the shape
+     * @throws IOException In case of an I/O problem.
+     */
+    public int processShape(Shape s) throws IOException {
+        if (s instanceof Rectangle2D) {
+            // Special optimization in case of Rectangle Shape
+            Rectangle2D r = (Rectangle2D) s;
+            gen.defineRect(r.getX(), r.getY(), r.getWidth(), r.getHeight());
+            return PathIterator.WIND_NON_ZERO;
+        } else {
+            PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
+            processPathIterator(iter);
+            return iter.getWindingRule();
+        }
+    }
+
+    /**
+     * Processes a path iterator generating the necessary painting operations.
      * @param iter PathIterator to process
      * @throws IOException In case of an I/O problem.
      */
@@ -449,8 +469,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             applyStroke(getStroke());
 
             gen.writeln(gen.mapCommand("newpath"));
-            PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
-            processPathIterator(iter);
+            processShape(s);
             doDrawing(false, true, false);
             gen.restoreGraphicsState();
         } catch (IOException ioe) {
@@ -486,8 +505,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             preparePainting();
             try {
                 gen.writeln(gen.mapCommand("newpath"));
-                PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
-                processPathIterator(iter);
+                processShape(s);
                 // clip area
                 gen.writeln(gen.mapCommand("clip"));
             } catch (IOException ioe) {
@@ -752,10 +770,9 @@ public class PSGraphics2D extends AbstractGraphics2D {
             applyPaint(getPaint(), true);
 
             gen.writeln(gen.mapCommand("newpath"));
-            PathIterator iter = s.getPathIterator(IDENTITY_TRANSFORM);
-            processPathIterator(iter);
+            int windingRule = processShape(s);
             doDrawing(true, false,
-                      iter.getWindingRule() == PathIterator.WIND_EVEN_ODD);
+                    windingRule == PathIterator.WIND_EVEN_ODD);
             gen.restoreGraphicsState();
         } catch (IOException ioe) {
             handleIOException(ioe);

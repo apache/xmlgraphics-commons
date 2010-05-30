@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="update" fixes-bug="49338" due-to="Julien Aymé">
+        Using shorthand procedures for rectangles instead of the generic shape processor.
+      </action>
       <action context="Code" dev="JM" type="update" fixes-bug="49337" due-to="Julien Aymé">
         Moved method disableClipping from AbstractPSDocumentGraphics2D to PSGraphics2D.
       </action>
