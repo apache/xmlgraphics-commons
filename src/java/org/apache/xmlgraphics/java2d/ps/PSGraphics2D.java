@@ -173,6 +173,15 @@ public class PSGraphics2D extends AbstractGraphics2D {
     }*/
 
     /**
+     * Disable clipping on each draw command.
+     *
+     * @param b set to true to disable all clipping.
+     */
+    public void disableClipping(boolean b) {
+        this.clippingDisabled = b;
+    }
+
+    /**
      * Creates a new <code>Graphics</code> object that is
      * a copy of this <code>Graphics</code> object.
      * @return     a new graphics context that is a copy of
