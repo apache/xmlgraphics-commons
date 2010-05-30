@@ -90,15 +90,6 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
     }
 
     /**
-     * Disable clipping on each draw command.
-     *
-     * @param b set to true to disable all clipping.
-     */
-    public void disableClipping(boolean b) {
-        this.clippingDisabled = b;
-    }
-
-    /**
      * Writes the file header.
      * @throws IOException if an I/O error occurs
      */

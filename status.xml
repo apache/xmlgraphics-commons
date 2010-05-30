@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="update" fixes-bug="49337" due-to="Julien Aymé">
+        Moved method disableClipping from AbstractPSDocumentGraphics2D to PSGraphics2D.
+      </action>
       <action context="Code" dev="JM" type="add" fixes-bug="49250" due-to="Julien Aymé">
         Added getter and setter for enabling/disabling comments in PSGenerator.
       </action>
