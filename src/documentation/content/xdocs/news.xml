@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <news>
+  <item date="2010-06-11" title="Version 1.4 Released">
+    <p>
+      This release adds the option to generate smaller PostScript
+      files, support for the AdobeStandardCyrillic encoding,
+      RefinedImageFlavor, TexturePaint support for PSGraphics2D
+      (PostScript tiling patterns), improvements to the XMP framework,
+      and more. In addition it contains a number of bug fixes.  For
+      details, please see the <a
+      href="changes.html#version_1.4">Changes</a> page.
+    </p>
+    <p>
+      We are pleased to note that many new features were contributed
+      from outside the team of committers. Such broader interest
+      ensures the healthy further development of the project.
+	</p>
+  </item>
   <item date="2008-06-11" title="Version 1.3.1 Released">
     <p>
       This release is mostly a bugfix release for the image loading framework

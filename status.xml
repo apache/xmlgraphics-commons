@@ -39,7 +39,7 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
-    <release version="Trunk" date="n/a">
+    <release version="1.4" date="11 June 2010">
       <action context="Code" dev="JM" type="update" fixes-bug="49338" due-to="Julien Aymé">
         Using shorthand procedures for rectangles instead of the generic shape processor.
       </action>
