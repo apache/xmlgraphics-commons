@@ -25,7 +25,7 @@ import org.apache.xmlgraphics.util.i18n.LocalizableSupport;
 
 public class PropertyUtil {
     protected static final String RESOURCES =
-        "org.apache.xmlgraphics.image.codec.resources.Messages";
+        "org.apache.xmlgraphics.image.codec.Messages";
 
 
     protected static LocalizableSupport localizableSupport =
