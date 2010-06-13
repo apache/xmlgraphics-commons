@@ -40,11 +40,14 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix" fixes-bug="49364" due-to="Julien Aymé">
+        Two properties didn't get copied in copy constructor of PSState.
+      </action>
       <action context="Code" dev="JM" type="update" fixes-bug="49339" due-to="Julien Aymé">
         Optimization for PostScript state handling in (E)PSDocumentGraphics2D.
       </action>
       <action context="Code" dev="JM" type="update" fixes-bug="49338" due-to="Julien Aymé">
-        Using shorthand procedures for rectangles instead of the generic shape processor.
+        PS output: Using shorthand procedures for rectangles instead of the generic shape processor.
       </action>
       <action context="Code" dev="JM" type="update" fixes-bug="49337" due-to="Julien Aymé">
         Moved method disableClipping from AbstractPSDocumentGraphics2D to PSGraphics2D.
