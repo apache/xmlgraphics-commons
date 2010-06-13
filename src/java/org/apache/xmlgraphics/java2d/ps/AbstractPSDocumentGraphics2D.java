@@ -231,15 +231,19 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         }
 
         writePageHeader();
+        AffineTransform at;
         if ((this.viewportWidth != this.width
                 || this.viewportHeight != this.height)
                 && (this.viewportWidth > 0) && (this.viewportHeight > 0)){
-            gen.concatMatrix(this.width / this.viewportWidth, 0,
+            at = new AffineTransform(this.width / this.viewportWidth, 0,
                        0, -1 * (this.height / this.viewportHeight),
                        0, this.height);
         } else {
-            gen.concatMatrix(1, 0, 0, -1, 0, this.height);
+            at = new AffineTransform(1, 0, 0, -1, 0, this.height);
         }
+        // Do not use concatMatrix, since it alters PSGenerator current state
+        //gen.concatMatrix(at);
+        gen.writeln(gen.formatMatrix(at) + " " + gen.mapCommand("concat"));
         gen.writeDSCComment(DSCConstants.END_PAGE_SETUP);
         this.pagePending = true;
     }
