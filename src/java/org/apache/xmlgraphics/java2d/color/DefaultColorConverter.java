@@ -17,20 +17,36 @@
 
 /* $Id:$ */
 
-package org.apache.xmlgraphics.java2d;
+package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
+import org.apache.xmlgraphics.java2d.color.ColorConverter;
+
 /**
- * Utility for implementing a color conversion scheme.
+ * A default implementation that does not apply any conversion
  */
-public interface ColorConverter {
+public final class DefaultColorConverter implements ColorConverter {
 
     /**
-     * @param color to convert
-    * @return converted color
-    */
+     * private constructor to support singleton pattern
+     */
+    private static final DefaultColorConverter SINGLETON = new DefaultColorConverter();
 
-    Color convert(Color color);
+    private DefaultColorConverter() {
+    }
 
+    /**
+     * static factory
+     *
+     * @return singleton instance of DefaultColorConverter
+     */
+    public static DefaultColorConverter getInstance() {
+        return SINGLETON;
+    }
+
+    /** {@inheritDoc} */
+    public Color convert(Color color) {
+        return color;
+    }
 }
