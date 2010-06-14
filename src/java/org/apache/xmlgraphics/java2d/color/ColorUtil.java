@@ -17,9 +17,10 @@
 
 /* $Id: ColorUtil.java 815938 2009-09-16 19:38:13Z jeremias $ */
 
-package org.apache.xmlgraphics.java2d;
+package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
+
 
 /**
  * Generic Color helper class.

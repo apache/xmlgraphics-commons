@@ -39,7 +39,7 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
-import org.apache.xmlgraphics.java2d.CMYKColorSpace;
+import org.apache.xmlgraphics.java2d.color.CMYKColorSpace;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**

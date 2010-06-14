@@ -17,7 +17,7 @@
 
 /* $Id: ColorExt.java 884117 2009-11-25 14:42:48Z jeremias $ */
 
-package org.apache.xmlgraphics.java2d;
+package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 import java.awt.color.ColorSpace;
