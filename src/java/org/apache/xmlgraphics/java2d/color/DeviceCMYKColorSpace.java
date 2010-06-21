@@ -24,30 +24,17 @@ import java.awt.color.ColorSpace;
 /**
  * This class represents an uncalibrated CMYK color space.
  */
-public class CMYKColorSpace extends ColorSpace {
+public class DeviceCMYKColorSpace extends ColorSpace {
 
     private static final long serialVersionUID = 2925508946083542974L;
-
-    private static CMYKColorSpace instance;
 
     /**
      * Constructs an uncalibrated CMYK ColorSpace object with {@link ColorSpace#TYPE_CMYK} and
      * 4 components.
      * @see java.awt.color.ColorSpace#ColorSpace(int, int)
      */
-    protected CMYKColorSpace() {
+    public DeviceCMYKColorSpace() {
         super(TYPE_CMYK, 4);
-    }
-
-    /**
-     * Returns an instance of an uncalibrated CMYK color space.
-     * @return CMYKColorSpace the requested color space object
-     */
-    public static CMYKColorSpace getInstance() {
-        if (instance == null) {
-            instance = new CMYKColorSpace();
-        }
-        return instance;
     }
 
     /** {@inheritDoc} */

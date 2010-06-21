@@ -81,7 +81,7 @@ public final class ColorUtil {
      */
     public static Color toCMYKGrayColor(float black) {
         float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
-        CMYKColorSpace cmykCs = CMYKColorSpace.getInstance();
+        DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
         float[] rgb = cmykCs.toRGB(cmyk);
         return ColorExt.createFromFoRgbIcc(rgb[0], rgb[1], rgb[2],
                 CMYK_PSEUDO_PROFILE, null, cmykCs, cmyk);
