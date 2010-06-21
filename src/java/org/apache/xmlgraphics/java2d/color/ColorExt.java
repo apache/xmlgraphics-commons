@@ -21,252 +21,87 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 import java.awt.color.ColorSpace;
-import java.util.Arrays;
 
 /**
- * Color helper class.
- * <p>
- * This class extends java.awt.Color class keeping track of the original color
- * property values specified by the fo user in a rgb-icc call.
+ * Extended {@link Color} class allowing to specify a prioritized list of alternate colors.
+ * An instance of this class should normally be an sRGB fallback color. The alternate colors
+ * shall be the ones that are preferred if an output format supports them. This is done so because
+ * it allows to specify the exact sRGB value that should be used if the alternate color spaces
+ * are not supported. Colors in other color spaces will often not return the exact desired sRGB
+ * value when converting native color values to sRGB through their {@link ColorSpace} instance.
  */
 public final class ColorExt extends Color {
-    //
-    private static final long serialVersionUID = 1L;
 
-    // Values of fop-rgb-icc arguments
-    private float rgbReplacementRed;
-    private float rgbReplacementGreen;
-    private float rgbReplacementBlue;
-
-    private String iccProfileName;
-    private String iccProfileSrc;
-    private ColorSpace colorSpace;
-
-    private float[] colorValues;
+    private Color[] alternateColors;
 
     /**
-     * Helper for createFromFoRgbIcc.
-     *
-     * @param colorSpc
-     *          ColorSpace of color.
-     * @param colorVals
-     *          Color components of color.
-     * @param opacity
-     *          Opacity level of color.
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(float, float, float, float)
      */
-    private ColorExt(final ColorSpace colorSpc, final float[] colorVals,
-            final float opacity) {
-        super(colorSpc, colorVals, opacity);
+    public ColorExt(float r, float g, float b, float a, Color[] alternateColors) {
+        super(r, g, b, a);
+        initAlternateColors(alternateColors);
     }
 
     /**
-     * Helper for createFromSvgIccColor.
-     *
-     * @param red
-     *          Red component of color.
-     * @param green
-     *          Green component of color.
-     * @param blue
-     *          Blue component of color.
-     * @param opacity
-     *          Opacity level of color.
-     *
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(float, float, float)
      */
-    private ColorExt(final float red, final float green, final float blue, final float opacity) {
-        super(red, green, blue, opacity);
+    public ColorExt(float r, float g, float b, Color[] alternateColors) {
+        super(r, g, b);
+        initAlternateColors(alternateColors);
     }
 
     /**
-     * Create ColorExt object backup up FO's rgb-icc color function.
-     *
-     * @param redReplacement
-     *            Red part of RGB replacement color that will be used when ICC
-     *            profile can not be loaded
-     * @param greenReplacement
-     *            Green part of RGB replacement color that will be used when ICC
-     *            profile can not be loaded
-     * @param blueReplacement
-     *            Blue part of RGB replacement color that will be used when ICC
-     *            profile can not be loaded
-     * @param profileName
-     *            Name of ICC profile
-     * @param profileSrc
-     *            Source of ICC profile
-     * @param colorSpace
-     *            ICC ColorSpace for the ICC profile
-     * @param iccValues
-     *            color values
-     * @return the requested color object
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(int, boolean)
      */
-    public static ColorExt createFromFoRgbIcc( float redReplacement,
-            final float greenReplacement, final float blueReplacement,
-            final String profileName, final String profileSrc,
-            final ColorSpace colorSpace, final float[] iccValues) {
-        ColorExt ce = new ColorExt(colorSpace, iccValues, 1.0f);
-        ce.rgbReplacementRed = redReplacement;
-        ce.rgbReplacementGreen = greenReplacement;
-        ce.rgbReplacementBlue = blueReplacement;
-        ce.iccProfileName = profileName;
-        ce.iccProfileSrc = profileSrc;
-        ce.colorSpace = colorSpace;
-        ce.colorValues = iccValues;
-        return ce;
+    public ColorExt(int rgba, boolean hasalpha, Color[] alternateColors) {
+        super(rgba, hasalpha);
+        initAlternateColors(alternateColors);
     }
 
     /**
-     * Create ColorExt object backing up SVG's icc-color function.
-     *
-     * @param red
-     *            Red value resulting from the conversion from the user provided
-     *            (icc) color values to the batik (rgb) color space
-     * @param green
-     *            Green value resulting from the conversion from the user
-     *            provided (icc) color values to the batik (rgb) color space
-     * @param blue
-     *            Blue value resulting from the conversion from the user
-     *            provided (icc) color values to the batik (rgb) color space
-     * @param opacity
-     *            Opacity
-     * @param profileName
-     *            ICC profile name
-     * @param profileHref
-     *            the URI to the color profile
-     * @param profileCS
-     *            ICC ColorSpace profile
-     * @param colorValues
-     *            ICC color values
-     * @return the requested color object
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(int, int, int, int)
      */
-    public static ColorExt createFromSvgIccColor(final float red,
-            final float green, final float blue, final float opacity,
-            final String profileName, final String profileHref,
-            final ColorSpace profileCS, final float[] colorValues) {
-        //TODO this method is not referenced by FOP, can it be deleted?
-        ColorExt ce = new ColorExt(red, green, blue, opacity);
-        ce.rgbReplacementRed = -1;
-        ce.rgbReplacementGreen = -1;
-        ce.rgbReplacementBlue = -1;
-        ce.iccProfileName = profileName;
-        ce.iccProfileSrc = profileHref;
-        ce.colorSpace = profileCS;
-        ce.colorValues = colorValues;
-        return ce;
-
-    }
-
-    /** {@inheritDoc} */
-    public int hashCode() {
-        //implementation from the superclass
-        //should be good enough for our purposes
-        return super.hashCode();
-    }
-
-    /** {@inheritDoc} */
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ColorExt other = (ColorExt) obj;
-        //TODO maybe use super.getColorComponents() instead
-        if (!Arrays.equals(colorValues, other.colorValues)) {
-            return false;
-        }
-        if (iccProfileName == null) {
-            if (other.iccProfileName != null) {
-                return false;
-            }
-        } else if (!iccProfileName.equals(other.iccProfileName)) {
-            return false;
-        }
-        if (iccProfileSrc == null) {
-            if (other.iccProfileSrc != null) {
-                return false;
-            }
-        } else if (!iccProfileSrc.equals(other.iccProfileSrc)) {
-            return false;
-        }
-        if (Float.floatToIntBits(rgbReplacementBlue)
-                != Float.floatToIntBits(other.rgbReplacementBlue)) {
-            return false;
-        }
-        if (Float.floatToIntBits(rgbReplacementGreen)
-                != Float.floatToIntBits(other.rgbReplacementGreen)) {
-            return false;
-        }
-        if (Float.floatToIntBits(rgbReplacementRed)
-                != Float.floatToIntBits(other.rgbReplacementRed)) {
-            return false;
-        }
-        return true;
+    public ColorExt(int r, int g, int b, int a, Color[] alternateColors) {
+        super(r, g, b, a);
+        initAlternateColors(alternateColors);
     }
 
     /**
-     * Get ICC profile name.
-     *
-     * @return ICC profile name
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(int, int, int)
      */
-    public String getIccProfileName() {
-        return this.iccProfileName;
+    public ColorExt(int r, int g, int b, Color[] alternateColors) {
+        super(r, g, b);
+        initAlternateColors(alternateColors);
     }
 
     /**
-     * Get ICC profile source.
-     *
-     * @return ICC profile source
+     * @param alternateColors the prioritized list of alternative colors.
+     * @see Color#Color(int)
      */
-    public String getIccProfileSrc() {
-        return this.iccProfileSrc;
+    public ColorExt(int rgb, Color[] alternateColors) {
+        super(rgb);
+        initAlternateColors(alternateColors);
+    }
+
+    private void initAlternateColors(Color[] colors) {
+        //Colors are immutable but array are not, so copy
+        this.alternateColors = new Color[colors.length];
+        System.arraycopy(colors, 0, this.alternateColors, 0, colors.length);
     }
 
     /**
-     * @return the original ColorSpace
+     * Returns the list of alternate colors.
+     * @return the list of alternate colors
      */
-    public ColorSpace getOrigColorSpace() {
-        //TODO this method is probably unnecessary
-        // due to super.cs and getColorSpace()
-        return this.colorSpace;
-    }
-
-    /**
-     * Returns the original color values.
-     * @return the original color values
-     */
-    public float[] getOriginalColorComponents() {
-        //TODO this method is probably unnecessary
-        // due to super.fvalue and getColorComponents()
-        float[] copy = new float[this.colorValues.length];
-        System.arraycopy(this.colorValues, 0, copy, 0, copy.length);
-        return copy;
-    }
-
-    /**
-     * Create string representation of fop-rgb-icc function call to map this
-     * ColorExt settings.
-     * @return the string representing the internal fop-rgb-icc() function call
-     */
-    public String toFunctionCall() {
-        StringBuffer sb = new StringBuffer(40);
-        sb.append("fop-rgb-icc(");
-        sb.append(this.rgbReplacementRed + ",");
-        sb.append(this.rgbReplacementGreen + ",");
-        sb.append(this.rgbReplacementBlue + ",");
-        sb.append(this.iccProfileName + ",");
-        if (this.iccProfileSrc != null) {
-            sb.append("\"" + this.iccProfileSrc + "\"");
-        }
-        float[] colorComponents = this.getColorComponents(null);
-        for (int ix = 0; ix < colorComponents.length; ix++) {
-            sb.append(",");
-            sb.append(colorComponents[ix]);
-        }
-        sb.append(")");
-        return sb.toString();
+    public Color[] getAlternateColors() {
+        Color[] cols = new Color[this.alternateColors.length];
+        System.arraycopy(this.alternateColors, 0, cols, 0, this.alternateColors.length);
+        return cols;
     }
 
 }

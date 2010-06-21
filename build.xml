@@ -398,6 +398,7 @@ NOTE:
         source="${javac.source}">
       <header><![CDATA[${name} ${version}]]></header>
       <footer><![CDATA[${name} ${version}]]></footer>
+      <link offline="false" href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
       <classpath>
         <path refid="libs-build-classpath"/>
         <pathelement path="${java.class.path}"/>

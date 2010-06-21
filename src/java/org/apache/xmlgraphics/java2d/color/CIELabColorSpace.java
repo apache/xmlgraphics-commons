@@ -24,7 +24,7 @@ import java.awt.color.ColorSpace;
 /**
  * This class defines the CIE L*a*b* (CIE 1976) color space. Valid values for L* are between 0
  * and 100, for a* and b* between -127 and +127.
- * @see http://en.wikipedia.org/wiki/Lab_color_space
+ * @see <a href="http://en.wikipedia.org/wiki/Lab_color_space">http://en.wikipedia.org/wiki/Lab_color_space</a>
  */
 public class CIELabColorSpace extends ColorSpace {
 
@@ -126,7 +126,7 @@ public class CIELabColorSpace extends ColorSpace {
     public float getMaxValue(int component) {
         switch (component) {
         case 0: //L*
-            return 1f;
+            return 100f;
         case 1: //a*
         case 2: //b*
             return 127f;
