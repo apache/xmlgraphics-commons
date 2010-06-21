@@ -28,6 +28,9 @@ public class DeviceCMYKColorSpace extends ColorSpace {
 
     private static final long serialVersionUID = 2925508946083542974L;
 
+    /** The name for the uncalibrated CMYK pseudo-profile */
+    public static final String PSEUDO_PROFILE_NAME = "#CMYK";
+
     /**
      * Constructs an uncalibrated CMYK ColorSpace object with {@link ColorSpace#TYPE_CMYK} and
      * 4 components.

@@ -32,6 +32,8 @@ import java.awt.color.ColorSpace;
  */
 public final class ColorExt extends Color {
 
+    private static final long serialVersionUID = -6125884937776779150L;
+
     private Color[] alternateColors;
 
     /**
