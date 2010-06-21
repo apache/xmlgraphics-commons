@@ -26,6 +26,10 @@ public class ColorSpaces {
 
     private static DeviceCMYKColorSpace deviceCMYK;
 
+    /**
+     * Returns an instance of the device-specific CMYK color space.
+     * @return an instance of the device-specific CMYK color space
+     */
     public static synchronized DeviceCMYKColorSpace getDeviceCMYKColorSpace() {
         if (deviceCMYK == null) {
             deviceCMYK = new DeviceCMYKColorSpace();

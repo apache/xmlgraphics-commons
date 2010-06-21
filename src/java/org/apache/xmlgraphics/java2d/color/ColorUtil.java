@@ -75,15 +75,18 @@ public final class ColorUtil {
     }
 
     /**
-     * Creates an uncalibrary CMYK color with the given gray value.
+     * Creates an uncalibrated CMYK color with the given gray value.
      * @param black the gray component (0 - 1)
      * @return the CMYK color
      */
     public static Color toCMYKGrayColor(float black) {
+        //Calculated color components
         float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
+        //Create native color
         DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
+        Color cmykColor = new ICCColor(cmykCs, CMYK_PSEUDO_PROFILE, null, cmyk, 1.0f);
+        //Calculate an sRGB equivalent for the gray value
         float[] rgb = cmykCs.toRGB(cmyk);
-        return ColorExt.createFromFoRgbIcc(rgb[0], rgb[1], rgb[2],
-                CMYK_PSEUDO_PROFILE, null, cmykCs, cmyk);
+        return new ColorExt(rgb[0], rgb[1], rgb[2], new Color[] {cmykColor});
     }
 }
