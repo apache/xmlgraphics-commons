@@ -30,9 +30,6 @@ import java.awt.Color;
  */
 public final class ColorUtil {
 
-    /** The name for the uncalibrated CMYK pseudo-profile */
-    public static final String CMYK_PSEUDO_PROFILE = "#CMYK";
-
     /**
      * Private constructor since this is an utility class.
      */
@@ -84,7 +81,8 @@ public final class ColorUtil {
         float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
         //Create native color
         DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
-        Color cmykColor = new ICCColor(cmykCs, CMYK_PSEUDO_PROFILE, null, cmyk, 1.0f);
+        Color cmykColor = new ICCColor(cmykCs,
+                DeviceCMYKColorSpace.PSEUDO_PROFILE_NAME, null, cmyk, 1.0f);
         //Calculate an sRGB equivalent for the gray value
         float[] rgb = cmykCs.toRGB(cmyk);
         return new ColorExt(rgb[0], rgb[1], rgb[2], new Color[] {cmykColor});
