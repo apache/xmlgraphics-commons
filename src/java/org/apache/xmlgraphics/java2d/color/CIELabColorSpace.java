@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 
 /**
@@ -182,6 +183,11 @@ public class CIELabColorSpace extends ColorSpace {
         float L = (float)((116 * var_Y) - 16);
         float a = (float)(500 * (var_X - var_Y));
         float b = (float)(200 * (var_Y - var_Z));
+
+        //Normalize to range 0.0..1.0
+        L = normalize(L, 0);
+        a = normalize(a, 1);
+        b = normalize(b, 2);
         return new float[] {L, a, b};
     }
 
@@ -195,14 +201,19 @@ public class CIELabColorSpace extends ColorSpace {
     /** {@inheritDoc} */
     public float[] toCIEXYZ(float[] colorvalue) {
         checkNumComponents(colorvalue);
-        float L = colorvalue[0];
-        float a = colorvalue[1];
-        float b = colorvalue[2];
+        //Scale to native value range
+        float L = denormalize(colorvalue[0], 0);
+        float a = denormalize(colorvalue[1], 1);
+        float b = denormalize(colorvalue[2], 2);
 
+        return toCIEXYZNative(L, a, b);
+    }
+
+    /** {@inheritDoc} */
+    public float[] toCIEXYZNative(float L, float a, float b) {
         double var_Y = (L + 16) / 116.0;
         double var_X = a / 500 + var_Y;
         double var_Z = var_Y - b / 200.0;
-
 
         if (Math.pow(var_Y, 3) > t0) {
             var_Y = Math.pow(var_Y, 3);
@@ -232,6 +243,48 @@ public class CIELabColorSpace extends ColorSpace {
         ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
         float[] xyz = toCIEXYZ(colorvalue);
         return sRGB.fromCIEXYZ(xyz);
+    }
+
+    private float getNativeValueRange(int component) {
+        return getMaxValue(component) - getMinValue(component);
+    }
+
+    private float normalize(float value, int component) {
+        return (value - getMinValue(component)) / getNativeValueRange(component);
+    }
+
+    private float denormalize(float value, int component) {
+        return value * getNativeValueRange(component) + getMinValue(component);
+    }
+
+    /**
+     * Creates a {@link Color} instance from color values usually used by the L*a*b* color space
+     * by scaling them to the 0.0..1.0 range expected by Color's constructor.
+     * @param colorvalue the original color values
+     *                  (native value range, i.e. not normalized to 0.0..1.0)
+     * @param alpha the alpha component
+     * @return the requested color instance
+     */
+    public Color toColor(float[] colorvalue, float alpha) {
+        int c = colorvalue.length;
+        float[] normalized = new float[c];
+        for (int i = 0; i < c; i++) {
+            normalized[i] = normalize(colorvalue[i], i);
+        }
+        return new Color(this, normalized, alpha);
+    }
+
+    /**
+     * Creates a {@link Color} instance from color values usually used by the L*a*b* color space
+     * by scaling them to the 0.0..1.0 range expected by Color's constructor.
+     * @param L the L* component
+     * @param a the a* component
+     * @param b the b* component
+     * @param alpha the alpha component
+     * @return the requested color instance
+     */
+    public Color toColor(float L, float a, float b, float alpha) {
+        return toColor(new float[] {L, a, b}, alpha);
     }
 
 }

@@ -28,18 +28,20 @@ import junit.framework.TestCase;
  */
 public class NamedColorTest extends TestCase {
 
+    private static final float POSTGELB_X = 0.6763079f;
+    private static final float POSTGELB_Y = 0.6263507f;
+    private static final float POSTGELB_Z = 0.04217565f;
+
     public void testNamedColorWithCIELab() throws Exception {
         CIELabColorSpace lab = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
 
         //CIE Lab definition of "Postgelb" (postal yellow) at D50 as defined by Swiss Post
-        float[] c1lab = new float[] {83.25f, 16.45f, 96.89f};
-
         //Convert to XYZ
-        float[] c1xyz = lab.toCIEXYZ(c1lab);
+        float[] c1xyz = lab.toCIEXYZNative(83.25f, 16.45f, 96.89f);
         //Verify XYZ values are OK
-        assertEquals(0.67631, c1xyz[0], 0.001f);
-        assertEquals(0.62634, c1xyz[1], 0.001f);
-        assertEquals(0.042191, c1xyz[2], 0.001f);
+        assertEquals(POSTGELB_X, c1xyz[0], 0.001f);
+        assertEquals(POSTGELB_Y, c1xyz[1], 0.001f);
+        assertEquals(POSTGELB_Z, c1xyz[2], 0.001f);
 
         //Build named color based on XYZ coordinates
         NamedColorSpace ncs = new NamedColorSpace("Postgelb", c1xyz);
@@ -59,5 +61,29 @@ public class NamedColorTest extends TestCase {
         assertEquals(0, c1.getBlue());
     }
 
+    public void testEquals() throws Exception {
+        NamedColorSpace ncs1 = new NamedColorSpace("Postgelb",
+                new float[] {POSTGELB_X, POSTGELB_Y, POSTGELB_Z});
 
+        NamedColorSpace ncs2 = new NamedColorSpace("Postgelb",
+                new float[] {POSTGELB_X, POSTGELB_Y, POSTGELB_Z});
+
+        assertEquals(ncs1, ncs2);
+
+        //Construct the same NamedColorSpace via two different methods
+        CIELabColorSpace lab = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+        Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
+        float[] xyz = lab.toCIEXYZ(postgelbLab.getColorComponents(null));
+        xyz[0] = POSTGELB_X;
+        xyz[1] = POSTGELB_Y;
+        xyz[2] = POSTGELB_Z;
+        ncs1 = new NamedColorSpace("Postgelb", postgelbLab);
+        ncs2 = new NamedColorSpace("Postgelb", xyz);
+        assertEquals(ncs1, ncs2);
+
+        //Compare with a similar color coming from sRGB
+        Color rgb = new Color(255, 184, 0);
+        ncs2 = new NamedColorSpace("PostgelbFromRGB", rgb);
+        assertFalse(ncs1.equals(ncs2));
+    }
 }

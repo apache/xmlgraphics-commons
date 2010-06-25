@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 
 /**
@@ -42,9 +43,22 @@ public class NamedColorSpace extends ColorSpace {
     public NamedColorSpace(String name, float[] xyz) {
         super(ColorSpace.TYPE_GRAY, 1);
         checkNumComponents(xyz, 3);
-        this.name = name;
+        if (name == null || name.trim().length() == 0) {
+            throw new IllegalArgumentException("No name provided for named color space");
+        }
+        this.name = name.trim();
         this.xyz = new float[3];
         System.arraycopy(xyz, 0, this.xyz, 0, 3);
+    }
+
+    /**
+     * Creates a new named color.
+     * @param name the color name
+     * @param color the color to use when the named color's specific color properties are not
+     *                  available.
+     */
+    public NamedColorSpace(String name, Color color) {
+        this(name, color.getColorSpace().toCIEXYZ(color.getColorComponents(null)));
     }
 
     private void checkNumComponents(float[] colorvalue, int expected) {
@@ -63,6 +77,26 @@ public class NamedColorSpace extends ColorSpace {
      */
     public String getColorName() {
         return this.name;
+    }
+
+    /**
+     * Returns the XYZ coordinates of the named color.
+     * @return the XYZ coordinates of the named color
+     */
+    public float[] getXYZ() {
+        float[] result = new float[this.xyz.length];
+        System.arraycopy(this.xyz, 0, result, 0, this.xyz.length);
+        return result;
+    }
+
+    /**
+     * Returns an sRGB-based color representing the full-tint color defined by this named color
+     * space.
+     * @return the sRGB color
+     */
+    public Color getRGBColor() {
+        float[] comps = toRGB(this.xyz);
+        return new Color(comps[0], comps[1], comps[2]);
     }
 
     /** {@inheritDoc} */
@@ -113,6 +147,28 @@ public class NamedColorSpace extends ColorSpace {
     public float[] toRGB(float[] colorvalue) {
         ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
         return sRGB.fromCIEXYZ(this.xyz);
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NamedColorSpace)) {
+            return false;
+        }
+        NamedColorSpace other = (NamedColorSpace)obj;
+        if (!this.name.equals(other.name)) {
+            return false;
+        }
+        for (int i = 0, c = this.xyz.length; i < c; i++) {
+            if (this.xyz[i] != other.xyz[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    public String toString() {
+        return "Named Color Space: " + getColorName();
     }
 
 }
