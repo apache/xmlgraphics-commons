@@ -21,7 +21,6 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 import java.awt.color.ColorSpace;
-import java.net.URI;
 
 /**
  * This class extends AWT's {@link Color} class by fields for the profile name and the profile
@@ -33,21 +32,21 @@ public class ICCColor extends Color {
     private static final long serialVersionUID = -104707261086330666L;
 
     private String profileName;
-    private URI profileURI;
+    private String profileSource;
 
     /**
      * Creates a new ICC-based color.
      * @param cspace the color space
      * @param profileName the color profile name
-     * @param profileURI the color profile URI
+     * @param profileSource the color profile URI
      * @param components the component values
      * @param alpha the alpha value
      */
-    public ICCColor(ColorSpace cspace, String profileName, URI profileURI,
+    public ICCColor(ColorSpace cspace, String profileName, String profileSource,
             float[] components, float alpha) {
         super(cspace, components, alpha);
         this.profileName = profileName;
-        this.profileURI = profileURI;
+        this.profileSource = profileSource;
     }
 
     /**
@@ -62,8 +61,40 @@ public class ICCColor extends Color {
      * Returns the URI identifying the color profile.
      * @return the URI identifying the color profile.
      */
-    public URI getColorProfileURI() {
-        return this.profileURI;
+    public String getColorProfileSource() {
+        return this.profileSource;
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ICCColor)) {
+            return false;
+        }
+        ICCColor other = (ICCColor)obj;
+        if (getRGB() != other.getRGB()) {
+            return false;
+        }
+        if (!getColorSpace().equals(other.getColorSpace())) {
+            return false;
+        }
+        float[] comps = getComponents(null);
+        float[] otherComps = other.getComponents(null);
+        if (comps.length != otherComps.length) {
+            return false;
+        }
+        for (int i = 0, c = comps.length; i < c; i++) {
+            if (comps[i] != otherComps[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    public String toString() {
+        StringBuffer sb = new StringBuffer(super.toString());
+        sb.append(' ').append(getColorProfileName());
+        return sb.toString();
     }
 
 }

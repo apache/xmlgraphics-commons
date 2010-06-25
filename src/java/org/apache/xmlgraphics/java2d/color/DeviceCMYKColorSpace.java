@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 
 /**
@@ -61,6 +62,15 @@ public class DeviceCMYKColorSpace extends ColorSpace {
     /** {@inheritDoc} */
     public float[] fromCIEXYZ(float[] colorvalue) {
         throw new UnsupportedOperationException("NYI");
+    }
+
+    public static ColorExt createColorExt(float[] cmykComponents) {
+        DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
+        float[] rgb = cmykCs.toRGB(cmykComponents);
+        ICCColor alt = new ICCColor(cmykCs,
+                PSEUDO_PROFILE_NAME, null, cmykComponents, 1.0f);
+        ColorExt colorExt = new ColorExt(rgb[0], rgb[1], rgb[2], new Color[] {alt});
+        return colorExt;
     }
 
 }

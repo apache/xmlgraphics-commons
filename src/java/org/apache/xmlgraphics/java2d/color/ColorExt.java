@@ -91,19 +91,79 @@ public final class ColorExt extends Color {
     }
 
     private void initAlternateColors(Color[] colors) {
-        //Colors are immutable but array are not, so copy
-        this.alternateColors = new Color[colors.length];
-        System.arraycopy(colors, 0, this.alternateColors, 0, colors.length);
+        if (colors != null) {
+            //Colors are immutable but array are not, so copy
+            this.alternateColors = new Color[colors.length];
+            System.arraycopy(colors, 0, this.alternateColors, 0, colors.length);
+        }
     }
 
     /**
-     * Returns the list of alternate colors.
+     * Returns the list of alternate colors. An empty array will be returned if no alternative
+     * colors are available.
      * @return the list of alternate colors
      */
     public Color[] getAlternateColors() {
-        Color[] cols = new Color[this.alternateColors.length];
-        System.arraycopy(this.alternateColors, 0, cols, 0, this.alternateColors.length);
-        return cols;
+        if (this.alternateColors != null) {
+            Color[] cols = new Color[this.alternateColors.length];
+            System.arraycopy(this.alternateColors, 0, cols, 0, this.alternateColors.length);
+            return cols;
+        } else {
+            return new Color[0];
+        }
+    }
+
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Color)) {
+            return false;
+        }
+        Color otherCol = (Color)obj;
+        if (getRGB() != otherCol.getRGB()) {
+            return false;
+        }
+        if (!getColorSpace().equals(otherCol.getColorSpace())) {
+            return false;
+        }
+        float[] comps = getComponents(null);
+        float[] otherComps = otherCol.getComponents(null);
+        if (comps.length != otherComps.length) {
+            return false;
+        }
+        for (int i = 0, c = comps.length; i < c; i++) {
+            if (comps[i] != otherComps[i]) {
+                return false;
+            }
+        }
+        if (getClass() != obj.getClass() && this.alternateColors != null) {
+            //We're quite strict here to preserve the additional functionality of ColorExt.
+            //If we don't do this, a renderer may not detect the difference between a ColorExt
+            //and a Color with the same sRGB fallback but with additional color alternatives
+            //taking precedence in some renderers.
+            return false;
+        }
+        if (getClass() == obj.getClass() ) {
+            ColorExt other = (ColorExt)obj;
+            if (this.alternateColors == null && other.alternateColors != null) {
+                return false;
+            } else if (this.alternateColors != null && other.alternateColors == null) {
+                return false;
+            }
+            if (this.alternateColors != null
+                    && this.alternateColors.length != other.alternateColors.length) {
+                return false;
+            }
+            if (this.alternateColors != null) {
+                for (int i = 0, c = this.alternateColors.length; i < c; i++) {
+                    Color col1 = this.alternateColors[i];
+                    Color col2 = other.alternateColors[i];
+                    if (!col1.equals(col2)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 }

@@ -38,7 +38,7 @@ public class ColorConverterTest extends TestCase {
         assertEquals(1, altArray.length);
         ICCColor alt = (ICCColor)altArray[0];
         assertEquals("#CMYK", alt.getColorProfileName());
-        assertNull(alt.getColorProfileURI());
+        assertNull(alt.getColorProfileSource());
         assertEquals(ColorSpace.TYPE_CMYK, alt.getColorSpace().getType());
         float[] comps = alt.getColorComponents(null);
         assertEquals(4, comps.length);
