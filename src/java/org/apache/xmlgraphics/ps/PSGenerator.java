@@ -24,6 +24,7 @@ import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -59,6 +60,8 @@ public class PSGenerator implements PSCommandMap {
     /** Line feed used by PostScript */
     public static final char LF = '\n';
 
+    private static final String IDENTITY_H = "Identity-H";
+
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean commentsEnabled = true;
@@ -72,6 +75,12 @@ public class PSGenerator implements PSCommandMap {
     private DecimalFormat df5 = new DecimalFormat("0.#####", new DecimalFormatSymbols(Locale.US));
 
     private StringBuffer tempBuffer = new StringBuffer(256);
+
+    private boolean identityHEmbedded;
+
+    private PSResource procsetCIDInitResource;
+
+    private PSResource identityHCMapResource;
 
     /**
      * Creates a new instance.
@@ -761,4 +770,66 @@ public class PSGenerator implements PSCommandMap {
         return getResourceTracker().isResourceSupplied(res);
     }
 
+    /**
+     * Embeds the Identity-H CMap file into the output stream, if that has not
+     * already been done.
+     *
+     * @return true if embedding has actually been performed, false otherwise
+     * (which means that a call to this method had already been made earlier)
+     * @throws IOException in case of an I/O problem
+     */
+    public boolean embedIdentityH() throws IOException {
+        if (identityHEmbedded) {
+            return false;
+        } else {
+            resTracker.registerNeededResource(getProcsetCIDInitResource());
+            writeDSCComment(DSCConstants.BEGIN_DOCUMENT, IDENTITY_H);
+            InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H);
+            int b;
+            while ((b = cmap.read()) != -1) {
+                out.write(b);
+            }
+            cmap.close();
+            writeDSCComment(DSCConstants.END_DOCUMENT);
+            resTracker.registerSuppliedResource(getIdentityHCMapResource());
+            identityHEmbedded = true;
+            return true;
+        }
+    }
+
+    /**
+     * Returns the PSResource instance corresponding to the Identity-H CMap
+     * resource.
+     *
+     * @return the Identity-H CMap resource.
+     */
+    public PSResource getIdentityHCMapResource() {
+        if (identityHCMapResource == null) {
+            identityHCMapResource = new PSResource(PSResource.TYPE_CMAP, IDENTITY_H);
+        }
+        return identityHCMapResource;
+    }
+
+    /**
+     * Returns the PSResource instance corresponding to the CIDInit ProcSet
+     * resource.
+     *
+     * @return the <q>ProcSet CIDInit</q> resource
+     */
+    public PSResource getProcsetCIDInitResource() {
+        if (procsetCIDInitResource == null) {
+            procsetCIDInitResource = new PSResource(PSResource.TYPE_PROCSET, "CIDInit");
+        }
+        return procsetCIDInitResource;
+    }
+
+    /**
+     * Adds a PostScript DSC comment to the output stream requiring the
+     * inclusion of the CIDInit ProcSet resource.
+     *
+     * @throws IOException in case of an I/O problem
+     */
+    public void includeProcsetCIDInitResource() throws IOException {
+        writeDSCComment(DSCConstants.INCLUDE_RESOURCE, getProcsetCIDInitResource());
+    }
  }
