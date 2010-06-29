@@ -36,6 +36,10 @@ public class PSResource implements Comparable {
     public static final String TYPE_FORM = "form";
     /** a procset resource */
     public static final String TYPE_ENCODING = "encoding";
+    /** A CMap resource. */
+    public static final String TYPE_CMAP = "cmap";
+    /** A CIDFont resource. */
+    public static final String TYPE_CIDFONT = "cidfont";
 
     private String type;
     private String name;
