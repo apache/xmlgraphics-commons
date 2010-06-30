@@ -17,13 +17,12 @@
 
 /* $Id$ */
 
-package org.apache.xmlgraphics.java2d;
+package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.color.ColorSpace;
 
 /**
  * This class represents an uncalibrated CMYK color space.
- * @deprecated This class has been moved to the "color" subpackage.
  */
 public class CMYKColorSpace extends ColorSpace {
 
@@ -32,10 +31,12 @@ public class CMYKColorSpace extends ColorSpace {
     private static CMYKColorSpace instance;
 
     /**
+     * Constructs an uncalibrated CMYK ColorSpace object with {@link ColorSpace#TYPE_CMYK} and
+     * 4 components.
      * @see java.awt.color.ColorSpace#ColorSpace(int, int)
      */
-    protected CMYKColorSpace(int type, int numcomponents) {
-        super(type, numcomponents);
+    protected CMYKColorSpace() {
+        super(TYPE_CMYK, 4);
     }
 
     /**
@@ -44,7 +45,7 @@ public class CMYKColorSpace extends ColorSpace {
      */
     public static CMYKColorSpace getInstance() {
         if (instance == null) {
-            instance = new CMYKColorSpace(TYPE_CMYK, 4);
+            instance = new CMYKColorSpace();
         }
         return instance;
     }

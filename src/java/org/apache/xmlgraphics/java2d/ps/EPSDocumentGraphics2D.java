@@ -22,7 +22,6 @@ package org.apache.xmlgraphics.java2d.ps;
 import java.io.IOException;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
-import org.apache.xmlgraphics.ps.PSProcSets;
 
 /**
  * This class is a wrapper for the <tt>AbstractPSDocumentGraphics2D</tt> that
@@ -69,8 +68,7 @@ public class EPSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
         //Prolog
         gen.writeDSCComment(DSCConstants.BEGIN_PROLOG);
-        PSProcSets.writeStdProcSet(gen);
-        PSProcSets.writeEPSProcSet(gen);
+        writeProcSets();
         if (customTextHandler instanceof PSTextHandler) {
             ((PSTextHandler)customTextHandler).writeSetup();
         }

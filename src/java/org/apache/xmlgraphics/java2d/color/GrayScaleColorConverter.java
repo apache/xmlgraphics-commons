@@ -17,11 +17,11 @@
 
 /* $Id:$ */
 
-package org.apache.xmlgraphics.java2d;
+package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
-import org.apache.xmlgraphics.java2d.ColorConverter;
+import org.apache.xmlgraphics.java2d.color.ColorConverter;
 
 /**
  * Converts to grayscale using the standard RED=30%, GREEN=59% and BLUE=11%
