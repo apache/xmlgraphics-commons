@@ -117,7 +117,7 @@ public class CIELabColorSpace extends ColorSpace {
             return 0f;
         case 1: //a*
         case 2: //b*
-            return -127f;
+            return -128f;
         default:
             throw new IllegalArgumentException(CIE_LAB_ONLY_HAS_3_COMPONENTS);
         }
@@ -130,7 +130,7 @@ public class CIELabColorSpace extends ColorSpace {
             return 100f;
         case 1: //a*
         case 2: //b*
-            return 127f;
+            return 128f;
         default:
             throw new IllegalArgumentException(CIE_LAB_ONLY_HAS_3_COMPONENTS);
         }
@@ -258,6 +258,20 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /**
+     * Converts normalized (0..1) color components to CIE L*a*b*'s native value range.
+     * @param comps the normalized components.
+     * @return the denormalized components
+     */
+    public float[] toNativeComponents(float[] comps) {
+        checkNumComponents(comps);
+        float[] nativeComps = new float[comps.length];
+        for (int i = 0, c = comps.length; i < c; i++) {
+            nativeComps[i] = denormalize(comps[i], i);
+        }
+        return nativeComps;
+    }
+
+    /**
      * Creates a {@link Color} instance from color values usually used by the L*a*b* color space
      * by scaling them to the 0.0..1.0 range expected by Color's constructor.
      * @param colorvalue the original color values
@@ -271,7 +285,8 @@ public class CIELabColorSpace extends ColorSpace {
         for (int i = 0; i < c; i++) {
             normalized[i] = normalize(colorvalue[i], i);
         }
-        return new Color(this, normalized, alpha);
+        //Using ICCColor for better equals() functionality
+        return new ICCColor(this, null, null, normalized, alpha);
     }
 
     /**

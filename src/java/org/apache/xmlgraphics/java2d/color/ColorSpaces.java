@@ -25,6 +25,8 @@ package org.apache.xmlgraphics.java2d.color;
 public class ColorSpaces {
 
     private static DeviceCMYKColorSpace deviceCMYK;
+    private static CIELabColorSpace cieLabD50;
+    private static CIELabColorSpace cieLabD65;
 
     /**
      * Returns an instance of the device-specific CMYK color space.
@@ -35,6 +37,28 @@ public class ColorSpaces {
             deviceCMYK = new DeviceCMYKColorSpace();
         }
         return deviceCMYK;
+    }
+
+    /**
+     * Returns an instance of the CIE L*a*b* color space using the D50 white point.
+     * @return an instance of the requested CIE L*a*b* color space
+     */
+    public static synchronized CIELabColorSpace getCIELabColorSpaceD50() {
+        if (cieLabD50 == null) {
+            cieLabD50 = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+        }
+        return cieLabD50;
+    }
+
+    /**
+     * Returns an instance of the CIE L*a*b* color space using the D65 white point.
+     * @return an instance of the requested CIE L*a*b* color space
+     */
+    public static synchronized CIELabColorSpace getCIELabColorSpaceD65() {
+        if (cieLabD65 == null) {
+            cieLabD65 = new CIELabColorSpace(CIELabColorSpace.getD65WhitePoint());
+        }
+        return cieLabD65;
     }
 
 }
