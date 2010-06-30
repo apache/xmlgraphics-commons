@@ -33,7 +33,7 @@ public class NamedColorTest extends TestCase {
     private static final float POSTGELB_Z = 0.04217565f;
 
     public void testNamedColorWithCIELab() throws Exception {
-        CIELabColorSpace lab = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+        CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
 
         //CIE Lab definition of "Postgelb" (postal yellow) at D50 as defined by Swiss Post
         //Convert to XYZ
@@ -71,7 +71,7 @@ public class NamedColorTest extends TestCase {
         assertEquals(ncs1, ncs2);
 
         //Construct the same NamedColorSpace via two different methods
-        CIELabColorSpace lab = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+        CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
         Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
         float[] xyz = lab.toCIEXYZ(postgelbLab.getColorComponents(null));
         xyz[0] = POSTGELB_X;

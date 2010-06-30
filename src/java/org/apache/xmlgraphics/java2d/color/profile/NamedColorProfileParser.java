@@ -27,6 +27,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.apache.xmlgraphics.java2d.color.CIELabColorSpace;
+import org.apache.xmlgraphics.java2d.color.ColorSpaces;
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
 
 /**
@@ -105,7 +106,7 @@ public class NamedColorProfileParser {
             case ColorSpace.TYPE_Lab:
                 //Not sure if this always D50 here,
                 //but the illuminant in the header is fixed to D50.
-                CIELabColorSpace labCS = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+                CIELabColorSpace labCS = ColorSpaces.getCIELabColorSpaceD50();
                 result[i] = new NamedColorSpace(name, labCS.toColor(colorvalue, 1.0f));
                 break;
             default:

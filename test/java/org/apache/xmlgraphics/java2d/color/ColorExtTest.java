@@ -35,7 +35,7 @@ public class ColorExtTest extends TestCase {
         assertEquals(col1, col2);
         assertEquals(col2, col1);
 
-        CIELabColorSpace lab = new CIELabColorSpace(CIELabColorSpace.getD50WhitePoint());
+        CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
         Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
         col1 = new ColorExt(255, 204, 0, new Color[] {postgelbLab});
 
