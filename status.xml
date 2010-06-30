@@ -39,7 +39,7 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
-    <release version="1.4" date="11 June 2010">
+    <release version="1.4" date="July 2010">
       <action context="Code" dev="JM" type="fix" fixes-bug="49364" due-to="Julien Aymé">
         Two properties didn't get copied in copy constructor of PSState.
       </action>
