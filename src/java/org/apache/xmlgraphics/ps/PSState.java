@@ -69,6 +69,8 @@ public class PSState implements Serializable {
             this.transformConcatList.addAll(org.transformConcatList);
         }
         this.linecap = org.linecap;
+        this.linejoin = org.linejoin;
+        this.miterLimit = org.miterLimit;
         this.linewidth = org.linewidth;
         this.dashpattern = org.dashpattern;
         this.color = org.color;

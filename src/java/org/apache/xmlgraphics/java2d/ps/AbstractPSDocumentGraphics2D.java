@@ -27,6 +27,7 @@ import java.io.OutputStream;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.PSGenerator;
+import org.apache.xmlgraphics.ps.PSProcSets;
 
 /**
  * This class is a wrapper for the <tt>PSGraphics2D</tt> that
@@ -196,6 +197,15 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
      */
     protected abstract void writePageTrailer() throws IOException;
 
+    /**
+     * Writes the ProcSets ending up in the prolog to the PostScript file. Override to add your
+     * own ProcSets if so desired.
+     * @throws IOException In case an I/O error occurs
+     */
+    protected void writeProcSets() throws IOException {
+        PSProcSets.writeStdProcSet(gen);
+        PSProcSets.writeEPSProcSet(gen);
+    }
 
     /** {@inheritDoc} */
     public void preparePainting() {
@@ -231,15 +241,19 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         }
 
         writePageHeader();
+        AffineTransform at;
         if ((this.viewportWidth != this.width
                 || this.viewportHeight != this.height)
                 && (this.viewportWidth > 0) && (this.viewportHeight > 0)){
-            gen.concatMatrix(this.width / this.viewportWidth, 0,
+            at = new AffineTransform(this.width / this.viewportWidth, 0,
                        0, -1 * (this.height / this.viewportHeight),
                        0, this.height);
         } else {
-            gen.concatMatrix(1, 0, 0, -1, 0, this.height);
+            at = new AffineTransform(1, 0, 0, -1, 0, this.height);
         }
+        // Do not use concatMatrix, since it alters PSGenerator current state
+        //gen.concatMatrix(at);
+        gen.writeln(gen.formatMatrix(at) + " " + gen.mapCommand("concat"));
         gen.writeDSCComment(DSCConstants.END_PAGE_SETUP);
         this.pagePending = true;
     }
