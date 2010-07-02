@@ -68,6 +68,9 @@
       <action context="Code" dev="JM" type="add" fixes-bug="48395" due-to="Andrey Koltunov">
         Added code for supporting the AdobeStandardCyrillic encoding.
       </action>
+      <action context="Code" dev="CB" type="add" fixes-bug="48237" due-to="Peter Hancock">
+        Added interface for Color Conversions. 
+      </action>
       <action context="Code" dev="JM" type="add">
         Added support for configurable additional penalties for preloader, loader and converter
         plug-ins in the ImageImplRegistry (in addition to the hard-coded penalties).
