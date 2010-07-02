@@ -30,9 +30,6 @@ import java.awt.Color;
  */
 public final class ColorUtil {
 
-    /** The name for the uncalibrated CMYK pseudo-profile */
-    public static final String CMYK_PSEUDO_PROFILE = "#CMYK";
-
     /**
      * Private constructor since this is an utility class.
      */
@@ -74,16 +71,4 @@ public final class ColorUtil {
         return (col.getRed() == col.getBlue() && col.getRed() == col.getGreen());
     }
 
-    /**
-     * Creates an uncalibrary CMYK color with the given gray value.
-     * @param black the gray component (0 - 1)
-     * @return the CMYK color
-     */
-    public static Color toCMYKGrayColor(float black) {
-        float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
-        CMYKColorSpace cmykCs = CMYKColorSpace.getInstance();
-        float[] rgb = cmykCs.toRGB(cmyk);
-        return ColorExt.createFromFoRgbIcc(rgb[0], rgb[1], rgb[2],
-                CMYK_PSEUDO_PROFILE, null, cmykCs, cmyk);
-    }
 }
