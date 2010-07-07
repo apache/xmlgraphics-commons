@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
+import java.awt.color.ColorSpace;
+
 /**
  * Provides access to various color spaces.
  */
@@ -37,6 +39,15 @@ public class ColorSpaces {
             deviceCMYK = new DeviceCMYKColorSpace();
         }
         return deviceCMYK;
+    }
+
+    /**
+     * Indicates whether the given color space is device-specific (i.e. uncalibrated).
+     * @param cs the color space to check
+     * @return true if the color space is device-specific
+     */
+    public static boolean isDeviceColorSpace(ColorSpace cs) {
+        return (cs instanceof AbstractDeviceSpecificColorSpace);
     }
 
     /**
@@ -59,6 +70,30 @@ public class ColorSpaces {
             cieLabD65 = new CIELabColorSpace(CIELabColorSpace.getD65WhitePoint());
         }
         return cieLabD65;
+    }
+
+    private static final ColorSpaceOrigin UNKNOWN_ORIGIN = new ColorSpaceOrigin() {
+
+        public String getProfileURI() {
+            return null;
+        }
+
+        public String getProfileName() {
+            return null;
+        }
+    };
+
+    /**
+     * Returns information about the origin of a color space.
+     * @param cs the color space
+     * @return the origin information
+     */
+    public static ColorSpaceOrigin getColorSpaceOrigin(ColorSpace cs) {
+        if (cs instanceof ColorSpaceOrigin) {
+            return (ColorSpaceOrigin)cs;
+        } else {
+            return UNKNOWN_ORIGIN;
+        }
     }
 
 }

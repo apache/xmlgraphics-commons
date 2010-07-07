@@ -37,8 +37,8 @@ import javax.xml.transform.Source;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.xmlgraphics.java2d.color.ColorExt;
 import org.apache.xmlgraphics.java2d.color.ColorUtil;
+import org.apache.xmlgraphics.java2d.color.ColorWithAlternatives;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 
 /**
@@ -647,10 +647,10 @@ public class PSGenerator implements PSCommandMap {
         StringBuffer codeBuffer = new StringBuffer();
 
         boolean established = false;
-        if (color instanceof ColorExt) {
-            ColorExt colExt = (ColorExt)color;
+        if (color instanceof ColorWithAlternatives) {
+            ColorWithAlternatives colExt = (ColorWithAlternatives)color;
             //Alternate colors have priority
-            Color[] alt = colExt.getAlternateColors();
+            Color[] alt = colExt.getAlternativeColors();
             for (int i = 0, c = alt.length; i < c; i++) {
                 Color col = alt[i];
                 established = establishColorFromColor(codeBuffer, col);
@@ -686,9 +686,10 @@ public class PSGenerator implements PSCommandMap {
                 codeBuffer.append(formatDouble(comps[i]));
             }
             codeBuffer.append(" ").append(mapCommand("setcmykcolor"));
-            return true;
+        } else {
+            establishDeviceRGB(codeBuffer, color);
         }
-        return false;
+        return true;
     }
 
     private void establishDeviceRGB(StringBuffer codeBuffer, Color color) {
@@ -706,7 +707,7 @@ public class PSGenerator implements PSCommandMap {
         if (gray) {
             codeBuffer.append(formatDouble(comps[0]));
         } else {
-            for (int i = 0; i < color.getColorSpace().getNumComponents(); i++) {
+            for (int i = 0, c = comps.length; i < c; i++) {
                 if (i > 0) {
                     codeBuffer.append(" ");
                 }

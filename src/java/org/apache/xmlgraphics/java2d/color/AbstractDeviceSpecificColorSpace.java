@@ -19,29 +19,15 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
-import java.awt.Color;
 import java.awt.color.ColorSpace;
 
-import junit.framework.TestCase;
+/**
+ * Base class for device-specific (uncalibrated) color spaces.
+ */
+public abstract class AbstractDeviceSpecificColorSpace extends ColorSpace {
 
-public class ColorConverterTest extends TestCase {
-
-    public void testToGray() throws Exception {
-        ColorConverter converter = GrayScaleColorConverter.getInstance();
-        Color rgb = new Color(255, 184, 0);
-        Color gray = converter.convert(rgb);
-
-        ColorSpaceOrigin origin = ColorSpaces.getColorSpaceOrigin(gray.getColorSpace());
-        assertEquals("#CMYK", origin.getProfileName());
-        assertNull(origin.getProfileURI());
-        assertEquals(ColorSpace.TYPE_CMYK, gray.getColorSpace().getType());
-        float[] comps = gray.getColorComponents(null);
-        assertEquals(4, comps.length);
-        assertEquals(0.0f, comps[0], 0.1f);
-        assertEquals(0.0f, comps[1], 0.1f);
-        assertEquals(0.0f, comps[2], 0.1f);
-        assertEquals(0.273f, comps[3], 0.01f);
-        assertEquals(0xFFB9B9B9, gray.getRGB());
+    protected AbstractDeviceSpecificColorSpace(int type, int numcomponents) {
+        super(type, numcomponents);
     }
 
 }

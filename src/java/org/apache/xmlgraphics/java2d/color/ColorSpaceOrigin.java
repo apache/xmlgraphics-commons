@@ -19,29 +19,24 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
-import java.awt.Color;
-
-import junit.framework.TestCase;
+import java.awt.color.ColorSpace;
 
 /**
- * Tests the {@link ColorWithAlternatives} class.
+ * Interface used to decorate {@link ColorSpace} subclasses to report the origin of the
+ * associated color profile.
  */
-public class ColorExtTest extends TestCase {
+public interface ColorSpaceOrigin {
 
-    public void testEquals() throws Exception {
-        Color col1 = new ColorWithAlternatives(255, 204, 0, null);
-        Color col2 = new Color(255, 204, 0);
+    /**
+     * Returns the name of the profile used to identify the color space in a particular context.
+     * @return the profile name
+     */
+    String getProfileName();
 
-        assertEquals(col1, col2);
-        assertEquals(col2, col1);
-
-        CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
-        Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
-        col1 = new ColorWithAlternatives(255, 204, 0, new Color[] {postgelbLab});
-
-        assertFalse(col1.equals(col2));
-        //Unfortunately, Color.equals() can't detect the color difference!
-        //col2.equals(col1) ===> true
-    }
+    /**
+     * Returns the URI identifying the associate color profile.
+     * @return the profile URI
+     */
+    String getProfileURI();
 
 }

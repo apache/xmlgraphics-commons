@@ -51,17 +51,30 @@ public class NamedColorProfileParser {
     /**
      * Parses a named color profile (NCP).
      * @param profile the profile to analyze
+     * @param profileName Optional profile name associated with this color profile
+     * @param profileURI Optional profile URI associated with this color profile
      * @return an object representing the parsed NCP
      * @throws IOException if an I/O error occurs
      */
-    public NamedColorProfile parseProfile(ICC_Profile profile) throws IOException {
+    public NamedColorProfile parseProfile(ICC_Profile profile,
+            String profileName, String profileURI) throws IOException {
         if (!isNamedColorProfile(profile)) {
             throw new IllegalArgumentException("Given profile is not a named color profile (NCP)");
         }
         String profileDescription = getProfileDescription(profile);
         String copyright = getCopyright(profile);
-        NamedColorSpace[] ncs = readNamedColors(profile);
+        NamedColorSpace[] ncs = readNamedColors(profile, profileName, profileURI);
         return new NamedColorProfile(profileDescription, copyright, ncs);
+    }
+
+    /**
+     * Parses a named color profile (NCP).
+     * @param profile the profile to analyze
+     * @return an object representing the parsed NCP
+     * @throws IOException if an I/O error occurs
+     */
+    public NamedColorProfile parseProfile(ICC_Profile profile) throws IOException {
+        return parseProfile(profile, null, null);
     }
 
     private String getProfileDescription(ICC_Profile profile) throws IOException {
@@ -74,7 +87,8 @@ public class NamedColorProfileParser {
         return readSimpleString(tag);
     }
 
-    private NamedColorSpace[] readNamedColors(ICC_Profile profile) throws IOException {
+    private NamedColorSpace[] readNamedColors(ICC_Profile profile,
+            String profileName, String profileURI) throws IOException {
         byte[] tag = profile.getData(ICC_Profile.icSigNamedColor2Tag);
         DataInput din = new DataInputStream(new ByteArrayInputStream(tag));
         int sig = din.readInt();
@@ -101,13 +115,14 @@ public class NamedColorProfileParser {
 
             switch (profile.getPCSType()) {
             case ColorSpace.TYPE_XYZ:
-                result[i] = new NamedColorSpace(name, colorvalue);
+                result[i] = new NamedColorSpace(name, colorvalue, profileName, profileURI);
                 break;
             case ColorSpace.TYPE_Lab:
                 //Not sure if this always D50 here,
                 //but the illuminant in the header is fixed to D50.
                 CIELabColorSpace labCS = ColorSpaces.getCIELabColorSpaceD50();
-                result[i] = new NamedColorSpace(name, labCS.toColor(colorvalue, 1.0f));
+                result[i] = new NamedColorSpace(name, labCS.toColor(colorvalue, 1.0f),
+                        profileName, profileURI);
                 break;
             default:
                 throw new UnsupportedOperationException(
