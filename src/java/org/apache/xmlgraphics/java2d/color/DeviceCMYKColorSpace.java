@@ -25,7 +25,7 @@ import java.awt.color.ColorSpace;
 /**
  * This class represents an uncalibrated CMYK color space.
  */
-public class DeviceCMYKColorSpace extends ColorSpace {
+public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace implements ColorSpaceOrigin {
 
     private static final long serialVersionUID = 2925508946083542974L;
 
@@ -64,13 +64,27 @@ public class DeviceCMYKColorSpace extends ColorSpace {
         throw new UnsupportedOperationException("NYI");
     }
 
-    public static ColorExt createColorExt(float[] cmykComponents) {
+    /**
+     * Creates a color instance representing a device-specific CMYK color. An sRGB value
+     * is calculated from the CMYK colors but it may not correctly represent the given CMYK
+     * values.
+     * @param cmykComponents the CMYK components
+     * @return the device-specific color
+     */
+    public static Color createCMYKColor(float[] cmykComponents) {
         DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
-        float[] rgb = cmykCs.toRGB(cmykComponents);
-        ICCColor alt = new ICCColor(cmykCs,
-                PSEUDO_PROFILE_NAME, null, cmykComponents, 1.0f);
-        ColorExt colorExt = new ColorExt(rgb[0], rgb[1], rgb[2], new Color[] {alt});
-        return colorExt;
+        Color cmykColor = new ColorWithAlternatives(cmykCs, cmykComponents, 1.0f, null);
+        return cmykColor;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileName() {
+        return PSEUDO_PROFILE_NAME;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileURI() {
+        return null; //No URI
     }
 
 }

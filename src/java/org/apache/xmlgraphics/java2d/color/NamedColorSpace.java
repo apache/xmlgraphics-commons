@@ -27,12 +27,15 @@ import java.awt.color.ColorSpace;
  * At the moment, this color space always returns the fully opaque color regardless of the single
  * component value (tint) given to its conversion methods.
  */
-public class NamedColorSpace extends ColorSpace {
+public class NamedColorSpace extends ColorSpace implements ColorSpaceOrigin {
 
     private static final long serialVersionUID = -8957543225908514658L;
 
-    private String name;
-    private float[] xyz;
+    private final String name;
+    private final float[] xyz;
+
+    private final String profileName;
+    private final String profileURI;
 
     /**
      * Creates a new named color.
@@ -41,6 +44,18 @@ public class NamedColorSpace extends ColorSpace {
      *                  values slightly larger than 1.0f are common)
      */
     public NamedColorSpace(String name, float[] xyz) {
+        this(name, xyz, null, null);
+    }
+
+    /**
+     * Creates a new named color.
+     * @param name the color name
+     * @param xyz the CIE XYZ coordinates (valid values: 0.0f to 1.0f, although
+     *                  values slightly larger than 1.0f are common)
+     * @param profileName Optional profile name associated with this color space
+     * @param profileURI Optional profile URI associated with this color space
+     */
+    public NamedColorSpace(String name, float[] xyz, String profileName, String profileURI) {
         super(ColorSpace.TYPE_GRAY, 1);
         checkNumComponents(xyz, 3);
         if (name == null || name.trim().length() == 0) {
@@ -49,6 +64,21 @@ public class NamedColorSpace extends ColorSpace {
         this.name = name.trim();
         this.xyz = new float[3];
         System.arraycopy(xyz, 0, this.xyz, 0, 3);
+        this.profileName = profileName;
+        this.profileURI = profileURI;
+    }
+
+    /**
+     * Creates a new named color.
+     * @param name the color name
+     * @param color the color to use when the named color's specific color properties are not
+     *                  available.
+     * @param profileName Optional profile name associated with this color space
+     * @param profileURI Optional profile URI associated with this color space
+     */
+    public NamedColorSpace(String name, Color color, String profileName, String profileURI) {
+        this(name, color.getColorSpace().toCIEXYZ(color.getColorComponents(null)),
+                profileName, profileURI);
     }
 
     /**
@@ -58,7 +88,7 @@ public class NamedColorSpace extends ColorSpace {
      *                  available.
      */
     public NamedColorSpace(String name, Color color) {
-        this(name, color.getColorSpace().toCIEXYZ(color.getColorComponents(null)));
+        this(name, color.getColorSpace().toCIEXYZ(color.getColorComponents(null)), null, null);
     }
 
     private void checkNumComponents(float[] colorvalue, int expected) {
@@ -77,6 +107,16 @@ public class NamedColorSpace extends ColorSpace {
      */
     public String getColorName() {
         return this.name;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileName() {
+        return this.profileName;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileURI() {
+        return this.profileURI;
     }
 
     /**

@@ -285,8 +285,8 @@ public class CIELabColorSpace extends ColorSpace {
         for (int i = 0; i < c; i++) {
             normalized[i] = normalize(colorvalue[i], i);
         }
-        //Using ICCColor for better equals() functionality
-        return new ICCColor(this, null, null, normalized, alpha);
+        //Using ColorWithAlternatives for better equals() functionality
+        return new ColorWithAlternatives(this, normalized, alpha, null);
     }
 
     /**

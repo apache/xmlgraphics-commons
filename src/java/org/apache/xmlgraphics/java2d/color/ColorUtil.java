@@ -57,7 +57,7 @@ public final class ColorUtil {
             cols[1] -= cols[1] * -factor;
             cols[2] -= cols[2] * -factor;
         }
-        return new ColorExt(cols[0], cols[1], cols[2], cols[3], null);
+        return new ColorWithAlternatives(cols[0], cols[1], cols[2], cols[3], null);
     }
 
 
@@ -80,6 +80,7 @@ public final class ColorUtil {
         //Calculated color components
         float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
         //Create native color
-        return DeviceCMYKColorSpace.createColorExt(cmyk);
+        return DeviceCMYKColorSpace.createCMYKColor(cmyk);
     }
+
 }
