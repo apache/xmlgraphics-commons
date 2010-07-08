@@ -134,6 +134,22 @@ public class ColorWithAlternatives extends Color {
         return this.alternativeColors != null && this.alternativeColors.length > 0;
     }
 
+    /**
+     * Returns the first alternative color found with the given color space type.
+     * @param colorSpaceType the color space type ({@link ColorSpace}.TYPE_*).
+     * @return the requested alternative color or null, if no match was found
+     */
+    public Color getFirstAlternativeOfType(int colorSpaceType) {
+        if (hasAlternativeColors()) {
+            for (int i = 0, c = this.alternativeColors.length; i < c; i++) {
+                if (this.alternativeColors[i].getColorSpace().getType() == colorSpaceType) {
+                    return this.alternativeColors[i];
+                }
+            }
+        }
+        return null;
+    }
+
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
         if (!(obj instanceof Color)) {
