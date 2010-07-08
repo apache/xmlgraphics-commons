@@ -32,6 +32,8 @@ import java.awt.color.ICC_Profile;
  */
 public class ICCColorSpaceExt extends ICC_ColorSpace implements ColorSpaceOrigin {
 
+    private static final long serialVersionUID = -3338065900662625221L;
+
     public static final int PERCEPTUAL = 0;
     public static final int RELATIVE_COLORIMETRIC = 1;
     public static final int ABSOLUTE_COLORIMETRIC = 2;
