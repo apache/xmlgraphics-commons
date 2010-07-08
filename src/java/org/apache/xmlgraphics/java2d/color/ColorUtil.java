@@ -83,4 +83,21 @@ public final class ColorUtil {
         return DeviceCMYKColorSpace.createCMYKColor(cmyk);
     }
 
+    /**
+     * Converts an arbitrary {@link Color} to a plain sRGB color doing the conversion at the
+     * best possible conversion quality.
+     * @param col the original color
+     * @return the sRGB equivalent
+     */
+    public static Color toSRGBColor(Color col) {
+        if (col.getColorSpace().isCS_sRGB()) {
+            return col; //Don't convert if already sRGB to avoid conversion differences
+        }
+        float[] comps = col.getColorComponents(null);
+        float[] srgb = col.getColorSpace().toRGB(comps);
+        comps = col.getComponents(null);
+        float alpha = comps[comps.length - 1];
+        return new Color(srgb[0], srgb[1], srgb[2], alpha);
+    }
+
 }
