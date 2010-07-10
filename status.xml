@@ -39,7 +39,7 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
-    <release version="Trunk" date="n/a">
+    <release version="1.4" date="July 2010">
     </release>
     <release version="1.4" date="July 2010">
       <action context="Code" dev="JM" type="fix" fixes-bug="49364" due-to="Julien Aymé">
