@@ -669,6 +669,7 @@ NOTE:
       <fileset dir="${build.dir}/maven"/>
       <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
     </jar>
+    <move file="${build.dir}/${name}-${version}-bundle.jar" todir="${basedir}"/>
   </target>
   
   <!-- =================================================================== -->
@@ -684,6 +685,7 @@ NOTE:
     <delete>
       <fileset dir="${basedir}" includes="${name}-*.tar.gz*"/>
       <fileset dir="${basedir}" includes="${name}-*.zip*"/>
+      <fileset dir="${basedir}" includes="${name}-*-bundle.jar*"/>
     </delete>
   </target>
   
