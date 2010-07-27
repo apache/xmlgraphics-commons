@@ -81,6 +81,16 @@ License labeling (according to http://www.apache.org/legal/3party.html):
 For more detailed info about the changes, please see:
 http://xmlgraphics.apache.org/commons/changes.html
 
+Version 1.4
+-----------
+
+This release adds the option to generate smaller PostScript files,
+support for the AdobeStandardCyrillic encoding, RefinedImageFlavor,
+TexturePaint support for PSGraphics2D (PostScript tiling patterns),
+improvements to the XMP framework, optimization for PostScript state
+handling in (E)PSDocumentGraphics2D, and more. In addition it contains
+a number of bug fixes.
+
 Version 1.3.1
 --------------
 
