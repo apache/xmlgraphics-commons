@@ -127,7 +127,10 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                     xRes = fldx.getAsFloat(0);
                     yRes = fldy.getAsFloat(0);
                 }
-                if (unit == 2) {
+                if (xRes == 0 || yRes == 0) {
+                    //Some TIFFs may report 0 here which would lead to problems
+                    size.setResolution(context.getSourceResolution());
+                } else if (unit == 2) {
                     size.setResolution(xRes, yRes); //Inch
                 } else {
                     size.setResolution(
