@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix">
+        Fix for TIFFs which report zero as their resolution. This resulted in an exception.
+      </action>
     </release>
     <release version="1.4" date="7 July 2010">
       <action context="Code" dev="JM" type="fix" fixes-bug="49364" due-to="Julien Aymé">
