@@ -31,16 +31,9 @@
         implementations that let you generate PDF &amp; PostScript files, and much more.
       </p>
       <p>
-        Apache XML Graphics Commons has only just begun. It's in the process of being
-        populated with components coming from <a href="ext:batik">Apache Batik</a>
-        and <a href="ext:fop">Apache FOP</a>. Stay tuned for exciting treasures made
-        available.
-      </p>
-      <p>
         In the Wiki, we have a 
-        <a href="http://wiki.apache.org/xmlgraphics/XmlGraphicsCommonComponents">plan for building Apache XML Graphics Commons</a>.
-        The plan provides an idea of what you can expect to find here when we're finished 
-        migrating components.
+        <a href="http://wiki.apache.org/xmlgraphics/XmlGraphicsCommonComponents">Roadmap for Apache XML Graphics Commons</a>.
+        This roadmap is the place to describe new ideas for the project.
       </p>
     </section>
     <section id="features">
