@@ -27,6 +27,7 @@ import java.io.OutputStream;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.PSGenerator;
+import org.apache.xmlgraphics.ps.PSProcSets;
 
 /**
  * This class is a wrapper for the <tt>PSGraphics2D</tt> that
@@ -196,6 +197,15 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
      */
     protected abstract void writePageTrailer() throws IOException;
 
+    /**
+     * Writes the ProcSets ending up in the prolog to the PostScript file. Override to add your
+     * own ProcSets if so desired.
+     * @throws IOException In case an I/O error occurs
+     */
+    protected void writeProcSets() throws IOException {
+        PSProcSets.writeStdProcSet(gen);
+        PSProcSets.writeEPSProcSet(gen);
+    }
 
     /** {@inheritDoc} */
     public void preparePainting() {

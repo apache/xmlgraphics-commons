@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
-import org.apache.xmlgraphics.ps.PSProcSets;
 
 /**
  * This class is a wrapper for the <tt>PSGraphics2D</tt> that
@@ -104,8 +103,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
         //Setup
         gen.writeDSCComment(DSCConstants.BEGIN_SETUP);
-        PSProcSets.writeStdProcSet(gen);
-        PSProcSets.writeEPSProcSet(gen);
+        writeProcSets();
         if (customTextHandler instanceof PSTextHandler) {
             ((PSTextHandler)customTextHandler).writeSetup();
         }
