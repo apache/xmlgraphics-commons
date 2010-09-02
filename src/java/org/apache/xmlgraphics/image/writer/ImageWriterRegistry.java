@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.xmlgraphics.util.Service;
@@ -39,7 +38,7 @@ public class ImageWriterRegistry {
 
     private static ImageWriterRegistry instance;
 
-    private Map imageWriterMap = new HashMap();
+    private Map imageWriterMap = new java.util.HashMap();
     private Map preferredOrder;
 
     /**
@@ -108,8 +107,24 @@ public class ImageWriterRegistry {
     }
 
     /**
+     * Registers a new ImageWriter implementation with the associated priority in the registry.
+     * Higher priorities get preference over lower priorities.
+     * @param writer the ImageWriter instance to register.
+     * @param priority the priority of the writer in the registry.
+     * @see #register(ImageWriter)
+     */
+    public void register(ImageWriter writer, int priority) {
+
+    	String key = writer.getClass().getName();
+    	// Register the priority to preferredOrder; overwrite original priority if exists
+    	preferredOrder.put(key, String.valueOf(priority));
+
+    	register(writer);
+    }
+
+    /**
      * Registers a new ImageWriter implementation in the registry. If an ImageWriter for the same
-     * target MIME type has already been registered, it is overwritten with the new one.
+     * target MIME type has already been registered, it is placed in an array based on priority.
      * @param writer the ImageWriter instance to register.
      */
     public void register(ImageWriter writer) {
@@ -120,14 +135,13 @@ public class ImageWriterRegistry {
         }
 
         int priority = getPriority(writer);
-        ListIterator li;
-        li = entries.listIterator();
+
+    	ListIterator li = entries.listIterator();
         while (li.hasNext()) {
             ImageWriter w = (ImageWriter)li.next();
             if (getPriority(w) < priority) {
                 li.previous();
-                li.add(writer);
-                return;
+                break;
             }
         }
         li.add(writer);
@@ -136,8 +150,8 @@ public class ImageWriterRegistry {
     /**
      * Returns an ImageWriter that can be used to encode an image to the requested MIME type.
      * @param mime the MIME type of the desired output format
-     * @return an ImageWriter instance handling the desired output format or null if none can be
-     *         found.
+     * @return a functional ImageWriter instance handling the desired output format or
+     *         null if none can be found.
      */
     public ImageWriter getWriterFor(String mime) {
         List entries = (List)imageWriterMap.get(mime);
