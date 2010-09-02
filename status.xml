@@ -40,6 +40,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="JM" type="fix" fixes-bug="49696" due-to="Joshua Marquart">
+        Allow to override priority when registering an ImageWriter on the ImageWriterRegistry.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Fix for TIFFs which report zero as their resolution. This resulted in an exception.
       </action>
