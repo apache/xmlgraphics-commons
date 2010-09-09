@@ -54,13 +54,6 @@ public interface XMPConstants {
      */
     String PDF_A_IDENTIFICATION = "http://www.aiim.org/pdfa/ns/id/";
 
-    /**
-     * Namespace URI for the PDF/A Identification Schema
-     * (from an older draft of ISO 19005-1, used by Adobe Acrobat)
-     * @deprecated Outdated, please use PDF_A_IDENTIFICATION instead.
-     */
-    String PDF_A_IDENTIFICATION_OLD = "http://www.aiim.org/pdfa/ns/id.html";
-
     /** Default language for the xml:lang property */
     String DEFAULT_LANGUAGE = "x-default";
 

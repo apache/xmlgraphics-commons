@@ -198,7 +198,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException  In case of an I/O problem
      */
     public void write(String cmd) throws IOException {
-        /* @todo Check disabled until clarification.
+        /* TODO Check disabled until clarification.
         if (cmd.length() > 255) {
             throw new RuntimeException("PostScript command exceeded limit of 255 characters");
         } */
