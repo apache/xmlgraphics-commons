@@ -209,7 +209,16 @@ public class CIELabColorSpace extends ColorSpace {
         return toCIEXYZNative(l, a, b);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Transforms a color value assumed to be in this {@link ColorSpace}
+     * into the CS_CIEXYZ conversion color space. This method uses component values
+     * in CIE Lab's native color ranges rather than the normalized values between 0 and 1.
+     * @param l the L* component (values between 0 and 100)
+     * @param a the a* component (usually between -128 and +128)
+     * @param b the b* component (usually between -128 and +128)
+     * @return the XYZ color values
+     * @see #toCIEXYZ(float[])
+     */
     public float[] toCIEXYZNative(float l, float a, float b) {
         double varY = (l + 16) / 116.0;
         double varX = a / 500 + varY;
@@ -292,10 +301,10 @@ public class CIELabColorSpace extends ColorSpace {
     /**
      * Creates a {@link Color} instance from color values usually used by the L*a*b* color space
      * by scaling them to the 0.0..1.0 range expected by Color's constructor.
-     * @param l the L* component
-     * @param a the a* component
-     * @param b the b* component
-     * @param alpha the alpha component
+     * @param l the L* component (values between 0 and 100)
+     * @param a the a* component (usually between -128 and +127)
+     * @param b the b* component (usually between -128 and +127)
+     * @param alpha the alpha component (values between 0 and 1)
      * @return the requested color instance
      */
     public Color toColor(float l, float a, float b, float alpha) {
