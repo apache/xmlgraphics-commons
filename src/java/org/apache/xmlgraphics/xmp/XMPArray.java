@@ -27,9 +27,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Represents an XMP array as defined by the XMP specification.
- * @todo Property qualifiers are currently not supported, yet.
  */
 public class XMPArray extends XMPComplexValue {
+    //TODO Property qualifiers are currently not supported, yet.
 
     private XMPArrayType type;
     private List values = new java.util.ArrayList();
