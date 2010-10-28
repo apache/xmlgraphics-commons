@@ -126,23 +126,8 @@
     <available property="jdk14.present" classname="java.lang.CharSequence"/>
     <fail message="${Name} requires at least Java 1.4" unless="jdk14.present"/>
     
-    <available property="sun.jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec"/>
-    <condition property="sun.jpeg.message" value="Sun-private JPEG Support PRESENT">
-      <equals arg1="${sun.jpeg.present}" arg2="true"/>
-    </condition>
-    <condition property="sun.jpeg.message" value="Sun-private JPEG Support NOT Present">
-      <not>
-        <equals arg1="${sun.jpeg.present}" arg2="true"/>
-      </not>
-    </condition>
-    <echo message="${sun.jpeg.message}"/>
     <condition property="internal-codecs.eff.disabled">
-      <or>
-        <not>
-          <equals arg1="${sun.jpeg.present}" arg2="true"/>
-        </not>
-        <equals arg1="${internal-codecs.disabled}" arg2="true"/>
-      </or>
+      <equals arg1="${internal-codecs.disabled}" arg2="true"/>
     </condition>
 
     <available property="junit.present" classname="junit.framework.TestCase"
@@ -209,7 +194,6 @@
     <patternset id="compile-pattern">
       <include name="**/*.java"/>
       <exclude name="**/image/codec/tiff/**/*.java"/>
-      <exclude name="**/image/writer/internal/JPEGImageWriter*.java"/>
       <exclude name="**/image/writer/internal/TIFFImageWriter*.java"/>
     </patternset>
   </target>
@@ -336,7 +320,6 @@
         <fileset dir="${basedir}/test/java">
           <include name="**/*Test*.java"/>
           <exclude name="**/*TestSuite.java"/>
-          <exclude name="**/image/writer/internal/JPEGImageWriter*.java" if="internal-codecs.eff.disabled"/>
           <exclude name="**/image/writer/internal/TIFFImageWriter*.java" if="internal-codecs.eff.disabled"/>
         </fileset>
       </batchtest>
