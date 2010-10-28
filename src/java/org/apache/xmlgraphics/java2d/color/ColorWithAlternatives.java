@@ -40,6 +40,11 @@ public class ColorWithAlternatives extends Color {
     private Color[] alternativeColors;
 
     /**
+     * Constructor for RGBA colors.
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(float, float, float, float)
      */
@@ -49,6 +54,10 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for RGB colors.
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(float, float, float)
      */
@@ -58,6 +67,9 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for RGBA colors.
+     * @param rgba the combined RGBA value
+     * @param hasalpha true if the alpha bits are valid, false otherwise
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(int, boolean)
      */
@@ -67,6 +79,11 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for RGBA colors.
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(int, int, int, int)
      */
@@ -76,6 +93,10 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for RGB colors.
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(int, int, int)
      */
@@ -85,6 +106,8 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for RGB colors.
+     * @param rgb the combined RGB components
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(int)
      */
@@ -94,6 +117,10 @@ public class ColorWithAlternatives extends Color {
     }
 
     /**
+     * Constructor for colors with an arbitrary color space.
+     * @param cspace the color space
+     * @param components the color components
+     * @param alpha the alpha component
      * @param alternativeColors the prioritized list of alternative colors.
      * @see Color#Color(ColorSpace, float[], float)
      */
@@ -202,6 +229,12 @@ public class ColorWithAlternatives extends Color {
             }
         }
         return true;
+    }
+
+    /** {@inheritDoc} */
+    public int hashCode() {
+        //No special treatment necessary for the alternative colors
+        return super.hashCode();
     }
 
 }

@@ -1,21 +1,22 @@
 /*
-
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
+/* $Id$ */
+
 package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.color.ColorSpace;
@@ -25,33 +26,46 @@ import java.awt.color.ICC_Profile;
 /**
  * This class extends the ICCColorSpace class by providing
  * convenience methods to convert to sRGB using various
- * methods, forcing a givent intent, such as perceptual or
- * relative colorimetric.
- *
- * @version $Id$
+ * methods, forcing a given intent, such as perceptual or
+ * relative colorimetric. It also additionally holds the name
+ * and source URI of the color profile.
  */
 public class ICCColorSpaceExt extends ICC_ColorSpace implements ColorSpaceOrigin {
 
     private static final long serialVersionUID = -3338065900662625221L;
 
+    /** Constant for the perceptual rendering intent. Typical use: scanned images. */
     public static final int PERCEPTUAL = 0;
+    /** Constant for the relative colorimetric rendering intent. Typical use: vector graphics. */
     public static final int RELATIVE_COLORIMETRIC = 1;
+    /**
+     * Constant for the absolute colorimetric rendering intent.
+     * Typical use: logos and solid colors.
+     */
     public static final int ABSOLUTE_COLORIMETRIC = 2;
+    /** Constant for the saturation rendering intent. Typical use: business graphics. */
     public static final int SATURATION = 3;
+    /** Automatic rendering intent. The color profile's intent isn't overridden. */
     public static final int AUTO = 4;
 
-    static final ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+    static final ColorSpace SRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
 
     private int intent;
     private String profileName;
     private String profileURI;
 
-
+    /**
+     * Creates a new ICC-based color space.
+     * @param p the color profile
+     * @param intent the overriding rendering intent (use {@link #AUTO} no preserve the profile's)
+     * @param profileName the color profile name
+     * @param profileURI the source URI of the color profile
+     */
     public ICCColorSpaceExt(ICC_Profile p, int intent, String profileName, String profileURI) {
         super(p);
 
         this.intent = intent;
-        switch(intent){
+        switch(intent) {
         case AUTO:
         case RELATIVE_COLORIMETRIC:
         case ABSOLUTE_COLORIMETRIC:
@@ -65,7 +79,7 @@ public class ICCColorSpaceExt extends ICC_ColorSpace implements ColorSpaceOrigin
         /**
          * Apply the requested intent into the profile
          */
-        if (intent != AUTO){
+        if (intent != AUTO) {
             byte[] hdr = p.getData(ICC_Profile.icSigHead);
             hdr[ICC_Profile.icHdrRenderingIntent] = (byte)intent;
         }
@@ -77,10 +91,12 @@ public class ICCColorSpaceExt extends ICC_ColorSpace implements ColorSpaceOrigin
     /**
      * Returns the sRGB value obtained by forcing the
      * conversion method to the intent passed to the
-     * constructor
+     * constructor.
+     * @param values the color values in the local color space
+     * @return the sRGB values
      */
-    public float[] intendedToRGB(float[] values){
-        switch(intent){
+    public float[] intendedToRGB(float[] values) {
+        switch(intent) {
             case ABSOLUTE_COLORIMETRIC:
             return absoluteColorimetricToRGB(values);
             case PERCEPTUAL:
@@ -98,33 +114,41 @@ public class ICCColorSpaceExt extends ICC_ColorSpace implements ColorSpaceOrigin
     /**
      * Perceptual conversion is the method implemented by the
      * base class's toRGB method
+     * @param values the color values in the local color space
+     * @return the sRGB values
      */
-    public float[] perceptualToRGB(float[] values){
+    public float[] perceptualToRGB(float[] values) {
         return toRGB(values);
     }
 
     /**
      * Relative colorimetric needs to happen through CIEXYZ
-     * conversion
+     * conversion.
+     * @param values the color values in the local color space
+     * @return the sRGB values
      */
-    public float[] relativeColorimetricToRGB(float[] values){
+    public float[] relativeColorimetricToRGB(float[] values) {
         float[] ciexyz = toCIEXYZ(values);
-        return sRGB.fromCIEXYZ(ciexyz);
+        return SRGB.fromCIEXYZ(ciexyz);
     }
 
     /**
      * Absolute colorimetric. NOT IMPLEMENTED.
-     * Temporarily returns same as perceptual
+     * Temporarily returns same as perceptual.
+     * @param values the color values in the local color space
+     * @return the sRGB values
      */
-    public float[] absoluteColorimetricToRGB(float[] values){
+    public float[] absoluteColorimetricToRGB(float[] values) {
         return perceptualToRGB(values);
     }
 
     /**
      * Saturation. NOT IMPLEMENTED. Temporarily returns same
      * as perceptual.
+     * @param values the color values in the local color space
+     * @return the sRGB values
      */
-    public float[] saturationToRGB(float[] values){
+    public float[] saturationToRGB(float[] values) {
         return perceptualToRGB(values);
     }
 

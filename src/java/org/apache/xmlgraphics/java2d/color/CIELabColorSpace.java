@@ -41,10 +41,10 @@ public class CIELabColorSpace extends ColorSpace {
     private static final float REF_Y_D50 = 100.00f;
     private static final float REF_Z_D50 = 82.49f;
 
-    private static final double d = 6.0 / 29.0;
-    private static final double refA = 1.0 / (3 * Math.pow(d, 2)); //7.787037...
-    private static final double refB = 16.0 / 116.0;
-    private static final double t0 = Math.pow(d, 3); //0.008856...
+    private static final double D = 6.0 / 29.0;
+    private static final double REF_A = 1.0 / (3 * Math.pow(D, 2)); //7.787037...
+    private static final double REF_B = 16.0 / 116.0;
+    private static final double T0 = Math.pow(D, 3); //0.008856...
 
     private float wpX;
     private float wpY;
@@ -156,39 +156,39 @@ public class CIELabColorSpace extends ColorSpace {
     /** {@inheritDoc} */
     public float[] fromCIEXYZ(float[] colorvalue) {
         checkNumComponents(colorvalue, 3);
-        float X = colorvalue[0];
-        float Y = colorvalue[1];
-        float Z = colorvalue[2];
+        float x = colorvalue[0];
+        float y = colorvalue[1];
+        float z = colorvalue[2];
 
-        double var_X = X / wpX;
-        double var_Y = Y / wpY;
-        double var_Z = Z / wpZ;
+        double varX = x / wpX;
+        double varY = y / wpY;
+        double varZ = z / wpZ;
 
-        if (var_X > t0) {
-            var_X = Math.pow(var_X, (1 / 3.0));
+        if (varX > T0) {
+            varX = Math.pow(varX, (1 / 3.0));
         } else {
-            var_X = (refA * var_X) + refB;
+            varX = (REF_A * varX) + REF_B;
         }
-        if (var_Y > t0) {
-            var_Y = Math.pow(var_Y, 1 / 3.0);
+        if (varY > T0) {
+            varY = Math.pow(varY, 1 / 3.0);
         } else {
-            var_Y = (refA * var_Y) + refB;
+            varY = (REF_A * varY) + REF_B;
         }
-        if (var_Z > t0) {
-            var_Z = Math.pow(var_Z, 1 / 3.0);
+        if (varZ > T0) {
+            varZ = Math.pow(varZ, 1 / 3.0);
         } else {
-            var_Z = (refA * var_Z) + refB;
+            varZ = (REF_A * varZ) + REF_B;
         }
 
-        float L = (float)((116 * var_Y) - 16);
-        float a = (float)(500 * (var_X - var_Y));
-        float b = (float)(200 * (var_Y - var_Z));
+        float l = (float)((116 * varY) - 16);
+        float a = (float)(500 * (varX - varY));
+        float b = (float)(200 * (varY - varZ));
 
         //Normalize to range 0.0..1.0
-        L = normalize(L, 0);
+        l = normalize(l, 0);
         a = normalize(a, 1);
         b = normalize(b, 2);
-        return new float[] {L, a, b};
+        return new float[] {l, a, b};
     }
 
     /** {@inheritDoc} */
@@ -202,40 +202,40 @@ public class CIELabColorSpace extends ColorSpace {
     public float[] toCIEXYZ(float[] colorvalue) {
         checkNumComponents(colorvalue);
         //Scale to native value range
-        float L = denormalize(colorvalue[0], 0);
+        float l = denormalize(colorvalue[0], 0);
         float a = denormalize(colorvalue[1], 1);
         float b = denormalize(colorvalue[2], 2);
 
-        return toCIEXYZNative(L, a, b);
+        return toCIEXYZNative(l, a, b);
     }
 
     /** {@inheritDoc} */
-    public float[] toCIEXYZNative(float L, float a, float b) {
-        double var_Y = (L + 16) / 116.0;
-        double var_X = a / 500 + var_Y;
-        double var_Z = var_Y - b / 200.0;
+    public float[] toCIEXYZNative(float l, float a, float b) {
+        double varY = (l + 16) / 116.0;
+        double varX = a / 500 + varY;
+        double varZ = varY - b / 200.0;
 
-        if (Math.pow(var_Y, 3) > t0) {
-            var_Y = Math.pow(var_Y, 3);
+        if (Math.pow(varY, 3) > T0) {
+            varY = Math.pow(varY, 3);
         } else {
-            var_Y = (var_Y - 16 / 116.0) / refA;
+            varY = (varY - 16 / 116.0) / REF_A;
         }
-        if (Math.pow(var_X, 3) > t0) {
-            var_X = Math.pow(var_X, 3);
+        if (Math.pow(varX, 3) > T0) {
+            varX = Math.pow(varX, 3);
         } else {
-            var_X = (var_X - 16 / 116.0) / refA;
+            varX = (varX - 16 / 116.0) / REF_A;
         }
-        if (Math.pow(var_Z, 3) > t0) {
-            var_Z = Math.pow(var_Z, 3);
+        if (Math.pow(varZ, 3) > T0) {
+            varZ = Math.pow(varZ, 3);
         } else {
-            var_Z = (var_Z - 16 / 116.0) / refA;
+            varZ = (varZ - 16 / 116.0) / REF_A;
         }
 
-        float X = (float)(wpX * var_X / 100);
-        float Y = (float)(wpY * var_Y / 100);
-        float Z = (float)(wpZ * var_Z / 100);
+        float x = (float)(wpX * varX / 100);
+        float y = (float)(wpY * varY / 100);
+        float z = (float)(wpZ * varZ / 100);
 
-        return new float[] {X, Y, Z};
+        return new float[] {x, y, z};
     }
 
     /** {@inheritDoc} */
@@ -292,14 +292,14 @@ public class CIELabColorSpace extends ColorSpace {
     /**
      * Creates a {@link Color} instance from color values usually used by the L*a*b* color space
      * by scaling them to the 0.0..1.0 range expected by Color's constructor.
-     * @param L the L* component
+     * @param l the L* component
      * @param a the a* component
      * @param b the b* component
      * @param alpha the alpha component
      * @return the requested color instance
      */
-    public Color toColor(float L, float a, float b, float alpha) {
-        return toColor(new float[] {L, a, b}, alpha);
+    public Color toColor(float l, float a, float b, float alpha) {
+        return toColor(new float[] {l, a, b}, alpha);
     }
 
 }

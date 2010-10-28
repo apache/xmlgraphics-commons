@@ -207,6 +207,11 @@ public class NamedColorSpace extends ColorSpace implements ColorSpaceOrigin {
     }
 
     /** {@inheritDoc} */
+    public int hashCode() {
+        return (this.profileName + name).hashCode();
+    }
+
+    /** {@inheritDoc} */
     public String toString() {
         return "Named Color Space: " + getColorName();
     }
