@@ -43,7 +43,6 @@ public class ImageRendered extends AbstractImage {
      * @param info the image info object
      * @param red the RenderedImage instance
      * @param transparentColor the transparent color or null
-     * @param iccProfile an ICC color profile or null if no profile is associated
      */
     public ImageRendered(ImageInfo info, RenderedImage red, Color transparentColor) {
         super(info);

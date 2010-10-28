@@ -55,12 +55,17 @@ http://maven.apache.org/maven-v4_0_0.xsd">
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/xmlgraphics/commons/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/xmlgraphics/commons/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/xmlgraphics/commons/trunk/?root=Apache-SVN</url>
+    <url>http://svn.apache.org/viewvc/xmlgraphics/commons/trunk/?root=Apache-SVN</url>
   </scm>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
   </organization>
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>7</version>
+  </parent>
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>

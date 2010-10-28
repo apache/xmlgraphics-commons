@@ -268,7 +268,6 @@
   <target name="uptodate-jar-sources" depends="init">
     <uptodate property="jar.sources.uptodate" targetfile="${build.dir}/${name}-${version}-sources.jar">
       <srcfiles dir="${src.java.dir}"/>
-      <srcfiles dir="${src.java.version.dir}"/>
     </uptodate>
   </target>
 
@@ -658,16 +657,55 @@ NOTE:
     <filter  token="version" value="${version}"/>
     <mkdir dir="${build.dir}/maven"/>
     <copy file="${basedir}/xmlgraphics-commons-pom-template.pom" tofile="${build.dir}/maven/pom.xml" filtering="true"/>
+    <fileset id="bundle-files" dir="${build.dir}">
+      <patternset>
+      <include name="${name}-${version}.jar"/>
+      <include name="${name}-${version}-sources.jar"/>
+      <include name="${name}-${version}-javadoc.jar"/>
+      </patternset>
+      <patternset>
+      <include name="maven/pom.xml"/>
+      </patternset>
+    </fileset>
+    <checksum algorithm="md5">
+      <fileset refid="bundle-files"/>
+    </checksum>
+    <checksum algorithm="sha1">
+      <fileset refid="bundle-files"/>
+    </checksum>
+    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}-sources.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}-javadoc.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/maven/pom.xml"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
     <jar jarfile="${build.dir}/${name}-${version}-bundle.jar">
       <manifest>
         <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
       </manifest>
       <fileset dir="${build.dir}">
-        <include name="${name}-${version}.jar"/>
-        <include name="${name}-${version}-sources.jar"/>
-        <include name="${name}-${version}-javadoc.jar"/>
+        <patternset>
+          <include name="${name}-${version}.jar*"/>
+          <include name="${name}-${version}-sources.jar*"/>
+          <include name="${name}-${version}-javadoc.jar*"/>
+        </patternset>
       </fileset>
-      <fileset dir="${build.dir}/maven"/>
+      <fileset dir="${build.dir}/maven">
+        <patternset>
+          <include name="pom.xml*"/>
+        </patternset>
+      </fileset>
       <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
     </jar>
     <move file="${build.dir}/${name}-${version}-bundle.jar" todir="${basedir}"/>
