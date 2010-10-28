@@ -25,7 +25,8 @@ import java.awt.color.ColorSpace;
 /**
  * This class represents an uncalibrated CMYK color space.
  */
-public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace implements ColorSpaceOrigin {
+public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
+            implements ColorSpaceOrigin {
 
     private static final long serialVersionUID = 2925508946083542974L;
 

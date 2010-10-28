@@ -24,11 +24,15 @@ import java.awt.color.ColorSpace;
 /**
  * Provides access to various color spaces.
  */
-public class ColorSpaces {
+public final class ColorSpaces {
 
     private static DeviceCMYKColorSpace deviceCMYK;
     private static CIELabColorSpace cieLabD50;
     private static CIELabColorSpace cieLabD65;
+
+    private ColorSpaces() {
+        //Don't instantiate this class
+    }
 
     /**
      * Returns an instance of the device-specific CMYK color space.
