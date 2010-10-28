@@ -70,6 +70,7 @@ public class ImageWriterRegistry {
      * Map (for example a Properties file). The entries of the Map consists of fully qualified
      * class or package names as keys and integer numbers as values. Zero (0) is the default
      * priority.
+     * @param preferredOrder the map of order properties used to order the plug-ins
      */
     public ImageWriterRegistry(Properties preferredOrder) {
         this.preferredOrder = preferredOrder;
@@ -115,11 +116,11 @@ public class ImageWriterRegistry {
      */
     public void register(ImageWriter writer, int priority) {
 
-    	String key = writer.getClass().getName();
-    	// Register the priority to preferredOrder; overwrite original priority if exists
-    	preferredOrder.put(key, String.valueOf(priority));
+        String key = writer.getClass().getName();
+        // Register the priority to preferredOrder; overwrite original priority if exists
+        preferredOrder.put(key, String.valueOf(priority));
 
-    	register(writer);
+        register(writer);
     }
 
     /**
@@ -136,7 +137,7 @@ public class ImageWriterRegistry {
 
         int priority = getPriority(writer);
 
-    	ListIterator li = entries.listIterator();
+        ListIterator li = entries.listIterator();
         while (li.hasNext()) {
             ImageWriter w = (ImageWriter)li.next();
             if (getPriority(w) < priority) {
