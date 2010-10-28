@@ -41,6 +41,10 @@
   <changes>
     <release version="Trunk" date="n/a">
       <action context="Code" dev="JM" type="remove">
+        Removed dependency on com.sun classes to achieve compatibility with Apache Harmony,
+        OpenJDK and possibly other JVMs. 
+      </action>
+      <action context="Code" dev="JM" type="remove">
         Removal of the deprecated <code>TextHandler.drawString(String, float, float)</code> method.
       </action>
       <action context="Code" dev="JM" type="update" fixes-bug="49703" due-to="Glenn Adams">

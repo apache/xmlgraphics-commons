@@ -65,11 +65,15 @@ public class ImageLoaderInternalTIFF extends AbstractImageLoader {
         ImageInputStream imgStream = ImageUtil.needImageInputStream(src);
 
         SeekableStream seekStream = new ImageInputStreamSeekableStreamAdapter(imgStream);
-        org.apache.xmlgraphics.image.codec.tiff.TIFFImage img
-            = new org.apache.xmlgraphics.image.codec.tiff.TIFFImage
-                (seekStream, null, 0);
-        // TODO: This may ignore ICC Profiles stored in TIFF images.
-        return new ImageRendered(info, img, null);
+        try {
+            org.apache.xmlgraphics.image.codec.tiff.TIFFImage img
+                = new org.apache.xmlgraphics.image.codec.tiff.TIFFImage
+                    (seekStream, null, 0);
+            // TODO: This may ignore ICC Profiles stored in TIFF images.
+            return new ImageRendered(info, img, null);
+        } catch (RuntimeException e) {
+            throw new ImageException("Could not load image with internal TIFF codec", e);
+        }
     }
 
     /** {@inheritDoc} */
