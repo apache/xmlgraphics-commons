@@ -31,7 +31,7 @@ public class CIELabColorSpace extends ColorSpace {
 
     private static final long serialVersionUID = -1821569090707520704L;
 
-    //CIE XYZ tristimulus values of the reference white point: Observer= 2°, Illuminant= D65
+    //CIE XYZ tristimulus values of the reference white point: Observer= 2 degrees, Illuminant= D65
     private static final float REF_X_D65 = 95.047f;
     private static final float REF_Y_D65 = 100.000f;
     private static final float REF_Z_D65 = 108.883f;
