@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Tests the {@link ColorWithAlternatives} class.
  */
-public class ColorExtTest extends TestCase {
+public class ColorWithAlternativesTest extends TestCase {
 
     public void testEquals() throws Exception {
         Color col1 = new ColorWithAlternatives(255, 204, 0, null);
