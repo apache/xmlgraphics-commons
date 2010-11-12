@@ -30,8 +30,8 @@
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
   <property name="javac.deprecation" value="on"/>
-  <property name="javac.source" value="1.4"/>
-  <property name="javac.target" value="1.4"/>
+  <property name="javac.source" value="1.5"/>
+  <property name="javac.target" value="1.5"/>
   <property name="javac.fork" value="no"/>
 
   <property name="junit.fork" value="on"/>
@@ -123,8 +123,8 @@
   <target name="init" depends="info, init-avail"/>
 
   <target name="init-avail">
-    <available property="jdk14.present" classname="java.lang.CharSequence"/>
-    <fail message="${Name} requires at least Java 1.4" unless="jdk14.present"/>
+    <available property="jdk15.present" classname="java.lang.StringBuilder"/>
+    <fail message="${Name} requires at least Java 1.5" unless="jdk15.present"/>
     
     <condition property="internal-codecs.eff.disabled">
       <equals arg1="${internal-codecs.disabled}" arg2="true"/>
