@@ -34,7 +34,7 @@ class PSGraphicsDevice extends GraphicsDevice {
     protected GraphicsConfiguration gc;
 
     /**
-     * Create a new PostScruot graphics device.
+     * Create a new PostScript graphics device.
      *
      * @param gc The graphics configuration we should reference
      */
@@ -43,26 +43,31 @@ class PSGraphicsDevice extends GraphicsDevice {
     }
 
     /** {@inheritDoc} */
+    @Override
     public GraphicsConfiguration getBestConfiguration(GraphicsConfigTemplate gct) {
         return gc;
     }
 
     /** {@inheritDoc} */
+    @Override
     public GraphicsConfiguration[] getConfigurations() {
         return new GraphicsConfiguration[] {gc};
     }
 
     /** {@inheritDoc} */
+    @Override
     public GraphicsConfiguration getDefaultConfiguration() {
         return gc;
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getIDstring() {
         return toString();
     }
 
     /** {@inheritDoc} */
+    @Override
     public int getType() {
         return GraphicsDevice.TYPE_PRINTER;
     }
