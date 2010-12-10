@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.java2d.color.profile;
 import java.awt.color.ICC_Profile;
 
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
+import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 
 /**
  * Simplified in-memory representation of an ICC named color profile.
@@ -31,25 +32,28 @@ public class NamedColorProfile {
     private String profileName;
     private String copyright;
     private NamedColorSpace[] namedColors;
-    private int renderingIntent = ICC_Profile.icPerceptual;
+    private RenderingIntent renderingIntent = RenderingIntent.PERCEPTUAL;
 
     /**
      * Creates a new named color profile.
      * @param profileName the profile name
      * @param copyright the copyright
      * @param namedColors the array of named colors
+     * @param intent the rendering intent
      */
-    public NamedColorProfile(String profileName, String copyright, NamedColorSpace[] namedColors) {
+    public NamedColorProfile(String profileName, String copyright, NamedColorSpace[] namedColors,
+            RenderingIntent intent) {
         this.profileName = profileName;
         this.copyright = copyright;
         this.namedColors = namedColors;
+        this.renderingIntent = intent;
     }
 
     /**
      * Returns the color profile's rendering intent.
      * @return the rendering intent (See {@link ICC_Profile}.ic*)
      */
-    public int getRenderingIntent() {
+    public RenderingIntent getRenderingIntent() {
         return this.renderingIntent;
     }
 
@@ -96,6 +100,7 @@ public class NamedColorProfile {
     }
 
     /** {@inheritDoc} */
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("Named color profile: ");
         sb.append(getProfileName());

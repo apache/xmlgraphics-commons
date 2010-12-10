@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
+import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 
 /**
  * Tests the {@link NamedColorProfileParser}.
@@ -48,7 +49,7 @@ public class NamedColorProfileParserTest extends TestCase {
         NamedColorProfile ncp = parser.parseProfile(iccProfile);
         assertEquals("Named Color Profile Example", ncp.getProfileName());
         assertEquals("The Apache Software Foundation", ncp.getCopyright());
-        assertEquals(ICC_Profile.icPerceptual, ncp.getRenderingIntent());
+        assertEquals(RenderingIntent.PERCEPTUAL, ncp.getRenderingIntent());
         NamedColorSpace[] namedColors = ncp.getNamedColors();
         assertEquals(2, namedColors.length);
         NamedColorSpace ncs;
