@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.apache.xmlgraphics.java2d.color.CIELabColorSpace;
 import org.apache.xmlgraphics.java2d.color.ColorSpaces;
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
+import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 
 /**
  * This class is a parser for ICC named color profiles. It uses Java's {@link ICC_Profile} class
@@ -63,8 +64,9 @@ public class NamedColorProfileParser {
         }
         String profileDescription = getProfileDescription(profile);
         String copyright = getCopyright(profile);
+        RenderingIntent intent = getRenderingIntent(profile);
         NamedColorSpace[] ncs = readNamedColors(profile, profileName, profileURI);
-        return new NamedColorProfile(profileDescription, copyright, ncs);
+        return new NamedColorProfile(profileDescription, copyright, ncs, intent);
     }
 
     /**
@@ -85,6 +87,12 @@ public class NamedColorProfileParser {
     private String getCopyright(ICC_Profile profile) throws IOException {
         byte[] tag = profile.getData(ICC_Profile.icSigCopyrightTag);
         return readSimpleString(tag);
+    }
+
+    private RenderingIntent getRenderingIntent(ICC_Profile profile) throws IOException {
+        byte[] hdr = profile.getData(ICC_Profile.icSigHead);
+        int value = hdr[ICC_Profile.icHdrRenderingIntent];
+        return RenderingIntent.fromICCValue(value);
     }
 
     private NamedColorSpace[] readNamedColors(ICC_Profile profile,
