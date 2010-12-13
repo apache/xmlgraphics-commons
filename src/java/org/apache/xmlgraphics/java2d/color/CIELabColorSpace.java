@@ -25,7 +25,8 @@ import java.awt.color.ColorSpace;
 /**
  * This class defines the CIE L*a*b* (CIE 1976) color space. Valid values for L* are between 0
  * and 100, for a* and b* between -127 and +127.
- * @see <a href="http://en.wikipedia.org/wiki/Lab_color_space">http://en.wikipedia.org/wiki/Lab_color_space</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Lab_color_space"
+ *      >http://en.wikipedia.org/wiki/Lab_color_space</a>
  */
 public class CIELabColorSpace extends ColorSpace {
 
@@ -111,6 +112,7 @@ public class CIELabColorSpace extends ColorSpace {
     private static final String CIE_LAB_ONLY_HAS_3_COMPONENTS = "CIE Lab only has 3 components!";
 
     /** {@inheritDoc} */
+    @Override
     public float getMinValue(int component) {
         switch (component) {
         case 0: //L*
@@ -124,6 +126,7 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public float getMaxValue(int component) {
         switch (component) {
         case 0: //L*
@@ -137,6 +140,7 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getName(int component) {
         switch (component) {
         case 0:
@@ -154,6 +158,7 @@ public class CIELabColorSpace extends ColorSpace {
     //and adjusted to the local requirements.
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromCIEXYZ(float[] colorvalue) {
         checkNumComponents(colorvalue, 3);
         float x = colorvalue[0];
@@ -192,6 +197,7 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromRGB(float[] rgbvalue) {
         ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
         float[] xyz = sRGB.toCIEXYZ(rgbvalue);
@@ -199,6 +205,7 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toCIEXYZ(float[] colorvalue) {
         checkNumComponents(colorvalue);
         //Scale to native value range
@@ -248,6 +255,7 @@ public class CIELabColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toRGB(float[] colorvalue) {
         ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
         float[] xyz = toCIEXYZ(colorvalue);
