@@ -21,7 +21,6 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import java.awt.Rectangle;
 import java.awt.color.ColorSpace;
-import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentSampleModel;
 import java.awt.image.DataBuffer;
@@ -31,7 +30,6 @@ import java.awt.image.MultiPixelPackedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
-import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,9 +46,6 @@ import java.util.zip.Deflater;
 import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
 import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
 import org.apache.xmlgraphics.image.codec.util.SeekableOutputStream;
-
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGQTable;
 
 /**
  * A baseline TIFF writer. The writer outputs TIFF images in either Bilevel,
@@ -118,12 +113,12 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             do {
                 hasNext = iter.hasNext();
                 ifdOffset = encode(nextImage, nextParam, ifdOffset, !hasNext);
-                if(hasNext) {
+                if (hasNext) {
                     Object obj = iter.next();
-                    if(obj instanceof RenderedImage) {
+                    if (obj instanceof RenderedImage) {
                         nextImage = (RenderedImage)obj;
                         nextParam = encodeParam;
-                    } else if(obj instanceof Object[]) {
+                    } else if (obj instanceof Object[]) {
                         Object[] o = (Object[])obj;
                         nextImage = (RenderedImage)o[0];
                         nextParam = (TIFFEncodeParam)o[1];
@@ -198,6 +193,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Currently all images are stored uncompressed.
         int compression = encodeParam.getCompression();
 
+        if (compression == COMP_JPEG_TTN2) {
+            throw new IllegalArgumentException("JPEG compression is not supported");
+        }
+
         // Get tiled output preference.
         boolean isTiled = encodeParam.getWriteTiled();
 
@@ -212,15 +211,15 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         // Retrieve and verify sample size.
         int[] sampleSize = sampleModel.getSampleSize();
-        for(int i = 1; i < sampleSize.length; i++) {
-            if(sampleSize[i] != sampleSize[0]) {
+        for (int i = 1; i < sampleSize.length; i++) {
+            if (sampleSize[i] != sampleSize[0]) {
                 throw new Error("TIFFImageEncoder0");
             }
         }
 
         // Check low bit limits.
         int numBands = sampleModel.getNumBands();
-        if((sampleSize[0] == 1 || sampleSize[0] == 4) && numBands != 1) {
+        if ((sampleSize[0] == 1 || sampleSize[0] == 4) && numBands != 1) {
             throw new Error("TIFFImageEncoder1");
         }
 
@@ -228,20 +227,20 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int dataType = sampleModel.getDataType();
         switch(dataType) {
         case DataBuffer.TYPE_BYTE:
-            if(sampleSize[0] != 1 && sampleSize[0] == 4 &&    // todo does this make sense??
+            if (sampleSize[0] != 1 && sampleSize[0] == 4 &&    // todo does this make sense??
                sampleSize[0] != 8) {                          // we get error only for 4
                 throw new Error("TIFFImageEncoder2");
             }
             break;
         case DataBuffer.TYPE_SHORT:
         case DataBuffer.TYPE_USHORT:
-            if(sampleSize[0] != 16) {
+            if (sampleSize[0] != 16) {
                 throw new Error("TIFFImageEncoder3");
             }
             break;
         case DataBuffer.TYPE_INT:
         case DataBuffer.TYPE_FLOAT:
-            if(sampleSize[0] != 32) {
+            if (sampleSize[0] != 32) {
                 throw new Error("TIFFImageEncoder4");
             }
             break;
@@ -268,11 +267,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int imageType = TIFF_UNSUPPORTED;
         int numExtraSamples = 0;
         int extraSampleType = EXTRA_SAMPLE_UNSPECIFIED;
-        if(colorModel instanceof IndexColorModel) { // Bilevel or palette
+        if (colorModel instanceof IndexColorModel) { // Bilevel or palette
             icm = (IndexColorModel)colorModel;
             int mapSize = icm.getMapSize();
 
-            if(sampleSize[0] == 1 && numBands == 1) { // Bilevel image
+            if (sampleSize[0] == 1 && numBands == 1) { // Bilevel image
 
                 if (mapSize != 2) {
                     throw new IllegalArgumentException(
@@ -308,17 +307,17 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     imageType = TIFF_PALETTE;
                 }
 
-            } else if(numBands == 1) { // Non-bilevel image.
+            } else if (numBands == 1) { // Non-bilevel image.
                 // Palette color image.
                 imageType = TIFF_PALETTE;
             }
-        } else if(colorModel == null) {
+        } else if (colorModel == null) {
 
-            if(sampleSize[0] == 1 && numBands == 1) { // bilevel
+            if (sampleSize[0] == 1 && numBands == 1) { // bilevel
                 imageType = TIFF_BILEVEL_BLACK_IS_ZERO;
             } else { // generic image
                 imageType = TIFF_GENERIC;
-                if(numBands > 1) {
+                if (numBands > 1) {
                     numExtraSamples = numBands - 1;
                 }
             }
@@ -337,8 +336,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 imageType = TIFF_CIELAB;
                 break;
             case ColorSpace.TYPE_RGB:
-                if(compression == COMP_JPEG_TTN2 &&
-                   encodeParam.getJPEGCompressRGBToYCbCr()) {
+                if (compression == COMP_JPEG_TTN2
+                        && encodeParam.getJPEGCompressRGBToYCbCr()) {
                     imageType = TIFF_YCBCR;
                 } else {
                     imageType = TIFF_RGB;
@@ -352,33 +351,21 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 break;
             }
 
-            if(imageType == TIFF_GENERIC) {
+            if (imageType == TIFF_GENERIC) {
                 numExtraSamples = numBands - 1;
-            } else if(numBands > 1) {
+            } else if (numBands > 1) {
                 numExtraSamples = numBands - colorSpace.getNumComponents();
             }
 
-            if(numExtraSamples == 1 && colorModel.hasAlpha()) {
+            if (numExtraSamples == 1 && colorModel.hasAlpha()) {
                 extraSampleType = colorModel.isAlphaPremultiplied() ?
                     EXTRA_SAMPLE_ASSOCIATED_ALPHA :
                     EXTRA_SAMPLE_UNASSOCIATED_ALPHA;
             }
         }
 
-        if(imageType == TIFF_UNSUPPORTED) {
+        if (imageType == TIFF_UNSUPPORTED) {
             throw new Error("TIFFImageEncoder8");
-        }
-
-        // Check JPEG compatibility.
-        if(compression == COMP_JPEG_TTN2) {
-            if(imageType == TIFF_PALETTE) {
-                throw new Error("TIFFImageEncoder11");
-            } else if(!(sampleSize[0] == 8 &&
-                        (imageType == TIFF_GRAY ||
-                         imageType == TIFF_RGB ||
-                         imageType == TIFF_YCBCR))) {
-                throw new Error("TIFFImageEncoder9");
-            }
         }
 
         int photometricInterpretation = -1;
@@ -414,7 +401,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             int redIndex = 0, greenIndex = sizeOfColormap;
             int blueIndex = 2 * sizeOfColormap;
             colormap = new char[sizeOfColormap * 3];
-            for (int i=0; i<sizeOfColormap; i++) {
+            for (int i = 0; i < sizeOfColormap; i++) {
                 int tmp = 0xff & r[i];   // beware of sign extended bytes
                 colormap[redIndex++]   = (char)((tmp << 8) | tmp);
                 tmp = 0xff & g[i];
@@ -450,7 +437,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Initialize tile dimensions.
         int tileWidth;
         int tileHeight;
-        if(isTiled) {
+        if (isTiled) {
             tileWidth = encodeParam.getTileWidth() > 0 ?
                 encodeParam.getTileWidth() : im.getTileWidth();
             tileHeight = encodeParam.getTileHeight() > 0 ?
@@ -462,51 +449,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 encodeParam.getTileHeight() : DEFAULT_ROWS_PER_STRIP;
         }
 
-        // Re-tile for JPEG conformance if needed.
-        JPEGEncodeParam jep = null;
-        if(compression == COMP_JPEG_TTN2) {
-            // Get JPEGEncodeParam from encodeParam.
-            jep = encodeParam.getJPEGEncodeParam();
-
-            // Determine maximum subsampling.
-            int maxSubH = jep.getHorizontalSubsampling(0);
-            int maxSubV = jep.getVerticalSubsampling(0);
-            for(int i = 1; i < numBands; i++) {
-                int subH = jep.getHorizontalSubsampling(i);
-                if(subH > maxSubH) {
-                    maxSubH = subH;
-                }
-                int subV = jep.getVerticalSubsampling(i);
-                if(subV > maxSubV) {
-                    maxSubV = subV;
-                }
-            }
-
-            int factorV = 8*maxSubV;
-            tileHeight =
-                (int)((float)tileHeight/(float)factorV + 0.5F)*factorV;
-            if(tileHeight < factorV) {
-                tileHeight = factorV;
-            }
-
-            if(isTiled) {
-                int factorH = 8*maxSubH;
-                tileWidth =
-                    (int)((float)tileWidth/(float)factorH + 0.5F)*factorH;
-                if(tileWidth < factorH) {
-                    tileWidth = factorH;
-                }
-            }
-        }
-
         int numTiles;
-        if(isTiled) {
+        if (isTiled) {
             // NB: Parentheses are used in this statement for correct rounding.
             numTiles =
-                ((width + tileWidth - 1)/tileWidth) *
-                ((height + tileHeight - 1)/tileHeight);
+                ((width + tileWidth - 1) / tileWidth) *
+                ((height + tileHeight - 1) / tileHeight);
         } else {
-            numTiles = (int)Math.ceil((double)height/(double)tileHeight);
+            numTiles = (int)Math.ceil((double)height / (double)tileHeight);
         }
 
         long[] tileByteCounts = new long[numTiles];
@@ -516,18 +466,18 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         long bytesPerTile = bytesPerRow * tileHeight;
 
-        for (int i=0; i<numTiles; i++) {
+        for (int i = 0; i < numTiles; i++) {
             tileByteCounts[i] = bytesPerTile;
         }
 
-        if(!isTiled) {
+        if (!isTiled) {
             // Last strip may have lesser rows
-            long lastStripRows = height - (tileHeight * (numTiles-1));
-            tileByteCounts[numTiles-1] = lastStripRows * bytesPerRow;
+            long lastStripRows = height - (tileHeight * (numTiles - 1));
+            tileByteCounts[numTiles - 1] = lastStripRows * bytesPerRow;
         }
 
         long totalBytesOfData = bytesPerTile * (numTiles - 1) +
-            tileByteCounts[numTiles-1];
+            tileByteCounts[numTiles - 1];
 
         // The data will be written after the IFD: create the array here
         // but fill it in later.
@@ -560,8 +510,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                  new long[] {height}));
 
         char [] shortSampleSize = new char[numBands];
-        for (int i=0; i<numBands; i++)
+        for (int i = 0; i < numBands; i++) {
             shortSampleSize[i] = (char)sampleSize[i];
+        }
         fields.add(new TIFFField(TIFFImageDecoder.TIFF_BITS_PER_SAMPLE,
                                  TIFFField.TIFF_SHORT, numBands,
                                  shortSampleSize));
@@ -575,7 +526,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                           TIFFField.TIFF_SHORT, 1,
                                  new char[] {(char)photometricInterpretation}));
 
-        if(!isTiled) {
+        if (!isTiled) {
             fields.add(new TIFFField(TIFFImageDecoder.TIFF_STRIP_OFFSETS,
                                      TIFFField.TIFF_LONG, numTiles,
                                      tileOffsets));
@@ -585,7 +536,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                  TIFFField.TIFF_SHORT, 1,
                                  new char[] {(char)numBands}));
 
-        if(!isTiled) {
+        if (!isTiled) {
             fields.add(new TIFFField(TIFFImageDecoder.TIFF_ROWS_PER_STRIP,
                                      TIFFField.TIFF_LONG, 1,
                                      new long[] {tileHeight}));
@@ -601,7 +552,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                      colormap));
         }
 
-        if(isTiled) {
+        if (isTiled) {
             fields.add(new TIFFField(TIFFImageDecoder.TIFF_TILE_WIDTH,
                                      TIFFField.TIFF_LONG, 1,
                                      new long[] {tileWidth}));
@@ -619,9 +570,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                      tileByteCounts));
         }
 
-        if(numExtraSamples > 0) {
+        if (numExtraSamples > 0) {
             char[] extraSamples = new char[numExtraSamples];
-            for(int i = 0; i < numExtraSamples; i++) {
+            for (int i = 0; i < numExtraSamples; i++) {
                 extraSamples[i] = (char)extraSampleType;
             }
             fields.add(new TIFFField(TIFFImageDecoder.TIFF_EXTRA_SAMPLES,
@@ -630,17 +581,17 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         }
 
         // Data Sample Format Extension fields.
-        if(dataType != DataBuffer.TYPE_BYTE) {
+        if (dataType != DataBuffer.TYPE_BYTE) {
             // SampleFormat
             char[] sampleFormat = new char[numBands];
-            if(dataType == DataBuffer.TYPE_FLOAT) {
+            if (dataType == DataBuffer.TYPE_FLOAT) {
                 sampleFormat[0] = 3;
-            } else if(dataType == DataBuffer.TYPE_USHORT) {
+            } else if (dataType == DataBuffer.TYPE_USHORT) {
                 sampleFormat[0] = 1;
             } else {
                 sampleFormat[0] = 2;
             }
-            for(int b = 1; b < numBands; b++) {
+            for (int b = 1; b < numBands; b++) {
                 sampleFormat[b] = sampleFormat[0];
             }
             fields.add(new TIFFField(TIFFImageDecoder.TIFF_SAMPLE_FORMAT,
@@ -654,88 +605,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             // use it if available.
         }
 
-        // Initialize some JPEG variables.
-        com.sun.image.codec.jpeg.JPEGEncodeParam jpegEncodeParam = null;
-        com.sun.image.codec.jpeg.JPEGImageEncoder jpegEncoder = null;
-        int jpegColorID = 0;
-
-        if(compression == COMP_JPEG_TTN2) {
-
-            // Initialize JPEG color ID.
-            jpegColorID =
-                com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_UNKNOWN;
-            switch(imageType) {
-            case TIFF_GRAY:
-            case TIFF_PALETTE:
-                jpegColorID =
-                    com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_GRAY;
-                break;
-            case TIFF_RGB:
-                if (colorModel.hasAlpha()) {
-                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_RGBA;
-                } else {
-                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_RGB;
-                }
-                break;
-            case TIFF_YCBCR:
-                if (colorModel.hasAlpha()) {
-                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_YCbCrA;
-                } else {
-                    jpegColorID = com.sun.image.codec.jpeg.JPEGDecodeParam.COLOR_ID_YCbCr;
-                }
-                break;
-            }
-
-            // Get the JDK encoding parameters.
-            Raster tile00 = im.getTile(0, 0);
-            jpegEncodeParam =
-                com.sun.image.codec.jpeg.JPEGCodec.getDefaultJPEGEncodeParam(
-                    tile00, jpegColorID);
-
-            modifyEncodeParam(jep, jpegEncodeParam, numBands);
-
-            // Write an abbreviated tables-only stream to JPEGTables field.
-            jpegEncodeParam.setImageInfoValid(false);
-            jpegEncodeParam.setTableInfoValid(true);
-            ByteArrayOutputStream tableStream =
-              new ByteArrayOutputStream();
-            jpegEncoder =
-              com.sun.image.codec.jpeg.JPEGCodec.createJPEGEncoder(
-                tableStream,
-                jpegEncodeParam);
-            jpegEncoder.encode(tile00);
-            byte[] tableData = tableStream.toByteArray();
-            fields.add(new TIFFField(TIFF_JPEG_TABLES,
-                                     TIFFField.TIFF_UNDEFINED,
-                                     tableData.length,
-                                     tableData));
-
-            // Reset encoder so it's recreated below.
-            jpegEncoder = null;
-        }
-
-        if(imageType == TIFF_YCBCR) {
+        if (imageType == TIFF_YCBCR) {
             // YCbCrSubSampling: 2 is the default so we must write 1 as
             // we do not (yet) do any subsampling.
             char subsampleH = 1;
             char subsampleV = 1;
-
-            // If JPEG, update values.
-            if(compression == COMP_JPEG_TTN2) {
-                // Determine maximum subsampling.
-                subsampleH = (char)jep.getHorizontalSubsampling(0);
-                subsampleV = (char)jep.getVerticalSubsampling(0);
-                for(int i = 1; i < numBands; i++) {
-                    char subH = (char)jep.getHorizontalSubsampling(i);
-                    if(subH > subsampleH) {
-                        subsampleH = subH;
-                    }
-                    char subV = (char)jep.getVerticalSubsampling(i);
-                    if(subV > subsampleV) {
-                        subsampleV = subV;
-                    }
-                }
-            }
 
             fields.add(new TIFFField(TIFF_YCBCR_SUBSAMPLING,
                                      TIFFField.TIFF_SHORT, 2,
@@ -746,21 +620,13 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             fields.add(new TIFFField(TIFF_YCBCR_POSITIONING,
                                      TIFFField.TIFF_SHORT, 1,
                                      new char[]
-                {(char)((compression == COMP_JPEG_TTN2)? 1 : 2)}));
+                {(char)((compression == COMP_JPEG_TTN2) ? 1 : 2)}));
 
             // Reference black/white.
             long[][] refbw;
-            if(compression == COMP_JPEG_TTN2) {
-                refbw =
-                    new long[][] { // no headroon/footroom
-                        {0, 1}, {255, 1}, {128, 1}, {255, 1}, {128, 1}, {255, 1}
-                    };
-            } else {
-                refbw =
-                    new long[][] { // CCIR 601.1 headroom/footroom (presumptive)
-                        {15, 1}, {235, 1}, {128, 1}, {240, 1}, {128, 1}, {240, 1}
-                    };
-            }
+            refbw = new long[][] // CCIR 601.1 headroom/footroom (presumptive)
+                    {{15, 1}, {235, 1}, {128, 1}, {240, 1}, {128, 1}, {240, 1}};
+
             fields.add(new TIFFField(TIFF_REF_BLACK_WHITE,
                                      TIFFField.TIFF_RATIONAL, 6,
                                      refbw));
@@ -771,19 +637,19 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         // Add extra fields specified via the encoding parameters.
         TIFFField[] extraFields = encodeParam.getExtraFields();
-        if(extraFields != null) {
+        if (extraFields != null) {
             List extantTags = new ArrayList(fields.size());
             Iterator fieldIter = fields.iterator();
-            while(fieldIter.hasNext()) {
+            while (fieldIter.hasNext()) {
                 TIFFField fld = (TIFFField)fieldIter.next();
                 extantTags.add(new Integer(fld.getTag()));
             }
 
             int numExtraFields = extraFields.length;
-            for(int i = 0; i < numExtraFields; i++) {
+            for (int i = 0; i < numExtraFields; i++) {
                 TIFFField fld = extraFields[i];
                 Integer tagValue = new Integer(fld.getTag());
-                if(!extantTags.contains(tagValue)) {
+                if (!extantTags.contains(tagValue)) {
                     fields.add(fld);
                     extantTags.add(tagValue);
                 }
@@ -801,7 +667,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // following the IFD so initialize the first offset accordingly.
         tileOffsets[0] = ifdOffset + dirSize;
 
-        // Branch here depending on whether data are being comrpressed.
+        // Branch here depending on whether data are being compressed.
         // If not, then the IFD is written immediately.
         // If so then there are three possibilities:
         // A) the OutputStream is a SeekableOutputStream (outCache null);
@@ -820,31 +686,31 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         Deflater deflater = null;
         boolean jpegRGBToYCbCr = false;
 
-        if(compression == COMP_NONE) {
+        if (compression == COMP_NONE) {
             // Determine the number of bytes of padding necessary between
             // the end of the IFD and the first data segment such that the
             // alignment of the data conforms to the specification (required
             // for uncompressed data only).
             int numBytesPadding = 0;
-            if(sampleSize[0] == 16 && tileOffsets[0] % 2 != 0) {
+            if (sampleSize[0] == 16 && tileOffsets[0] % 2 != 0) {
                 numBytesPadding = 1;
                 tileOffsets[0]++;
-            } else if(sampleSize[0] == 32 && tileOffsets[0] % 4 != 0) {
+            } else if (sampleSize[0] == 32 && tileOffsets[0] % 4 != 0) {
                 numBytesPadding = (int)(4 - tileOffsets[0] % 4);
                 tileOffsets[0] += numBytesPadding;
             }
 
             // Update the data offsets (which TIFFField stores by reference).
             for (int i = 1; i < numTiles; i++) {
-                tileOffsets[i] = tileOffsets[i-1] + tileByteCounts[i-1];
+                tileOffsets[i] = tileOffsets[i - 1] + tileByteCounts[i - 1];
             }
 
-            if(!isLast) {
+            if (!isLast) {
                 // Determine the offset of the next IFD.
                 nextIFDOffset = (int)(tileOffsets[0] + totalBytesOfData);
 
                 // IFD offsets must be on a word boundary.
-                if ((nextIFDOffset&0x01) != 0) {
+                if ((nextIFDOffset & 0x01) != 0) {
                     nextIFDOffset++;
                     skipByte = true;
                 }
@@ -855,8 +721,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
             // Write any padding bytes needed between the end of the IFD
             // and the start of the actual image data.
-            if(numBytesPadding != 0) {
-                for(int padding = 0; padding < numBytesPadding; padding++) {
+            if (numBytesPadding != 0) {
+                for (int padding = 0; padding < numBytesPadding; padding++) {
                     output.write((byte)0);
                 }
             }
@@ -875,12 +741,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     // Attempt to create a temporary file.
                     tempFile = File.createTempFile("jai-SOS-", ".tmp");
                     tempFile.deleteOnExit();
-                    RandomAccessFile raFile =
-                        new RandomAccessFile(tempFile, "rw");
+                    RandomAccessFile raFile = new RandomAccessFile(tempFile, "rw");
                     output = new SeekableOutputStream(raFile);
 
                     // this method is exited!
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // Allocate memory for the entire image data (!).
                     output = new ByteArrayOutputStream((int)totalBytesOfData);
                 }
@@ -889,19 +754,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             int bufSize = 0;
             switch(compression) {
             case COMP_PACKBITS:
-                bufSize = (int)(bytesPerTile +
-                                ((bytesPerRow+127)/128)*tileHeight);
-                break;
-            case COMP_JPEG_TTN2:
-                bufSize = 0;
-
-                // Set color conversion flag.
-                if(imageType == TIFF_YCBCR &&
-                   colorModel != null &&
-                   colorModel.getColorSpace().getType() ==
-                   ColorSpace.TYPE_RGB) {
-                    jpegRGBToYCbCr = true;
-                }
+                bufSize = (int)(bytesPerTile + ((bytesPerRow + 127) / 128) * tileHeight);
                 break;
             case COMP_DEFLATE:
                 bufSize = (int)bytesPerTile;
@@ -910,7 +763,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             default:
                 bufSize = 0;
             }
-            if(bufSize != 0) {
+            if (bufSize != 0) {
                 compressBuf = new byte[bufSize];
             }
         }
@@ -932,12 +785,12 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Also create a buffer to hold tileHeight lines of the
         // data to be written to the file, so we can use array writes.
         byte[] bpixels = null;
-        if(compression != COMP_JPEG_TTN2) {
-            if(dataType == DataBuffer.TYPE_BYTE) {
+        if (compression != COMP_JPEG_TTN2) {
+            if (dataType == DataBuffer.TYPE_BYTE) {
                 bpixels = new byte[tileHeight * tileWidth * numBands];
-            } else if(dataTypeIsShort) {
+            } else if (dataTypeIsShort) {
                 bpixels = new byte[2 * tileHeight * tileWidth * numBands];
-            } else if(dataType == DataBuffer.TYPE_INT ||
+            } else if (dataType == DataBuffer.TYPE_INT ||
                       dataType == DataBuffer.TYPE_FLOAT) {
                 bpixels = new byte[4 * tileHeight * tileWidth * numBands];
             }
@@ -952,15 +805,15 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 tileHeight : Math.min(tileHeight, lastRow - row);
             int size = rows * tileWidth * numBands;
 
-            for(int col = minX; col < lastCol; col += tileWidth) {
+            for (int col = minX; col < lastCol; col += tileWidth) {
                 // Grab the pixels
                 Raster src =
                     im.getData(new Rectangle(col, row, tileWidth, rows));
 
                 boolean useDataBuffer = false;
-                if(compression != COMP_JPEG_TTN2) { // JPEG access Raster
-                    if(checkContiguous) {
-                        if(sampleSize[0] == 8) { // 8-bit
+                if (compression != COMP_JPEG_TTN2) { // JPEG access Raster
+                    if (checkContiguous) {
+                        if (sampleSize[0] == 8) { // 8-bit
                             ComponentSampleModel csm =
                                 (ComponentSampleModel)src.getSampleModel();
                             int[] bankIndices = csm.getBankIndices();
@@ -968,15 +821,15 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             int pixelStride = csm.getPixelStride();
                             int lineStride = csm.getScanlineStride();
 
-                            if(pixelStride != numBands ||
+                            if (pixelStride != numBands ||
                                lineStride != bytesPerRow) {
                                 useDataBuffer = false;
                             } else {
                                 useDataBuffer = true;
-                                for(int i = 0;
+                                for (int i = 0;
                                     useDataBuffer && i < numBands;
                                     i++) {
-                                    if(bankIndices[i] != 0 ||
+                                    if (bankIndices[i] != 0 ||
                                        bandOffsets[i] != i) {
                                         useDataBuffer = false;
                                     }
@@ -985,7 +838,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         } else { // 1-bit
                             MultiPixelPackedSampleModel mpp =
                                 (MultiPixelPackedSampleModel)src.getSampleModel();
-                            if(mpp.getNumBands() == 1 &&
+                            if (mpp.getNumBands() == 1 &&
                                mpp.getDataBitOffset() == 0 &&
                                mpp.getPixelBitStride() == 1) {
                                 useDataBuffer = true;
@@ -993,8 +846,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         }
                     }
 
-                    if(!useDataBuffer) {
-                        if(dataType == DataBuffer.TYPE_FLOAT) {
+                    if (!useDataBuffer) {
+                        if (dataType == DataBuffer.TYPE_FLOAT) {
                             fpixels = src.getPixels(col, row, tileWidth, rows,
                                                     fpixels);
                         } else {
@@ -1008,11 +861,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
                 int pixel = 0;
                 int k = 0;
-                switch(sampleSize[0]) {
+                switch (sampleSize[0]) {
 
                 case 1:
 
-                    if(useDataBuffer) {
+                    if (useDataBuffer) {
                         byte[] btmp =
                             ((DataBufferByte)src.getDataBuffer()).getData();
                         MultiPixelPackedSampleModel mpp =
@@ -1023,13 +876,13 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                           src.getSampleModelTranslateX(),
                                           row -
                                           src.getSampleModelTranslateY());
-                        if(lineStride == (int)bytesPerRow) {
+                        if (lineStride == (int)bytesPerRow) {
                             System.arraycopy(btmp, inOffset,
                                              bpixels, 0,
-                                             (int)bytesPerRow*rows);
+                                             (int)bytesPerRow * rows);
                         } else {
                             int outOffset = 0;
-                            for(int j = 0; j < rows; j++) {
+                            for (int j = 0; j < rows; j++) {
                                 System.arraycopy(btmp, inOffset,
                                                  bpixels, outOffset,
                                                  (int)bytesPerRow);
@@ -1041,10 +894,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         index = 0;
 
                         // For each of the rows in a strip
-                        for (int i=0; i<rows; i++) {
+                        for (int i = 0; i < rows; i++) {
 
                             // Write number of pixels exactly divisible by 8
-                            for (int j=0; j<tileWidth/8; j++) {
+                            for (int j = 0; j < tileWidth / 8; j++) {
 
                                 pixel =
                                     (pixels[index++] << 7) |
@@ -1059,9 +912,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             }
 
                             // Write the pixels remaining after division by 8
-                            if (tileWidth%8 > 0) {
+                            if (tileWidth % 8 > 0) {
                                 pixel = 0;
-                                for (int j=0; j<tileWidth%8; j++) {
+                                for (int j = 0; j < tileWidth % 8; j++) {
                                     pixel |= (pixels[index++] << (7 - j));
                                 }
                                 bpixels[k++] = (byte)pixel;
@@ -1069,16 +922,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         }
                     }
 
-                    if(compression == COMP_NONE) {
-                        output.write(bpixels, 0, rows * ((tileWidth+7)/8));
-                    } else if(compression == COMP_PACKBITS) {
+                    if (compression == COMP_NONE) {
+                        output.write(bpixels, 0, rows * ((tileWidth + 7) / 8));
+                    } else if (compression == COMP_PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
                                              (int)bytesPerRow,
                                              compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
                         output.write(compressBuf, 0, numCompressedBytes);
-                    } else if(compression == COMP_DEFLATE) {
+                    } else if (compression == COMP_DEFLATE) {
                         int numCompressedBytes =
                             deflate(deflater, bpixels, compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
@@ -1092,11 +945,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     index = 0;
 
                     // For each of the rows in a strip
-                    for (int i=0; i<rows; i++) {
+                    for (int i = 0; i < rows; i++) {
 
                         // Write  the number of pixels that will fit into an
                         // even number of nibbles.
-                        for (int j=0; j < tileWidth/2; j++) {
+                        for (int j = 0; j < tileWidth / 2; j++) {
                             pixel = (pixels[index++] << 4) | pixels[index++];
                             bpixels[k++] = (byte)pixel;
                         }
@@ -1108,16 +961,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         }
                     }
 
-                    if(compression == COMP_NONE) {
-                        output.write(bpixels, 0, rows * ((tileWidth+1)/2));
-                    } else if(compression == COMP_PACKBITS) {
+                    if (compression == COMP_NONE) {
+                        output.write(bpixels, 0, rows * ((tileWidth + 1) / 2));
+                    } else if (compression == COMP_PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
                                              (int)bytesPerRow,
                                              compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
                         output.write(compressBuf, 0, numCompressedBytes);
-                    } else if(compression == COMP_DEFLATE) {
+                    } else if (compression == COMP_DEFLATE) {
                         int numCompressedBytes =
                             deflate(deflater, bpixels, compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
@@ -1127,8 +980,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
                 case 8:
 
-                    if(compression != COMP_JPEG_TTN2) {
-                        if(useDataBuffer) {
+                    if (compression != COMP_JPEG_TTN2) {
+                        if (useDataBuffer) {
                             byte[] btmp =
                                 ((DataBufferByte)src.getDataBuffer()).getData();
                             ComponentSampleModel csm =
@@ -1139,14 +992,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                               row -
                                               src.getSampleModelTranslateY());
                             int lineStride = csm.getScanlineStride();
-                            if(lineStride == (int)bytesPerRow) {
+                            if (lineStride == (int)bytesPerRow) {
                                 System.arraycopy(btmp,
                                                  inOffset,
                                                  bpixels, 0,
-                                                 (int)bytesPerRow*rows);
+                                                 (int)bytesPerRow * rows);
                             } else {
                                 int outOffset = 0;
-                                for(int j = 0; j < rows; j++) {
+                                for (int j = 0; j < rows; j++) {
                                     System.arraycopy(btmp, inOffset,
                                                      bpixels, outOffset,
                                                      (int)bytesPerRow);
@@ -1161,62 +1014,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         }
                     }
 
-                    if(compression == COMP_NONE) {
+                    if (compression == COMP_NONE) {
                         output.write(bpixels, 0, size);
-                    } else if(compression == COMP_PACKBITS) {
+                    } else if (compression == COMP_PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
                                              (int)bytesPerRow,
                                              compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
                         output.write(compressBuf, 0, numCompressedBytes);
-                    } else if(compression == COMP_JPEG_TTN2) {
-                        long startPos = getOffset(output);
-
-                        // Recreate encoder and parameters if the encoder
-                        // is null (first data segment) or if its size
-                        // doesn't match the current data segment.
-                        if(jpegEncoder == null ||
-                           jpegEncodeParam.getWidth() != src.getWidth() ||
-                           jpegEncodeParam.getHeight() != src.getHeight()) {
-
-                          jpegEncodeParam =
-                            com.sun.image.codec.jpeg.JPEGCodec.
-                                getDefaultJPEGEncodeParam(src, jpegColorID);
-
-                            modifyEncodeParam(jep, jpegEncodeParam,
-                                              numBands);
-
-                            jpegEncoder =
-                              com.sun.image.codec.jpeg.JPEGCodec.
-                              createJPEGEncoder(output, jpegEncodeParam);
-                        }
-
-                        if(jpegRGBToYCbCr) {
-                            WritableRaster wRas = null;
-                            if(src instanceof WritableRaster) {
-                                wRas = (WritableRaster)src;
-                            } else {
-                                wRas = src.createCompatibleWritableRaster();
-                                wRas.setRect(src);
-                            }
-
-                            if (wRas.getMinX() != 0 || wRas.getMinY() != 0) {
-                                wRas =
-                                    wRas.createWritableTranslatedChild(0, 0);
-                            }
-                            BufferedImage bi =
-                                new BufferedImage(colorModel, wRas,
-                                                  false, null);
-                            jpegEncoder.encode(bi);
-                        } else {
-                            jpegEncoder.encode(src.createTranslatedChild(0,
-                                                                         0));
-                        }
-
-                        long endPos = getOffset(output);
-                        tileByteCounts[tileNum++] = (int)(endPos - startPos);
-                    } else if(compression == COMP_DEFLATE) {
+                    } else if (compression == COMP_DEFLATE) {
                         int numCompressedBytes =
                             deflate(deflater, bpixels, compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
@@ -1233,16 +1040,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         bpixels[ls++] = (byte) (value & 0x00ff);
                     }
 
-                    if(compression == COMP_NONE) {
+                    if (compression == COMP_NONE) {
                         output.write(bpixels, 0, size*2);
-                    } else if(compression == COMP_PACKBITS) {
+                    } else if (compression == COMP_PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
                                              (int)bytesPerRow,
                                              compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
                         output.write(compressBuf, 0, numCompressedBytes);
-                    } else if(compression == COMP_DEFLATE) {
+                    } else if (compression == COMP_DEFLATE) {
                         int numCompressedBytes =
                             deflate(deflater, bpixels, compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
@@ -1251,7 +1058,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     break;
 
                 case 32:
-                    if(dataType == DataBuffer.TYPE_INT) {
+                    if (dataType == DataBuffer.TYPE_INT) {
                         int li = 0;
                         for (int i = 0; i < size; i++) {
                             int value = pixels[i];
@@ -1270,16 +1077,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             bpixels[lf++] = (byte)( value & 0x000000ff);
                         }
                     }
-                    if(compression == COMP_NONE) {
+                    if (compression == COMP_NONE) {
                         output.write(bpixels, 0, size*4);
-                    } else if(compression == COMP_PACKBITS) {
+                    } else if (compression == COMP_PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
                                              (int)bytesPerRow,
                                              compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
                         output.write(compressBuf, 0, numCompressedBytes);
-                    } else if(compression == COMP_DEFLATE) {
+                    } else if (compression == COMP_DEFLATE) {
                         int numCompressedBytes =
                             deflate(deflater, bpixels, compressBuf);
                         tileByteCounts[tileNum++] = numCompressedBytes;
@@ -1291,20 +1098,20 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             }
         }
 
-        if(compression == COMP_NONE) {
+        if (compression == COMP_NONE) {
             // Write an extra byte for IFD word alignment if needed.
-            if(skipByte) {
+            if (skipByte) {
                 output.write((byte)0);
             }
         } else {
             // Recompute the tile offsets the size of the compressed tiles.
             int totalBytes = 0;
-            for (int i=1; i<numTiles; i++) {
-                int numBytes = (int)tileByteCounts[i-1];
+            for (int i = 1; i < numTiles; i++) {
+                int numBytes = (int)tileByteCounts[i - 1];
                 totalBytes += numBytes;
-                tileOffsets[i] = tileOffsets[i-1] + numBytes;
+                tileOffsets[i] = tileOffsets[i - 1] + numBytes;
             }
-            totalBytes += (int)tileByteCounts[numTiles-1];
+            totalBytes += (int)tileByteCounts[numTiles - 1];
 
             nextIFDOffset = isLast ?
                 0 : ifdOffset + dirSize + totalBytes;
@@ -1313,11 +1120,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 skipByte = true;
             }
 
-            if(outCache == null) {
+            if (outCache == null) {
                 // Original OutputStream must be a SeekableOutputStream.
 
                 // Write an extra byte for IFD word alignment if needed.
-                if(skipByte) {
+                if (skipByte) {
                     output.write((byte)0);
                 }
 
@@ -1332,7 +1139,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
                 // Seek forward to position after data.
                 sos.seek(savePos);
-            } else if(tempFile != null) {
+            } else if (tempFile != null) {
 
                 // Using a file cache for the image data.
 
@@ -1351,9 +1158,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 // Write the image data.
                 byte[] copyBuffer = new byte[8192];
                 int bytesCopied = 0;
-                while(bytesCopied < totalBytes) {
+                while (bytesCopied < totalBytes) {
                     int bytesRead = fileStream.read(copyBuffer);
-                    if(bytesRead == -1) {
+                    if (bytesRead == -1) {
                         break;
                     }
                     output.write(copyBuffer, 0, bytesRead);
@@ -1365,15 +1172,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 tempFile.delete();
 
                 // Write an extra byte for IFD word alignment if needed.
-                if(skipByte) {
+                if (skipByte) {
                     output.write((byte)0);
                 }
-            } else if(output instanceof ByteArrayOutputStream) {
+            } else if (output instanceof ByteArrayOutputStream) {
 
                 // Using a memory cache for the image data.
 
-                ByteArrayOutputStream memoryStream =
-                    (ByteArrayOutputStream)output;
+                ByteArrayOutputStream memoryStream = (ByteArrayOutputStream)output;
 
                 // Reset variable to the original OutputStream.
                 output = outCache;
@@ -1385,7 +1191,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 memoryStream.writeTo(output);
 
                 // Write an extra byte for IFD word alignment if needed.
-                if(skipByte) {
+                if (skipByte) {
                     output.write((byte)0);
                 }
             } else {
@@ -1406,19 +1212,19 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int numEntries = fields.size();
 
         // Initialize the size excluding that of any values > 4 bytes.
-        int dirSize = 2 + numEntries*12 + 4;
+        int dirSize = 2 + numEntries * 12 + 4;
 
         // Loop over fields adding the size of all values > 4 bytes.
         Iterator iter = fields.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             // Get the field.
             TIFFField field = (TIFFField)iter.next();
 
             // Determine the size of the field value.
-            int valueSize = field.getCount()*sizeOfType[field.getType()];
+            int valueSize = field.getCount() * sizeOfType[field.getType()];
 
             // Add any excess size.
-            if(valueSize > 4) {
+            if (valueSize > 4) {
                 dirSize += valueSize;
             }
         }
@@ -1455,7 +1261,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         writeUnsignedShort(numEntries);
 
         Iterator iter = fields.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
 
             // 12 byte field entry TIFFField
             TIFFField field = (TIFFField)iter.next();
@@ -1504,8 +1310,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int type = field.getType();
         int count = field.getCount();
         int valueSize = 0;
-        if(type == TIFFField.TIFF_ASCII) {
-            for(int i = 0; i < count; i++) {
+        if (type == TIFFField.TIFF_ASCII) {
+            for (int i = 0; i < count; i++) {
                 byte[] stringBytes = field.getAsString(i).getBytes();   // note: default encoding @work here!
                 valueSize += stringBytes.length;
                 if (stringBytes[stringBytes.length - 1] != 0) {
@@ -1544,22 +1350,30 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             // unsigned 8 bits
         case TIFFField.TIFF_BYTE:
             byte[] bytes = field.getAsBytes();
-            if (count > 4) count =4;
-            for (int i=0; i<count; i++)
+            if (count > 4) {
+                count = 4;
+            }
+            for (int i = 0; i < count; i++) {
                 output.write(bytes[i]);
+            }
 
-            for (int i = 0; i < (4 - count); i++)
+            for (int i = 0; i < (4 - count); i++) {
                 output.write(0);
+            }
             break;
 
             // unsigned 16 bits
         case TIFFField.TIFF_SHORT:
             char[] chars = field.getAsChars();
-            if (count > 2) count=2;
-            for (int i=0; i<count; i++)
+            if (count > 2) {
+                count = 2;
+            }
+            for (int i = 0; i < count; i++) {
                 writeUnsignedShort(chars[i]);
-            for (int i = 0; i < (2 - count); i++)
+            }
+            for (int i = 0; i < (2 - count); i++) {
                 writeUnsignedShort(0);
+            }
 
             break;
 
@@ -1567,7 +1381,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         case TIFFField.TIFF_LONG:
             long[] longs = field.getAsLongs();
 
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 writeLong(longs[i]);
             }
             break;
@@ -1587,7 +1401,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         case TIFFField.TIFF_SBYTE:
         case TIFFField.TIFF_UNDEFINED:
             byte[] bytes = field.getAsBytes();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 output.write(bytes[i]);
             }
             break;
@@ -1595,13 +1409,13 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             // unsigned 16 bits
         case TIFFField.TIFF_SHORT:
             char[] chars = field.getAsChars();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 writeUnsignedShort(chars[i]);
             }
             break;
         case TIFFField.TIFF_SSHORT:
             short[] shorts = field.getAsShorts();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 writeUnsignedShort(shorts[i]);
             }
             break;
@@ -1610,14 +1424,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         case TIFFField.TIFF_LONG:
         case TIFFField.TIFF_SLONG:
             long[] longs = field.getAsLongs();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 writeLong(longs[i]);
             }
             break;
 
         case TIFFField.TIFF_FLOAT:
             float[] floats = field.getAsFloats();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 int intBits = Float.floatToIntBits(floats[i]);
                 writeLong(intBits);
             }
@@ -1625,7 +1439,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         case TIFFField.TIFF_DOUBLE:
             double[] doubles = field.getAsDoubles();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 long longBits = Double.doubleToLongBits(doubles[i]);
                 writeLong(longBits >>> 32);           // write upper 32 bits
                 writeLong(longBits & 0xffffffffL);    // write lower 32 bits
@@ -1635,17 +1449,17 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         case TIFFField.TIFF_RATIONAL:
         case TIFFField.TIFF_SRATIONAL:
             long[][] rationals = field.getAsRationals();
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 writeLong(rationals[i][0]);
                 writeLong(rationals[i][1]);
             }
             break;
 
         case TIFFField.TIFF_ASCII:
-            for (int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 byte[] stringBytes = field.getAsString(i).getBytes();
                 output.write(stringBytes);
-                if(stringBytes[stringBytes.length-1] != (byte)0) {
+                if (stringBytes[stringBytes.length - 1] != (byte)0) {
                     output.write((byte)0);
                 }
             }
@@ -1682,9 +1496,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
      * This method should only be used if compressing data.
      */
     private long getOffset(OutputStream out) throws IOException {
-        if(out instanceof ByteArrayOutputStream) {
+        if (out instanceof ByteArrayOutputStream) {
             return ((ByteArrayOutputStream)out).size();
-        } else if(out instanceof SeekableOutputStream) {
+        } else if (out instanceof SeekableOutputStream) {
             return ((SeekableOutputStream)out).getFilePointer();
         } else {
             // Shouldn't happen.
@@ -1700,7 +1514,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int inOffset = 0;
         int outOffset = 0;
 
-        for(int i = 0; i < numRows; i++) {
+        for (int i = 0; i < numRows; i++) {
             outOffset = packBits(data, inOffset, bytesPerRow,
                                  compData, outOffset);
             inOffset += bytesPerRow;
@@ -1719,15 +1533,15 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int inMax = inOffset + inCount - 1;
         int inMaxMinus1 = inMax - 1;
 
-        while(inOffset <= inMax) {
+        while (inOffset <= inMax) {
             int run = 1;
             byte replicate = input[inOffset];
-            while(run < 127 && inOffset < inMax &&
-                  input[inOffset] == input[inOffset+1]) {
+            while (run < 127 && inOffset < inMax &&
+                  input[inOffset] == input[inOffset + 1]) {
                 run++;
                 inOffset++;
             }
-            if(run > 1) {
+            if (run > 1) {
                 inOffset++;
                 output[outOffset++] = (byte)(-(run - 1));
                 output[outOffset++] = replicate;
@@ -1735,21 +1549,21 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
             run = 0;
             int saveOffset = outOffset;
-            while(run < 128 &&
+            while (run < 128 &&
                   ((inOffset < inMax &&
-                    input[inOffset] != input[inOffset+1]) ||
+                    input[inOffset] != input[inOffset + 1]) ||
                    (inOffset < inMaxMinus1 &&
-                    input[inOffset] != input[inOffset+2]))) {
+                    input[inOffset] != input[inOffset + 2]))) {
                 run++;
                 output[++outOffset] = input[inOffset++];
             }
-            if(run > 0) {
+            if (run > 0) {
                 output[saveOffset] = (byte)(run - 1);
                 outOffset++;
             }
 
-            if(inOffset == inMax) {
-                if(run > 0 && run < 128) {
+            if (inOffset == inMax) {
+                if (run > 0 && run < 128) {
                     output[saveOffset]++;
                     output[outOffset++] = input[inOffset++];
                 } else {
@@ -1771,17 +1585,4 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         return numCompressedBytes;
     }
 
-    private static void modifyEncodeParam(JPEGEncodeParam src,
-                                          JPEGEncodeParam dst,
-                                          int nbands) {
-      dst.setDensityUnit    (src.getDensityUnit());
-      dst.setXDensity       (src.getXDensity());
-      dst.setYDensity       (src.getYDensity());
-      dst.setRestartInterval(src.getRestartInterval());
-      for (int i=0; i<4; i++) {
-        JPEGQTable tbl = src.getQTable(i);
-        if (tbl != null)
-          dst.setQTable(i, tbl);
-      }
-    }
 }

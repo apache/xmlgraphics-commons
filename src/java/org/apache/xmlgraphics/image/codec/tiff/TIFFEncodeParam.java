@@ -24,8 +24,6 @@ import java.util.zip.Deflater;
 
 import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
 
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-
 /**
  * An instance of <code>ImageEncodeParam</code> for encoding images in
  * the TIFF format.
@@ -107,7 +105,6 @@ public class TIFFEncodeParam implements ImageEncodeParam {
     private TIFFField[] extraFields;
 
     private boolean convertJPEGRGBToYCbCr = true;
-    private JPEGEncodeParam jpegEncodeParam = null;
 
     private int deflateLevel = Deflater.DEFAULT_COMPRESSION;
 
@@ -115,7 +112,9 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * Constructs a TIFFEncodeParam object with default values for
      * all parameters.
      */
-    public TIFFEncodeParam() {}
+    public TIFFEncodeParam() {
+        //nop
+    }
 
     /**
      * Returns the value of the compression parameter.
@@ -146,7 +145,6 @@ public class TIFFEncodeParam implements ImageEncodeParam {
         switch(compression) {
         case COMPRESSION_NONE:
         case COMPRESSION_PACKBITS:
-        case COMPRESSION_JPEG_TTN2:
         case COMPRESSION_DEFLATE:
             // Do nothing.
             break;
@@ -188,9 +186,6 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * <code>getWriteTiled()</code> returns <code>false</code>, the width
      * of each strip is always the width of the image and the default
      * number of rows per strip is 8.
-     *
-     * <p> If JPEG compession is being used, the dimensions of the strips or
-     * tiles may be modified to conform to the JPEG-in-TIFF specification.
      *
      * @param tileWidth The tile width; ignored if strips are used.
      * @param tileHeight The tile height or number of rows per strip.
@@ -252,8 +247,9 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * setting is ignored if the compression type is not DEFLATE.
      */
     public void setDeflateLevel(int deflateLevel) {
-        if(deflateLevel < 1 && deflateLevel > 9 &&
-           deflateLevel != Deflater.DEFAULT_COMPRESSION) {
+        if (deflateLevel < 1
+                && deflateLevel > 9
+                && deflateLevel != Deflater.DEFAULT_COMPRESSION) {
             throw new Error("TIFFEncodeParam1");
         }
 
@@ -281,42 +277,6 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      */
     public boolean getJPEGCompressRGBToYCbCr() {
         return convertJPEGRGBToYCbCr;
-    }
-
-    /**
-     * Sets the JPEG compression parameters.  These parameters are ignored
-     * if the compression type is not JPEG.  The argument may be
-     * <code>null</code> to indicate that default compression parameters
-     * are to be used.  For maximum conformance with the specification it
-     * is recommended in most cases that only the quality compression
-     * parameter be set.
-     *
-     * <p> The <code>writeTablesOnly</code> and <code>JFIFHeader</code>
-     * flags of the <code>JPEGEncodeParam</code> are ignored.  The
-     * <code>writeImageOnly</code> flag is used to determine whether the
-     * JPEGTables field will be written to the TIFF stream: if
-     * <code>writeImageOnly</code> is <code>true</code>, then the JPEGTables
-     * field will be written and will contain a valid JPEG abbreviated
-     * table specification datastream.  In this case the data in each data
-     * segment (strip or tile) will contain an abbreviated JPEG image
-     * datastream.  If the <code>writeImageOnly</code> flag is
-     * <code>false</code>, then the JPEGTables field will not be written and
-     * each data segment will contain a complete JPEG interchange datastream.
-     */
-    public void setJPEGEncodeParam(JPEGEncodeParam jpegEncodeParam) {
-        if(jpegEncodeParam != null) {
-            jpegEncodeParam = (JPEGEncodeParam)jpegEncodeParam.clone();
-            jpegEncodeParam.setTableInfoValid(false);
-            jpegEncodeParam.setImageInfoValid(true);
-        }
-        this.jpegEncodeParam = jpegEncodeParam;
-    }
-
-    /**
-     * Retrieves the JPEG compression parameters.
-     */
-    public JPEGEncodeParam getJPEGEncodeParam() {
-        return jpegEncodeParam;
     }
 
     /**
