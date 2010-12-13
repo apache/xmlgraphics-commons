@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.xmlgraphics.java2d.color.ColorUtil;
+
 /**
  * This class holds the current state of the PostScript interpreter.
  *
@@ -184,7 +186,7 @@ public class PSState implements Serializable {
      * @return true if the color changed compared to the previous setting
      */
     public boolean useColor(Color value) {
-        if (!color.equals(value)) {
+        if (!ColorUtil.isSameColor(color, value)) {
             color = value;
             return true;
         } else {

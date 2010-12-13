@@ -39,9 +39,30 @@ public class ColorWithAlternativesTest extends TestCase {
         Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
         col1 = new ColorWithAlternatives(255, 204, 0, new Color[] {postgelbLab});
 
-        assertFalse(col1.equals(col2));
-        //Unfortunately, Color.equals() can't detect the color difference!
-        //col2.equals(col1) ===> true
+        //java.awt.Color tests on the sRGB value only
+        assertEquals(col1, col2);
+        assertEquals(col2, col1);
+    }
+
+    public void testSameColor() throws Exception {
+        Color col1 = new ColorWithAlternatives(255, 204, 0, null);
+        Color col2 = new Color(255, 204, 0);
+
+        //No alternatives. Only sRGB counts.
+        assertTrue(ColorUtil.isSameColor(col1, col2));
+
+        CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
+        Color postgelbLab = lab.toColor(83.25f, 16.45f, 96.89f, 1.0f);
+        col1 = new ColorWithAlternatives(255, 204, 0, new Color[] {postgelbLab});
+
+        //Same sRGB value but one color with alternatives:
+        assertFalse(ColorUtil.isSameColor(col1, col2));
+
+        //Once the spotcolor naked and once as part of a color with alternatives
+        assertFalse(ColorUtil.isSameColor(postgelbLab, col1));
+
+        //sRGB values is calculated from Lab color and doesn't exactly match the selected fallback
+        assertFalse(postgelbLab.equals(col1));
     }
 
 }
