@@ -27,11 +27,14 @@ import java.awt.color.ColorSpace;
  * The alternative colors shall be the ones that are preferred if an output format supports them.
  * This is normally used for passing device-specific colors through to the output format.
  * <p>
- * An additional benefit of this class is a better {@link ColorWithAlternatives#equals(Object)}
- * method than the one from {@link Color} which only takes the sRGB values into account.
- * <p>
  * This class only adds a single reference to a color array which should not increase memory
  * consumption by much if no alternative colors are specified.
+ * <p>
+ * <b>Important:</b> Due to a flaw in {@link Color#equals(Object)}, the <code>equals()</code>
+ * method should not be used to compare two colors, especially when used to update the current
+ * color for some output format. {@link Color} only takes the sRGB values into account but not
+ * more the advanced facets of this class. Use {@link ColorUtil#isSameColor(Color, Color)} for
+ * such a check.
  */
 public class ColorWithAlternatives extends Color {
 
