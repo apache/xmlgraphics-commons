@@ -43,6 +43,7 @@ public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toRGB(float[] colorvalue) {
         return new float [] {
             (1 - colorvalue[0]) * (1 - colorvalue[3]),
@@ -51,16 +52,32 @@ public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromRGB(float[] rgbvalue) {
-        throw new UnsupportedOperationException("NYI");
+        assert rgbvalue.length == 3;
+        //Note: this is an arbitrary conversion, not a color-managed one!
+        float r = rgbvalue[0];
+        float g = rgbvalue[1];
+        float b = rgbvalue[2];
+        if (r == g && r == b) {
+            return new float[] {0, 0, 0, 1 - r};
+        } else {
+            float c = 1 - r;
+            float m = 1 - g;
+            float y = 1 - b;
+            float k = Math.min(c, Math.min(m, y));
+            return new float[] {c, m, y, k};
+        }
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toCIEXYZ(float[] colorvalue) {
         throw new UnsupportedOperationException("NYI");
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromCIEXYZ(float[] colorvalue) {
         throw new UnsupportedOperationException("NYI");
     }
