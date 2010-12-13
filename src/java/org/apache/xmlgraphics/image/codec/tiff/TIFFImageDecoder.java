@@ -71,6 +71,8 @@ public class TIFFImageDecoder extends ImageDecoderImpl {
     public static final int TIFF_S_MIN_SAMPLE_VALUE         = 340;
     public static final int TIFF_S_MAX_SAMPLE_VALUE         = 341;
 
+    public static final int TIFF_ICC_PROFILE                = 34675;
+
     public TIFFImageDecoder(SeekableStream input,
                             ImageDecodeParam param) {
         super(input, param);
