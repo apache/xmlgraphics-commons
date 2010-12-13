@@ -59,6 +59,7 @@ public class PSGenerator implements PSCommandMap {
      * later in the document (mostly in the %%Trailer section).
      * @deprecated Please use DSCConstants.ATEND. This constant was in the wrong place.
      */
+    @Deprecated
     public static final Object ATEND = DSCConstants.ATEND;
 
     /** Line feed used by PostScript */
@@ -71,7 +72,7 @@ public class PSGenerator implements PSCommandMap {
     private boolean compactMode = true;
     private PSCommandMap commandMap = PSProcSets.STD_COMMAND_MAP;
 
-    private Stack graphicsStateStack = new Stack();
+    private Stack<PSState> graphicsStateStack = new Stack<PSState>();
     private PSState currentState;
     //private DecimalFormat df3 = new DecimalFormat("0.000", new DecimalFormatSymbols(Locale.US));
     private DecimalFormat df3 = new DecimalFormat("0.###", new DecimalFormatSymbols(Locale.US));
@@ -455,7 +456,7 @@ public class PSGenerator implements PSCommandMap {
     public boolean restoreGraphicsState() throws IOException {
         if (this.graphicsStateStack.size() > 0) {
             writeln(mapCommand("grestore"));
-            this.currentState = (PSState)this.graphicsStateStack.pop();
+            this.currentState = this.graphicsStateStack.pop();
             return true;
         } else {
             return false;
@@ -628,6 +629,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException In case of an I/O problem
      * @deprecated use useColor method instead
      */
+    @Deprecated
     public void useRGBColor(Color col) throws IOException {
         useColor(col);
     }
@@ -646,10 +648,15 @@ public class PSGenerator implements PSCommandMap {
     private String convertColorToPS(Color color) {
         StringBuffer codeBuffer = new StringBuffer();
 
+        //Important: Right now, CMYK colors are treated as device colors (DeviceCMYK) irrespective
+        //of any associated color profile. All other colors are converted to sRGB (if necessary)
+        //and the resulting RGB components are treated as DeviceRGB colors.
+        //If all three RGB components are the same, DeviceGray is used.
+
         boolean established = false;
         if (color instanceof ColorWithAlternatives) {
             ColorWithAlternatives colExt = (ColorWithAlternatives)color;
-            //Alternate colors have priority
+            //Alternative colors have priority
             Color[] alt = colExt.getAlternativeColors();
             for (int i = 0, c = alt.length; i < c; i++) {
                 Color col = alt[i];
@@ -669,30 +676,34 @@ public class PSGenerator implements PSCommandMap {
             established = establishColorFromColor(codeBuffer, color);
         }
         if (!established) {
-            establishDeviceRGB(codeBuffer, color);
+            establishFallbackRGB(codeBuffer, color);
         }
 
         return codeBuffer.toString();
     }
 
     private boolean establishColorFromColor(StringBuffer codeBuffer, Color color) {
+        //Important: see above note about color handling!
         float[] comps = color.getColorComponents(null);
         if (color.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
             // colorspace is CMYK
-            for (int i = 0; i < color.getColorSpace().getNumComponents(); i++) {
-                if (i > 0) {
-                    codeBuffer.append(" ");
-                }
-                codeBuffer.append(formatDouble(comps[i]));
-            }
-            codeBuffer.append(" ").append(mapCommand("setcmykcolor"));
-        } else {
-            establishDeviceRGB(codeBuffer, color);
+            writeSetColor(codeBuffer, comps, "setcmykcolor");
+            return true;
         }
-        return true;
+        return false;
     }
 
-    private void establishDeviceRGB(StringBuffer codeBuffer, Color color) {
+    private void writeSetColor(StringBuffer codeBuffer, float[] comps, String command) {
+        for (int i = 0, c = comps.length; i < c; i++) {
+            if (i > 0) {
+                codeBuffer.append(" ");
+            }
+            codeBuffer.append(formatDouble(comps[i]));
+        }
+        codeBuffer.append(" ").append(mapCommand(command));
+    }
+
+    private void establishFallbackRGB(StringBuffer codeBuffer, Color color) {
         float[] comps;
         if (color.getColorSpace().isCS_sRGB()) {
             comps = color.getColorComponents(null);
@@ -707,17 +718,7 @@ public class PSGenerator implements PSCommandMap {
         if (gray) {
             codeBuffer.append(formatDouble(comps[0]));
         } else {
-            for (int i = 0, c = comps.length; i < c; i++) {
-                if (i > 0) {
-                    codeBuffer.append(" ");
-                }
-                codeBuffer.append(formatDouble(comps[i]));
-            }
-        }
-        if (gray) {
-            codeBuffer.append(" ").append(mapCommand("setgray"));
-        } else {
-            codeBuffer.append(" ").append(mapCommand("setrgbcolor"));
+            writeSetColor(codeBuffer, comps, gray ? "setgray" : "setrgbcolor");
         }
     }
 
@@ -756,6 +757,7 @@ public class PSGenerator implements PSCommandMap {
      * set can be cleared.
      * @deprecated Use the notifyStartNewPage() on ResourceTracker instead.
      */
+    @Deprecated
     public void notifyStartNewPage() {
         getResourceTracker().notifyStartNewPage();
     }
@@ -766,6 +768,7 @@ public class PSGenerator implements PSCommandMap {
      * @param needed true if this is a needed resource, false for a supplied resource
      * @deprecated Use the notifyResourceUsageOnPage() on ResourceTracker instead
      */
+    @Deprecated
     public void notifyResourceUsage(PSResource res, boolean needed) {
         getResourceTracker().notifyResourceUsageOnPage(res);
     }
@@ -778,6 +781,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException In case of an I/O problem
      * @deprecated Use the writeResources() on ResourceTracker instead.
      */
+    @Deprecated
     public void writeResources(boolean pageLevel) throws IOException {
         getResourceTracker().writeResources(pageLevel, this);
     }
@@ -788,6 +792,7 @@ public class PSGenerator implements PSCommandMap {
      * @return true if the resource is registered as being supplied.
      * @deprecated Use the isResourceSupplied() on ResourceTracker instead.
      */
+    @Deprecated
     public boolean isResourceSupplied(PSResource res) {
         return getResourceTracker().isResourceSupplied(res);
     }
