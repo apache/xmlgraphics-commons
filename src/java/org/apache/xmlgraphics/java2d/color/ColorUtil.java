@@ -100,4 +100,82 @@ public final class ColorUtil {
         return new Color(srgb[0], srgb[1], srgb[2], alpha);
     }
 
+    /**
+     * Checks if two colors are the same color. This check is much more restrictive than
+     * {@link Color#equals(Object)} in that it doesn't only check if both colors result in the
+     * same sRGB value. For example, if two colors not of the same exact class are compared,
+     * they are treated as not the same.
+     * <p>
+     * Note: At the moment, this method only supports {@link Color} and
+     * {@link ColorWithAlternatives} only. Other subclasses of {@link Color} are checked only using
+     * the {@link Color#equals(Object)} method.
+     * @param col1 the first color
+     * @param col2 the second color
+     * @return true if both colors are the same color
+     */
+    public static boolean isSameColor(Color col1, Color col2) {
+        //Check fallback sRGB values first, then go into details
+        if (!col1.equals(col2)) {
+            return false;
+        }
+
+        //Consider same-ness only between colors of the same class (not subclasses)
+        //but consider a ColorWithAlternatives without alternatives to be the same as a Color.
+        boolean skipClassTest = false;
+        if (col1.getClass() == ColorWithAlternatives.class
+                && !((ColorWithAlternatives)col1).hasAlternativeColors()) {
+            skipClassTest = true;
+        }
+        if (col2.getClass() == ColorWithAlternatives.class
+                && !((ColorWithAlternatives)col2).hasAlternativeColors()) {
+            skipClassTest = true;
+        }
+        if (!skipClassTest && col1.getClass() != col2.getClass()) {
+            return false;
+        }
+
+        //Check color space
+        if (!col1.getColorSpace().equals(col2.getColorSpace())) {
+            return false;
+        }
+
+        //Check native components
+        float[] comps1 = col1.getComponents(null);
+        float[] comps2 = col2.getComponents(null);
+        if (comps1.length != comps2.length) {
+            return false;
+        }
+        for (int i = 0, c = comps1.length; i < c; i++) {
+            if (comps1[i] != comps2[i]) {
+                return false;
+            }
+        }
+
+        //Compare alternative colors, order is relevant
+        if (col1 instanceof ColorWithAlternatives && col2 instanceof ColorWithAlternatives) {
+            ColorWithAlternatives ca1 = (ColorWithAlternatives)col1;
+            ColorWithAlternatives ca2 = (ColorWithAlternatives)col2;
+            if (ca1.hasAlternativeColors() && !ca2.hasAlternativeColors()) {
+                return false;
+            } else if (!ca1.hasAlternativeColors() && ca2.hasAlternativeColors()) {
+                return false;
+            } if (ca1.hasAlternativeColors()) {
+                Color[] alt1 = ca1.getAlternativeColors();
+                Color[] alt2 = ca2.getAlternativeColors();
+                if (alt1.length != alt2.length) {
+                    return false;
+                }
+                for (int i = 0, c = alt1.length; i < c; i++) {
+                    Color c1 = alt1[i];
+                    Color c2 = alt2[i];
+                    if (!isSameColor(c1, c2)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 }
