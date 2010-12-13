@@ -714,12 +714,12 @@ public class PSGenerator implements PSCommandMap {
             ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
             comps = color.getColorComponents(sRGB, null);
         }
+        assert comps.length == 3;
         boolean gray = ColorUtil.isGray(color);
         if (gray) {
-            codeBuffer.append(formatDouble(comps[0]));
-        } else {
-            writeSetColor(codeBuffer, comps, gray ? "setgray" : "setrgbcolor");
+            comps = new float[] {comps[0]};
         }
+        writeSetColor(codeBuffer, comps, gray ? "setgray" : "setrgbcolor");
     }
 
     /**
