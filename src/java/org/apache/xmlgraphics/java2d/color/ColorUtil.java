@@ -121,16 +121,17 @@ public final class ColorUtil {
 
         //Consider same-ness only between colors of the same class (not subclasses)
         //but consider a ColorWithAlternatives without alternatives to be the same as a Color.
-        boolean skipClassTest = false;
-        if (col1.getClass() == ColorWithAlternatives.class
-                && !((ColorWithAlternatives)col1).hasAlternativeColors()) {
-            skipClassTest = true;
+        Class<?> cl1 = col1.getClass();
+        if (col1 instanceof ColorWithAlternatives
+                && !((ColorWithAlternatives) col1).hasAlternativeColors()) {
+            cl1 = Color.class;
         }
-        if (col2.getClass() == ColorWithAlternatives.class
-                && !((ColorWithAlternatives)col2).hasAlternativeColors()) {
-            skipClassTest = true;
+        Class<?> cl2 = col2.getClass();
+        if (col2 instanceof ColorWithAlternatives
+                && !((ColorWithAlternatives) col2).hasAlternativeColors()) {
+            cl2 = Color.class;
         }
-        if (!skipClassTest && col1.getClass() != col2.getClass()) {
+        if (cl1 != cl2) {
             return false;
         }
 
@@ -153,26 +154,9 @@ public final class ColorUtil {
 
         //Compare alternative colors, order is relevant
         if (col1 instanceof ColorWithAlternatives && col2 instanceof ColorWithAlternatives) {
-            ColorWithAlternatives ca1 = (ColorWithAlternatives)col1;
-            ColorWithAlternatives ca2 = (ColorWithAlternatives)col2;
-            if (ca1.hasAlternativeColors() && !ca2.hasAlternativeColors()) {
-                return false;
-            } else if (!ca1.hasAlternativeColors() && ca2.hasAlternativeColors()) {
-                return false;
-            } if (ca1.hasAlternativeColors()) {
-                Color[] alt1 = ca1.getAlternativeColors();
-                Color[] alt2 = ca2.getAlternativeColors();
-                if (alt1.length != alt2.length) {
-                    return false;
-                }
-                for (int i = 0, c = alt1.length; i < c; i++) {
-                    Color c1 = alt1[i];
-                    Color c2 = alt2[i];
-                    if (!isSameColor(c1, c2)) {
-                        return false;
-                    }
-                }
-            }
+            ColorWithAlternatives ca1 = (ColorWithAlternatives) col1;
+            ColorWithAlternatives ca2 = (ColorWithAlternatives) col2;
+            return ca1.hasSameAlternativeColors(ca2);
         }
 
         return true;
