@@ -51,7 +51,7 @@ public class PSTilingPattern {
     protected String patternName = null;
 
     /**
-     * The XUID is an extended unique ID — an array of integers that provides for
+     * The XUID is an extended unique ID -- an array of integers that provides for
      * distributed, hierarchical management of the space of unique ID numbers
      * (optional)
      */
@@ -65,7 +65,7 @@ public class PSTilingPattern {
     /**
      * An array of four numbers in the pattern coordinate system, giving
      * the coordinates of the left, bottom, right, and top edges, respectively, of the
-     * pattern cell’s bounding box
+     * pattern cell's bounding box
      */
     protected Rectangle2D bBox = null;
 
@@ -108,7 +108,7 @@ public class PSTilingPattern {
      * the name is null, the pattern should be stored in PSPatternStorage, where the pattern
      * gets a name (the pattern without name cannot be use in PS file)
      * @param paintProc a postscript procedure for painting the pattern cell
-     * @param bBox a pattern cell’s bounding box
+     * @param bBox a pattern cell's bounding box
      * @param xStep the desired horizontal spacing between pattern cells
      * @param yStep the desired vertical spacing between pattern cells
      * @param paintType 1 for colored pattern, 2 for uncolored pattern
@@ -192,7 +192,7 @@ public class PSTilingPattern {
     /**
      * Returns the bounding box.
      *
-     * @return a pattern cell’s bounding box
+     * @return a pattern cell's bounding box
      */
     public Rectangle2D getBoundingBox() {
         return (this.bBox);
@@ -201,7 +201,7 @@ public class PSTilingPattern {
     /**
      * Sets the bounding box.
      *
-     * @param bBox a pattern cell’s bounding box
+     * @param bBox a pattern cell's bounding box
      */
     public void setBoundingBox(Rectangle2D bBox) {
         if (bBox == null) {
@@ -392,9 +392,9 @@ public class PSTilingPattern {
             }
 
             // define color image: width height bits/comp matrix
-            //                        datasrc0 … datasrcncomp-1 multi ncomp colorimage
+            //                        datasrc0 ï¿½ datasrcncomp-1 multi ncomp colorimage
             sb.append(width + " " + height + " 8 " + "matrix\n");   // width height bits/comp matrix
-            int [] argb = new int[width * height];                  // datasrc0 … datasrcncomp-1
+            int [] argb = new int[width * height];                  // datasrc0 ï¿½ datasrcncomp-1
             sb.append("{<");
             texture.getImage().getRGB(0, 0, width, height, argb, 0, width);
             int count = 0;
