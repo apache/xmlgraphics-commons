@@ -164,6 +164,30 @@ public class ColorWithAlternatives extends Color {
         return this.alternativeColors != null && this.alternativeColors.length > 0;
     }
 
+    public boolean hasSameAlternativeColors(ColorWithAlternatives col) {
+        if (!hasAlternativeColors()) {
+            return !col.hasAlternativeColors();
+        }
+        // this.hasAlternativeColors()
+        if (!col.hasAlternativeColors()) {
+            return false;
+        }
+        // this.hasAlternativeColors() && col.hasAlternativeColors()
+        Color[] alt1 = getAlternativeColors();
+        Color[] alt2 = col.getAlternativeColors();
+        if (alt1.length != alt2.length) {
+            return false;
+        }
+        for (int i = 0, c = alt1.length; i < c; i++) {
+            Color c1 = alt1[i];
+            Color c2 = alt2[i];
+            if (!ColorUtil.isSameColor(c1, c2)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Returns the first alternative color found with the given color space type.
      * @param colorSpaceType the color space type ({@link ColorSpace}.TYPE_*).
