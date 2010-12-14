@@ -164,6 +164,11 @@ public class ColorWithAlternatives extends Color {
         return this.alternativeColors != null && this.alternativeColors.length > 0;
     }
 
+    /**
+     * Indicates whether another instance has the same alternative colors.
+     * @param col the color to compare the alternatives to
+     * @return true if the same alternative colors are present
+     */
     public boolean hasSameAlternativeColors(ColorWithAlternatives col) {
         if (!hasAlternativeColors()) {
             return !col.hasAlternativeColors();
