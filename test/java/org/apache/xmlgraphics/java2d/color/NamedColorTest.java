@@ -56,8 +56,10 @@ public class NamedColorTest extends TestCase {
             assertEquals(c1xyz[i], xyz[i], 0.001f);
         }
 
-        assertEquals(254, c1.getRed());
-        assertEquals(195, c1.getGreen());
+        //NOTE: Allowing for some fuzziness due to differences in XYZ->sRGB calculation between
+        //Java 1.5 and 6.
+        assertEquals(254, c1.getRed(), 1f);
+        assertEquals(195, c1.getGreen(), 2f);
         assertEquals(0, c1.getBlue());
     }
 
