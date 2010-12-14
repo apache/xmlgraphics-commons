@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: ColorUtil.java 815938 2009-09-16 19:38:13Z jeremias $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.java2d.color;
 

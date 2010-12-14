@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: ColorExt.java 884117 2009-11-25 14:42:48Z jeremias $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.java2d.color;
 
