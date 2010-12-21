@@ -19,18 +19,22 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
-import java.awt.Color;
+import java.awt.color.ColorSpace;
 
 /**
- * Utility for implementing a color conversion scheme.
+ * Base class for device-specific (uncalibrated) color spaces.
  */
-public interface ColorConverter {
+public abstract class AbstractDeviceSpecificColorSpace extends ColorSpace {
+
+    private static final long serialVersionUID = -4888985582872101875L;
 
     /**
-     * @param color to convert
-    * @return converted color
-    */
-
-    Color convert(Color color);
+     * Creates a new instance.
+     * @param type the color space type ({@link ColorSpace}.TYPE_*)
+     * @param numcomponents the number of color components applicable to the color space
+     */
+    protected AbstractDeviceSpecificColorSpace(int type, int numcomponents) {
+        super(type, numcomponents);
+    }
 
 }

@@ -39,7 +39,7 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
-import org.apache.xmlgraphics.java2d.color.DeviceCMYKColorSpace;
+import org.apache.xmlgraphics.java2d.color.ColorSpaces;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
@@ -119,7 +119,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
                             colorSpace = ColorSpace.getInstance(
                               ColorSpace.CS_LINEAR_RGB);
                         } else if (numComponents == 4) {
-                            colorSpace = DeviceCMYKColorSpace.getInstance();
+                            colorSpace = ColorSpaces.getDeviceCMYKColorSpace();
                         } else {
                             throw new ImageException("Unsupported ColorSpace for image "
                                         + info

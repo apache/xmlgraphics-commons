@@ -21,32 +21,39 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
-import org.apache.xmlgraphics.java2d.color.ColorConverter;
-
 /**
- * A default implementation that does not apply any conversion
+ * Converts to grayscale using the standard RED=30%, GREEN=59% and BLUE=11%
+ * weights (see http://en.wikipedia.org/wiki/Grayscale)
  */
-public final class DefaultColorConverter implements ColorConverter {
+public final class GrayScaleColorConverter implements ColorConverter {
+
+    private static final int RED_WEIGHT = 77;
+    private static final int GREEN_WEIGTH = 150;
+    private static final int BLUE_WEIGHT = 28;
+
+    private static final GrayScaleColorConverter SINGLETON = new GrayScaleColorConverter();
+
+    private GrayScaleColorConverter() { }
 
     /**
-     * private constructor to support singleton pattern
-     */
-    private static final DefaultColorConverter SINGLETON = new DefaultColorConverter();
-
-    private DefaultColorConverter() {
-    }
-
-    /**
-     * static factory
+     * Returns a singleton instance.
      *
-     * @return singleton instance of DefaultColorConverter
+     * @return singleton instance of GrayScaleColorConverter
      */
-    public static DefaultColorConverter getInstance() {
+    public static GrayScaleColorConverter getInstance() {
         return SINGLETON;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * The color is converted to CMYK with just the K component.
+     * {@inheritDoc}
+     */
     public Color convert(Color color) {
-        return color;
+
+        float kValue = (RED_WEIGHT * color.getRed()
+                + GREEN_WEIGTH * color.getGreen()
+                + BLUE_WEIGHT * color.getBlue()) / 255.0f / 255.0f;
+
+        return ColorUtil.toCMYKGrayColor(kValue);
     }
 }

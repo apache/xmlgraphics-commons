@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: ColorUtil.java 815938 2009-09-16 19:38:13Z jeremias $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.java2d.color;
 
@@ -69,6 +69,97 @@ public final class ColorUtil {
      */
     public static boolean isGray(Color col) {
         return (col.getRed() == col.getBlue() && col.getRed() == col.getGreen());
+    }
+
+    /**
+     * Creates an uncalibrated CMYK color with the given gray value.
+     * @param black the gray component (0 - 1)
+     * @return the CMYK color
+     */
+    public static Color toCMYKGrayColor(float black) {
+        //Calculated color components
+        float[] cmyk = new float[] {0f, 0f, 0f, 1.0f - black};
+        //Create native color
+        return DeviceCMYKColorSpace.createCMYKColor(cmyk);
+    }
+
+    /**
+     * Converts an arbitrary {@link Color} to a plain sRGB color doing the conversion at the
+     * best possible conversion quality.
+     * @param col the original color
+     * @return the sRGB equivalent
+     */
+    public static Color toSRGBColor(Color col) {
+        if (col.getColorSpace().isCS_sRGB()) {
+            return col; //Don't convert if already sRGB to avoid conversion differences
+        }
+        float[] comps = col.getColorComponents(null);
+        float[] srgb = col.getColorSpace().toRGB(comps);
+        comps = col.getComponents(null);
+        float alpha = comps[comps.length - 1];
+        return new Color(srgb[0], srgb[1], srgb[2], alpha);
+    }
+
+    /**
+     * Checks if two colors are the same color. This check is much more restrictive than
+     * {@link Color#equals(Object)} in that it doesn't only check if both colors result in the
+     * same sRGB value. For example, if two colors not of the same exact class are compared,
+     * they are treated as not the same.
+     * <p>
+     * Note: At the moment, this method only supports {@link Color} and
+     * {@link ColorWithAlternatives} only. Other subclasses of {@link Color} are checked only using
+     * the {@link Color#equals(Object)} method.
+     * @param col1 the first color
+     * @param col2 the second color
+     * @return true if both colors are the same color
+     */
+    public static boolean isSameColor(Color col1, Color col2) {
+        //Check fallback sRGB values first, then go into details
+        if (!col1.equals(col2)) {
+            return false;
+        }
+
+        //Consider same-ness only between colors of the same class (not subclasses)
+        //but consider a ColorWithAlternatives without alternatives to be the same as a Color.
+        Class<?> cl1 = col1.getClass();
+        if (col1 instanceof ColorWithAlternatives
+                && !((ColorWithAlternatives) col1).hasAlternativeColors()) {
+            cl1 = Color.class;
+        }
+        Class<?> cl2 = col2.getClass();
+        if (col2 instanceof ColorWithAlternatives
+                && !((ColorWithAlternatives) col2).hasAlternativeColors()) {
+            cl2 = Color.class;
+        }
+        if (cl1 != cl2) {
+            return false;
+        }
+
+        //Check color space
+        if (!col1.getColorSpace().equals(col2.getColorSpace())) {
+            return false;
+        }
+
+        //Check native components
+        float[] comps1 = col1.getComponents(null);
+        float[] comps2 = col2.getComponents(null);
+        if (comps1.length != comps2.length) {
+            return false;
+        }
+        for (int i = 0, c = comps1.length; i < c; i++) {
+            if (comps1[i] != comps2[i]) {
+                return false;
+            }
+        }
+
+        //Compare alternative colors, order is relevant
+        if (col1 instanceof ColorWithAlternatives && col2 instanceof ColorWithAlternatives) {
+            ColorWithAlternatives ca1 = (ColorWithAlternatives) col1;
+            ColorWithAlternatives ca2 = (ColorWithAlternatives) col2;
+            return ca1.hasSameAlternativeColors(ca2);
+        }
+
+        return true;
     }
 
 }
