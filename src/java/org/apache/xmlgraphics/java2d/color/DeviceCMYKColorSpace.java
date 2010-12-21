@@ -42,6 +42,16 @@ public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
         super(TYPE_CMYK, 4);
     }
 
+    /**
+     * Returns an instance of an uncalibrated CMYK color space.
+     * @return CMYKColorSpace the requested color space object
+     * @deprecated Use {@link ColorSpaces#getDeviceCMYKColorSpace()} instead.
+     */
+    @Deprecated
+    public static DeviceCMYKColorSpace getInstance() {
+        return ColorSpaces.getDeviceCMYKColorSpace();
+    }
+
     /** {@inheritDoc} */
     @Override
     public float[] toRGB(float[] colorvalue) {
