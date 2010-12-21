@@ -19,18 +19,24 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
-import java.awt.Color;
+import java.awt.color.ColorSpace;
 
 /**
- * Utility for implementing a color conversion scheme.
+ * Interface used to decorate {@link ColorSpace} subclasses to report the origin of the
+ * associated color profile.
  */
-public interface ColorConverter {
+public interface ColorSpaceOrigin {
 
     /**
-     * @param color to convert
-    * @return converted color
-    */
+     * Returns the name of the profile used to identify the color space in a particular context.
+     * @return the profile name
+     */
+    String getProfileName();
 
-    Color convert(Color color);
+    /**
+     * Returns the URI identifying the associate color profile.
+     * @return the profile URI
+     */
+    String getProfileURI();
 
 }
