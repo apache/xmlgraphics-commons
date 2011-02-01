@@ -40,6 +40,7 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.java2d.color.ColorSpaces;
+import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
@@ -233,7 +234,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
 
             ICC_Profile iccProfile = null;
             try {
-                iccProfile = ICC_Profile.getInstance(iccStream.toByteArray());
+                iccProfile = ColorProfileUtil.getICC_Profile(iccStream.toByteArray());
                 if (log.isDebugEnabled()) {
                     log.debug("JPEG has an ICC profile: " + iccProfile.toString());
                 }
