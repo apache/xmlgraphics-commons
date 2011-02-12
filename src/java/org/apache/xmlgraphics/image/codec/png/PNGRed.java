@@ -19,8 +19,6 @@
 
 package org.apache.xmlgraphics.image.codec.png;
 
-import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
-
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -41,17 +39,19 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.TimeZone;
-import java.util.Vector;
+import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.rendered.AbstractRed;
 import org.apache.xmlgraphics.image.rendered.CachableRed;
 
@@ -59,7 +59,6 @@ import org.apache.xmlgraphics.image.rendered.CachableRed;
  *
  * @version $Id$
  */
-
 public class PNGRed extends AbstractRed {
 
     static class PNGChunk {
@@ -279,7 +278,7 @@ public class PNGRed extends AbstractRed {
     private static final int POST_ADD_GRAY_TRANS_EXP =
         POST_ADD_GRAY_TRANS | POST_EXP_MASK;
 
-    private Vector streamVec = new Vector();
+    private List<InputStream> streamVec = new ArrayList<InputStream>();
     private DataInputStream dataStream;
 
     private int bytesPerPixel; // number of bytes per input pixel
@@ -297,8 +296,9 @@ public class PNGRed extends AbstractRed {
 
     private WritableRaster theTile;
     private Rectangle bounds;
+
     /** A Hashtable containing the image properties. */
-    private Hashtable properties = new Hashtable();
+    private Map<String, Object> properties = new HashMap<String, Object>();
 
 
     private int[] gammaLut = null;
@@ -479,6 +479,8 @@ public class PNGRed extends AbstractRed {
                 properties.put("significant_bits", significantBits);
             }
         }
+        distream.close();
+        stream.close();
     }
 
     private static String getChunkType(DataInputStream distream) {
@@ -748,7 +750,7 @@ public class PNGRed extends AbstractRed {
 
         // Parse prior IDAT chunks
         InputStream seqStream =
-            new SequenceInputStream(streamVec.elements());
+            new SequenceInputStream( Collections.enumeration( streamVec ));
         InputStream infStream =
             new InflaterInputStream(seqStream, new Inflater());
         dataStream = new DataInputStream(infStream);
@@ -783,6 +785,13 @@ public class PNGRed extends AbstractRed {
         }
 
         decodeImage(interlaceMethod == 1);
+
+        // Free resources associated with compressed data.
+        dataStream.close();
+        infStream.close();
+        seqStream.close();
+        streamVec = null;
+
         SampleModel sm = theTile.getSampleModel();
         ColorModel  cm;
 
@@ -1850,6 +1859,7 @@ public class PNGRed extends AbstractRed {
     }
 
     // RenderedImage stuff
+    @Override
     public Raster getTile(int tileX, int tileY) {
         if (tileX != 0 || tileY != 0) {
             // Error -- bad tile requested
