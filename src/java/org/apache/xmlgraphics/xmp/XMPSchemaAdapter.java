@@ -196,7 +196,7 @@ public class XMPSchemaAdapter {
             } else {
                 sb.append('-');
             }
-            if (zoneOffsetHours < 10) {
+            if (Math.abs(zoneOffsetHours) < 10) {
                 sb.append('0');
             }
             sb.append(Math.abs(zoneOffsetHours));
