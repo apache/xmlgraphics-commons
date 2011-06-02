@@ -132,7 +132,7 @@ public class Metadata implements XMLizable, PropertyAccess {
                             handler.startPrefixMapping(prefix, ns);
                         }
                         handler.startElement(XMPConstants.RDF_NAMESPACE,
-                                "RDF", "rdf:Description", atts);
+                                "Description", "rdf:Description", atts);
                         empty = false;
                         first = false;
                     }
@@ -140,7 +140,7 @@ public class Metadata implements XMLizable, PropertyAccess {
                 }
             }
             if (!empty) {
-                handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description");
+                handler.endElement(XMPConstants.RDF_NAMESPACE, "Description", "rdf:Description");
                 if (prefix != null) {
                     handler.endPrefixMapping(prefix);
                 }
