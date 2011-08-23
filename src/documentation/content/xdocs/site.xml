@@ -45,6 +45,7 @@ See http://forrest.apache.org/docs/linking.html for more info
       <mail label="Mailing Lists" href="http://xmlgraphics.apache.org/mail.html" description="Information on Mailing Lists"/>
       <repo label="Code Repositories" href="http://xmlgraphics.apache.org/repo.html" description="Information on Code Repositories"/>
       <changes label="Changes" href="changes.html"/>
+	  <bugs label="Bugs" href="bugs.html"/>
     </information>
   </about>
 
