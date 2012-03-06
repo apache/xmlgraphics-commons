@@ -30,9 +30,9 @@
         and XSL-FO. You will find components such as a PDF library, an RTF library, Graphics2D 
         implementations that let you generate PDF &amp; PostScript files, and much more.
       </p>
-      <p>
-	    Apache XML Graphics Commons is an <a href="http://www.apache.org/">Apache</a> project 
-        and part of a larger community of developers and users.
+      <p>The Apache™ XML Graphics Commons project is part of the <a href="http://www.apache.org">Apache™</a>
+        Software Foundation, which is a wider community of users and developers of open
+		source projects.
       </p>
       <p>
         In the Wiki, we have a 
