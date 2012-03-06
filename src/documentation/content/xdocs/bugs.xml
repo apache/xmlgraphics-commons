@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -20,7 +20,7 @@
 
 <document>
   <header>
-    <title>Apache XML Graphics Commons: Bugs and Other Trackable Issues</title>
+    <title>Apache™ XML Graphics Commons: Bugs and Other Trackable Issues</title>
     <version>$Revision: 911792 $</version>
   </header>
   <body>
@@ -64,3 +64,4 @@ sent to the <link href="http://xmlgraphics.apache.org/mail.html#xmlgraphics-gene
     </section>
   </body>
 </document>
+
