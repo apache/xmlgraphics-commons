@@ -18,13 +18,13 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
 <document>
   <header>
-    <title>Image Loader Framework</title>
+    <title>Apache™ XML Graphics Commons: Image Loader Framework</title>
   </header>
   <body>
     <section id="overview">
       <title>Overview</title>
       <p>
-        Apache XML Graphics Commons contains a unified framework for loading and
+        Apache™ XML Graphics Commons contains a unified framework for loading and
         processing images (bitmap and vector). The package name is
         <code>org.apache.xmlgraphics.image.loader</code>. Key features:
       </p>

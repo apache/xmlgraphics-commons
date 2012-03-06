@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -32,11 +32,13 @@ See http://forrest.apache.org/docs/linking.html for more info
 
 <site label="XMLGraphicsCommons" href="" xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
 
-  <about label="XML Graphics Commons">
+  <about label="Apache™ XML Graphics Commons">
     <index label="Overview" href="index.html" description="Overview"/>
     <download label="Download" href="download.html" description="Download"/>
+	<asf-license label="Apache License" href="http://www.apache.org/licenses"/>"
     <asf-sponsorship label="ASF Sponsorship Program" href="http://www.apache.org/foundation/sponsorship.html"/>"
     <asf-thanks label="ASF Thanks" href="http://www.apache.org/foundation/thanks.html"/>"
+	<asf-security label="Security" href="http://www.apache.org/security/"/>
     <documentation label="Documentation">
       <postscript label="Tools for Adobe PostScript" href="postscript.html" description="Tools for Adobe PostScript"/>
       <image-loader label="Image Loader Framework" href="image-loader.html" description="Image Loader Framework"/>

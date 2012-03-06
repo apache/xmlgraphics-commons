@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -66,7 +66,7 @@ which will be used to configure the chosen Forrest skin.
 
   <!-- mandatory project logo
        default skin: renders it at the top -->
-  <project-name>Apache XML Graphics Commons</project-name>
+  <project-name>Apache™ XML Graphics Commons</project-name>
   <project-description>Common components for Apache Batik and Apache FOP</project-description>
   <project-url>http://xmlgraphics.apache.org/commons/</project-url>
   <project-logo></project-logo>
@@ -90,7 +90,7 @@ which will be used to configure the chosen Forrest skin.
   <favicon-url>favicon.ico</favicon-url>
 
   <!-- The following are used to construct a copyright statement -->
-  <year>2006-2011</year>
+  <year>2006-2012</year>
   <vendor>The Apache Software Foundation.</vendor>
   <!-- The optional copyright-link URL will be used as a link in the
     copyright statement
@@ -364,13 +364,6 @@ which will be used to configure the chosen Forrest skin.
       <height>125</height>
     </credit>
     -->
-    <credit box-location="alt2">
-      <name>ApacheCon NA 2011</name>
-      <url>http://www.apachecon.com/</url>
-      <image>http://apache.org/ads/ApacheCon/2011-na-125x125.png</image>
-      <width>125</width>
-      <height>125</height>
-    </credit>
     
     <!-- A credit with @role="pdf" will be used to compose a footer
      for each page in the PDF, using either "name" or "url" or both.
