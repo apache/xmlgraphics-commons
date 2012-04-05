@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -66,7 +66,7 @@ which will be used to configure the chosen Forrest skin.
 
   <!-- mandatory project logo
        default skin: renders it at the top -->
-  <project-name>Apache XML Graphics Commons</project-name>
+  <project-name>Apache™ XML Graphics Commons</project-name>
   <project-description>Common components for Apache Batik and Apache FOP</project-description>
   <project-url>http://xmlgraphics.apache.org/commons/</project-url>
   <project-logo></project-logo>
@@ -90,12 +90,15 @@ which will be used to configure the chosen Forrest skin.
   <favicon-url>favicon.ico</favicon-url>
 
   <!-- The following are used to construct a copyright statement -->
-  <year>2006-2008</year>
+  <year>2006-2012</year>
   <vendor>The Apache Software Foundation.</vendor>
   <!-- The optional copyright-link URL will be used as a link in the
     copyright statement
   -->
   <copyright-link>http://www.apache.org/licenses/</copyright-link>
+  <trademark-statement>
+    Apache, Apache XML Graphics Commons, and the Apache feather logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.
+  </trademark-statement>
 
   <!-- Some skins use this to form a 'breadcrumb trail' of links.
     Use location="alt" to move the trail to an alternate location
@@ -105,9 +108,8 @@ which will be used to configure the chosen Forrest skin.
     For some skins just set the attributes to blank.
   -->
   <trail location="alt">
-    <link1 name="apache.org" href="http://www.apache.org/"/>
-    <link2 name="XML Federation" href="http://xml.apache.org/"/>
-    <link3 name="xmlgraphics.apache.org" href="http://xmlgraphics.apache.org/"/>
+    <link1 name="The Apache Software Foundation" href="http://www.apache.org/"/>
+    <link2 name="Apache XML Graphics Project" href="http://xmlgraphics.apache.org/"/>
   </trail>
 
   <!-- Configure the TOC, i.e. the Table of Contents.
@@ -362,25 +364,17 @@ which will be used to configure the chosen Forrest skin.
       <height>125</height>
     </credit>
     -->
-	<!--
-    <credit box-location="alt2">
-      <name>ApacheCon US 2009</name>
-      <url>http://us.apachecon.com/</url>
-      <image>http://apache.org/ads/ApacheCon/2009-usa-125x125.png</image>
-      <width>125</width>
-      <height>125</height>
-    </credit>
-	-->
     
     <!-- A credit with @role="pdf" will be used to compose a footer
      for each page in the PDF, using either "name" or "url" or both.
     -->
-    <!--
     <credit role="pdf">
-      <name>Built with Apache Forrest</name>
-      <url>http://forrest.apache.org/</url>
+      <name>PDF created by Apache FOP</name>
+      <url>http://xmlgraphics.apache.org/fop/</url>
+      <image>images/logo.jpg</image>
+      <width>138</width>
+      <height>31</height>
     </credit>
-    -->
   </credits>
 
 </skinconfig>

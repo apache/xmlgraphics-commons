@@ -37,6 +37,11 @@ import javax.xml.transform.Source;
 
 import org.apache.commons.io.IOUtils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.xmlgraphics.java2d.color.ColorUtil;
+import org.apache.xmlgraphics.java2d.color.ColorWithAlternatives;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 
 /**
@@ -57,6 +62,7 @@ public class PSGenerator implements PSCommandMap {
      * later in the document (mostly in the %%Trailer section).
      * @deprecated Please use DSCConstants.ATEND. This constant was in the wrong place.
      */
+    @Deprecated
     public static final Object ATEND = DSCConstants.ATEND;
 
     /** Line feed used by PostScript */
@@ -64,13 +70,14 @@ public class PSGenerator implements PSCommandMap {
 
     private static final String IDENTITY_H = "Identity-H";
 
+    private Log log = LogFactory.getLog(getClass());
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean commentsEnabled = true;
     private boolean compactMode = true;
     private PSCommandMap commandMap = PSProcSets.STD_COMMAND_MAP;
 
-    private Stack graphicsStateStack = new Stack();
+    private Stack<PSState> graphicsStateStack = new Stack<PSState>();
     private PSState currentState;
     //private DecimalFormat df3 = new DecimalFormat("0.000", new DecimalFormatSymbols(Locale.US));
     private DecimalFormat df3 = new DecimalFormat("0.###", new DecimalFormatSymbols(Locale.US));
@@ -209,7 +216,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException  In case of an I/O problem
      */
     public void write(String cmd) throws IOException {
-        /* @todo Check disabled until clarification.
+        /* TODO Check disabled until clarification.
         if (cmd.length() > 255) {
             throw new RuntimeException("PostScript command exceeded limit of 255 characters");
         } */
@@ -470,7 +477,7 @@ public class PSGenerator implements PSCommandMap {
     public boolean restoreGraphicsState() throws IOException {
         if (this.graphicsStateStack.size() > 0) {
             writeln(mapCommand("grestore"));
-            this.currentState = (PSState)this.graphicsStateStack.pop();
+            this.currentState = this.graphicsStateStack.pop();
             return true;
         } else {
             return false;
@@ -643,6 +650,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException In case of an I/O problem
      * @deprecated use useColor method instead
      */
+    @Deprecated
     public void useRGBColor(Color col) throws IOException {
         useColor(col);
     }
@@ -658,47 +666,81 @@ public class PSGenerator implements PSCommandMap {
         }
     }
 
-    private String convertColorToPS(Color col) {
-        StringBuffer p = new StringBuffer();
-        float[] comps = col.getColorComponents(null);
+    private String convertColorToPS(Color color) {
+        StringBuffer codeBuffer = new StringBuffer();
 
-        if (col.getColorSpace().getType() == ColorSpace.TYPE_RGB) {
-            // according to pdfspec 12.1 p.399
-            // if the colors are the same then just use the g or G operator
-            boolean same = (comps[0] == comps[1]
-                        && comps[0] == comps[2]);
-            // output RGB
-            if (same) {
-                p.append(formatDouble(comps[0]));
-            } else {
-                for (int i = 0; i < col.getColorSpace().getNumComponents(); i++) {
-                    if (i > 0) {
-                        p.append(" ");
-                    }
-                    p.append(formatDouble(comps[i]));
+        //Important: Right now, CMYK colors are treated as device colors (DeviceCMYK) irrespective
+        //of any associated color profile. All other colors are converted to sRGB (if necessary)
+        //and the resulting RGB components are treated as DeviceRGB colors.
+        //If all three RGB components are the same, DeviceGray is used.
+
+        boolean established = false;
+        if (color instanceof ColorWithAlternatives) {
+            ColorWithAlternatives colExt = (ColorWithAlternatives)color;
+            //Alternative colors have priority
+            Color[] alt = colExt.getAlternativeColors();
+            for (int i = 0, c = alt.length; i < c; i++) {
+                Color col = alt[i];
+                established = establishColorFromColor(codeBuffer, col);
+                if (established) {
+                    break;
                 }
             }
-            if (same) {
-                p.append(" ").append(mapCommand("setgray"));
-            } else {
-                p.append(" ").append(mapCommand("setrgbcolor"));
+            if (log.isDebugEnabled() && alt.length > 0) {
+                log.debug("None of the alternative colors are supported. Using fallback: "
+                        + color);
             }
-        } else if (col.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
-            // colorspace is CMYK
-            for (int i = 0; i < col.getColorSpace().getNumComponents(); i++) {
-                if (i > 0) {
-                    p.append(" ");
-                }
-                p.append(formatDouble(comps[i]));
-            }
-            p.append(" ").append(mapCommand("setcmykcolor"));
-        } else {
-            // means we're in DeviceGray or Unknown.
-            // assume we're in DeviceGray, because otherwise we're screwed.
-            p.append(formatDouble(comps[0]));
-            p.append(" ").append(mapCommand("setgray"));
         }
-        return p.toString();
+
+        //Fallback
+        if (!established) {
+            established = establishColorFromColor(codeBuffer, color);
+        }
+        if (!established) {
+            establishFallbackRGB(codeBuffer, color);
+        }
+
+        return codeBuffer.toString();
+    }
+
+    private boolean establishColorFromColor(StringBuffer codeBuffer, Color color) {
+        //Important: see above note about color handling!
+        float[] comps = color.getColorComponents(null);
+        if (color.getColorSpace().getType() == ColorSpace.TYPE_CMYK) {
+            // colorspace is CMYK
+            writeSetColor(codeBuffer, comps, "setcmykcolor");
+            return true;
+        }
+        return false;
+    }
+
+    private void writeSetColor(StringBuffer codeBuffer, float[] comps, String command) {
+        for (int i = 0, c = comps.length; i < c; i++) {
+            if (i > 0) {
+                codeBuffer.append(" ");
+            }
+            codeBuffer.append(formatDouble(comps[i]));
+        }
+        codeBuffer.append(" ").append(mapCommand(command));
+    }
+
+    private void establishFallbackRGB(StringBuffer codeBuffer, Color color) {
+        float[] comps;
+        if (color.getColorSpace().isCS_sRGB()) {
+            comps = color.getColorComponents(null);
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("Converting color to sRGB as a fallback: " + color);
+            }
+            ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+            comps = color.getColorComponents(sRGB, null);
+        }
+        assert comps.length == 3;
+        boolean gray = ColorUtil.isGray(color);
+        if (gray) {
+            comps = new float[] {comps[0]};
+        }
+        writeSetColor(codeBuffer, comps, gray ? "setgray" : "setrgbcolor");
     }
 
     /**
@@ -736,6 +778,7 @@ public class PSGenerator implements PSCommandMap {
      * set can be cleared.
      * @deprecated Use the notifyStartNewPage() on ResourceTracker instead.
      */
+    @Deprecated
     public void notifyStartNewPage() {
         getResourceTracker().notifyStartNewPage();
     }
@@ -746,6 +789,7 @@ public class PSGenerator implements PSCommandMap {
      * @param needed true if this is a needed resource, false for a supplied resource
      * @deprecated Use the notifyResourceUsageOnPage() on ResourceTracker instead
      */
+    @Deprecated
     public void notifyResourceUsage(PSResource res, boolean needed) {
         getResourceTracker().notifyResourceUsageOnPage(res);
     }
@@ -758,6 +802,7 @@ public class PSGenerator implements PSCommandMap {
      * @exception IOException In case of an I/O problem
      * @deprecated Use the writeResources() on ResourceTracker instead.
      */
+    @Deprecated
     public void writeResources(boolean pageLevel) throws IOException {
         getResourceTracker().writeResources(pageLevel, this);
     }
@@ -768,6 +813,7 @@ public class PSGenerator implements PSCommandMap {
      * @return true if the resource is registered as being supplied.
      * @deprecated Use the isResourceSupplied() on ResourceTracker instead.
      */
+    @Deprecated
     public boolean isResourceSupplied(PSResource res) {
         return getResourceTracker().isResourceSupplied(res);
     }

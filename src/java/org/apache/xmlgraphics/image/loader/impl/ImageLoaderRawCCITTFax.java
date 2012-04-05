@@ -51,6 +51,10 @@ import org.apache.xmlgraphics.util.io.SubInputStream;
  */
 public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGConstants {
 
+    private static final int COMPRESSION_CCITT_1D = 2;
+    private static final int COMPRESSION_FAX_GROUP3 = 3;
+    private static final int COMPRESSION_FAX_GROUP4 = 4;
+
     /** logger */
     protected static Log log = LogFactory.getLog(ImageLoaderRawCCITTFax.class);
 
@@ -90,9 +94,19 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
             if (fld != null) {
                 compression = fld.getAsInt(0);
                 switch (compression) {
-                case TIFFImage.COMP_FAX_G3_1D:
-                case TIFFImage.COMP_FAX_G3_2D:
-                case TIFFImage.COMP_FAX_G4_2D:
+                case COMPRESSION_CCITT_1D:
+                case COMPRESSION_FAX_GROUP4:
+                    break;
+                case COMPRESSION_FAX_GROUP3:
+                    //Note: the TIFFImage compression constants seem to be a bit misleading!
+                    compression = TIFFImage.COMP_FAX_G3_1D; //1D is the default for Group3
+                    fld = dir.getField(TIFFImageDecoder.TIFF_T4_OPTIONS);
+                    if (fld != null) {
+                        long t4Options = fld.getAsLong(0);
+                        if ((t4Options & 0x01) != 0) {
+                            compression = TIFFImage.COMP_FAX_G3_2D; //"Abusing" for 2D signalling
+                        }
+                    }
                     break;
                 default:
                     log.debug("Unsupported compression " + compression);
@@ -143,6 +157,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         }
 
         /** {@inheritDoc} */
+        @Override
         public int read(byte[] b, int off, int len) throws IOException {
             int result = super.read(b, off, len);
             if (result > 0) {
@@ -155,6 +170,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         }
 
         /** {@inheritDoc} */
+        @Override
         public int read() throws IOException {
             int b = super.read();
             if (b < 0) {

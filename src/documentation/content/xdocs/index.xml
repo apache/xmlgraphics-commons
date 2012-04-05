@@ -18,17 +18,21 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN" "http://forrest.apache.org/dtd/document-v20.dtd">
 <document> 
   <header> 
-    <title>Apache XML Graphics Commons</title>
+    <title>Apache™ XML Graphics Commons</title>
   </header> 
   <body> 
     <section>
       <title>Overview</title>
       <p>
-        Apache XML Graphics Commons is a library that consists of several reusable components 
+        Apache™ XML Graphics Commons is a library that consists of several reusable components 
         used by <a href="ext:batik">Apache Batik</a> and <a href="ext:fop">Apache FOP</a>. 
         Many of these components can easily be used separately outside the domains of SVG 
         and XSL-FO. You will find components such as a PDF library, an RTF library, Graphics2D 
         implementations that let you generate PDF &amp; PostScript files, and much more.
+      </p>
+      <p>The Apache™ XML Graphics Commons project is part of the <a href="http://www.apache.org">Apache™</a>
+        Software Foundation, which is a wider community of users and developers of open
+		source projects.
       </p>
       <p>
         In the Wiki, we have a 

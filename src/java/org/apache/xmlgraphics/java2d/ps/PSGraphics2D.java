@@ -28,7 +28,6 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Rectangle;
@@ -67,6 +66,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
 
     private static final boolean DEBUG = false;
 
+    /**
+     * The G2D instance that represents the root instance
+     * (used in context with create()/dispose()). Null if this instance is the root instance.
+     */
     protected PSGraphics2D rootG2D;
 
     /** the PostScript generator being created */
@@ -532,8 +535,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
                     gen.write(psTilingPattern.toString());
                     gen.writeln("/Pattern " + gen.mapCommand("setcolorspace"));
                     gen.writeln(psTilingPattern.getName() + " " + gen.mapCommand("setcolor"));
-                }
-                catch (IOException ioe) {
+                } catch (IOException ioe) {
                     handleIOException(ioe);
                 }
             }
@@ -821,8 +823,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @return the device configuration
      */
     public GraphicsConfiguration getDeviceConfiguration() {
-        return GraphicsEnvironment.getLocalGraphicsEnvironment().
-                getDefaultScreenDevice().getDefaultConfiguration();
+        return new PSGraphicsConfiguration();
     }
 
     /**

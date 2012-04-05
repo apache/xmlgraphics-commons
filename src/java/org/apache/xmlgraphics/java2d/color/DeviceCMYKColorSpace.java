@@ -19,38 +19,41 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
+import java.awt.Color;
 import java.awt.color.ColorSpace;
 
 /**
  * This class represents an uncalibrated CMYK color space.
  */
-public class DeviceCMYKColorSpace extends ColorSpace {
+public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
+            implements ColorSpaceOrigin {
 
     private static final long serialVersionUID = 2925508946083542974L;
 
-    private static DeviceCMYKColorSpace instance;
+    /** The name for the uncalibrated CMYK pseudo-profile */
+    public static final String PSEUDO_PROFILE_NAME = "#CMYK";
 
     /**
      * Constructs an uncalibrated CMYK ColorSpace object with {@link ColorSpace#TYPE_CMYK} and
      * 4 components.
      * @see java.awt.color.ColorSpace#ColorSpace(int, int)
      */
-    protected DeviceCMYKColorSpace() {
+    public DeviceCMYKColorSpace() {
         super(TYPE_CMYK, 4);
     }
 
     /**
      * Returns an instance of an uncalibrated CMYK color space.
      * @return CMYKColorSpace the requested color space object
+     * @deprecated Use {@link ColorSpaces#getDeviceCMYKColorSpace()} instead.
      */
+    @Deprecated
     public static DeviceCMYKColorSpace getInstance() {
-        if (instance == null) {
-            instance = new DeviceCMYKColorSpace();
-        }
-        return instance;
+        return ColorSpaces.getDeviceCMYKColorSpace();
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toRGB(float[] colorvalue) {
         return new float [] {
             (1 - colorvalue[0]) * (1 - colorvalue[3]),
@@ -59,18 +62,57 @@ public class DeviceCMYKColorSpace extends ColorSpace {
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromRGB(float[] rgbvalue) {
-        throw new UnsupportedOperationException("NYI");
+        assert rgbvalue.length == 3;
+        //Note: this is an arbitrary conversion, not a color-managed one!
+        float r = rgbvalue[0];
+        float g = rgbvalue[1];
+        float b = rgbvalue[2];
+        if (r == g && r == b) {
+            return new float[] {0, 0, 0, 1 - r};
+        } else {
+            float c = 1 - r;
+            float m = 1 - g;
+            float y = 1 - b;
+            float k = Math.min(c, Math.min(m, y));
+            return new float[] {c, m, y, k};
+        }
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] toCIEXYZ(float[] colorvalue) {
         throw new UnsupportedOperationException("NYI");
     }
 
     /** {@inheritDoc} */
+    @Override
     public float[] fromCIEXYZ(float[] colorvalue) {
         throw new UnsupportedOperationException("NYI");
+    }
+
+    /**
+     * Creates a color instance representing a device-specific CMYK color. An sRGB value
+     * is calculated from the CMYK colors but it may not correctly represent the given CMYK
+     * values.
+     * @param cmykComponents the CMYK components
+     * @return the device-specific color
+     */
+    public static Color createCMYKColor(float[] cmykComponents) {
+        DeviceCMYKColorSpace cmykCs = ColorSpaces.getDeviceCMYKColorSpace();
+        Color cmykColor = new ColorWithAlternatives(cmykCs, cmykComponents, 1.0f, null);
+        return cmykColor;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileName() {
+        return PSEUDO_PROFILE_NAME;
+    }
+
+    /** {@inheritDoc} */
+    public String getProfileURI() {
+        return null; //No URI
     }
 
 }

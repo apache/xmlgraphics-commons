@@ -40,6 +40,25 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="PH" type="fix" fixes-bug="51911" due-to="JM and Mehdi Houshmand">
+        Support for T.4 Group 3 1D encoding.
+      </action>
+      <action context="Code" dev="JM" type="fix" fixes-bug="51039" due-to="Florian Barbera Vila Bollain">
+        Fixed a bug formatting ISO 8601 dates with negative two-digit time zones.
+      </action>
+      <action context="Code" dev="JM" type="remove">
+        Removed dependency on com.sun classes to achieve compatibility with Apache Harmony,
+        OpenJDK and possibly other JVMs. 
+      </action>
+      <action context="Code" dev="JM" type="remove">
+        Removal of the deprecated <code>TextHandler.drawString(String, float, float)</code> method.
+      </action>
+      <action context="Code" dev="JM" type="update" fixes-bug="49703" due-to="Glenn Adams">
+        Various code style fixes
+      </action>
+      <action context="Code" dev="JM" type="fix" fixes-bug="49696" due-to="Joshua Marquart">
+        Allow to override priority when registering an ImageWriter on the ImageWriterRegistry.
+      </action>
       <action context="Code" dev="JM" type="fix">
         Fix for TIFFs which report zero as their resolution. This resulted in an exception.
       </action>
