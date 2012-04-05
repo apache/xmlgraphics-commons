@@ -196,7 +196,7 @@ public class XMPSchemaAdapter {
             } else {
                 sb.append('-');
             }
-            if (zoneOffsetHours < 10) {
+            if (Math.abs(zoneOffsetHours) < 10) {
                 sb.append('0');
             }
             sb.append(Math.abs(zoneOffsetHours));
@@ -214,9 +214,9 @@ public class XMPSchemaAdapter {
      * Parses an ISO 8601 date and time value.
      * @param dt the date and time value as an ISO 8601 string
      * @return the parsed date/time
-     * @todo Parse formats other than yyyy-mm-ddThh:mm:ssZ
      */
     public static Date parseISO8601Date(final String dt) {
+        //TODO Parse formats other than yyyy-mm-ddThh:mm:ssZ
         int offset = 0;
         String parsablePart;
         if (dt.endsWith("Z")) {

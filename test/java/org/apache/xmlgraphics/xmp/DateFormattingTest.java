@@ -56,6 +56,10 @@ public class DateFormattingTest extends TestCase {
         s = XMPSchemaAdapter.formatISO8601Date(dt, TimeZone.getTimeZone("GMT-08:00"));
         assertEquals("2008-02-07T07:11:07-08:00", s);
         assertEquals(dt, XMPSchemaAdapter.parseISO8601Date(s));
+
+        s = XMPSchemaAdapter.formatISO8601Date(dt, TimeZone.getTimeZone("GMT-11:00"));
+        assertEquals("2008-02-07T04:11:07-11:00", s);
+        assertEquals(dt, XMPSchemaAdapter.parseISO8601Date(s));
     }
 
 }

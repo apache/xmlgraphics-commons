@@ -21,10 +21,12 @@ package org.apache.xmlgraphics.java2d.ps;
 
 import java.io.IOException;
 
+import org.apache.xmlgraphics.java2d.TextHandler;
+
 /**
  * Interface which the Graphics2D class delegates text painting to for Postscript.
  */
-public interface PSTextHandler extends org.apache.xmlgraphics.java2d.TextHandler {
+public interface PSTextHandler extends TextHandler {
     /**
      * Is called by when the "Setup" or "Prolog" of the PostScript document is generated.
      * Subclasses can do font registration, for example.

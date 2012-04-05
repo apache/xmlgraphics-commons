@@ -53,6 +53,7 @@ import javax.xml.transform.Source;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 import org.w3c.dom.Element;
 
 import org.apache.xmlgraphics.image.loader.Image;
@@ -312,7 +313,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 }
                 decompresser.end();
                 try {
-                    iccProf = ICC_Profile.getInstance(bos.toByteArray());
+                    iccProf = ColorProfileUtil.getICC_Profile(bos.toByteArray());
                 } catch (IllegalArgumentException e) {
                     log.debug("Failed to interpret embedded ICC Profile", e);
                     iccProf = null;

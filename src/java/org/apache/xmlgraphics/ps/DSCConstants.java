@@ -146,7 +146,6 @@ public class DSCConstants {
 
     // ----==== Requirements Conventions ====----
 
-    /**@todo Add the missing comments */
     /**
      * This comment indicates all types of paper media (paper sizes, weight, color)
      * this document requires.

@@ -1,0 +1,87 @@
+ <project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>apache.org</groupId>
+  <artifactId>sign-and-deploy</artifactId>
+  <packaging>pom</packaging>
+  <name>Profiles to run gpg:sign-and-deploy</name>
+  <version>1</version>
+  <url>http://www.apache.org</url>
+  <description>
+    This pom works as a tool for pushing a release to the Apache Nexus repository.
+    Instead of using the 'bundle' mechanism, this signs and pushes each of the four pieces:
+    main jar, pom, -sources jar, and -javadoc jar. To use this you have to have a Maven
+    settings.xml to configure your credentials on the Apache Nexus instance, and 
+    to communicate your GPG key and passphrase.
+
+    Drop this file into a directory with the pieces, and run mvn -f THIS_FILE -Ppublish -Dfile=BASE_FILE_NAME
+
+    Depending on how you manage your settings.xml, you might have to activate more profiles.
+  </description>
+  <properties>
+    <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+  </properties>
+  <profiles>
+    <profile>
+      <id>publish</id>
+      <build>
+	<defaultGoal>verify</defaultGoal>
+	<plugins>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-gpg-plugin</artifactId>
+	    <version>1.1</version>
+	    <executions>
+	      <execution>
+		<id>base</id>
+		<phase>verify</phase>
+		<goals>
+		  <goal>sign-and-deploy-file</goal>
+		</goals>
+		<configuration>
+		  <file>${file}.jar</file>
+		  <repositoryId>apache.releases.https</repositoryId>
+		  <url>${url}</url>
+		  <pomFile>pom.xml</pomFile>
+		  <keyname>${gpg.keyname}</keyname>
+		  <passphrase>${gpg.passphrase}</passphrase>
+		</configuration>
+	      </execution>
+	      <execution>
+		<id>javadoc</id>
+		<phase>verify</phase>
+		<goals>
+		  <goal>sign-and-deploy-file</goal>
+		</goals>
+		<configuration>
+		  <file>${file}-javadoc.jar</file>
+		  <classifier>javadoc</classifier>
+		  <repositoryId>apache.releases.https</repositoryId>
+		  <url>${url}</url>
+		  <pomFile>pom.xml</pomFile>
+		  <keyname>${gpg.keyname}</keyname>
+		  <passphrase>${gpg.passphrase}</passphrase>
+		</configuration>
+	      </execution>
+	      <execution>
+		<id>sources</id>
+		<phase>verify</phase>
+		<goals>
+		  <goal>sign-and-deploy-file</goal>
+		</goals>
+		<configuration>
+		  <file>${file}-sources.jar</file>
+		  <classifier>sources</classifier>
+		  <repositoryId>apache.releases.https</repositoryId>
+		  <url>${url}</url>
+		  <pomFile>pom.xml</pomFile>
+		  <keyname>${gpg.keyname}</keyname>
+		  <passphrase>${gpg.passphrase}</passphrase>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

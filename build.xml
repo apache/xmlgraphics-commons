@@ -30,8 +30,8 @@
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
   <property name="javac.deprecation" value="on"/>
-  <property name="javac.source" value="1.4"/>
-  <property name="javac.target" value="1.4"/>
+  <property name="javac.source" value="1.5"/>
+  <property name="javac.target" value="1.5"/>
   <property name="javac.fork" value="no"/>
 
   <property name="junit.fork" value="on"/>
@@ -123,26 +123,11 @@
   <target name="init" depends="info, init-avail"/>
 
   <target name="init-avail">
-    <available property="jdk14.present" classname="java.lang.CharSequence"/>
-    <fail message="${Name} requires at least Java 1.4" unless="jdk14.present"/>
+    <available property="jdk15.present" classname="java.lang.StringBuilder"/>
+    <fail message="${Name} requires at least Java 1.5" unless="jdk15.present"/>
     
-    <available property="sun.jpeg.present" classname="com.sun.image.codec.jpeg.JPEGCodec"/>
-    <condition property="sun.jpeg.message" value="Sun-private JPEG Support PRESENT">
-      <equals arg1="${sun.jpeg.present}" arg2="true"/>
-    </condition>
-    <condition property="sun.jpeg.message" value="Sun-private JPEG Support NOT Present">
-      <not>
-        <equals arg1="${sun.jpeg.present}" arg2="true"/>
-      </not>
-    </condition>
-    <echo message="${sun.jpeg.message}"/>
     <condition property="internal-codecs.eff.disabled">
-      <or>
-        <not>
-          <equals arg1="${sun.jpeg.present}" arg2="true"/>
-        </not>
-        <equals arg1="${internal-codecs.disabled}" arg2="true"/>
-      </or>
+      <equals arg1="${internal-codecs.disabled}" arg2="true"/>
     </condition>
 
     <available property="junit.present" classname="junit.framework.TestCase"
@@ -209,7 +194,6 @@
     <patternset id="compile-pattern">
       <include name="**/*.java"/>
       <exclude name="**/image/codec/tiff/**/*.java"/>
-      <exclude name="**/image/writer/internal/JPEGImageWriter*.java"/>
       <exclude name="**/image/writer/internal/TIFFImageWriter*.java"/>
     </patternset>
   </target>
@@ -268,7 +252,6 @@
   <target name="uptodate-jar-sources" depends="init">
     <uptodate property="jar.sources.uptodate" targetfile="${build.dir}/${name}-${version}-sources.jar">
       <srcfiles dir="${src.java.dir}"/>
-      <srcfiles dir="${src.java.version.dir}"/>
     </uptodate>
   </target>
 
@@ -337,7 +320,6 @@
         <fileset dir="${basedir}/test/java">
           <include name="**/*Test*.java"/>
           <exclude name="**/*TestSuite.java"/>
-          <exclude name="**/image/writer/internal/JPEGImageWriter*.java" if="internal-codecs.eff.disabled"/>
           <exclude name="**/image/writer/internal/TIFFImageWriter*.java" if="internal-codecs.eff.disabled"/>
         </fileset>
       </batchtest>
@@ -398,6 +380,7 @@ NOTE:
         source="${javac.source}">
       <header><![CDATA[${name} ${version}]]></header>
       <footer><![CDATA[${name} ${version}]]></footer>
+      <link offline="false" href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
       <classpath>
         <path refid="libs-build-classpath"/>
         <pathelement path="${java.class.path}"/>
@@ -657,16 +640,55 @@ NOTE:
     <filter  token="version" value="${version}"/>
     <mkdir dir="${build.dir}/maven"/>
     <copy file="${basedir}/xmlgraphics-commons-pom-template.pom" tofile="${build.dir}/maven/pom.xml" filtering="true"/>
+    <fileset id="bundle-files" dir="${build.dir}">
+      <patternset>
+      <include name="${name}-${version}.jar"/>
+      <include name="${name}-${version}-sources.jar"/>
+      <include name="${name}-${version}-javadoc.jar"/>
+      </patternset>
+      <patternset>
+      <include name="maven/pom.xml"/>
+      </patternset>
+    </fileset>
+    <checksum algorithm="md5">
+      <fileset refid="bundle-files"/>
+    </checksum>
+    <checksum algorithm="sha1">
+      <fileset refid="bundle-files"/>
+    </checksum>
+    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}-sources.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/${name}-${version}-javadoc.jar"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
+    <antcall target="sign-file">
+      <param name="sign.archive" value="${build.dir}/maven/pom.xml"/>
+      <param name="pwd" value="${pwd}"/>
+    </antcall>
     <jar jarfile="${build.dir}/${name}-${version}-bundle.jar">
       <manifest>
         <attribute name="Build-Id" value="${ts} (${user.name} [${os.name} ${os.version} ${os.arch}, Java ${java.runtime.version}])"/>
       </manifest>
       <fileset dir="${build.dir}">
-        <include name="${name}-${version}.jar"/>
-        <include name="${name}-${version}-sources.jar"/>
-        <include name="${name}-${version}-javadoc.jar"/>
+        <patternset>
+          <include name="${name}-${version}.jar*"/>
+          <include name="${name}-${version}-sources.jar*"/>
+          <include name="${name}-${version}-javadoc.jar*"/>
+        </patternset>
       </fileset>
-      <fileset dir="${build.dir}/maven"/>
+      <fileset dir="${build.dir}/maven">
+        <patternset>
+          <include name="pom.xml*"/>
+        </patternset>
+      </fileset>
       <metainf dir="${basedir}" includes="LICENSE,NOTICE"/>
     </jar>
     <move file="${build.dir}/${name}-${version}-bundle.jar" todir="${basedir}"/>

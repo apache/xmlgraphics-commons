@@ -23,30 +23,22 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.io.IOException;
 
 /**
  * Default TextHandler implementation which paints text using graphics primitives (shapes).
  */
 public class StrokingTextHandler implements TextHandler {
 
-    private AbstractGraphics2D g2d;
-
     /**
-     * Legacy constructor.
-     * @param g2d a graphics 2d implementation
-     * @deprecated Use default constructor instead
+     * Default constructor.
      */
-    public StrokingTextHandler(AbstractGraphics2D g2d) {
-        this();
-        this.g2d = g2d;
-    }
-
     public StrokingTextHandler() {
         //nop
     }
 
     /** {@inheritDoc} */
-    public void drawString(Graphics2D g2d, String text, float x, float y) {
+    public void drawString(Graphics2D g2d, String text, float x, float y) throws IOException {
         java.awt.Font awtFont = g2d.getFont();
         FontRenderContext frc = g2d.getFontRenderContext();
         GlyphVector gv = awtFont.createGlyphVector(frc, text);
@@ -54,12 +46,4 @@ public class StrokingTextHandler implements TextHandler {
         g2d.fill(glyphOutline);
     }
 
-    /** {@inheritDoc} */
-    public void drawString(String text, float x, float y) {
-        if (g2d == null) {
-            throw new NullPointerException(
-            "Use legacy constructor when calling this deprecated method!");
-        }
-        drawString(this.g2d, text, x, y);
-    }
 }

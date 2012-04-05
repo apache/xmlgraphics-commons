@@ -46,9 +46,6 @@ import java.io.InputStream;
  * the <code>skipBytes()</code> and <code>readFully()</code> methods and a
  * variety of <code>read</code> methods for various data types.
  *
- * <p> A number of concrete subclasses of <code>SeekableStream</code> are
- * supplied in the <code>com.sun.media.jai.codec</code> package.
- *
  * <p> Three classes are provided for the purpose of adapting a standard
  * <code>InputStream</code> to the <code>SeekableStream</code> interface.
  * <code>ForwardSeekableStream</code> does not allows seeking backwards, but is
@@ -191,7 +188,7 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     // public int available) throws IOException
     // public void close() throws IOException;
 
-    /** Marked position */
+    /** Marked position, shared by {@link ForwardSeekableStream} */
     protected long markPos = -1L;
 
     /**
@@ -300,8 +297,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
         int n = 0;
         do {
             int count = this.read(b, off + n, len - n);
-            if (count < 0)
+            if (count < 0) {
                 throw new EOFException();
+            }
             n += count;
         } while (n < len);
     }
@@ -345,8 +343,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
      */
     public final boolean readBoolean() throws IOException {
         int ch = this.read();
-        if (ch < 0)
+        if (ch < 0) {
             throw new EOFException();
+        }
         return (ch != 0);
     }
 
@@ -370,8 +369,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
      */
     public final byte readByte() throws IOException {
         int ch = this.read();
-        if (ch < 0)
+        if (ch < 0) {
             throw new EOFException();
+        }
         return (byte)(ch);
     }
 
@@ -390,8 +390,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
      */
     public final int readUnsignedByte() throws IOException {
         int ch = this.read();
-        if (ch < 0)
+        if (ch < 0) {
             throw new EOFException();
+        }
         return ch;
     }
 
@@ -419,8 +420,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final short readShort() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (short)((ch1 << 8) + (ch2 << 0));
     }
 
@@ -448,8 +450,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final short readShortLE() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (short)((ch2 << 8) + (ch1 << 0));
     }
 
@@ -476,8 +479,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final int readUnsignedShort() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (ch1 << 8) + (ch2 << 0);
     }
 
@@ -505,8 +509,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final int readUnsignedShortLE() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (ch2 << 8) + (ch1 << 0);
     }
 
@@ -532,8 +537,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final char readChar() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (char)((ch1 << 8) + (ch2 << 0));
     }
 
@@ -560,8 +566,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
     public final char readCharLE() throws IOException {
         int ch1 = this.read();
         int ch2 = this.read();
-        if ((ch1 | ch2) < 0)
+        if ((ch1 | ch2) < 0) {
             throw new EOFException();
+        }
         return (char)((ch2 << 8) + (ch1 << 0));
     }
 
@@ -590,8 +597,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
         int ch2 = this.read();
         int ch3 = this.read();
         int ch4 = this.read();
-        if ((ch1 | ch2 | ch3 | ch4) < 0)
+        if ((ch1 | ch2 | ch3 | ch4) < 0) {
             throw new EOFException();
+        }
         return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
     }
 
@@ -621,8 +629,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
         int ch2 = this.read();
         int ch3 = this.read();
         int ch4 = this.read();
-        if ((ch1 | ch2 | ch3 | ch4) < 0)
+        if ((ch1 | ch2 | ch3 | ch4) < 0) {
             throw new EOFException();
+        }
         return ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + (ch1 << 0));
     }
 
@@ -651,8 +660,9 @@ public abstract class SeekableStream extends InputStream implements DataInput {
         long ch2 = this.read();
         long ch3 = this.read();
         long ch4 = this.read();
-        if ((ch1 | ch2 | ch3 | ch4) < 0)
+        if ((ch1 | ch2 | ch3 | ch4) < 0) {
             throw new EOFException();
+        }
         return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
     }
 

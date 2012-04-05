@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id:$ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.java2d.color;
 

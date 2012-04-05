@@ -37,13 +37,4 @@ public interface TextHandler {
      */
     void drawString(Graphics2D g2d, String text, float x, float y) throws IOException;
 
-    /**
-     * Draw some text.
-     * @param text the text to paint
-     * @param x the x-coordinate where the <code>String</code> should be rendered
-     * @param y the y-coordinate where the <code>String</code> should be rendered
-     * @throws IOException In case of an I/O error
-     * @deprecated Use {@code #drawString(Graphics2D, String, float, float)} instead.
-     */
-    void drawString(String text, float x, float y) throws IOException;
 }

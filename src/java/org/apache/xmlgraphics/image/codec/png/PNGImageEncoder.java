@@ -19,8 +19,6 @@
 
 package org.apache.xmlgraphics.image.codec.png;
 
-import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
-
 import java.awt.Rectangle;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
@@ -39,6 +37,8 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
+
+import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
 
 class CRC {
 
@@ -78,21 +78,24 @@ class ChunkStream extends OutputStream implements DataOutput {
     private ByteArrayOutputStream baos;
     private DataOutputStream dos;
 
-    public ChunkStream(String type) throws IOException {
+    ChunkStream(String type) throws IOException {
         this.type = type;
 
         this.baos = new ByteArrayOutputStream();
         this.dos = new DataOutputStream(baos);
     }
 
+    @Override
     public void write(byte[] b) throws IOException {
         dos.write(b);
     }
 
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         dos.write(b, off, len);
     }
 
+    @Override
     public void write(int b) throws IOException {
         dos.write(b);
     }
@@ -163,17 +166,31 @@ class ChunkStream extends OutputStream implements DataOutput {
         crc = CRC.updateCRC(crc, data, 0, len);
         output.writeInt(crc ^ 0xffffffff);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public void close() throws IOException {
+
+        if ( baos != null ) {
+            baos.close();
+            baos = null;
+        }
+        if (dos != null) {
+            dos.close();
+            dos = null;
+        }
+    }
 }
 
 
 class IDATOutputStream extends FilterOutputStream {
 
-    private static final byte[] typeSignature =
-      {(byte)'I', (byte)'D', (byte)'A', (byte)'T'};
+    private static final byte[] typeSignature
+         = {(byte)'I', (byte)'D', (byte)'A', (byte)'T'};
 
     private int bytesWritten = 0;
     private int segmentLength;
-    byte[] buffer;
+    private byte[] buffer;
 
     public IDATOutputStream(OutputStream output,
                             int segmentLength) {
@@ -182,6 +199,7 @@ class IDATOutputStream extends FilterOutputStream {
         this.buffer = new byte[segmentLength];
     }
 
+    @Override
     public void close() throws IOException {
         flush();
     }
@@ -193,7 +211,12 @@ class IDATOutputStream extends FilterOutputStream {
         out.write(x & 0xff);
     }
 
+    @Override
     public void flush() throws IOException {
+        if (bytesWritten == 0) {
+            return;
+        }
+
         // Length
         writeInt(bytesWritten);
         // 'IDAT' signature
@@ -212,10 +235,12 @@ class IDATOutputStream extends FilterOutputStream {
         bytesWritten = 0;
     }
 
+    @Override
     public void write(byte[] b) throws IOException {
         this.write(b, 0, b.length);
     }
 
+    @Override
     public void write(byte[] b, int off, int len) throws IOException {
         while (len > 0) {
             int bytes = Math.min(segmentLength - bytesWritten, len);
@@ -230,6 +255,7 @@ class IDATOutputStream extends FilterOutputStream {
         }
     }
 
+    @Override
     public void write(int b) throws IOException {
         buffer[bytesWritten++] = (byte)b;
         if (bytesWritten == segmentLength) {
@@ -305,6 +331,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         cs.writeByte(interlace ? (byte)1 : (byte)0);
 
         cs.writeToStream(dataOutput);
+        cs.close();
     }
 
     private byte[] prevRow = null;
@@ -483,12 +510,15 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         }
 
         dos.finish();
+        dos.close();
         ios.flush();
+        ios.close();
     }
 
     private void writeIEND() throws IOException {
         ChunkStream cs = new ChunkStream("IEND");
         cs.writeToStream(dataOutput);
+        cs.close();
     }
 
     private static final float[] srgbChroma = {
@@ -510,6 +540,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 cs.writeInt((int)(chroma[i]*100000));
             }
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -527,6 +558,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             // everything is different.
             cs.writeInt((int)(gamma*100000/*+0.5*/));
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -536,6 +568,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             byte[] ICCProfileData = param.getICCProfileData();
             cs.write(ICCProfileData);
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -548,6 +581,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 cs.writeByte(significantBits[i]);
             }
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -558,6 +592,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             int intent = param.getSRGBIntent();
             cs.write(intent);
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -574,6 +609,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         }
 
         cs.writeToStream(dataOutput);
+        cs.close();
     }
 
     private void writeBKGD() throws IOException {
@@ -603,6 +639,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             }
 
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -616,6 +653,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             }
 
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -642,6 +680,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             }
 
             cs.writeToStream(dataOutput);
+            cs.close();
         } else if (colorType == PNG_COLOR_PALETTE) {
             int lastEntry = Math.min(255, alphaPalette.length - 1);
             int nonOpaque;
@@ -657,6 +696,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                     cs.writeByte(alphaPalette[i]);
                 }
                 cs.writeToStream(dataOutput);
+                cs.close();
             }
         }
     }
@@ -671,6 +711,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             cs.writeByte((byte)dims[2]);
 
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -681,6 +722,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             System.out.println("sPLT not supported yet.");
 
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -709,6 +751,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             cs.writeByte(second);
 
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -727,6 +770,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 cs.write(value);
 
                 cs.writeToStream(dataOutput);
+                cs.close();
             }
         }
     }
@@ -748,8 +792,10 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 DeflaterOutputStream dos = new DeflaterOutputStream(cs);
                 dos.write(value);
                 dos.finish();
+                dos.close();
 
                 cs.writeToStream(dataOutput);
+                cs.close();
             }
         }
     }
@@ -763,6 +809,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             ChunkStream cs = new ChunkStream(type);
             cs.write(data);
             cs.writeToStream(dataOutput);
+            cs.close();
         }
     }
 
@@ -814,6 +861,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
      * the end of the operation, this should be done if needed
      * by the caller of this method.
      */
+    @Override
     public void encode(RenderedImage im) throws IOException {
         this.image = im;
         this.width = image.getWidth();
@@ -998,5 +1046,6 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         writeIEND();
 
         dataOutput.flush();
+        dataOutput.close();
     }
 }
