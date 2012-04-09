@@ -19,10 +19,10 @@
 
 package org.apache.xmlgraphics.image.codec.tiff;
 
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
+
 /**
  * A class for performing LZW decoding.
- *
- *
  */
 public class TIFFLZWDecoder {
 
@@ -60,7 +60,7 @@ public class TIFFLZWDecoder {
     public byte[] decode(byte[] data, byte[] uncompData, int h) {
 
         if(data[0] == (byte)0x00 && data[1] == (byte)0x01) {
-            throw new UnsupportedOperationException("TIFFLZWDecoder0");
+            throw new UnsupportedOperationException(PropertyUtil.getString("TIFFLZWDecoder0"));
         }
 
         initializeStringTable();

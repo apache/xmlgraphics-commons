@@ -437,13 +437,13 @@ public class TIFFField implements Comparable, Serializable {
      * <p><b>Note: this class has a natural ordering that is inconsistent
      * with <code>equals()</code>.</b>
      *
-     * @throws IllegalArgumentException if the parameter is <code>null</code>.
+     * @throws NullPointerException if the parameter is <code>null</code>.
      * @throws ClassCastException if the parameter is not a
      *         <code>TIFFField</code>.
      */
     public int compareTo(Object o) {
         if(o == null) {
-            throw new IllegalArgumentException();
+            throw new NullPointerException();
         }
 
         int oTag = ((TIFFField)o).getTag();

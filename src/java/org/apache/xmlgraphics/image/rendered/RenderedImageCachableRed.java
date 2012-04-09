@@ -53,7 +53,7 @@ public class RenderedImageCachableRed implements CachableRed {
 
     public RenderedImageCachableRed(RenderedImage src) {
         if(src == null){
-            throw new IllegalArgumentException();
+            throw new NullPointerException();
         }
         this.src = src;
     }

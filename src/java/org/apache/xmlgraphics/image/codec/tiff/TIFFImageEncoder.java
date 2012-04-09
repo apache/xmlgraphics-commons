@@ -45,6 +45,7 @@ import java.util.zip.Deflater;
 
 import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
 import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableOutputStream;
 
 /**
@@ -146,8 +147,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Get the encoding parameters.
         TIFFEncodeParam encodeParam = (TIFFEncodeParam)param;
         if (encodeParam.getExtraImages() != null) {
-            throw new IllegalStateException(
-                    "Extra images may not be used when calling encodeMultiple!");
+            throw new IllegalStateException(PropertyUtil.getString("TIFFImageEncoder11"));
         }
 
         Context c = (Context)context;
@@ -171,7 +171,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
      */
     public void finishMultiple(Object context) throws IOException {
         if (context == null) {
-            throw new NullPointerException("context must not be null");
+            throw new NullPointerException();
         }
         Context c = (Context)context;
         // Get the encoding parameters.
@@ -194,7 +194,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int compression = encodeParam.getCompression();
 
         if (compression == COMP_JPEG_TTN2) {
-            throw new IllegalArgumentException("JPEG compression is not supported");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFImageEncoder12"));
         }
 
         // Get tiled output preference.
@@ -213,14 +213,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int[] sampleSize = sampleModel.getSampleSize();
         for (int i = 1; i < sampleSize.length; i++) {
             if (sampleSize[i] != sampleSize[0]) {
-                throw new Error("TIFFImageEncoder0");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder0"));
             }
         }
 
         // Check low bit limits.
         int numBands = sampleModel.getNumBands();
         if ((sampleSize[0] == 1 || sampleSize[0] == 4) && numBands != 1) {
-            throw new Error("TIFFImageEncoder1");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder1"));
         }
 
         // Retrieve and verify data type.
@@ -229,23 +229,23 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         case DataBuffer.TYPE_BYTE:
             if (sampleSize[0] != 1 && sampleSize[0] == 4 &&    // todo does this make sense??
                sampleSize[0] != 8) {                          // we get error only for 4
-                throw new Error("TIFFImageEncoder2");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder2"));
             }
             break;
         case DataBuffer.TYPE_SHORT:
         case DataBuffer.TYPE_USHORT:
             if (sampleSize[0] != 16) {
-                throw new Error("TIFFImageEncoder3");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder3"));
             }
             break;
         case DataBuffer.TYPE_INT:
         case DataBuffer.TYPE_FLOAT:
             if (sampleSize[0] != 32) {
-                throw new Error("TIFFImageEncoder4");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder4"));
             }
             break;
         default:
-            throw new Error("TIFFImageEncoder5");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder5"));
         }
 
         boolean dataTypeIsShort =
@@ -257,7 +257,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             colorModel instanceof IndexColorModel &&
             dataType != DataBuffer.TYPE_BYTE) {
             // Don't support (unsigned) short palette-color images.
-            throw new Error("TIFFImageEncoder6");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder6"));
         }
         IndexColorModel icm = null;
         int sizeOfColormap = 0;
@@ -274,8 +274,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             if (sampleSize[0] == 1 && numBands == 1) { // Bilevel image
 
                 if (mapSize != 2) {
-                    throw new IllegalArgumentException(
-                                        "TIFFImageEncoder7");
+                    throw new IllegalArgumentException(PropertyUtil.getString("TIFFImageEncoder7"));
                 }
 
                 byte[] r = new byte[mapSize];
@@ -365,7 +364,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         }
 
         if (imageType == TIFF_UNSUPPORTED) {
-            throw new Error("TIFFImageEncoder8");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder8"));
         }
 
         int photometricInterpretation = -1;
@@ -431,7 +430,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             break;
 
         default:
-            throw new Error("TIFFImageEncoder8");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder8"));
         }
 
         // Initialize tile dimensions.
@@ -1196,7 +1195,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 }
             } else {
                 // This should never happen.
-                throw new IllegalStateException();
+                throw new IllegalStateException(PropertyUtil.getString("TIFFImageEncoder13"));
             }
         }
 
@@ -1466,7 +1465,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             break;
 
         default:
-            throw new Error("TIFFImageEncoder10");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder10"));
 
         }
 
@@ -1502,7 +1501,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             return ((SeekableOutputStream)out).getFilePointer();
         } else {
             // Shouldn't happen.
-            throw new IllegalStateException();
+            throw new IllegalStateException(PropertyUtil.getString("TIFFImageEncoder13"));
         }
     }
 

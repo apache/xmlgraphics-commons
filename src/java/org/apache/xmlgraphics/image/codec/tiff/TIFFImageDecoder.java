@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import org.apache.xmlgraphics.image.codec.util.ImageDecodeParam;
 import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 
 /**
@@ -84,7 +85,7 @@ public class TIFFImageDecoder extends ImageDecoderImpl {
 
     public RenderedImage decodeAsRenderedImage(int page) throws IOException {
         if  ((page < 0) || (page >= getNumPages())) {
-            throw new IOException("TIFFImageDecoder0");
+            throw new IOException(PropertyUtil.getString("TIFFImageDecoder0"));
         }
         return new TIFFImage(input, (TIFFDecodeParam)param, page);
     }
