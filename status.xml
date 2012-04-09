@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="47175" due-to="Sebastian Bazley">
+        Ensure that throwables have meaningful messages.
+      </action>
       <action context="Code" dev="GA" type="update">
         Minor build improvements to eliminate warning and parameterize junit formatting.
         Eliminate (5) deprecation warnings.

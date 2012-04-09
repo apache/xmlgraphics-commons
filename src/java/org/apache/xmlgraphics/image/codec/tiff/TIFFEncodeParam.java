@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.zip.Deflater;
 
 import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
 /**
  * An instance of <code>ImageEncodeParam</code> for encoding images in
@@ -149,7 +150,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
             // Do nothing.
             break;
         default:
-            throw new Error("TIFFEncodeParam0");
+            throw new RuntimeException(PropertyUtil.getString("TIFFEncodeParam0"));
         }
 
         this.compression = compression;
@@ -250,7 +251,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
         if (deflateLevel < 1
                 && deflateLevel > 9
                 && deflateLevel != Deflater.DEFAULT_COMPRESSION) {
-            throw new Error("TIFFEncodeParam1");
+            throw new RuntimeException(PropertyUtil.getString("TIFFEncodeParam1"));
         }
 
         this.deflateLevel = deflateLevel;
