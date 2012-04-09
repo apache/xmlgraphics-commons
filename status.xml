@@ -21,6 +21,7 @@
 <status>
 	<developers>
 	  <!-- In alphabetical order (last name) -->
+	  <person name="Glenn Adams"       email="gadams@apache.org"        id="GA"/>
 	  <person name="Max Berger"        email="mayberger@apache.org"     id="MB"/>
 	  <person name="Chris Bowditch"    email="cbowditch@apache.org"     id="CB"/>
 	  <person name="Adrian Cumiskey"   email="acumiskey@apache.org"     id="AC"/>
@@ -40,6 +41,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="update">
+        Minor build improvements to eliminate warning and parameterize junit formatting.
+        Eliminate (5) deprecation warnings.
+      </action>
       <action context="Code" dev="PH" type="fix" fixes-bug="51911" due-to="JM and Mehdi Houshmand">
         Support for T.4 Group 3 1D encoding.
       </action>

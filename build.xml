@@ -35,6 +35,9 @@
   <property name="javac.fork" value="no"/>
 
   <property name="junit.fork" value="on"/>
+  <property name="junit.haltonfailure" value="off"/>
+  <property name="junit.printsummary" value="off"/>
+  <property name="junit.formatter.brief" value="on"/>
 
   <property name="javadoc.packages" value="org.apache.xmlgraphics.*"/>
   
@@ -202,7 +205,7 @@
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}" fork="${javac.fork}" debug="${javac.debug}"
            deprecation="${javac.deprecation}" optimize="${javac.optimize}"
-           source="${javac.source}" target="${javac.target}">
+           source="${javac.source}" target="${javac.target}" includeAntRuntime="true">
       <src path="${src.java.dir}"/>
       <patternset refid="compile-pattern"/>
       <classpath refid="libs-build-classpath"/>
@@ -275,13 +278,18 @@
   <!-- =================================================================== -->
   <!-- Testing                                                             -->
   <!-- =================================================================== -->
-  <target name="junit-compile" depends="package" if="junit.present">
+  <target name="junit-init" depends="init-avail">
+    <condition property="junit.formatter.brief.use">
+      <istrue value="${junit.formatter.brief}"/>
+    </condition>
+  </target>
+  <target name="junit-compile" depends="package,junit-init" if="junit.present">
     <mkdir dir="${build.dir}/test-classes"/>
     <mkdir dir="${build.dir}/test-reports"/>
     <javac destdir="${build.dir}/test-classes" fork="${javac.fork}"
            debug="${javac.debug}" deprecation="${javac.deprecation}"
            optimize="${javac.optimize}" source="${javac.source}"
-           target="${javac.target}">
+           target="${javac.target}" includeAntRuntime="true">
       <src path="${basedir}/test/java"/>
       <patternset refid="compile-pattern"/>
       <classpath>
@@ -299,14 +307,13 @@
       </fileset>
     </copy>
   </target>
-
   <target name="junit-basic" depends="junit-compile" description="Runs the standard JUnit test suite" if="junit.present">
     <echo message="Running basic functionality tests"/>
-    <junit haltonerror="no" fork="${junit.fork}" errorproperty="test.junit.error" failureproperty="test.junit.failure">
+    <junit haltonerror="no" haltonfailure="${junit.haltonfailure}" fork="${junit.fork}" errorproperty="test.junit.error" failureproperty="test.junit.failure" printsummary="${junit.printsummary}">
       <sysproperty key="basedir" value="${basedir}"/>
       <sysproperty key="jawa.awt.headless" value="true"/>
       <jvmarg value="-enableassertions"/>
-      <formatter type="brief" usefile="false"/>
+      <formatter type="brief" usefile="false" if="junit.formatter.brief.use"/>
       <formatter type="plain" usefile="true"/>
       <formatter type="xml" usefile="true"/>
       <classpath>

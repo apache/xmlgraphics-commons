@@ -83,7 +83,7 @@ public class ServiceTest extends TestCase {
     public void testWithClassNames() throws Exception {
         Class cls = ImageWriter.class;
         boolean found = true;
-        Iterator iter = Service.providers(cls, false);
+        Iterator iter = Service.providerNames(cls);
         while (iter.hasNext()) {
             Object obj = iter.next();
             assertNotNull(obj);
@@ -97,7 +97,7 @@ public class ServiceTest extends TestCase {
         assertTrue("None of the expected classes found", found);
 
         //Do it a second time to make sure the cache works as expected
-        iter = Service.providers(cls, false);
+        iter = Service.providerNames(cls);
         while (iter.hasNext()) {
             Object obj = iter.next();
             assertNotNull(obj);

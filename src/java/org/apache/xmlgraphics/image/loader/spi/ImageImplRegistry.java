@@ -104,19 +104,19 @@ public class ImageImplRegistry {
      */
     public void discoverClasspathImplementations() {
         //Dynamic registration of ImagePreloaders
-        Iterator iter = Service.providers(ImagePreloader.class, true);
+        Iterator iter = Service.providers(ImagePreloader.class);
         while (iter.hasNext()) {
             registerPreloader((ImagePreloader)iter.next());
         }
 
         //Dynamic registration of ImageLoaderFactories
-        iter = Service.providers(ImageLoaderFactory.class, true);
+        iter = Service.providers(ImageLoaderFactory.class);
         while (iter.hasNext()) {
             registerLoaderFactory((ImageLoaderFactory)iter.next());
         }
 
         //Dynamic registration of ImageConverters
-        iter = Service.providers(ImageConverter.class, true);
+        iter = Service.providers(ImageConverter.class);
         while (iter.hasNext()) {
             registerConverter((ImageConverter)iter.next());
         }
