@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="47174" due-to="Sebastian Bazley">
+        Should never use Error to report runtime errors.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="47175" due-to="Sebastian Bazley">
         Ensure that throwables have meaningful messages.
       </action>

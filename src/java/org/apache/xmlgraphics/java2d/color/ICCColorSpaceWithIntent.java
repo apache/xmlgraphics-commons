@@ -85,7 +85,7 @@ public class ICCColorSpaceWithIntent extends ICC_ColorSpace implements ColorSpac
         case SATURATION:
             return saturationToRGB(values);
         default:
-            throw new Error("invalid intent:" + intent );
+            throw new RuntimeException("invalid intent:" + intent );
         }
     }
 
