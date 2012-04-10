@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.net.URI;
+
 import java.util.List;
 
 import org.xml.sax.ContentHandler;
@@ -216,15 +218,19 @@ public class XMPArray extends XMPComplexValue {
         for (int i = 0, c = values.size(); i < c; i++) {
             String lang = (String)xmllang.get(i);
             atts.clear();
+            Object v = values.get(i);
             if (lang != null) {
                 atts.addAttribute(XMPConstants.XML_NS, "lang", "xml:lang", "CDATA", lang);
             }
+            if (v instanceof URI) {
+                atts.addAttribute(XMPConstants.RDF_NAMESPACE, "resource",
+                        "rdf:resource", "CDATA", ((URI)v).toString());
+            }
             handler.startElement(XMPConstants.RDF_NAMESPACE,
                     "li", "rdf:li", atts);
-            Object v = values.get(i);
             if (v instanceof XMPComplexValue) {
                 ((XMPComplexValue)v).toSAX(handler);
-            } else {
+            } else if (!(v instanceof URI)) {
                 String value = (String)values.get(i);
                 char[] chars = value.toCharArray();
                 handler.characters(chars, 0, chars.length);

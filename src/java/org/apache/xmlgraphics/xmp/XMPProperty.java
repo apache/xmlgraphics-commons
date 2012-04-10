@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.net.URI;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -38,6 +40,7 @@ public class XMPProperty implements XMLizable {
     private Object value;
     private String xmllang;
     private Map qualifiers;
+    private boolean uri;
 
     /**
      * Creates a new XMP property.
@@ -47,6 +50,7 @@ public class XMPProperty implements XMLizable {
     public XMPProperty(QName name, Object value) {
         this.name = name;
         this.value = value;
+        this.uri = false;
     }
 
     /** @return the qualified name of the property (namespace URI + local name) */
@@ -192,12 +196,15 @@ public class XMPProperty implements XMLizable {
     public void toSAX(ContentHandler handler) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         String qName = getEffectiveQName();
+        if (value instanceof URI) {
+            atts.addAttribute(XMPConstants.RDF_NAMESPACE, "resource", "rdf:resource", "CDATA", ((URI)value).toString());
+        }
         handler.startElement(getName().getNamespaceURI(),
                 getName().getLocalName(), qName, atts);
         if (value instanceof XMPComplexValue) {
             XMPComplexValue cv = ((XMPComplexValue)value);
             cv.toSAX(handler);
-        } else {
+        } else if (!(value instanceof URI)) {
             char[] chars = value.toString().toCharArray();
             handler.characters(chars, 0, chars.length);
         }
