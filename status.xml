@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="add" fixes-bug="43940" due-to="Julien Aymé">
+        Add double format utility to improve thread safety and performance.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="50497" due-to="Brian Carlson">
         Support rdf:resource attributes in XMP.
       </action>
