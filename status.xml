@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53177" due-to="R. Meyer">
+        Fix for XGC when rendering PostScript using SVG being drawn upside down when using a custom affine transform.
+      </action>
       <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
         Use new double format utility.
       </action>
