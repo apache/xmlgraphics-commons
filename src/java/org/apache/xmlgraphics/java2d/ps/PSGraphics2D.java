@@ -456,8 +456,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             gen.saveGraphicsState();
 
             AffineTransform trans = getTransform();
-            boolean newTransform = gen.getCurrentState().checkTransform(trans)
-                    && !trans.isIdentity();
+            boolean newTransform = !trans.isIdentity();
 
             if (newTransform) {
                 gen.concatMatrix(trans);
@@ -756,8 +755,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             gen.saveGraphicsState();
 
             AffineTransform trans = getTransform();
-            boolean newTransform = gen.getCurrentState().checkTransform(trans)
-                    && !trans.isIdentity();
+            boolean newTransform = !trans.isIdentity();
 
             if (newTransform) {
                 gen.concatMatrix(trans);

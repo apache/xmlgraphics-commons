@@ -71,6 +71,12 @@
     </fileset>
   </path>
 
+  <path id="libs-tools-build-classpath">
+    <fileset dir="${lib.dir}/build">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
   <path id="libs-run-classpath">
     <fileset dir="${lib.dir}">
       <include name="*.jar"/>
@@ -294,6 +300,7 @@
       <patternset refid="compile-pattern"/>
       <classpath>
         <path refid="libs-build-classpath"/>
+        <path refid="libs-tools-build-classpath"/>
         <fileset dir="${build.dir}">
           <include name="${name}-${version}.jar"/>
         </fileset>
@@ -319,6 +326,7 @@
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <path refid="libs-build-classpath"/>
+        <path refid="libs-tools-build-classpath"/>
         <fileset dir="build">
           <include name="${name}-${version}.jar"/>
         </fileset>
