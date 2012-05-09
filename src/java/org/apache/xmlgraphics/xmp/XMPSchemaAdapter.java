@@ -19,14 +19,10 @@
 
 package org.apache.xmlgraphics.xmp;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.xmlgraphics.util.DateFormatUtil;
 import org.apache.xmlgraphics.util.QName;
 
 /**
@@ -160,13 +156,6 @@ public class XMPSchemaAdapter {
         return formatISO8601Date(dt, TimeZone.getDefault());
     }
 
-    private static DateFormat createPseudoISO8601DateFormat() {
-        DateFormat df = new SimpleDateFormat(
-                "yyyy'-'MM'-'dd'T'HH':'mm':'ss", Locale.ENGLISH);
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return df;
-    }
-
     /**
      * Formats a Date using ISO 8601 format in the given time zone.
      * @param dt the date
@@ -174,79 +163,7 @@ public class XMPSchemaAdapter {
      * @return the formatted date
      */
     public static String formatISO8601Date(Date dt, TimeZone tz) {
-        //ISO 8601 cannot be expressed directly using SimpleDateFormat
-        Calendar cal = Calendar.getInstance(tz, Locale.ENGLISH);
-        cal.setTime(dt);
-        int offset = cal.get(Calendar.ZONE_OFFSET);
-        offset += cal.get(Calendar.DST_OFFSET);
-
-        //DateFormat is operating on GMT so adjust for time zone offset
-        Date dt1 = new Date(dt.getTime() + offset);
-        StringBuffer sb = new StringBuffer(createPseudoISO8601DateFormat().format(dt1));
-
-        offset /= (1000 * 60); //Convert to minutes
-
-        if (offset == 0) {
-            sb.append('Z');
-        } else {
-            int zoneOffsetHours = offset / 60;
-            int zoneOffsetMinutes = Math.abs(offset % 60);
-            if (zoneOffsetHours > 0) {
-                sb.append('+');
-            } else {
-                sb.append('-');
-            }
-            if (Math.abs(zoneOffsetHours) < 10) {
-                sb.append('0');
-            }
-            sb.append(Math.abs(zoneOffsetHours));
-            sb.append(':');
-            if (zoneOffsetMinutes < 10) {
-                sb.append('0');
-            }
-            sb.append(zoneOffsetMinutes);
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * Parses an ISO 8601 date and time value.
-     * @param dt the date and time value as an ISO 8601 string
-     * @return the parsed date/time
-     */
-    public static Date parseISO8601Date(final String dt) {
-        //TODO Parse formats other than yyyy-mm-ddThh:mm:ssZ
-        int offset = 0;
-        String parsablePart;
-        if (dt.endsWith("Z")) {
-            parsablePart = dt.substring(0, dt.length() - 1);
-        } else {
-            int pos;
-            int neg = 1;
-            pos = dt.lastIndexOf('+');
-            if (pos < 0) {
-                pos = dt.lastIndexOf('-');
-                neg = -1;
-            }
-            if (pos >= 0) {
-                String timeZonePart = dt.substring(pos);
-                parsablePart = dt.substring(0, pos);
-                offset = Integer.parseInt(timeZonePart.substring(1, 3)) * 60;
-                offset += Integer.parseInt(timeZonePart.substring(4, 6));
-                offset *= neg;
-            } else {
-                parsablePart = dt;
-            }
-        }
-        Date d;
-        try {
-            d = createPseudoISO8601DateFormat().parse(parsablePart);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid ISO 8601 date format: " + dt);
-        }
-        d.setTime(d.getTime() - offset * 60 * 1000);
-        return d;
+        return DateFormatUtil.formatISO8601(dt, tz);
     }
 
     /**
@@ -279,7 +196,7 @@ public class XMPSchemaAdapter {
         if (dt == null) {
             return null;
         } else {
-            return parseISO8601Date(dt);
+            return DateFormatUtil.parseISO8601Date(dt);
         }
     }
 
@@ -514,9 +431,9 @@ public class XMPSchemaAdapter {
         for (int i = 0, c = res.length; i < c; i++) {
             Object obj = arr[i];
             if (obj instanceof Date) {
-                res[i] = (Date)((Date)obj).clone();
+                res[i] = (Date) ((Date) obj).clone();
             } else {
-                res[i] = parseISO8601Date(obj.toString());
+                res[i] = DateFormatUtil.parseISO8601Date(obj.toString());
             }
         }
         return res;

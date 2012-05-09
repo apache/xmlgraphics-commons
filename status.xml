@@ -41,7 +41,10 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
-      <action context="Code" dev="GA" type="fix" fixes-bug="53177" due-to="R. Meyer">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53184" due-to="Robert Meyer">
+        Unify date formatting between FOP and XGC as well as tidying the date format code.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="53177" due-to="Robert Meyer">
         Fix for XGC when rendering PostScript using SVG being drawn upside down when using a custom affine transform.
       </action>
       <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
