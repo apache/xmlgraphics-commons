@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.PSGenerator;
 import org.apache.xmlgraphics.ps.dsc.events.DSCAtend;
@@ -44,6 +47,7 @@ import org.apache.xmlgraphics.ps.dsc.tools.DSCTools;
  * DSCHandler interface.
  */
 public class DSCParser implements DSCParserConstants {
+    private static final Log LOG = LogFactory.getLog(DSCParser.class);
 
     private InputStream in;
     private BufferedReader reader;
@@ -90,11 +94,11 @@ public class DSCParser implements DSCParserConstants {
 
     /**
      * This method is used to write out warning messages for the parsing process. Subclass to
-     * override this method. The default implementation writes to System.err.
+     * override this method. The default implementation writes to logger.
      * @param msg the warning message
      */
     protected void warn(String msg) {
-        System.err.println(msg);
+        LOG.warn(msg);
     }
 
     /**
