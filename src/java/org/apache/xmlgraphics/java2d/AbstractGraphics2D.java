@@ -906,7 +906,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
             }   catch(NoninvertibleTransformException e){
                                 // Should never happen since we checked the
                                 // matrix determinant
-                throw new Error();
+                throw new RuntimeException(e);
             }
 
             gc.transform(xform);

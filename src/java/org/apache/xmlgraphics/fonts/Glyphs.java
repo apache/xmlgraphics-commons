@@ -585,7 +585,7 @@ public class Glyphs {
         List lines = new java.util.ArrayList();
         InputStream in = Glyphs.class.getResourceAsStream(filename);
         if (in == null) {
-            throw new Error("Cannot load " + filename
+            throw new RuntimeException("Cannot load " + filename
                     + ". The Glyphs class cannot properly be initialized!");
         }
         try {
@@ -597,10 +597,10 @@ public class Glyphs {
                 }
             }
         } catch (UnsupportedEncodingException uee) {
-            throw new Error("Incompatible JVM! US-ASCII encoding is not supported."
+            throw new RuntimeException("Incompatible JVM! US-ASCII encoding is not supported."
                     + " The Glyphs class cannot properly be initialized!");
         } catch (IOException ioe) {
-            throw new Error("I/O error while loading " + filename
+            throw new RuntimeException("I/O error while loading " + filename
                     + ". The Glyphs class cannot properly be initialized!");
         } finally {
             IOUtils.closeQuietly(in);

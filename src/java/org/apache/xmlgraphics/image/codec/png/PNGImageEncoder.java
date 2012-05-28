@@ -39,6 +39,7 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
 import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
 class CRC {
 
@@ -895,7 +896,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             // Ensure all channels have the same bit depth
             for (int i = 1; i < sampleSize.length; i++) {
                 if (sampleSize[i] != bitDepth) {
-                    throw new RuntimeException();
+                    throw new RuntimeException(PropertyUtil.getString("PNGImageEncoder0"));
                 }
             }
 
@@ -907,7 +908,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             } else if (bitDepth > 8 && bitDepth < 16) {
                 bitDepth = 16;
             } else if (bitDepth > 16) {
-                throw new RuntimeException();
+                throw new RuntimeException(PropertyUtil.getString("PNGImageEncoder1"));
             }
         }
 
@@ -917,10 +918,10 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         ColorModel colorModel = image.getColorModel();
         if (colorModel instanceof IndexColorModel) {
             if (bitDepth < 1 || bitDepth > 8) {
-                throw new RuntimeException();
+                throw new RuntimeException(PropertyUtil.getString("PNGImageEncoder2"));
             }
             if (sampleModel.getNumBands() != 1) {
-                throw new RuntimeException();
+                throw new RuntimeException(PropertyUtil.getString("PNGImageEncoder3"));
             }
 
             IndexColorModel icm = (IndexColorModel)colorModel;
@@ -970,7 +971,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 redPalette = greenPalette = bluePalette = alphaPalette = null;
                 this.colorType = PNG_COLOR_GRAY;
             } else {
-                throw new RuntimeException();
+                throw new RuntimeException(PropertyUtil.getString("PNGImageEncoder4"));
             }
         } else if (numBands == 1) {
             if (param == null) {

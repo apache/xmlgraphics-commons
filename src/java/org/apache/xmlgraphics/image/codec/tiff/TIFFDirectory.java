@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 
 /**
@@ -98,15 +99,13 @@ public class TIFFDirectory implements Serializable {
         stream.seek(0L);
         int endian = stream.readUnsignedShort();
         if (!isValidEndianTag(endian)) {
-            throw new
-                IllegalArgumentException("TIFFDirectory1");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory1"));
         }
         isBigEndian = (endian == 0x4d4d);
 
         int magic = readUnsignedShort(stream);
         if (magic != 42) {
-            throw new
-                IllegalArgumentException("TIFFDirectory2");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory2"));
         }
 
         // Get the initial ifd offset as an unsigned int (using a long)
@@ -114,8 +113,7 @@ public class TIFFDirectory implements Serializable {
 
         for (int i = 0; i < directory; i++) {
             if (ifd_offset == 0L) {
-                throw new
-                   IllegalArgumentException("TIFFDirectory3");
+                throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory3"));
             }
 
             stream.seek(ifd_offset);
@@ -125,8 +123,7 @@ public class TIFFDirectory implements Serializable {
             ifd_offset = readUnsignedInt(stream);
         }
         if (ifd_offset == 0L) {
-            throw new
-               IllegalArgumentException("TIFFDirectory3");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory3"));
         }
 
         stream.seek(ifd_offset);
@@ -154,8 +151,7 @@ public class TIFFDirectory implements Serializable {
         stream.seek(0L);
         int endian = stream.readUnsignedShort();
         if (!isValidEndianTag(endian)) {
-            throw new
-                IllegalArgumentException("TIFFDirectory1");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory1"));
         }
         isBigEndian = (endian == 0x4d4d);
 
@@ -227,8 +223,7 @@ public class TIFFDirectory implements Serializable {
                     stream.seek(value);
                 }
             } catch (ArrayIndexOutOfBoundsException ae) {
-
-                System.err.println(tag + " " + "TIFFDirectory4");
+                // System.err.println(tag + " " + "TIFFDirectory4"); TODO - log this message
                 // if the data type is unknown we should skip this TIFF Field
                 stream.seek(nextTagOffset);
                 continue;
@@ -338,8 +333,7 @@ public class TIFFDirectory implements Serializable {
                 break;
 
             default:
-                System.err.println("TIFFDirectory0");
-                break;
+                throw new RuntimeException(PropertyUtil.getString("TIFFDirectory0"));
             }
 
             fields[i] = new TIFFField(tag, type, count, obj);
@@ -580,14 +574,12 @@ public class TIFFDirectory implements Serializable {
         stream.seek(0L);
         int endian = stream.readUnsignedShort();
         if (!isValidEndianTag(endian)) {
-            throw new
-                IllegalArgumentException("TIFFDirectory1");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory1"));
         }
         boolean isBigEndian = (endian == 0x4d4d);
         int magic = readUnsignedShort(stream, isBigEndian);
         if (magic != 42) {
-            throw new
-                IllegalArgumentException("TIFFDirectory2");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory2"));
         }
 
         stream.seek(4L);

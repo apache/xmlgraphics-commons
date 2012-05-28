@@ -307,7 +307,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         public void setBitDepth(int bitDepth) {
             if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4 &&
                 bitDepth != 8 && bitDepth != 16) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam2"));
             }
             this.bitDepth = bitDepth;
             bitDepthSet = true;
@@ -391,7 +391,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          */
         public void setBitShift(int bitShift) {
             if (bitShift < 0) {
-                throw new RuntimeException();
+                throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam25"));
             }
             this.bitShift = bitShift;
             bitShiftSet = true;
@@ -464,7 +464,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          */
         public void setBitDepth(int bitDepth) {
             if (bitDepth != 8 && bitDepth != 16) {
-                throw new RuntimeException();
+                throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam26"));
             }
             this.bitDepth = bitDepth;
             bitDepthSet = true;
@@ -482,7 +482,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          */
         public void setBackgroundRGB(int[] rgb) {
             if (rgb.length != 3) {
-                throw new RuntimeException();
+                throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam27"));
             }
             backgroundRGB = rgb;
             backgroundSet = true;
@@ -637,7 +637,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      */
     public void setChromaticity(float[] chromaticity) {
         if (chromaticity.length != 8) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam28"));
         }
         this.chromaticity = (float[])(chromaticity.clone());
         chromaticitySet = true;
