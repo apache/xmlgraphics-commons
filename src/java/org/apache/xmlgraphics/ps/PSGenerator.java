@@ -27,10 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Stack;
 
 import javax.xml.transform.Source;
@@ -43,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xmlgraphics.java2d.color.ColorUtil;
 import org.apache.xmlgraphics.java2d.color.ColorWithAlternatives;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
+import org.apache.xmlgraphics.util.DoubleFormatUtil;
 
 /**
  * This class is used to output PostScript code to an OutputStream. This class assumes that
@@ -79,9 +77,8 @@ public class PSGenerator implements PSCommandMap {
 
     private Stack<PSState> graphicsStateStack = new Stack<PSState>();
     private PSState currentState;
-    //private DecimalFormat df3 = new DecimalFormat("0.000", new DecimalFormatSymbols(Locale.US));
-    private DecimalFormat df3 = new DecimalFormat("0.###", new DecimalFormatSymbols(Locale.US));
-    private DecimalFormat df5 = new DecimalFormat("0.#####", new DecimalFormatSymbols(Locale.US));
+
+    private StringBuffer doubleBuffer = new StringBuffer(16);
 
     private StringBuffer tempBuffer = new StringBuffer(256);
 
@@ -196,7 +193,9 @@ public class PSGenerator implements PSCommandMap {
      * @return the formatted value
      */
     public String formatDouble(double value) {
-        return df3.format(value);
+        doubleBuffer.setLength(0);
+        DoubleFormatUtil.formatDouble(value, 3, 3, doubleBuffer);
+        return doubleBuffer.toString();
     }
 
     /**
@@ -206,7 +205,9 @@ public class PSGenerator implements PSCommandMap {
      * @return the formatted value
      */
     public String formatDouble5(double value) {
-        return df5.format(value);
+        doubleBuffer.setLength(0);
+        DoubleFormatUtil.formatDouble(value, 5, 5, doubleBuffer);
+        return doubleBuffer.toString();
     }
 
     /**
@@ -439,7 +440,7 @@ public class PSGenerator implements PSCommandMap {
                 } else if (params[i] == DSCConstants.ATEND) {
                     tempBuffer.append(DSCConstants.ATEND);
                 } else if (params[i] instanceof Double) {
-                    tempBuffer.append(df3.format(params[i]));
+                    tempBuffer.append(formatDouble(((Double)params[i]).doubleValue()));
                 } else if (params[i] instanceof Number) {
                     tempBuffer.append(params[i].toString());
                 } else if (params[i] instanceof Date) {

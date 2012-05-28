@@ -21,6 +21,7 @@
 <status>
 	<developers>
 	  <!-- In alphabetical order (last name) -->
+	  <person name="Glenn Adams"       email="gadams@apache.org"        id="GA"/>
 	  <person name="Max Berger"        email="mayberger@apache.org"     id="MB"/>
 	  <person name="Chris Bowditch"    email="cbowditch@apache.org"     id="CB"/>
 	  <person name="Adrian Cumiskey"   email="acumiskey@apache.org"     id="AC"/>
@@ -40,6 +41,31 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53184" due-to="Robert Meyer">
+        Unify date formatting between FOP and XGC as well as tidying the date format code.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="53177" due-to="Robert Meyer">
+        Fix for XGC when rendering PostScript using SVG being drawn upside down when using a custom affine transform.
+      </action>
+      <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
+        Use new double format utility.
+      </action>
+      <action context="Code" dev="GA" type="add" fixes-bug="43940" due-to="Julien Aymé">
+        Add double format utility to improve thread safety and performance.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="50497" due-to="Brian Carlson">
+        Support rdf:resource attributes in XMP.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="47174" due-to="Sebastian Bazley">
+        Should never use Error to report runtime errors.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="47175" due-to="Sebastian Bazley">
+        Ensure that throwables have meaningful messages.
+      </action>
+      <action context="Code" dev="GA" type="update">
+        Minor build improvements to eliminate warning and parameterize junit formatting.
+        Eliminate (5) deprecation warnings.
+      </action>
       <action context="Code" dev="PH" type="fix" fixes-bug="51911" due-to="JM and Mehdi Houshmand">
         Support for T.4 Group 3 1D encoding.
       </action>

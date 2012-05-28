@@ -347,7 +347,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
 
         // Arbitrarily select a BufferedImage type.
         int imageType;
-        switch(raster.getNumBands()) {
+        int numBands = raster.getNumBands();
+        switch(numBands) {
         case 1:
             imageType = BufferedImage.TYPE_BYTE_GRAY;
             break;
@@ -358,7 +359,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
             imageType = BufferedImage.TYPE_4BYTE_ABGR;
             break;
         default:
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Unsupported band count: " + numBands);
         }
 
         // Create a BufferedImage.

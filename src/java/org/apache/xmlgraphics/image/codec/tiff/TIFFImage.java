@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 import org.apache.xmlgraphics.image.rendered.AbstractRed;
 import org.apache.xmlgraphics.image.rendered.CachableRed;
@@ -122,7 +123,7 @@ public class TIFFImage extends AbstractRed {
         try {
             inflater.inflate(inflated);
         } catch (DataFormatException dfe) {
-            throw new RuntimeException("TIFFImage17" + ": " +
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage17") + ": " +
                                        dfe.getMessage());
         }
         inflater.reset();
@@ -154,7 +155,8 @@ public class TIFFImage extends AbstractRed {
         } else if (field.getType() == TIFFField.TIFF_LONG) {
             value = field.getAsLongs();
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage18") + ": "
+                                       + field.getType());
         }
 
         return value;
@@ -200,7 +202,7 @@ public class TIFFImage extends AbstractRed {
 
             // Support planar format (band sequential) only for 1 sample/pixel.
             if (planarConfiguration[0] != 1 && samplesPerPixel != 1) {
-                throw new RuntimeException("TIFFImage0");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage0"));
             }
 
             // Read the TIFF_BITS_PER_SAMPLE field
@@ -215,7 +217,7 @@ public class TIFFImage extends AbstractRed {
                 // Ensure that all samples have the same bit depth.
                 for (int i = 1; i < bitsPerSample.length; i++) {
                     if (bitsPerSample[i] != bitsPerSample[0]) {
-                        throw new RuntimeException("TIFFImage1");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage1"));
                     }
                 }
             }
@@ -233,7 +235,7 @@ public class TIFFImage extends AbstractRed {
                 // Check that all the samples have the same format
                 for (int l = 1; l < sampleFormat.length; l++) {
                     if (sampleFormat[l] != sampleFormat[0]) {
-                        throw new RuntimeException("TIFFImage2");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage2"));
                     }
                 }
 
@@ -271,7 +273,7 @@ public class TIFFImage extends AbstractRed {
             }
 
             if (!isValidDataFormat) {
-                throw new RuntimeException("TIFFImage3");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage3"));
             }
 
             // Figure out what compression if any, is being used.
@@ -338,7 +340,8 @@ public class TIFFImage extends AbstractRed {
 
             // Bail out if not one of the supported types.
             if (imageType == TYPE_UNSUPPORTED) {
-                throw new RuntimeException("TIFFImage4");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage4") + ": "
+                                           + imageType);
             }
 
             // Set basic image layout
@@ -403,7 +406,7 @@ public class TIFFImage extends AbstractRed {
                 TIFFField tileOffsetsField =
                     dir.getField(TIFFImageDecoder.TIFF_STRIP_OFFSETS);
                 if (tileOffsetsField == null) {
-                    throw new RuntimeException("TIFFImage5");
+                    throw new RuntimeException(PropertyUtil.getString("TIFFImage5"));
                 } else {
                     tileOffsets = getFieldAsLongs(tileOffsetsField);
                 }
@@ -411,7 +414,7 @@ public class TIFFImage extends AbstractRed {
                 TIFFField tileByteCountsField =
                     dir.getField(TIFFImageDecoder.TIFF_STRIP_BYTE_COUNTS);
                 if (tileByteCountsField == null) {
-                    throw new RuntimeException("TIFFImage6");
+                    throw new RuntimeException(PropertyUtil.getString("TIFFImage6"));
                 } else {
                     tileByteCounts = getFieldAsLongs(tileByteCountsField);
                 }
@@ -446,7 +449,7 @@ public class TIFFImage extends AbstractRed {
             case COMP_FAX_G3_2D:
             case COMP_FAX_G4_2D:
                 if (sampleSize != 1) {
-                    throw new RuntimeException("TIFFImage7");
+                    throw new RuntimeException(PropertyUtil.getString("TIFFImage7"));
                 }
 
                 // Fax T.4 compression options
@@ -489,12 +492,11 @@ public class TIFFImage extends AbstractRed {
                     predictor = predictorField.getAsInt(0);
 
                     if (predictor != 1 && predictor != 2) {
-                        throw new RuntimeException("TIFFImage8");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage8"));
                     }
 
                     if (predictor == 2 && sampleSize != 8) {
-                        throw new RuntimeException(sampleSize +
-                                                   "TIFFImage9");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage9"));
                     }
                 }
 
@@ -503,11 +505,11 @@ public class TIFFImage extends AbstractRed {
                 break;
 
             case COMP_JPEG_OLD:
-                throw new RuntimeException("TIFFImage15");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage15"));
 
             default:
-                throw new RuntimeException("Compression not supported: " + compression);
-                //throw new RuntimeException("TIFFImage10");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage10") + ": "
+                                           + compression);
             }
 
             ColorModel  colorModel  = null;
@@ -604,7 +606,7 @@ public class TIFFImage extends AbstractRed {
                 // Get the colormap
                 TIFFField cfield = dir.getField(TIFFImageDecoder.TIFF_COLORMAP);
                 if (cfield == null) {
-                    throw new RuntimeException("TIFFImage11");
+                    throw new RuntimeException(PropertyUtil.getString("TIFFImage11"));
                 } else {
                     colormap = cfield.getAsChars();
                 }
@@ -701,7 +703,8 @@ public class TIFFImage extends AbstractRed {
                 break;
 
             default:
-                throw new RuntimeException("TIFFImage4");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage4") + ": "
+                                           + imageType);
             }
 
         Map properties = new HashMap();
@@ -736,7 +739,7 @@ public class TIFFImage extends AbstractRed {
     public synchronized Raster getTile(int tileX, int tileY) {
         if ((tileX < 0) || (tileX >= tilesX) ||
             (tileY < 0) || (tileY >= tilesY)) {
-            throw new IllegalArgumentException("TIFFImage12");
+            throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage12"));
         }
 
         // System.out.println("Called TIFF getTile:" + tileX + "," + tileY);
@@ -774,7 +777,8 @@ public class TIFFImage extends AbstractRed {
             save_offset = stream.getFilePointer();
             stream.seek(tileOffsets[tileY * tilesX + tileX]);
         } catch (IOException ioe) {
-            throw new RuntimeException("TIFFImage13");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
         }
 
         // Number of bytes in this tile (strip) after compression.
@@ -835,7 +839,8 @@ public class TIFFImage extends AbstractRed {
 
                 stream.seek(save_offset);
             } catch (IOException ioe) {
-                throw new RuntimeException("TIFFImage13");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
             }
         } else if (imageType == TYPE_PALETTE) { // palette-RGB
             if (sampleSize == 16) {
@@ -902,7 +907,8 @@ public class TIFFImage extends AbstractRed {
                         stream.seek(save_offset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
 
                     if (dataType == DataBuffer.TYPE_USHORT) {
@@ -1001,7 +1007,8 @@ public class TIFFImage extends AbstractRed {
                         stream.seek(save_offset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
                 }
 
@@ -1043,14 +1050,15 @@ public class TIFFImage extends AbstractRed {
                             tempData = new byte[byteCount];
                             stream.readFully(tempData, 0, byteCount);
                         } else {
-                            throw new RuntimeException(
-                                    "Compression type not supported: " + compression);
+                            throw new RuntimeException(PropertyUtil.getString("IFFImage10") + ": "
+                                                       + compression);
                         }
 
                         stream.seek(save_offset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
 
                     // Expand the palette image into an rgb image with ushort
@@ -1098,14 +1106,15 @@ public class TIFFImage extends AbstractRed {
                             stream.readFully(bdata, 0, byteCount);
 
                         } else {
-                            throw new RuntimeException(
-                                    "Compression type not supported: " + compression);
+                            throw new RuntimeException(PropertyUtil.getString("TIFFImage10")
+                                                       + ": " + compression);
                         }
 
                         stream.seek(save_offset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
                 }
 
@@ -1123,7 +1132,8 @@ public class TIFFImage extends AbstractRed {
                         stream.readFully(data, 0, byteCount);
                         stream.seek(save_offset);
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
 
                     // If compressed, decode the data.
@@ -1209,7 +1219,8 @@ public class TIFFImage extends AbstractRed {
                         stream.seek(save_offset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException("TIFFImage13");
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
                     }
                 }
             }
@@ -1248,7 +1259,8 @@ public class TIFFImage extends AbstractRed {
 
                 stream.seek(save_offset);
             } catch (IOException ioe) {
-                throw new RuntimeException("TIFFImage13");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
             }
         } else { // everything else
             try {
@@ -1274,8 +1286,8 @@ public class TIFFImage extends AbstractRed {
                         inflate(data, bdata);
 
                     } else {
-                        throw new RuntimeException(
-                                "Compression type not supported: " + compression);
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage10")
+                                                   + ": " + compression);
                     }
 
                 } else if (sampleSize == 16) {
@@ -1371,7 +1383,8 @@ public class TIFFImage extends AbstractRed {
                 stream.seek(save_offset);
 
             } catch (IOException ioe) {
-                throw new RuntimeException("TIFFImage13");
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
             }
 
             // Modify the data for certain special cases.
@@ -1531,7 +1544,8 @@ public class TIFFImage extends AbstractRed {
         try {
             stream.readFully(byteArray, 0, byteCount);
         } catch (IOException ioe) {
-            throw new RuntimeException("TIFFImage13");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
         }
 
         interpretBytesAsShorts(byteArray, shortArray, shortCount);
@@ -1547,7 +1561,8 @@ public class TIFFImage extends AbstractRed {
         try {
             stream.readFully(byteArray, 0, byteCount);
         } catch (IOException ioe) {
-            throw new RuntimeException("TIFFImage13");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
+                                       ioe.getMessage());
         }
 
         interpretBytesAsInts(byteArray, intArray, intCount);
@@ -1645,7 +1660,8 @@ public class TIFFImage extends AbstractRed {
                 }
             }
         } catch (java.lang.ArrayIndexOutOfBoundsException ae) {
-            throw new RuntimeException("TIFFImage14");
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage14") + ": " +
+                                       ae.getMessage());
         }
 
         return dst;
@@ -1668,7 +1684,8 @@ public class TIFFImage extends AbstractRed {
                 cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage19") + ": " +
+                                                   numBands);
         }
 
         int componentSize = 0;
@@ -1684,7 +1701,8 @@ public class TIFFImage extends AbstractRed {
                 componentSize = 32;
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage20") + ": " +
+                                                   dataType);
         }
 
         RGBBits = new int[numBands];

@@ -19,6 +19,9 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import java.util.Stack;
 
 import org.xml.sax.Attributes;
@@ -227,6 +230,17 @@ public class XMPHandler extends DefaultHandler {
                         } else {
                             getCurrentArray(true).add(s);
                         }
+                    } else {
+                        String res = atts.getValue(XMPConstants.RDF_NAMESPACE,
+                                "resource");
+                        if ( res != null ) {
+                            try {
+                                URI resource = new URI(res);
+                                getCurrentArray(true).add(resource);
+                            } catch (URISyntaxException e) {
+                                throw new SAXException("rdf:resource value is not a well-formed URI", e);
+                            }
+                        }
                     }
                 }
             } else if ("Description".equals(localName)) {
@@ -261,8 +275,17 @@ public class XMPHandler extends DefaultHandler {
                 String s = content.toString().trim();
                 prop = new XMPProperty(name, s);
                 String lang = atts.getValue(XMPConstants.XML_NS, "lang");
+                String res = atts.getValue(XMPConstants.RDF_NAMESPACE, "resource");
                 if (lang != null) {
                     prop.setXMLLang(lang);
+                }
+                if (res != null) {
+                    try {
+                        URI resource = new URI(res);
+                        prop.setValue(resource);
+                    } catch (URISyntaxException e) {
+                        throw new SAXException("rdf:resource value is not a well-formed URI", e);
+                    }
                 }
             }
             if (prop.getName() == null) {
