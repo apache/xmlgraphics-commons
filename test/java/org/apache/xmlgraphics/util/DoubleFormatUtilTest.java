@@ -118,6 +118,102 @@ public class DoubleFormatUtilTest extends TestCase {
         expected = "0.00002";
         actual = format(value, decimals, precision);
         assertEquals(value, decimals, precision, expected, actual);
+
+        // Test added after bug #43940 was reopened
+        value = 0.005859375;
+        expected = "0.00585938";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+    }
+
+    public void testLimits() {
+        int decimals = 19;
+        int precision = 19;
+
+        double value = Double.NaN;
+        String expected = "NaN";
+        String actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = Double.POSITIVE_INFINITY;
+        expected = "Infinity";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = Double.NEGATIVE_INFINITY;
+        expected = "-Infinity";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3 + Double.MIN_VALUE;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3 - Double.MIN_VALUE;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 0.0010000000000000002; // == Math.nextAfter(1e-3, Double.POSITIVE_INFINITY);
+        expected = "0.0010000000000000002";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "0.001";
+        actual = format(value, 18, 18);
+        assertEquals(value, 18, 18, expected, actual);
+
+        value = 0.0009999999999999998; // == Math.nextAfter(1e-3, Double.NEGATIVE_INFINITY);
+        expected = "0.0009999999999999998";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "0.001";
+        actual = format(value, 18, 18);
+        assertEquals(value, 18, 18, expected, actual);
+
+        value = 1e7 + Double.MIN_VALUE;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e7 - Double.MIN_VALUE;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e7;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1.0000000000000002E7; // == Math.nextAfter(1e7, Double.POSITIVE_INFINITY);
+        expected = "10000000.000000002";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "10000000";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+
+        value = 9999999.999999998; // == Math.nextAfter(1e7, Double.NEGATIVE_INFINITY);
+        expected = "9999999.999999998";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "10000000";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+
+        value = 0.000009999999999999997; // Check higher precision
+        expected = "0.000009999999999999997";
+        actual = format(value, 21, 21);
+        assertEquals(value, 21, 21, expected, actual);
+        expected = "0.00001";
+        actual = format(value, 20, 20);
+        assertEquals(value, 20, 20, expected, actual);
     }
 
     /**
