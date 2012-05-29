@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
+        Fix handling of NaN, {+,-}Infinity, and other edge cases. Submitted by Julien Aymé.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="53184" due-to="Robert Meyer">
         Unify date formatting between FOP and XGC as well as tidying the date format code.
       </action>
