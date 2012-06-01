@@ -260,6 +260,9 @@ public class DoubleFormatUtilTest extends TestCase {
      * whereas DecimalFormat may have some formating errors regarding the last digit.
      */
     private String refFormat(double value, int decimals, int precision) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return Double.toString(value);
+        }
         buf.setLength(0);
         BigDecimal bg = new BigDecimal(Double.toString(value));
         int scale = Math.abs(value) < 1.0 ? precision : decimals;
@@ -514,5 +517,19 @@ public class DoubleFormatUtilTest extends TestCase {
         }
         long toStringDuration = System.currentTimeMillis() - start;
         System.out.println("toString duration: " + toStringDuration + "ms to format " + (3 * nbTest) + " doubles");
+    }
+
+    public void testAllDoubleRanges() {
+        Random r = new Random();
+        double value;
+        String expected, actual;
+        for (int i = -330; i <= 315; i++) {
+            value = r.nextDouble() * Math.pow(10.0, i);
+            for (int scale = 1; scale <= 350; scale++) {
+                expected = refFormat(value, scale, scale);
+                actual = format(value, scale, scale);
+                assertEquals(value, scale, scale, expected, actual);
+            }
+        }
     }
 }
