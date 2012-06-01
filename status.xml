@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="51149" due-to="Luis Bernardo">
+        Improve performance for certain kinds of PNG images.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="53327" due-to="Julien Aymé">
         Fix handling of values less than 1E-300.
       </action>
