@@ -164,8 +164,11 @@ public class DoubleFormatUtil {
                 } else if (digits == 0) {
                     long decP = Long.parseLong(intS);
                     format(target, scale, 0L, decP);
+                } else if (decLength < digits) {
+                    long decP = Long.parseLong(intS) * tenPow(decLength + 1) + Long.parseLong(decS) * 10;
+                    format(target, exposant + decLength, 0L, decP);
                 } else {
-                    long subDecP = decLength <= digits ? Long.parseLong(decS) * tenPow(digits - decLength) : Long.parseLong(decS.substring(0, digits));
+                    long subDecP = Long.parseLong(decS.substring(0, digits));
                     long decP = Long.parseLong(intS) * tenPow(digits) + subDecP;
                     format(target, scale, 0L, decP);
                 }
@@ -182,7 +185,7 @@ public class DoubleFormatUtil {
      * @return true if the source value will be rounded to zero
      */
     private static boolean isRoundedToZero(double source, int decimals, int precision) {
-        return Math.abs(source) < 5.0 / tenPow(Math.max(decimals, precision) + 1);
+        return source == 0.0 || Math.abs(source) < 5.0 / tenPowDouble(Math.max(decimals, precision) + 1);
     }
 
     /**
@@ -281,12 +284,12 @@ public class DoubleFormatUtil {
         int scale = (source >= 1.0) ? decimals : precision;
 
         long intPart = (long) Math.floor(source);
-        long tenScale = tenPow(scale);
+        double tenScale = tenPowDouble(scale);
         double fracUnroundedPart = (source - intPart) * tenScale;
         long fracPart = Math.round(fracUnroundedPart);
         if (fracPart >= tenScale) {
             intPart++;
-            fracPart -= tenScale;
+            fracPart = Math.round(fracPart - tenScale);
         }
         if (fracPart != 0L) {
             // Remove trailing zeroes
@@ -308,7 +311,7 @@ public class DoubleFormatUtil {
                 // append fractional part
                 target.append('.');
                 // insert leading zeroes
-                while (scale > 0 && fracPart < tenPow(--scale)) {
+                while (scale > 0 && fracPart < tenPowDouble(--scale)) {
                     target.append('0');
                 }
                 target.append(fracPart);
@@ -356,11 +359,11 @@ public class DoubleFormatUtil {
     private static boolean tooCloseToRound(double source, int scale) {
         source = Math.abs(source);
         long intPart = (long) Math.floor(source);
-        double fracPart = (source - intPart) * tenPow(scale);
-        double distanceToRound = Math.abs(fracPart - Math.floor(fracPart) - 0.5);
-        // For huge scale, we have to reduce the range.
-        double range = scale > 12 ? .1 : .001;
-        return distanceToRound <= range;
+        double fracPart = (source - intPart) * tenPowDouble(scale);
+        double range = .001;
+        double distanceToRound1 = Math.abs(fracPart - Math.floor(fracPart));
+        double distanceToRound2 = Math.abs(fracPart - Math.floor(fracPart) - 0.5);
+        return distanceToRound1 <= range || distanceToRound2 <= range;
         // .001 range: Totally arbitrary range,
         // I never had a failure in 10e7 random tests with this value
         // May be JVM dependent or architecture dependent
