@@ -52,6 +52,15 @@ import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
 
+// CSOFF: ConstantName
+// CSOFF: InnerAssignment
+// CSOFF: MethodName
+// CSOFF: MissingSwitchDefault
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NoWhitespaceAfter
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 /**
  * @version $Id$
  */

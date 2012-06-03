@@ -25,8 +25,9 @@ import java.util.Locale;
  * This class represents a group of ExtendedLocalizable objects which
  * have a shared default locale.
  *
- * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
+ *
+ * Originally authored by Stephane Hillion.
  */
 public class LocaleGroup {
     /**

@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
-import org.apache.xmlgraphics.image.loader.ImageInfo;
 
 /**
  * Defines an image converter that can convert one image representation into another.

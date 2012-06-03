@@ -26,8 +26,9 @@ import java.util.MissingResourceException;
  * This interface must be implemented by the classes which must provide a
  * way to override the default locale.
  *
- * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
+ *
+ * Originally authored by Stephane Hillion.
  */
 public interface Localizable {
     /**

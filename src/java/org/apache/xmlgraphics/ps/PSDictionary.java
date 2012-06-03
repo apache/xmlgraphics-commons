@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+// CSOFF: InnerAssignment
+
 /**
  * This class is used to encapsulate postscript dictionary objects.
  */

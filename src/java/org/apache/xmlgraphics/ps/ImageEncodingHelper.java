@@ -143,8 +143,8 @@ public class ImageEncodingHelper {
             data = new double[nbands];
             break;
         default:
-            throw new IllegalArgumentException("Unknown data buffer type: "+
-                                               dataType);
+            throw new IllegalArgumentException("Unknown data buffer type: "
+                                               + dataType);
         }
 
         ColorModel colorModel = image.getColorModel();

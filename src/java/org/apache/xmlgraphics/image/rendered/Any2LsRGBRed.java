@@ -33,17 +33,20 @@ import java.awt.image.SinglePixelPackedSampleModel;
 import java.awt.image.WritableRaster;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
-import org.apache.xmlgraphics.image.rendered.AbstractRed;
-import org.apache.xmlgraphics.image.rendered.Any2sRGBRed;
-import org.apache.xmlgraphics.image.rendered.CachableRed;
+
+// CSOFF: ConstantName
+// CSOFF: NeedBraces
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
 
 /**
  * This function will tranform an image from any colorspace into a
  * luminance image.  The alpha channel if any will be copied to the
  * new image.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
 public class Any2LsRGBRed extends AbstractRed {
 
@@ -108,8 +111,8 @@ public class Any2LsRGBRed extends AbstractRed {
         SampleModel srcSM = src.getSampleModel();
 
         // Fast case, SRGB source, INT Pack writable raster...
-        if (srcIssRGB &&
-            Any2sRGBRed.is_INT_PACK_COMP(wr.getSampleModel())) {
+        if (srcIssRGB
+            && Any2sRGBRed.is_INT_PACK_COMP(wr.getSampleModel())) {
             src.copyData(wr);
             if (srcCM.hasAlpha())
                 GraphicsUtil.coerceData(wr, srcCM, false);
@@ -244,8 +247,7 @@ public class Any2LsRGBRed extends AbstractRed {
                 return GraphicsUtil.Linear_sRGB_Unpre;
 
             return GraphicsUtil.Linear_sRGB;
-        }
-        else {
+        } else {
             // No ColorModel so try to make some intelligent
             // decisions based just on the number of bands...
             // 1 bands -> replicated into RGB
@@ -261,8 +263,9 @@ public class Any2LsRGBRed extends AbstractRed {
                 return GraphicsUtil.Linear_sRGB_Unpre;
             case 3:
                 return GraphicsUtil.Linear_sRGB;
+            default:
+                return GraphicsUtil.Linear_sRGB_Unpre;
             }
-            return GraphicsUtil.Linear_sRGB_Unpre;
         }
     }
 

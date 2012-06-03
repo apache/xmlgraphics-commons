@@ -54,9 +54,8 @@ public class ImageConverterBitmap2G2D extends AbstractImageConverter {
                 AffineTransform at = new AffineTransform();
                 at.translate(area.getX(), area.getY());
                 //Scale image to fit
-                double sx, sy;
-                sx = w / ri.getWidth();
-                sy = h / ri.getHeight();
+                double sx = w / ri.getWidth();
+                double sy = h / ri.getHeight();
                 if (sx != 1.0 || sy != 1.0) {
                     at.scale(sx, sy);
                 }

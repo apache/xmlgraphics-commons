@@ -31,6 +31,9 @@ import java.util.Map;
  */
 public final class PSProcSets {
 
+    private PSProcSets() {
+    }
+
     /** the standard procset for the XML Graphics project */
     public static final PSResource STD_PROCSET;
     /** the EPS procset for the XML Graphics project */
@@ -99,7 +102,7 @@ public final class PSProcSets {
             Iterator iter = STANDARD_MACROS.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry)iter.next();
-                gen.writeln("/" + entry.getValue() + "/" + entry.getKey()+" ld");
+                gen.writeln("/" + entry.getValue() + "/" + entry.getKey() + " ld");
             }
 
             gen.writeln("/re {4 2 roll M"); //define rectangle

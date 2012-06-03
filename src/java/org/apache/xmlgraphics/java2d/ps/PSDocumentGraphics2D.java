@@ -29,9 +29,10 @@ import org.apache.xmlgraphics.ps.DSCConstants;
  * is used to create a full document around the PostScript rendering from
  * <tt>PSGraphics2D</tt>.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  * @version $Id$
  * @see org.apache.xmlgraphics.java2d.ps.PSGraphics2D
+ *
+ * Originally authored by Keiron Liddle.
  */
 public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 

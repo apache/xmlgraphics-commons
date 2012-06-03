@@ -26,8 +26,9 @@ import java.util.ResourceBundle;
  * This interface provides much more control over internationalization
  * than the Localizable interface.
  *
- * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
+ *
+ * Originally authored by Stephane Hillion.
  */
 public interface ExtendedLocalizable extends Localizable {
     /**

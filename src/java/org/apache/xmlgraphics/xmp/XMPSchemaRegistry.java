@@ -29,7 +29,7 @@ import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema;
 /**
  * This class is a registry of XMP schemas. It's implemented as a singleton.
  */
-public class XMPSchemaRegistry {
+public final class XMPSchemaRegistry {
 
     private static XMPSchemaRegistry instance = null;
 

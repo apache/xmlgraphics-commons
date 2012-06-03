@@ -47,6 +47,10 @@ import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
+// CSOFF: NeedBraces
+// CSOFF: ParameterName
+// CSOFF: WhitespaceAround
+
 /**
  * This extension of the <tt>java.awt.Graphics2D</tt> abstract class
  * is still abstract, but it implements a lot of the <tt>Graphics2D</tt>
@@ -62,9 +66,10 @@ import java.util.Map;
  * <tt>drawRect</tt> can be expressed as <tt>draw(new Rectangle(..))</tt>),
  * are implemented by <tt>AbstractGraphics2D</tt>
  *
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
  * @version $Id$
  * @see org.apache.xmlgraphics.java2d.GraphicContext
+ *
+ * Originally authored by Vincent Hardy.
  */
 public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable {
     /**
@@ -912,8 +917,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
             gc.transform(xform);
             retVal = drawImage(img, 0, 0, null);
             gc.transform(inverseTransform);
-        }
-        else{
+        } else {
             AffineTransform savTransform = new AffineTransform(gc.getTransform());
             gc.transform(xform);
             retVal = drawImage(img, 0, 0, null);

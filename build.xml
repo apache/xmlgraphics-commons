@@ -19,9 +19,9 @@
 
   <!-- See build.properties and build-local.properties for overriding build settings. -->
   <!-- build-local.properties is not stored in SVN and overrides values from build.properties -->
+  <property environment="env"/>
   <property file="${basedir}/build-local.properties"/>
   <property file="${basedir}/build.properties"/>
-  <property environment="env"/>
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
@@ -56,6 +56,7 @@
   <property name="dist.src.dir" value="${basedir}/dist-src"/>
   <property name="dist.bin.result.dir" value="${dist.bin.dir}/${name}-${version}"/>
   <property name="dist.src.result.dir" value="${dist.src.dir}/${name}-${version}"/>
+  <property name="samedir" value="${basedir}"/>
 
   <!-- .NET support (using IKVM) -->
   <property name="ikvm.dir" value="."/>
@@ -69,18 +70,13 @@
     <fileset dir="${lib.dir}">
       <include name="*.jar"/>
     </fileset>
-  </path>
-
-  <path id="libs-tools-build-classpath">
     <fileset dir="${lib.dir}/build">
       <include name="*.jar"/>
     </fileset>
   </path>
 
   <path id="libs-run-classpath">
-    <fileset dir="${lib.dir}">
-      <include name="*.jar"/>
-    </fileset>
+    <path refid="libs-build-classpath"/>
     <fileset dir="${build.dir}">
       <include name="${name}.jar"/>
     </fileset>
@@ -300,7 +296,6 @@
       <patternset refid="compile-pattern"/>
       <classpath>
         <path refid="libs-build-classpath"/>
-        <path refid="libs-tools-build-classpath"/>
         <fileset dir="${build.dir}">
           <include name="${name}-${version}.jar"/>
         </fileset>
@@ -326,7 +321,6 @@
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <path refid="libs-build-classpath"/>
-        <path refid="libs-tools-build-classpath"/>
         <fileset dir="build">
           <include name="${name}-${version}.jar"/>
         </fileset>
@@ -445,6 +439,45 @@ NOTE:
   <!-- =================================================================== -->
   <!-- Checkstyle                                                          -->
   <!-- =================================================================== -->
+  <property name="checkstyle.location" value="${optional.lib.dir}/checkstyle-all-5.1.jar" />
+  <property name="checkstyle.noframes.xslt" value="${basedir}/checkstyle-noframes.xsl" />
+  <property name="checkstyle.config" value="${basedir}/checkstyle-5.1.xml" />
+  <path id="checkstyle-classpath">
+    <path refid="libs-build-classpath"/>
+    <pathelement location="${checkstyle.location}"/>
+  </path>
+  <condition property="checkstyle.avail">
+    <and>
+      <available classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
+        <classpath refid="checkstyle-classpath"/>
+      </available>
+      <available file="${checkstyle.noframes.xslt}"/>
+      <available file="${checkstyle.config}"/>
+    </and>
+  </condition>
+  <target name="checkstyle-avail" unless="checkstyle.avail">
+    <echo message="Checkstyle support NOT present. Please download it from http://checkstyle.sf.net/ and"/>
+    <echo message="... please provide ${checkstyle.location}"/>
+    <echo message="... please provide ${checkstyle.noframes.xslt}"/>
+    <echo message="... please provide ${checkstyle.config}"/>
+  </target>
+  <target name="checkstyle" depends="package, checkstyle-avail" if="checkstyle.avail" description="Runs Checkstyle for a code quality report">
+    <taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle-classpath"/>
+    <mkdir dir="${build.dir}"/>
+    <checkstyle config="${checkstyle.config}" failonviolation="false">
+      <classpath>
+        <path refid="checkstyle-classpath"/>
+        <pathelement location="${build.classes.dir}"/>
+        <pathelement location="${build.sandbox-classes.dir}"/>
+        <pathelement location="${build.codegen-classes.dir}"/>
+      </classpath>
+      <fileset dir="${src.dir}" includes="**/*.java"/>
+      <formatter type="xml" toFile="${build.dir}/report_checkstyle.xml"/>
+    </checkstyle>
+    <xslt in="${build.dir}/report_checkstyle.xml" out="${build.dir}/report_checkstyle.html" style="${checkstyle.noframes.xslt}"/>
+  </target>
+
+  <!--
   <property name="checkstyle.home.dir" value="${optional.lib.dir}"/>
   <property name="checkstyle.noframes.xslt" value="${checkstyle.home.dir}/contrib/checkstyle-noframes.xsl"/>
 
@@ -518,6 +551,7 @@ NOTE:
   </target>
 
   <target name="checkstyle" depends="checkstyle-avail, checkstyle-check, checkstyle-html" description="Runs Checkstyle for a code quality report"/>
+  -->
 
   <!-- =================================================================== -->
   <!-- Creates the documentation                                           -->

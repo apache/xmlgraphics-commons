@@ -33,7 +33,8 @@ public final class GrayScaleColorConverter implements ColorConverter {
 
     private static final GrayScaleColorConverter SINGLETON = new GrayScaleColorConverter();
 
-    private GrayScaleColorConverter() { }
+    private GrayScaleColorConverter() {
+    }
 
     /**
      * Returns a singleton instance.

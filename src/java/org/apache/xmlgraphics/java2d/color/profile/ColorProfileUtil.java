@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+// CSOFF: MethodName
+
 /**
  * Helper methods for handling color profiles.
  */

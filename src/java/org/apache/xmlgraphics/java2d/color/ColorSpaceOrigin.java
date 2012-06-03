@@ -19,8 +19,6 @@
 
 package org.apache.xmlgraphics.java2d.color;
 
-import java.awt.color.ColorSpace;
-
 /**
  * Interface used to decorate {@link ColorSpace} subclasses to report the origin of the
  * associated color profile.

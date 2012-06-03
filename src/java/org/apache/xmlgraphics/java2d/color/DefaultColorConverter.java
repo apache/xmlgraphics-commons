@@ -21,8 +21,6 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
-import org.apache.xmlgraphics.java2d.color.ColorConverter;
-
 /**
  * A default implementation that does not apply any conversion
  */

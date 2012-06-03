@@ -34,7 +34,10 @@ import org.apache.commons.io.IOUtils;
 /**
  * This class provides a number of constants for glyph management.
  */
-public class Glyphs {
+public final class Glyphs {
+
+    private Glyphs() {
+    }
 
     /**
      * Glyph name for the "notdef" glyph
@@ -708,7 +711,7 @@ public class Glyphs {
      * @param ch glyph to evaluate
      * @return the name of the glyph
      */
-    public static final String charToGlyphName(char ch) {
+    public static String charToGlyphName(char ch) {
         return stringToGlyph(Character.toString(ch));
     }
 
@@ -717,7 +720,7 @@ public class Glyphs {
      * @param glyphName the glyph name
      * @return the Unicode sequence of the glyph (or null if the glyph name is unknown)
      */
-    public static final String getUnicodeSequenceForGlyphName(String glyphName) {
+    public static String getUnicodeSequenceForGlyphName(String glyphName) {
         //Mapping: see http://www.adobe.com/devnet/opentype/archives/glyph.html
         //Step 1
         int period = glyphName.indexOf('.');
@@ -787,7 +790,7 @@ public class Glyphs {
      * @deprecated User getUnicodeCodePointsForGlyphName instead. This method only returns the
      *          first Unicode code point it finds.
      */
-    public static final String glyphToString(String name) {
+    public static String glyphToString(String name) {
         for (int i = 0; i < UNICODE_GLYPHS.length; i += 2) {
             if (UNICODE_GLYPHS[i + 1].equals(name)) {
                 return UNICODE_GLYPHS[i];

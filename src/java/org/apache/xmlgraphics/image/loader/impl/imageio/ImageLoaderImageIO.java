@@ -51,10 +51,10 @@ import javax.imageio.spi.IIOServiceProvider;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
+import org.w3c.dom.Element;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
-import org.w3c.dom.Element;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
@@ -65,6 +65,8 @@ import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+
+import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 
 /**
  * An ImageLoader implementation based on ImageIO for loading bitmap images.
@@ -80,7 +82,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
 
     private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
 
-    private static final Set providersIgnoringICC = new HashSet();
+    private static final Set providersIgnoringICC = new HashSet(); // CSOK: ConstantName
 
     /**
      * Main constructor.
@@ -267,7 +269,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
      */
     private ICC_Profile tryToExctractICCProfile(IIOMetadata iiometa) {
         ICC_Profile iccProf = null;
-        String supportedFormats[] = iiometa.getMetadataFormatNames();
+        String[] supportedFormats = iiometa.getMetadataFormatNames();
         for (int i = 0; i < supportedFormats.length; i++) {
             String format = supportedFormats[i];
             Element root = (Element) iiometa.getAsTree(format);

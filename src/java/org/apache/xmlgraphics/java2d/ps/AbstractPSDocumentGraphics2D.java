@@ -34,9 +34,10 @@ import org.apache.xmlgraphics.ps.PSProcSets;
  * is used to create a full document around the PostScript rendering from
  * <tt>PSGraphics2D</tt>.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  * @version $Id$
  * @see org.apache.xmlgraphics.java2d.ps.PSGraphics2D
+ *
+ * Originally authored by Keiron Liddle.
  */
 public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
 
@@ -244,7 +245,7 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
         AffineTransform at;
         if ((this.viewportWidth != this.width
                 || this.viewportHeight != this.height)
-                && (this.viewportWidth > 0) && (this.viewportHeight > 0)){
+                && (this.viewportWidth > 0) && (this.viewportHeight > 0)) {
             at = new AffineTransform(this.width / this.viewportWidth, 0,
                        0, -1 * (this.height / this.viewportHeight),
                        0, this.height);
