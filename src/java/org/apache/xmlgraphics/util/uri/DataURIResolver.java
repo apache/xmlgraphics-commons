@@ -30,6 +30,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.xmlgraphics.util.io.Base64DecodeStream;
 
 /**
@@ -41,7 +42,7 @@ import org.apache.xmlgraphics.util.io.Base64DecodeStream;
 public class DataURIResolver implements URIResolver {
 
     /** logger */
-    private static Log LOG = LogFactory.getLog(URIResolver.class);
+    private static final Log LOG = LogFactory.getLog(URIResolver.class);
 
 
     /**

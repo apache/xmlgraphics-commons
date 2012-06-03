@@ -19,9 +19,9 @@
 
 package org.apache.xmlgraphics.util.io;
 
-import java.io.OutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This class applies a ASCII Hex encoding to the stream.

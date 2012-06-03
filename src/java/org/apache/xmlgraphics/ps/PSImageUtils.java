@@ -42,7 +42,10 @@ import org.apache.xmlgraphics.util.io.RunLengthEncodeOutputStream;
 /**
  * Utility code for rendering images in PostScript.
  */
-public class PSImageUtils {
+public final class PSImageUtils {
+
+    private PSImageUtils() {
+    }
 
     /**
      * Writes a bitmap image to the PostScript stream.
@@ -517,11 +520,11 @@ public class PSImageUtils {
 
     private static String getColorSpaceName(ColorSpace colorSpace) {
         if (colorSpace.getType() == ColorSpace.TYPE_CMYK) {
-            return("/DeviceCMYK");
+            return "/DeviceCMYK";
         } else if (colorSpace.getType() == ColorSpace.TYPE_GRAY) {
-            return("/DeviceGray");
+            return "/DeviceGray";
         } else {
-            return("/DeviceRGB");
+            return "/DeviceRGB";
         }
     }
 
@@ -611,8 +614,8 @@ public class PSImageUtils {
             data = new double[nbands];
             break;
         default:
-            throw new IllegalArgumentException("Unknown data buffer type: "+
-                                               dataType);
+            throw new IllegalArgumentException("Unknown data buffer type: "
+                                               + dataType);
         }
 
         if (rgbArray == null) {

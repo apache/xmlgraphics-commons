@@ -22,6 +22,13 @@ package org.apache.xmlgraphics.util.io;
 import java.io.IOException;
 import java.io.InputStream;
 
+// CSOFF: ConstantName
+// CSOFF: MemberName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 /**
  * This class implements a Base64 Character decoder as specified in RFC1113.
  * Unlike some other encoding schemes there is nothing in this encoding that
@@ -42,10 +49,9 @@ import java.io.InputStream;
  *    "Base64DecodeStream: Bad Padding byte (1)."
  * </pre>
  *
- * @author <a href="mailto:thomas.deweese@kodak.com">Thomas DeWeese</a>
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
- * @author      Chuck McManis
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese, Vincent Hardy, and Chuck McManis.
  */
 
 public class Base64DecodeStream extends InputStream {
@@ -56,7 +62,7 @@ public class Base64DecodeStream extends InputStream {
         this.src = src;
     }
 
-    private static final byte pem_array[] = new byte[256];
+    private static final byte[] pem_array = new byte[256];
     static {
         for (int i=0; i<pem_array.length; i++)
             pem_array[i] = -1;
@@ -89,8 +95,8 @@ public class Base64DecodeStream extends InputStream {
         return 3-out_offset;
     }
 
-    byte decode_buffer[] = new byte[4];
-    byte out_buffer[] = new byte[3];
+    byte[] decode_buffer = new byte[4];
+    byte[] out_buffer = new byte[3];
     int  out_offset = 3;
     boolean EOF = false;
 

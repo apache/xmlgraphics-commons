@@ -36,9 +36,9 @@ public interface MultiImageWriter {
      * @param params a parameters object to customize the encoding.
      * @throws IOException In case of an /IO problem
      */
-    public void writeImage(RenderedImage image, ImageWriterParams params)
+    void writeImage(RenderedImage image, ImageWriterParams params)
             throws IOException;
 
-    public void close() throws IOException;
+    void close() throws IOException;
 
 }

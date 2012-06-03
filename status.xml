@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53352">
+        Upgrade to checkstyle-5.5 and ensure no warnings.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="51149" due-to="Luis Bernardo">
         Improve performance for certain kinds of PNG images.
       </action>

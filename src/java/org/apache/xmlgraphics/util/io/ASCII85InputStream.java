@@ -19,8 +19,8 @@
 
 package org.apache.xmlgraphics.util.io;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class applies a ASCII85 decoding to the stream.

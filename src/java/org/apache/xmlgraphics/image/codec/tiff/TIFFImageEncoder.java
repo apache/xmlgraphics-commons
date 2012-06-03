@@ -48,6 +48,12 @@ import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableOutputStream;
 
+// CSOFF: ConstantName
+// CSOFF: MissingSwitchDefault
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 /**
  * A baseline TIFF writer. The writer outputs TIFF images in either Bilevel,
  * Greyscale, Palette color or Full Color modes.

@@ -56,9 +56,10 @@ import org.apache.xmlgraphics.ps.PSImageUtils;
  * therefore of <tt>Graphics2D</tt>) which is able to generate PostScript
  * code.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  * @version $Id$
  * @see org.apache.xmlgraphics.java2d.AbstractGraphics2D
+ *
+ * Originally authored by Keiron Liddle.
  */
 public class PSGraphics2D extends AbstractGraphics2D {
 

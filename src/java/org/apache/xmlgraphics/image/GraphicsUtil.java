@@ -44,15 +44,30 @@ import org.apache.xmlgraphics.image.rendered.BufferedImageCachableRed;
 import org.apache.xmlgraphics.image.rendered.CachableRed;
 import org.apache.xmlgraphics.image.rendered.RenderedImageCachableRed;
 
+// CSOFF: AvoidNestedBlocks
+// CSOFF: ConstantName
+// CSOFF: MethodName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: OneStatementPerLine
+// CSOFF: OperatorWrap
+// CSOFF: StaticVariableName
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * Set of utility methods for Graphics.
  * These generally bypass broken methods in Java2D or provide tweaked
  * implementations.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
-public class GraphicsUtil {
+public final class GraphicsUtil {
+
+    private GraphicsUtil() {
+    }
 
     public static AffineTransform IDENTITY = new AffineTransform();
 
@@ -295,7 +310,7 @@ public class GraphicsUtil {
         int width  = x1-x0+1;
         int [] data = null;
 
-        for (int y = y0; y <= y1 ; y++)  {
+        for (int y = y0; y <= y1; y++)  {
             data = src.getPixels(x0,y,width,1,data);
             dst.setPixels       (x0,y,width,1,data);
         }
@@ -405,6 +420,10 @@ public class GraphicsUtil {
                                  retDBT.getData(b), offsets[b], len);
                 break;
             }
+            default:
+                throw new
+                    UnsupportedOperationException("unsupported data type: "
+                                                  + srcDB.getDataType());
             }
         }
 

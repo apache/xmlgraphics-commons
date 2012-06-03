@@ -43,7 +43,10 @@ import org.apache.xmlgraphics.ps.dsc.events.DSCCommentTitle;
 /**
  * Factory for DSCComment subclasses.
  */
-public class DSCCommentFactory {
+public final class DSCCommentFactory {
+
+    private DSCCommentFactory() {
+    }
 
     private static final Map DSC_FACTORIES = new java.util.HashMap();
 

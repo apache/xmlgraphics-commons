@@ -29,14 +29,18 @@ import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.Vector;
 
+// CSOFF: NeedBraces
+// CSOFF: WhitespaceAround
+
 /**
  * This implements CachableRed around a RenderedImage.
  * You can use this to wrap a RenderedImage that you want to
  * appear as a CachableRed.
  * It essentially ignores the dependency and dirty region methods.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
 public class RenderedImageCachableRed implements CachableRed {
 

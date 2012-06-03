@@ -33,7 +33,10 @@ import org.apache.xmlgraphics.util.io.SubInputStream;
 /**
  * Utility code for font handling in PostScript.
  */
-public class PSFontUtils {
+public final class PSFontUtils {
+
+    private PSFontUtils() {
+    }
 
     /**
      * This method reads a Type 1 font from a stream and embeds it into a PostScript stream.

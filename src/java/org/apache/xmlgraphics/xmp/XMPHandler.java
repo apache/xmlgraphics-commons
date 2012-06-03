@@ -51,11 +51,7 @@ public class XMPHandler extends DefaultHandler {
 
     private boolean hasComplexContent() {
         Object obj = this.contextStack.peek();
-        if (obj instanceof QName) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(obj instanceof QName);
     }
 
     private PropertyAccess getCurrentProperties() {

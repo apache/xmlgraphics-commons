@@ -29,7 +29,10 @@ import org.apache.commons.io.IOUtils;
 /**
  * Convenience methods around ImageWriter for the most important tasks.
  */
-public class ImageWriterUtil {
+public final class ImageWriterUtil {
+
+    private ImageWriterUtil() {
+    }
 
     /**
      * Saves a RenderedImage as a PNG file with 96 dpi.

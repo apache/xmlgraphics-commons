@@ -41,7 +41,17 @@ import java.util.zip.DeflaterOutputStream;
 import org.apache.xmlgraphics.image.codec.util.ImageEncoderImpl;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
-class CRC {
+// CSOFF: ConstantName
+// CSOFF: InnerAssignment
+// CSOFF: LocalVariableName
+// CSOFF: MissingSwitchDefault
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
+final class CRC {
+
+    private CRC() {
+    }
 
     private static int[] crcTable = new int[256];
 

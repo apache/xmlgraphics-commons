@@ -36,7 +36,7 @@ public interface ImageWriter {
      * @param out the OutputStream to write to
      * @throws IOException In case of an /IO problem
      */
-    public void writeImage(RenderedImage image, OutputStream out)
+    void writeImage(RenderedImage image, OutputStream out)
             throws IOException;
 
     /**
@@ -46,18 +46,18 @@ public interface ImageWriter {
      * @param params a parameters object to customize the encoding.
      * @throws IOException In case of an /IO problem
      */
-    public void writeImage(RenderedImage image, OutputStream out,
+    void writeImage(RenderedImage image, OutputStream out,
             ImageWriterParams params)
             throws IOException;
 
     /** @return the target MIME type supported by this ImageWriter */
-    public String getMIMEType();
+    String getMIMEType();
 
     /** @return true if the ImageWriter is expected to work properly in the current environment */
-    public boolean isFunctional();
+    boolean isFunctional();
 
     /** @return true if the implemented format supports multiple pages in a single file */
-    public boolean supportsMultiImageWriter();
+    boolean supportsMultiImageWriter();
 
     /**
      * Creates a MultiImageWriter instance that lets you put multiple pages into a single file
@@ -66,6 +66,6 @@ public interface ImageWriter {
      * @return the requested MultiImageWriter instance
      * @throws IOException In case of an /IO problem
      */
-    public MultiImageWriter createMultiImageWriter(OutputStream out) throws IOException;
+    MultiImageWriter createMultiImageWriter(OutputStream out) throws IOException;
 
 }

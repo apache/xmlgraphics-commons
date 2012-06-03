@@ -25,6 +25,8 @@ import javax.imageio.metadata.IIOMetadataNode;
 
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 
+// CSOFF: MultipleVariableDeclarations
+
 /**
  * ImageWriter that encodes TIFF images using Image I/O.
  *

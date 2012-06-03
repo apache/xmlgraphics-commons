@@ -21,8 +21,8 @@ package org.apache.xmlgraphics.image.codec.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A subclass of <code>SeekableStream</code> that may be used to wrap
