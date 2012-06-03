@@ -39,12 +39,14 @@ import org.apache.xmlgraphics.util.io.Finalizable;
 import org.apache.xmlgraphics.util.io.FlateEncodeOutputStream;
 import org.apache.xmlgraphics.util.io.RunLengthEncodeOutputStream;
 
+// CSOFF: HideUtilityClassConstructor
+
 /**
  * Utility code for rendering images in PostScript.
  */
-public final class PSImageUtils {
+public class PSImageUtils {
 
-    private PSImageUtils() {
+    public PSImageUtils() {
     }
 
     /**
