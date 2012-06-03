@@ -30,12 +30,14 @@ import org.apache.xmlgraphics.fonts.Glyphs;
 import org.apache.xmlgraphics.util.io.ASCIIHexOutputStream;
 import org.apache.xmlgraphics.util.io.SubInputStream;
 
+// CSOFF: HideUtilityClassConstructor
+
 /**
  * Utility code for font handling in PostScript.
  */
-public final class PSFontUtils {
+public class PSFontUtils {
 
-    private PSFontUtils() {
+    public PSFontUtils() {
     }
 
     /**
