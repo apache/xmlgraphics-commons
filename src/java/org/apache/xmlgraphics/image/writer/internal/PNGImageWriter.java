@@ -35,26 +35,20 @@ import org.apache.xmlgraphics.image.writer.ImageWriterParams;
  */
 public class PNGImageWriter extends AbstractImageWriter {
 
-    /**
-     * @see ImageWriter#writeImage(java.awt.image.RenderedImage, java.io.OutputStream)
-     */
+    /** {@inheritDoc} */
     public void writeImage(RenderedImage image, OutputStream out)
             throws IOException {
         writeImage(image, out, null);
     }
 
-    /**
-     * @see ImageWriter#writeImage(java.awt.image.RenderedImage, java.io.OutputStream, ImageWriterParams)
-     */
+    /** {@inheritDoc} */
     public void writeImage(RenderedImage image, OutputStream out,
             ImageWriterParams params) throws IOException {
         PNGImageEncoder encoder = new PNGImageEncoder(out, null);
         encoder.encode(image);
     }
 
-    /**
-     * @see ImageWriter#getMIMEType()
-     */
+    /** {@inheritDoc} */
     public String getMIMEType() {
         return "image/png";
     }
