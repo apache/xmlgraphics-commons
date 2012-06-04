@@ -41,6 +41,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="update" fixes-bug="53327" due-to="Julien Aymé">
+        Fix determination of use of precise vs fast formatting in order to fix regression with value 5.22534294505995E-4, decimals: 17, precision: 17.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="53352">
         Upgrade to checkstyle-5.5 and ensure no warnings.
       </action>
