@@ -347,8 +347,9 @@ public final class DoubleFormatUtil {
      * @return true if the rounding will potentially use too many digits
      */
     private static boolean tooManyDigitsUsed(double source, int scale) {
-        // if scale >= 19, 10^19 > Long.MAX_VALUE
-        return scale >= 19 || getExponant(source) + scale >= 14;
+        // if scale >= 308, 10^308 ~= Infinity
+        double decExp = Math.log10(source);
+        return scale >= 308 || decExp + scale >= 14.5;
     }
 
     /**
@@ -363,7 +364,8 @@ public final class DoubleFormatUtil {
         source = Math.abs(source);
         long intPart = (long) Math.floor(source);
         double fracPart = (source - intPart) * tenPowDouble(scale);
-        double range = .001;
+        double decExp = Math.log10(source);
+        double range = decExp + scale >= 12 ? .1 : .001;
         double distanceToRound1 = Math.abs(fracPart - Math.floor(fracPart));
         double distanceToRound2 = Math.abs(fracPart - Math.floor(fracPart) - 0.5);
         return distanceToRound1 <= range || distanceToRound2 <= range;

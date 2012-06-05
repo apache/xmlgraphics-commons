@@ -124,6 +124,21 @@ public class DoubleFormatUtilTest extends TestCase {
         expected = "0.00585938";
         actual = format(value, 8, 8);
         assertEquals(value, 8, 8, expected, actual);
+
+        value = 5.22534294505995E-4;
+        expected = "0.000522534294506";
+        actual = format(value, 17, 17);
+        assertEquals(value, 17, 17, expected, actual);
+
+        value = 4.9E-324;
+        expected = "0";
+        actual = format(value, 309, 309);
+        assertEquals(value, 309, 309, expected, actual);
+
+        value = 7.003868765287485E-280;
+        expected = refFormat(value, 294, 294);
+        actual = format(value, 294, 294);
+        assertEquals(value, 294, 294, expected, actual);
     }
 
     public void testLimits() {
@@ -412,8 +427,8 @@ public class DoubleFormatUtilTest extends TestCase {
 
         double value, highValue, lowValue;
         long start = System.currentTimeMillis();
-        int nbTest = 100000;
-        int maxDecimals = 10;
+        int nbTest = 1000000;
+        int maxDecimals = 16;
 
         r.setSeed(seed);
         start = System.currentTimeMillis();
