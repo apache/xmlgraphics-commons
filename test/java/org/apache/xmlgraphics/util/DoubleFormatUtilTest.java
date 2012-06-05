@@ -139,6 +139,16 @@ public class DoubleFormatUtilTest extends TestCase {
         expected = refFormat(value, 294, 294);
         actual = format(value, 294, 294);
         assertEquals(value, 294, 294, expected, actual);
+
+        value = 5E-304;
+        expected = refFormat(value, 303, 303);
+        actual = format(value, 303, 303);
+        assertEquals(value, 303, 303, expected, actual);
+
+        value = 9.999999999999999E-250;
+        expected = refFormat(value, 265, 265);
+        actual = format(value, 265, 265);
+        assertEquals(value, 265, 265, expected, actual);
     }
 
     public void testLimits() {
@@ -535,16 +545,36 @@ public class DoubleFormatUtilTest extends TestCase {
     }
 
     public void testAllDoubleRanges() {
+        double[] values = {0, 1, 5, 4.9999, 5.0001, 9.9999, 1234567890, 0 /* The last one is random */};
         Random r = new Random();
         double value;
         String expected, actual;
+        int minScale, maxScale;
         for (int i = -330; i <= 315; i++) {
-            value = r.nextDouble() * Math.pow(10.0, i);
-            for (int scale = 1; scale <= 350; scale++) {
-                expected = refFormat(value, scale, scale);
-                actual = format(value, scale, scale);
-                assertEquals(value, scale, scale, expected, actual);
+            values[values.length - 1] = r.nextDouble();
+            double pow = Math.pow(10.0, i);
+            for (double d : values) {
+                value = d * pow;
+                minScale = 1;
+                maxScale = 350;
+                // Reduce scales (unnecessary tests)
+                if (i < -30) {
+                    minScale = -i - 30;
+                    maxScale = -i + 30;
+                } else if (i <= 0) {
+                    minScale = 1;
+                    maxScale = -i + 30;
+                } else {
+                    minScale = 1;
+                    maxScale = 30;
+                }
+                for (int scale = minScale; scale <= maxScale; scale++) {
+                    expected = refFormat(value, scale, scale);
+                    actual = format(value, scale, scale);
+                    assertEquals(value, scale, scale, expected, actual);
+                }
             }
+            
         }
     }
 }

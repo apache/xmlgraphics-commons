@@ -188,14 +188,15 @@ public final class DoubleFormatUtil {
      * @return true if the source value will be rounded to zero
      */
     private static boolean isRoundedToZero(double source, int decimals, int precision) {
-        return source == 0.0 || Math.abs(source) < 5.0 / tenPowDouble(Math.max(decimals, precision) + 1);
+        // Use 4.999999999999999 instead of 5 since in some cases, 5.0 / 1eN > 5e-N (e.g. for N = 37, 42, 45, 66, ...)
+        return source == 0.0 || Math.abs(source) < 4.999999999999999 / tenPowDouble(Math.max(decimals, precision) + 1);
     }
 
     /**
      * Most used power of ten (to avoid the cost of Math.pow(10, n)
      */
     private static final long[] POWERS_OF_TEN_LONG = new long[19];
-    private static final double[] POWERS_OF_TEN_DOUBLE = new double[21];
+    private static final double[] POWERS_OF_TEN_DOUBLE = new double[30];
     static {
         POWERS_OF_TEN_LONG[0] = 1L;
         for (int i = 1; i < POWERS_OF_TEN_LONG.length; i++) {
@@ -251,7 +252,11 @@ public final class DoubleFormatUtil {
         target.append(intP);
         if (decP != 0L) {
             target.append('.');
-            while (scale > 0 && decP < tenPowDouble(--scale)) {
+            // Use tenPow instead of tenPowDouble for scale below 18,
+            // since the casting of decP to double may cause some imprecisions:
+            // E.g. for decP = 9999999999999999L and scale = 17,
+            // decP < tenPow(16) while (double) decP == tenPowDouble(16)
+            while (scale > 0 && (scale > 18 ? decP < tenPowDouble(--scale) : decP < tenPow(--scale))) {
                 // Insert leading zeroes
                 target.append('0');
             }
