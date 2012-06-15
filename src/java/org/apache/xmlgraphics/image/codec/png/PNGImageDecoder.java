@@ -51,6 +51,7 @@ import java.util.zip.InflaterInputStream;
 import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
+import org.apache.xmlgraphics.image.loader.impl.PNGConstants;
 
 // CSOFF: ConstantName
 // CSOFF: InnerAssignment
@@ -80,100 +81,18 @@ public class PNGImageDecoder extends ImageDecoderImpl {
     }
 }
 
-class PNGChunk {
-    int length;
-    int type;
-    byte[] data;
-    int crc;
-
-    final String typeString;
-
-    PNGChunk(int length, int type, byte[] data, int crc) {
-        this.length = length;
-        this.type = type;
-        this.data = data;
-        this.crc = crc;
-
-        typeString = ""
-                     + (char)((type >>> 24) & 0xff)
-                     + (char)((type >>> 16) & 0xff)
-                     + (char)((type >>>  8) & 0xff)
-                     + (char)((type       ) & 0xff);
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public String getTypeString() {
-        return typeString;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public byte getByte(int offset) {
-        return data[offset];
-    }
-
-    public int getInt1(int offset) {
-        return data[offset] & 0xff;
-    }
-
-    public int getInt2(int offset) {
-        return ((data[offset] & 0xff) << 8) |
-            (data[offset + 1] & 0xff);
-    }
-
-    public int getInt4(int offset) {
-        return ((data[offset] & 0xff) << 24) |
-            ((data[offset + 1] & 0xff) << 16) |
-            ((data[offset + 2] & 0xff) << 8) |
-            (data[offset + 3] & 0xff);
-    }
-
-    public String getString4(int offset) {
-        return  ""
-            + (char)data[offset]
-            + (char)data[offset + 1]
-            + (char)data[offset + 2]
-            + (char)data[offset + 3];
-    }
-
-    public boolean isType(String typeName) {
-        return typeString.equals(typeName);
-    }
-}
-
 /**
  * TO DO:
  *
  * zTXt chunks
  *
  */
-class PNGImage extends SimpleRenderedImage {
-
-    public static final int PNG_COLOR_GRAY = 0;
-    public static final int PNG_COLOR_RGB = 2;
-    public static final int PNG_COLOR_PALETTE = 3;
-    public static final int PNG_COLOR_GRAY_ALPHA = 4;
-    public static final int PNG_COLOR_RGB_ALPHA = 6;
+class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private static final String[] colorTypeNames = {
         "Grayscale", "Error", "Truecolor", "Index",
         "Grayscale with alpha", "Error", "Truecolor with alpha"
     };
-
-    public static final int PNG_FILTER_NONE = 0;
-    public static final int PNG_FILTER_SUB = 1;
-    public static final int PNG_FILTER_UP = 2;
-    public static final int PNG_FILTER_AVERAGE = 3;
-    public static final int PNG_FILTER_PAETH = 4;
 
     private int[][] bandOffsets = {
         null,
@@ -304,7 +223,7 @@ class PNGImage extends SimpleRenderedImage {
     private static final int POST_ADD_GRAY_TRANS_EXP =
         POST_ADD_GRAY_TRANS | POST_EXP_MASK;
 
-    private List streamVec = new ArrayList();
+    private List<InputStream> streamVec = new ArrayList<InputStream>();
     private DataInputStream dataStream;
 
     private int bytesPerPixel; // number of bytes per input pixel
@@ -399,7 +318,7 @@ class PNGImage extends SimpleRenderedImage {
 
         try {
             long magic = distream.readLong();
-            if (magic != 0x89504e470d0a1a0aL) {
+            if (magic != PNG_SIGNATURE) {
                 String msg = PropertyUtil.getString("PNGImageDecoder0");
                 throw new RuntimeException(msg);
             }
@@ -413,58 +332,58 @@ class PNGImage extends SimpleRenderedImage {
             try {
                 PNGChunk chunk;
 
-                String chunkType = getChunkType(distream);
-                if (chunkType.equals("IHDR")) {
-                    chunk = readChunk(distream);
+                String chunkType = PNGChunk.getChunkType(distream);
+                if (chunkType.equals(PNGChunk.ChunkType.IHDR.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_IHDR_chunk(chunk);
-                } else if (chunkType.equals("PLTE")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.PLTE.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_PLTE_chunk(chunk);
-                } else if (chunkType.equals("IDAT")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.IDAT.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     streamVec.add(new ByteArrayInputStream(chunk.getData()));
-                } else if (chunkType.equals("IEND")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.IEND.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_IEND_chunk(chunk);
                     break; // fall through to the bottom
-                } else if (chunkType.equals("bKGD")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.bKGD.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_bKGD_chunk(chunk);
-                } else if (chunkType.equals("cHRM")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.cHRM.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_cHRM_chunk(chunk);
-                } else if (chunkType.equals("gAMA")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.gAMA.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_gAMA_chunk(chunk);
-                } else if (chunkType.equals("hIST")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.hIST.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_hIST_chunk(chunk);
-                } else if (chunkType.equals("iCCP")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.iCCP.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_iCCP_chunk(chunk);
-                } else if (chunkType.equals("pHYs")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.pHYs.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_pHYs_chunk(chunk);
-                } else if (chunkType.equals("sBIT")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.sBIT.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_sBIT_chunk(chunk);
-                } else if (chunkType.equals("sRGB")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.sRGB.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_sRGB_chunk(chunk);
-                } else if (chunkType.equals("tEXt")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.tEXt.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_tEXt_chunk(chunk);
-                } else if (chunkType.equals("tIME")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.tIME.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_tIME_chunk(chunk);
-                } else if (chunkType.equals("tRNS")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.tRNS.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_tRNS_chunk(chunk);
-                } else if (chunkType.equals("zTXt")) {
-                    chunk = readChunk(distream);
+                } else if (chunkType.equals(PNGChunk.ChunkType.zTXt.name())) {
+                    chunk = PNGChunk.readChunk(distream);
                     parse_zTXt_chunk(chunk);
                 } else {
-                    chunk = readChunk(distream);
+                    chunk = PNGChunk.readChunk(distream);
                     // Output the chunk data in raw form
 
                     String type = chunk.getTypeString();
@@ -495,40 +414,6 @@ class PNGImage extends SimpleRenderedImage {
             if (emitProperties) {
                 properties.put("significant_bits", significantBits);
             }
-        }
-    }
-
-    private static String getChunkType(DataInputStream distream) {
-        try {
-            distream.mark(8);
-            /* int length = */ distream.readInt();
-            int type      =    distream.readInt();
-            distream.reset();
-
-            String typeString = "";        // todo simplify this
-            typeString += (char)(type >> 24);
-            typeString += (char)((type >> 16) & 0xff);
-            typeString += (char)((type >> 8) & 0xff);
-            typeString += (char)(type & 0xff);
-            return typeString;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static PNGChunk readChunk(DataInputStream distream) {
-        try {
-            int length = distream.readInt();
-            int type = distream.readInt();
-            byte[] data = new byte[length];
-            distream.readFully(data);
-            int crc = distream.readInt();
-
-            return new PNGChunk(length, type, data, crc);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
