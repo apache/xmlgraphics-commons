@@ -65,7 +65,6 @@ import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
-
 import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 
 /**
@@ -197,12 +196,21 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                     WritableRaster wr = Raster.createWritableRaster(imageData
                             .getSampleModel(), null);
                     imageData.copyData(wr);
-                    BufferedImage bi = new BufferedImage(cm2, wr, cm2
-                            .isAlphaPremultiplied(), null);
-                    imageData = bi;
-                    cm = cm2;
+                    try {
+                        BufferedImage bi = new BufferedImage(cm2, wr, cm2
+                                .isAlphaPremultiplied(), null);
+                        imageData = bi;
+                        cm = cm2;
+                    } catch (IllegalArgumentException iae) {
+                        log.warn("Image " + info.getOriginalURI()
+                                + " has an incompatible color profile."
+                                + " The color profile will be ignored."
+                                + "\nColor model of loaded bitmap: " + cm
+                                + "\nColor model of color profile: " + cm2);
+                    }
                 }
             }
+
             // ImageIOUtil.dumpMetadataToSystemOut(iiometa);
             // Retrieve the transparent color from the metadata
             if (iiometa != null && iiometa.isStandardMetadataFormatSupported()) {
