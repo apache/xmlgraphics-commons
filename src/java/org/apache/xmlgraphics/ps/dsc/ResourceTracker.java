@@ -102,10 +102,10 @@ public class ResourceTracker {
      * @param res the resource
      */
     public void registerNeededResource(PSResource res) {
-        if (documentNeededResources == null) {
-            documentNeededResources = new java.util.HashSet();
-        }
-        if (!documentSuppliedResources.contains(res)) {
+        if (documentSuppliedResources == null || !documentSuppliedResources.contains(res)) {
+            if (documentNeededResources == null) {
+                documentNeededResources = new java.util.HashSet();
+            }
             documentNeededResources.add(res);
         }
     }
