@@ -881,7 +881,8 @@ public abstract class SeekableStream extends InputStream implements DataInput {
         boolean eol = false;
 
         while (!eol) {
-            switch (c = read()) {
+            c = read();
+            switch (c) {
             case -1:
             case '\n':
                 eol = true;

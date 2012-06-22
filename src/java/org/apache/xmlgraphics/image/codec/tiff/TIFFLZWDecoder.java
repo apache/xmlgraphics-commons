@@ -21,6 +21,12 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
+// CSOFF: InnerAssignment
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: OneStatementPerLine
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 /**
  * A class for performing LZW decoding.
  */

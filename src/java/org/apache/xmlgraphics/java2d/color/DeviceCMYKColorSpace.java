@@ -20,7 +20,6 @@
 package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
-import java.awt.color.ColorSpace;
 
 /**
  * This class represents an uncalibrated CMYK color space.

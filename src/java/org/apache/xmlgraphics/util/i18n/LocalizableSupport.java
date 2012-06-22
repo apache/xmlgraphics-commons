@@ -23,6 +23,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+// CSOFF: InnerAssignment
+
 /**
  * This class provides a default implementation of the Localizable interface.
  * You can use it as a base class or as a member field and delegates various
@@ -73,8 +75,9 @@ import java.util.ResourceBundle;
  * Note: if no group is specified a LocalizableSupport object belongs to a
  * default group common to each instance of LocalizableSupport.
  *
- * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
+ *
+ * Originally authored by Stephane Hillion.
  */
 public class LocalizableSupport implements Localizable {
     /**

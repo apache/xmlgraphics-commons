@@ -881,4 +881,5 @@ public class PSGenerator implements PSCommandMap {
     public void includeProcsetCIDInitResource() throws IOException {
         writeDSCComment(DSCConstants.INCLUDE_RESOURCE, getProcsetCIDInitResource());
     }
- }
+
+}

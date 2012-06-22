@@ -37,7 +37,10 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  * Important: Before you use this class to look for an XMP packet in some random file, please read
  * the chapter on "Scanning Files for XMP Packets" in the XMP specification!
  */
-public class XMPPacketParser {
+public final class XMPPacketParser {
+
+    private XMPPacketParser() {
+    }
 
     private static final byte[] PACKET_HEADER;
     private static final byte[] PACKET_HEADER_END;

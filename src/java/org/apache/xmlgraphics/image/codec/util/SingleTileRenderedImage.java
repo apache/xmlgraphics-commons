@@ -22,6 +22,8 @@ package org.apache.xmlgraphics.image.codec.util;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 
+// CSOFF: InnerAssignment
+
 /**
  * A simple class that provides RenderedImage functionality
  * given a Raster and a ColorModel.

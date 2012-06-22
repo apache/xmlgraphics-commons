@@ -34,13 +34,13 @@ public interface DSCHandler {
      * @param header the first line of the DSC-compliant file
      * @throws IOException In case of an I/O error
      */
-    public void startDocument(String header) throws IOException;
+    void startDocument(String header) throws IOException;
 
     /**
      * Called when the PostScript file is fully processed, i.e. after the %%EOF comment.
      * @throws IOException In case of an I/O error
      */
-    public void endDocument() throws IOException;
+    void endDocument() throws IOException;
 
     /**
      * Called for each standard DSC comment. The classes passed to this method may be simple
@@ -48,14 +48,14 @@ public interface DSCHandler {
      * @param comment the DSC comment
      * @throws IOException In case of an I/O error
      */
-    public void handleDSCComment(DSCComment comment) throws IOException;
+    void handleDSCComment(DSCComment comment) throws IOException;
 
     /**
      * Called for a normal line of PostScript code.
      * @param line the line of code
      * @throws IOException In case of an I/O error
      */
-    public void line(String line) throws IOException;
+    void line(String line) throws IOException;
 
     /**
      * Called for any line containing a full-line PostScript comment. This is also called for
@@ -63,6 +63,6 @@ public interface DSCHandler {
      * @param comment the comment line
      * @throws IOException In case of an I/O error
      */
-    public void comment(String comment) throws IOException;
+    void comment(String comment) throws IOException;
 
 }

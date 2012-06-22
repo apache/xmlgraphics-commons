@@ -23,7 +23,11 @@ import java.util.MissingResourceException;
 
 import org.apache.xmlgraphics.util.i18n.LocalizableSupport;
 
-public class PropertyUtil {
+public final class PropertyUtil {
+
+    private PropertyUtil() {
+    }
+
     protected static final String RESOURCES =
         "org.apache.xmlgraphics.image.codec.Messages";
 
@@ -35,7 +39,7 @@ public class PropertyUtil {
     public static String getString(String key) {
         try {
             return localizableSupport.formatMessage(key, null);
-        } catch(MissingResourceException e) {
+        } catch (MissingResourceException e) {
             return key;
         }
    }

@@ -34,7 +34,10 @@ import org.xml.sax.SAXException;
 /**
  * Serializes an XMP tree to XML or to an XMP packet.
  */
-public class XMPSerializer {
+public final class XMPSerializer {
+
+    private XMPSerializer() {
+    }
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 

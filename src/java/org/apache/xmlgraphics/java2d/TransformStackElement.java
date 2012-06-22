@@ -21,14 +21,19 @@ package org.apache.xmlgraphics.java2d;
 
 import java.awt.geom.AffineTransform;
 
+// CSOFF: EmptyBlock
+// CSOFF: NoWhitespaceAfter
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 /**
  * Contains a description of an elementary transform stack element,
  * such as a rotate or translate. A transform stack element has a
  * type and a value, which is an array of double values.<br>
  *
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
- * @author <a href="mailto:paul_evenblij@compuware.com">Paul Evenblij</a>
  * @version $Id$
+ *
+ * Originally authored by Vincent Hardy and Paul Evenblij.
  */
 public abstract class TransformStackElement implements Cloneable{
 

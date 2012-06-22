@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class AbstractDSCComment extends AbstractEvent implements DSCComment {
 
-    private final boolean isWhitespace(char c) {
+    private boolean isWhitespace(char c) {
         return c == ' ' || c == '\t';
     }
 

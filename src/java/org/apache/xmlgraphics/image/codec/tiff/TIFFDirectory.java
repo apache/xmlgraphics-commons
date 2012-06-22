@@ -30,6 +30,16 @@ import java.util.Map;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 
+// CSOFF: ConstantName
+// CSOFF: EmptyStatement
+// CSOFF: InnerAssignment
+// CSOFF: LocalVariableName
+// CSOFF: MemberName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: ParameterName
+// CSOFF: WhitespaceAround
+
 /**
  * A class representing an Image File Directory (IFD) from a TIFF 6.0
  * stream.  The TIFF file format is described in more detail in the

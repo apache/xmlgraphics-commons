@@ -39,7 +39,10 @@ import org.apache.xmlgraphics.ps.dsc.events.DSCHeaderComment;
 /**
  * This class can extract a certain range of pages from a DSC-compliant PostScript file.
  */
-public class PageExtractor implements DSCParserConstants {
+public final class PageExtractor implements DSCParserConstants {
+
+    private PageExtractor() {
+    }
 
     /**
      * Parses a DSC-compliant file and pipes the content through to the OutputStream omitting

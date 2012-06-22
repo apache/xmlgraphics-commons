@@ -46,6 +46,12 @@ import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 import org.apache.xmlgraphics.image.rendered.AbstractRed;
 import org.apache.xmlgraphics.image.rendered.CachableRed;
 
+// CSOFF: LocalVariableName
+// CSOFF: MissingSwitchDefault
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 public class TIFFImage extends AbstractRed {
 
     // Compression types
@@ -118,7 +124,7 @@ public class TIFFImage extends AbstractRed {
      * Inflates <code>deflated</code> into <code>inflated</code> using the
      * <code>Inflater</code> constructed during class instantiation.
      */
-    private final void inflate(byte[] deflated, byte[] inflated) {
+    private void inflate(byte[] deflated, byte[] inflated) {
         inflater.setInput(deflated);
         try {
             inflater.inflate(inflated);

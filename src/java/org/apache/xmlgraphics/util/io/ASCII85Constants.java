@@ -27,30 +27,30 @@ package org.apache.xmlgraphics.util.io;
 public interface ASCII85Constants {
 
     /** Special character "z" stands for four NULL bytes (short-cut for !!!!!) */
-    public static final int ZERO          = 0x7A; //"z"
+    int ZERO          = 0x7A; //"z"
     /** ZERO as a byte array */
-    public static final byte[] ZERO_ARRAY = {(byte)ZERO};
+    byte[] ZERO_ARRAY = {(byte)ZERO};
     /** The start index for ASCII85 characters (!) */
-    public static final int START         = 0x21; //"!"
+    int START         = 0x21; //"!"
     /** The end index for ASCII85 characters (u) */
-    public static final int END           = 0x75; //"u"
+    int END           = 0x75; //"u"
     /** The EOL indicator (LF) */
-    public static final int EOL           = 0x0A; //"\n"
+    int EOL           = 0x0A; //"\n"
     /** The EOD (end of data) indicator */
-    public static final byte[] EOD        = {0x7E, 0x3E}; //"~>"
+    byte[] EOD        = {0x7E, 0x3E}; //"~>"
 
     /** Array of powers of 85 (4, 3, 2, 1, 0) */
-    public static final long POW85[] = new long[] {85 * 85 * 85 * 85,
+    long[] POW85 = new long[] {85 * 85 * 85 * 85,
                                                     85 * 85 * 85,
                                                     85 * 85,
                                                     85,
                                                     1};
 
     /*
-    public static final long BASE85_4 = 85;
-    public static final long BASE85_3 = BASE85_4 * BASE85_4;
-    public static final long BASE85_2 = BASE85_3 * BASE85_4;
-    public static final long BASE85_1 = BASE85_2 * BASE85_4;
+    long BASE85_4 = 85;
+    long BASE85_3 = BASE85_4 * BASE85_4;
+    long BASE85_2 = BASE85_3 * BASE85_4;
+    long BASE85_1 = BASE85_2 * BASE85_4;
     */
 
 }

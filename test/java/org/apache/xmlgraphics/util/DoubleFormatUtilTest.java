@@ -118,6 +118,127 @@ public class DoubleFormatUtilTest extends TestCase {
         expected = "0.00002";
         actual = format(value, decimals, precision);
         assertEquals(value, decimals, precision, expected, actual);
+
+        // Test added after bug #43940 was reopened
+        value = 0.005859375;
+        expected = "0.00585938";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+
+        value = 5.22534294505995E-4;
+        expected = "0.000522534294506";
+        actual = format(value, 17, 17);
+        assertEquals(value, 17, 17, expected, actual);
+
+        value = 4.9E-324;
+        expected = "0";
+        actual = format(value, 309, 309);
+        assertEquals(value, 309, 309, expected, actual);
+
+        value = 7.003868765287485E-280;
+        expected = refFormat(value, 294, 294);
+        actual = format(value, 294, 294);
+        assertEquals(value, 294, 294, expected, actual);
+
+        value = 5E-304;
+        expected = refFormat(value, 303, 303);
+        actual = format(value, 303, 303);
+        assertEquals(value, 303, 303, expected, actual);
+
+        value = 9.999999999999999E-250;
+        expected = refFormat(value, 265, 265);
+        actual = format(value, 265, 265);
+        assertEquals(value, 265, 265, expected, actual);
+    }
+
+    public void testLimits() {
+        int decimals = 19;
+        int precision = 19;
+
+        double value = Double.NaN;
+        String expected = "NaN";
+        String actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = Double.POSITIVE_INFINITY;
+        expected = "Infinity";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = Double.NEGATIVE_INFINITY;
+        expected = "-Infinity";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3 + Double.MIN_VALUE;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3 - Double.MIN_VALUE;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e-3;
+        expected = "0.001";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 0.0010000000000000002; // == Math.nextAfter(1e-3, Double.POSITIVE_INFINITY);
+        expected = "0.0010000000000000002";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "0.001";
+        actual = format(value, 18, 18);
+        assertEquals(value, 18, 18, expected, actual);
+
+        value = 0.0009999999999999998; // == Math.nextAfter(1e-3, Double.NEGATIVE_INFINITY);
+        expected = "0.0009999999999999998";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "0.001";
+        actual = format(value, 18, 18);
+        assertEquals(value, 18, 18, expected, actual);
+
+        value = 1e7 + Double.MIN_VALUE;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e7 - Double.MIN_VALUE;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1e7;
+        expected = "10000000";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+
+        value = 1.0000000000000002E7; // == Math.nextAfter(1e7, Double.POSITIVE_INFINITY);
+        expected = "10000000.000000002";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "10000000";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+
+        value = 9999999.999999998; // == Math.nextAfter(1e7, Double.NEGATIVE_INFINITY);
+        expected = "9999999.999999998";
+        actual = format(value, decimals, precision);
+        assertEquals(value, decimals, precision, expected, actual);
+        expected = "10000000";
+        actual = format(value, 8, 8);
+        assertEquals(value, 8, 8, expected, actual);
+
+        value = 0.000009999999999999997; // Check higher precision
+        expected = "0.000009999999999999997";
+        actual = format(value, 21, 21);
+        assertEquals(value, 21, 21, expected, actual);
+        expected = "0.00001";
+        actual = format(value, 20, 20);
+        assertEquals(value, 20, 20, expected, actual);
     }
 
     /**
@@ -164,6 +285,9 @@ public class DoubleFormatUtilTest extends TestCase {
      * whereas DecimalFormat may have some formating errors regarding the last digit.
      */
     private String refFormat(double value, int decimals, int precision) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return Double.toString(value);
+        }
         buf.setLength(0);
         BigDecimal bg = new BigDecimal(Double.toString(value));
         int scale = Math.abs(value) < 1.0 ? precision : decimals;
@@ -313,8 +437,8 @@ public class DoubleFormatUtilTest extends TestCase {
 
         double value, highValue, lowValue;
         long start = System.currentTimeMillis();
-        int nbTest = 100000;
-        int maxDecimals = 10;
+        int nbTest = 1000000;
+        int maxDecimals = 16;
 
         r.setSeed(seed);
         start = System.currentTimeMillis();
@@ -418,5 +542,39 @@ public class DoubleFormatUtilTest extends TestCase {
         }
         long toStringDuration = System.currentTimeMillis() - start;
         System.out.println("toString duration: " + toStringDuration + "ms to format " + (3 * nbTest) + " doubles");
+    }
+
+    public void testAllDoubleRanges() {
+        double[] values = {0, 1, 5, 4.9999, 5.0001, 9.9999, 1234567890, 0 /* The last one is random */};
+        Random r = new Random();
+        double value;
+        String expected, actual;
+        int minScale, maxScale;
+        for (int i = -330; i <= 315; i++) {
+            values[values.length - 1] = r.nextDouble();
+            double pow = Math.pow(10.0, i);
+            for (double d : values) {
+                value = d * pow;
+                minScale = 1;
+                maxScale = 350;
+                // Reduce scales (unnecessary tests)
+                if (i < -30) {
+                    minScale = -i - 30;
+                    maxScale = -i + 30;
+                } else if (i <= 0) {
+                    minScale = 1;
+                    maxScale = -i + 30;
+                } else {
+                    minScale = 1;
+                    maxScale = 30;
+                }
+                for (int scale = minScale; scale <= maxScale; scale++) {
+                    expected = refFormat(value, scale, scale);
+                    actual = format(value, scale, scale);
+                    assertEquals(value, scale, scale, expected, actual);
+                }
+            }
+            
+        }
     }
 }

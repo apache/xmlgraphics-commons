@@ -44,7 +44,7 @@ public class SeekableOutputStream extends OutputStream {
      *            <code>null</code>.
      */
     public SeekableOutputStream(RandomAccessFile file) {
-        if(file == null) {
+        if (file == null) {
             throw new IllegalArgumentException("SeekableOutputStream0");
         }
         this.file = file;

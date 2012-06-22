@@ -23,6 +23,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+// CSOFF: ConstantName
+// CSOFF: InnerAssignment
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: OneStatementPerLine
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * This class implements a Base64 Character encoder as specified in RFC1113.
  * Unlike some other encoding schemes there is nothing in this encoding
@@ -31,15 +39,14 @@ import java.io.PrintStream;
  * This means that the encoded text will simply start with the first line
  * of encoded text and end with the last line of encoded text.
  *
- * @author <a href="mailto:deweese@apache.org">Thomas DeWeese</a>
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
- * @author      Chuck McManis
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese, Vincent Hardy, and Chuck McManis.
  */
 public class Base64EncodeStream extends OutputStream {
 
     /** This array maps the 6 bit values to their characters */
-    private final static byte pem_array[] = {
+    private static final byte[] pem_array = {
     //   0   1   2   3   4   5   6   7
         'A','B','C','D','E','F','G','H', // 0
         'I','J','K','L','M','N','O','P', // 1

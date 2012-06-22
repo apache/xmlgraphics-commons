@@ -22,6 +22,8 @@ package org.apache.xmlgraphics.image.codec.png;
 import org.apache.xmlgraphics.image.codec.util.ImageDecodeParam;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
+// CSOFF: WhitespaceAround
+
 /**
  * An instance of <code>ImageDecodeParam</code> for decoding images in
  * the PNG format.

@@ -27,11 +27,13 @@ import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 
-import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+// CSOFF: WhitespaceAround
 
 /**
  * A simple class implemented the <code>RenderedImage</code>
@@ -161,7 +163,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * and so does not need to be implemented by subclasses.
      */
     public int getMinTileX() {
-        return XToTileX(getMinX());
+        return convertXToTileX(getMinX());
     }
 
     /**
@@ -170,7 +172,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * and so does not need to be implemented by subclasses.
      */
     public int getMaxTileX() {
-        return XToTileX(getMaxX() - 1);
+        return convertXToTileX(getMaxX() - 1);
     }
 
     /**
@@ -189,7 +191,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * implemented by subclasses.
      */
     public int getMinTileY() {
-        return YToTileY(getMinY());
+        return convertYToTileY(getMinY());
     }
 
     /**
@@ -198,7 +200,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * be implemented by subclasses.
      */
     public int getMaxTileY() {
-        return YToTileY(getMaxY() - 1);
+        return convertYToTileY(getMaxY() - 1);
     }
 
     /**
@@ -293,7 +295,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * relative to a given tile grid layout specified by its X offset
      * and tile width.
      */
-    public static int XToTileX(int x, int tileGridXOffset, int tileWidth) {
+    public static int convertXToTileX(int x, int tileGridXOffset, int tileWidth) {
         x -= tileGridXOffset;
         if (x < 0) {
             x += 1 - tileWidth; // Force round to -infinity
@@ -306,7 +308,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * relative to a given tile grid layout specified by its Y offset
      * and tile height.
      */
-    public static int YToTileY(int y, int tileGridYOffset, int tileHeight) {
+    public static int convertYToTileY(int y, int tileGridYOffset, int tileHeight) {
         y -= tileGridYOffset;
         if (y < 0) {
             y += 1 - tileHeight; // Force round to -infinity
@@ -322,8 +324,8 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * @param x the X coordinate of a pixel.
      * @return the X index of the tile containing the pixel.
      */
-    public int XToTileX(int x) {
-        return XToTileX(x, getTileGridXOffset(), getTileWidth());
+    public int convertXToTileX(int x) {
+        return convertXToTileX(x, getTileGridXOffset(), getTileWidth());
     }
 
     /**
@@ -334,8 +336,8 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * @param y the Y coordinate of a pixel.
      * @return the Y index of the tile containing the pixel.
      */
-    public int YToTileY(int y) {
-        return YToTileY(y, getTileGridYOffset(), getTileHeight());
+    public int convertYToTileY(int y) {
+        return convertYToTileY(y, getTileGridYOffset(), getTileHeight());
     }
 
     /**
@@ -424,10 +426,10 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * @param bounds the region of the RenderedImage to be returned.
      */
     public Raster getData(Rectangle bounds) {
-        int startX = XToTileX(bounds.x);
-        int startY = YToTileY(bounds.y);
-        int endX = XToTileX(bounds.x + bounds.width - 1);
-        int endY = YToTileY(bounds.y + bounds.height - 1);
+        int startX = convertXToTileX(bounds.x);
+        int startY = convertYToTileY(bounds.y);
+        int endX = convertXToTileX(bounds.x + bounds.width - 1);
+        int endY = convertYToTileY(bounds.y + bounds.height - 1);
         Raster tile;
 
         if ((startX == endX) && (startY == endY)) {
@@ -496,10 +498,10 @@ public abstract class SimpleRenderedImage implements RenderedImage {
             bounds = dest.getBounds();
         }
 
-        int startX = XToTileX(bounds.x);
-        int startY = YToTileY(bounds.y);
-        int endX = XToTileX(bounds.x + bounds.width - 1);
-        int endY = YToTileY(bounds.y + bounds.height - 1);
+        int startX = convertXToTileX(bounds.x);
+        int startY = convertYToTileY(bounds.y);
+        int endX = convertXToTileX(bounds.x + bounds.width - 1);
+        int endY = convertYToTileY(bounds.y + bounds.height - 1);
 
         for (int j = startY; j <= endY; j++) {
             for (int i = startX; i <= endX; i++) {

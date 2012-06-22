@@ -40,14 +40,21 @@ import java.util.Vector;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
+// CSOFF: LocalVariableName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: NoWhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * This is an abstract base class that takes care of most of the
  * normal issues surrounding the implementation of the CachableRed
  * (RenderedImage) interface.  It tries to make no assumptions about
  * the subclass implementation.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
 public abstract class AbstractRed implements CachableRed {
 
@@ -560,13 +567,13 @@ public abstract class AbstractRed implements CachableRed {
         if (tx1 >= minTileX+numXTiles) tx1 = minTileX+numXTiles-1;
         if (ty1 >= minTileY+numYTiles) ty1 = minTileY+numYTiles-1;
 
-        final boolean is_INT_PACK =
+        final boolean isIntPack =
             GraphicsUtil.is_INT_PACK_Data(getSampleModel(), false);
 
         for (int y=ty0; y<=ty1; y++)
             for (int x=tx0; x<=tx1; x++) {
                 Raster r = getTile(x, y);
-                if (is_INT_PACK)
+                if (isIntPack)
                     GraphicsUtil.copyData_INT_PACK(r, wr);
                 else
                     GraphicsUtil.copyData_FALLBACK(r, wr);
@@ -587,11 +594,11 @@ public abstract class AbstractRed implements CachableRed {
      *   falles outside of the bounds of the tile grid for the image.
      */
     public WritableRaster makeTile(int tileX, int tileY) {
-        if ((tileX < minTileX) || (tileX >= minTileX+numXTiles) ||
-            (tileY < minTileY) || (tileY >= minTileY+numYTiles))
+        if ((tileX < minTileX) || (tileX >= minTileX+numXTiles)
+            || (tileY < minTileY) || (tileY >= minTileY+numYTiles))
             throw new IndexOutOfBoundsException
-                ("Requested Tile (" + tileX + ',' + tileY +
-                 ") lies outside the bounds of image");
+                ("Requested Tile (" + tileX + ',' + tileY
+                 + ") lies outside the bounds of image");
 
         Point pt = new Point(tileGridXOff+tileX*tileWidth,
                              tileGridYOff+tileY*tileHeight);
@@ -621,8 +628,8 @@ public abstract class AbstractRed implements CachableRed {
         int x1 = x0+wr.getWidth() -1;
         int y1 = y0+wr.getHeight()-1;
 
-        if ((x0 < bounds.x) || (x1 >= (bounds.x+bounds.width)) ||
-            (y0 < bounds.y) || (y1 >= (bounds.y+bounds.height))) {
+        if ((x0 < bounds.x) || (x1 >= (bounds.x+bounds.width))
+            || (y0 < bounds.y) || (y1 >= (bounds.y+bounds.height))) {
             // Part of this raster lies outside our bounds so subset
             // it so it only advertises the stuff inside our bounds.
             if (x0 < bounds.x) x0 = bounds.x;

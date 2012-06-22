@@ -33,13 +33,23 @@ import java.awt.image.WritableRaster;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
+// CSOFF: ConstantName
+// CSOFF: MethodName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * This function will tranform an image from any colorspace into a
  * luminance image.  The alpha channel if any will be copied to the
  * new image.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
- * @version $Id$ */
+ * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
+ */
 public class Any2sRGBRed extends AbstractRed {
 
     boolean srcIsLsRGB = false;
@@ -301,8 +311,7 @@ public class Any2sRGBRed extends AbstractRed {
                 return GraphicsUtil.sRGB_Unpre;
 
             return GraphicsUtil.sRGB;
-        }
-        else {
+        } else {
             // No ColorModel so try to make some intelligent
             // decisions based just on the number of bands...
             // 1 bands -> replicated into RGB
@@ -318,8 +327,9 @@ public class Any2sRGBRed extends AbstractRed {
                 return GraphicsUtil.sRGB_Unpre;
             case 3:
                 return GraphicsUtil.sRGB;
+            default:
+                return GraphicsUtil.sRGB_Unpre;
             }
-            return GraphicsUtil.sRGB_Unpre;
         }
     }
 

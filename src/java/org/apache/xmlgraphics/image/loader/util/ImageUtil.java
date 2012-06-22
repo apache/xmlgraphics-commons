@@ -47,7 +47,10 @@ import org.apache.xmlgraphics.image.loader.ImageSource;
 /**
  * Helper and convenience methods for working with the image package.
  */
-public class ImageUtil {
+public final class ImageUtil {
+
+    private ImageUtil() {
+    }
 
     /**
      * Returns the InputStream of a Source object.

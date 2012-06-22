@@ -21,6 +21,8 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import java.io.Serializable;
 
+// CSOFF: WhitespaceAround
+
 /**
  * A class representing a field in a TIFF 6.0 Image File Directory.
  *
