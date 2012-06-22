@@ -118,8 +118,7 @@ public class ImageProviderPipeline {
         if (hints == null) {
             hints = Collections.EMPTY_MAP;
         }
-        long start, duration;
-        start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         Image img = null;
 
         //Remember the last image in the pipeline that is cacheable and cache that.
@@ -149,6 +148,7 @@ public class ImageProviderPipeline {
         }
 
         boolean entirelyInCache = true;
+        long duration;
         if (img == null && loader != null) {
             //Load image
             img = loader.loadImage(info, hints, context);

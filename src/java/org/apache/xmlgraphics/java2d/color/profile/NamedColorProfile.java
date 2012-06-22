@@ -19,8 +19,6 @@
 
 package org.apache.xmlgraphics.java2d.color.profile;
 
-import java.awt.color.ICC_Profile;
-
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
 import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 

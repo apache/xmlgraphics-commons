@@ -116,7 +116,8 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                 unit = (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_RESOLUTION_UNIT);
             }
             if (unit == 2 || unit == 3) {
-                float xRes, yRes;
+                float xRes;
+                float yRes;
                 TIFFField fldx = dir.getField(TIFFImageDecoder.TIFF_X_RESOLUTION);
                 TIFFField fldy = dir.getField(TIFFImageDecoder.TIFF_Y_RESOLUTION);
                 if (fldx == null || fldy == null) {

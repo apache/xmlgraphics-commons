@@ -38,6 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// CSOFF: OperatorWrap
+// CSOFF: ParameterName
+// CSOFF: WhitespaceAround
+
 /**
  * Handles the attributes in a graphic context:<br>
  * + Composite <br>
@@ -48,9 +52,9 @@ import java.util.Map;
  * + RenderingHints <br>
  * + AffineTransform <br>
  *
- * @author <a href="mailto:cjolif@ilog.fr">Christophe Jolif</a>
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
  * @version $Id$
+ *
+ * Originally authored by Vincent Hardy and Christophe Jolif.
  */
 public class GraphicContext implements Cloneable{
     /**

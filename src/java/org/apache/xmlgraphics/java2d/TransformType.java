@@ -19,13 +19,15 @@
 
 package org.apache.xmlgraphics.java2d;
 
+// CSOFF: WhitespaceAround
+
 /**
  * Enumeration for transformation types.
  *
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
  * @version $Id$
+ * Originally authored by Vincent Hardy.
  */
-public class TransformType{
+public final class TransformType{
     /*
      * Transform type constants
      */

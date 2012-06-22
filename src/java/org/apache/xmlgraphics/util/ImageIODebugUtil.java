@@ -36,7 +36,10 @@ import org.w3c.dom.Node;
  *
  * @version $Id$
  */
-public class ImageIODebugUtil {
+public final class ImageIODebugUtil {
+
+    private ImageIODebugUtil() {
+    }
 
     public static void dumpMetadata(IIOMetadata meta, boolean nativeFormat) {
         String format;

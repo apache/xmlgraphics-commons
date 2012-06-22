@@ -47,6 +47,7 @@ public class ImageEncodingHelper {
     private ColorModel encodedColorModel;
     private boolean firstTileDump;
     private boolean enableCMYK;
+    private boolean isBGR;
 
     /**
      * Main constructor
@@ -142,8 +143,8 @@ public class ImageEncodingHelper {
             data = new double[nbands];
             break;
         default:
-            throw new IllegalArgumentException("Unknown data buffer type: "+
-                                               dataType);
+            throw new IllegalArgumentException("Unknown data buffer type: "
+                                               + dataType);
         }
 
         ColorModel colorModel = image.getColorModel();
@@ -234,7 +235,17 @@ public class ImageEncodingHelper {
             Raster raster = image.getTile(0, 0);
             DataBuffer buffer = raster.getDataBuffer();
             if (buffer instanceof DataBufferByte) {
-                out.write(((DataBufferByte)buffer).getData());
+                byte[] bytes = ((DataBufferByte) buffer).getData();
+                // see determineEncodingColorModel() to see why we permute B and R here
+                if (isBGR) {
+                    for (int i = 0; i < bytes.length; i += 3) {
+                        out.write(bytes[i + 2]);
+                        out.write(bytes[i + 1]);
+                        out.write(bytes[i]);
+                    }
+                } else {
+                    out.write(bytes);
+                }
                 return true;
             }
         }
@@ -285,11 +296,25 @@ public class ImageEncodingHelper {
                     piSampleModel = (PixelInterleavedSampleModel)sampleModel;
                     int[] offsets = piSampleModel.getBandOffsets();
                     for (int i = 0; i < offsets.length; i++) {
-                        if (offsets[i] != i) {
+                        if (offsets[i] != i && offsets[i] != offsets.length - 1 - i) {
                             //Don't encode directly as samples are not next to each other
                             //i.e. offsets are not 012 (RGB) or 0123 (CMYK)
+                            // let also pass 210 BGR and 3210 (KYMC); 3210 will be skipped below
+                            // if 210 (BGR) the B and R bytes will be permuted later in optimizeWriteTo()
                             return;
                         }
+                    }
+                    // check if we are in a BGR case; this is added here as a workaround for bug fix
+                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6549882 that causes some PNG
+                    // images to be loaded as BGR with the consequence that performance was being impacted
+                    this.isBGR = false;
+                    if (offsets.length == 3 && offsets[0] == 2 && offsets[1] == 1 && offsets[2] == 0) {
+                        this.isBGR = true;
+                    }
+                    // make sure we did not get here due to a KMYC image
+                    if (offsets.length == 4 && offsets[0] == 3 && offsets[1] == 2 && offsets[2] == 1
+                            && offsets[3] == 0) {
+                        return;
                     }
                 }
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE

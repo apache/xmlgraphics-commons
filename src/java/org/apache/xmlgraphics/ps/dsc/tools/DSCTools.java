@@ -34,7 +34,10 @@ import org.apache.xmlgraphics.ps.dsc.events.PostScriptComment;
 /**
  * Helper methods commonly used when dealing with DSC-compliant PostScript files.
  */
-public class DSCTools implements DSCParserConstants {
+public final class DSCTools implements DSCParserConstants {
+
+    private DSCTools() {
+    }
 
     /**
      * Indicates whether the given event ends a header comment section according to the rules in

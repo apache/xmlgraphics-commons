@@ -30,10 +30,15 @@ import org.apache.xmlgraphics.fonts.Glyphs;
 import org.apache.xmlgraphics.util.io.ASCIIHexOutputStream;
 import org.apache.xmlgraphics.util.io.SubInputStream;
 
+// CSOFF: HideUtilityClassConstructor
+
 /**
  * Utility code for font handling in PostScript.
  */
 public class PSFontUtils {
+
+    public PSFontUtils() {
+    }
 
     /**
      * This method reads a Type 1 font from a stream and embeds it into a PostScript stream.

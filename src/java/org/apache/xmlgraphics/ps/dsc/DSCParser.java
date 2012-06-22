@@ -125,7 +125,7 @@ public class DSCParser implements DSCParserConstants {
         }
     }
 
-    private final boolean isWhitespace(char c) {
+    private boolean isWhitespace(char c) {
         return c == ' ' || c == '\t';
     }
 

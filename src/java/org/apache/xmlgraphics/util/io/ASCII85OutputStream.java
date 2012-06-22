@@ -19,9 +19,9 @@
 
 package org.apache.xmlgraphics.util.io;
 
-import java.io.OutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * This class applies a ASCII85 encoding to the stream.
@@ -92,7 +92,8 @@ public class ASCII85OutputStream extends FilterOutputStream
             if (firstpart > 0) {
                 out.write(buf, 0, firstpart);
             }
-            out.write(EOL); bw++;
+            out.write(EOL);
+            bw++;
             int rest = len - firstpart;
             if (rest > 0) {
                 out.write(buf, firstpart, rest);

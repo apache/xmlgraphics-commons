@@ -20,15 +20,16 @@
 package org.apache.xmlgraphics.util.io;
 
 import java.io.FilterOutputStream;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**
  * This class applies a RunLengthEncode filter to the stream.
  *
- * @author   <a href="mailto:smwolke@geistig.com">Stephen Wolke</a>
  * @version  $Id$
+ *
+ * Originally authored by Stephen Wolke.
  */
 public class RunLengthEncodeOutputStream extends FilterOutputStream
             implements Finalizable {
@@ -97,17 +98,6 @@ public class RunLengthEncodeOutputStream extends FilterOutputStream
             break;
         default:
             switch (isSequence) {
-            case IN_SEQUENCE:
-                if (runBuffer[runCount] != runBuffer[runCount - 1]) {
-                    out.write(BYTE_MAX - (runCount - 1));
-                    out.write(runBuffer[runCount - 1]);
-                    runBuffer[0] = runBuffer[runCount];
-                    runCount = 1;
-                    isSequence = NOT_IDENTIFY_SEQUENCE;
-                    break;
-                }
-                runCount++;
-                break;
             case NOT_IN_SEQUENCE:
                 if (runBuffer[runCount] == runBuffer[runCount - 1]) {
                     isSequence = START_SEQUENCE;
@@ -129,6 +119,18 @@ public class RunLengthEncodeOutputStream extends FilterOutputStream
                     runCount++;
                     break;
                 }
+            case IN_SEQUENCE:
+            default:
+                if (runBuffer[runCount] != runBuffer[runCount - 1]) {
+                    out.write(BYTE_MAX - (runCount - 1));
+                    out.write(runBuffer[runCount - 1]);
+                    runBuffer[0] = runBuffer[runCount];
+                    runCount = 1;
+                    isSequence = NOT_IDENTIFY_SEQUENCE;
+                    break;
+                }
+                runCount++;
+                break;
             }
         }
     }

@@ -24,7 +24,7 @@ package org.apache.xmlgraphics.image.loader.util;
  * {@link Integer}, but giving {@link Integer#MAX_VALUE} a special meaning: it means infinite
  * penalty, i.e. a candidate with this penalty will be excluded from any choice.
  */
-public class Penalty {
+public final class Penalty {
 
     public static final Penalty ZERO_PENALTY = new Penalty(0);
     public static final Penalty INFINITE_PENALTY = new Penalty(Integer.MAX_VALUE);

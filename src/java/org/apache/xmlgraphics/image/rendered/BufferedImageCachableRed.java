@@ -26,14 +26,19 @@ import java.awt.image.WritableRaster;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
+// CSOFF: NeedBraces
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * This implements CachableRed based on a BufferedImage.
  * You can use this to wrap a BufferedImage that you want to
  * appear as a CachableRed.
  * It essentially ignores the dependency and dirty region methods.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
- * @version $Id$ */
+ * Originally authored by Thomas DeWeese.
+ * @version $Id$
+ */
 public class BufferedImageCachableRed extends AbstractRed {
     // The bufferedImage that we wrap...
     BufferedImage bi;

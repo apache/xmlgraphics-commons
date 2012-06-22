@@ -31,7 +31,10 @@ import javax.xml.transform.stream.StreamSource;
 /**
  * The XMP parser.
  */
-public class XMPParser {
+public final class XMPParser {
+
+    private XMPParser() {
+    }
 
     /**
      * Parses an XMP file.

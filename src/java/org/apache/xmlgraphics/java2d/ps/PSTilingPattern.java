@@ -28,7 +28,7 @@ import java.util.List;
  * This class is implementation of PostScript tiling pattern. It allows to make a pattern
  * with defined PaintProc or texture.
  *
- * @author Jiri Kunhart
+ * Originally authored by Jiri Kunhart.
  */
 public class PSTilingPattern {
 
@@ -313,7 +313,7 @@ public class PSTilingPattern {
      * @param tilingType the tiling type
      */
     public void setTilingType(int tilingType) {
-        if (! ((tilingType <= 3) && (tilingType >= 1))) {
+        if (!((tilingType <= 3) && (tilingType >= 1))) {
             throw new IllegalArgumentException("Parameter tilingType must not be "
                     + tilingType + " (only 1, 2 or 3)");
         }
@@ -429,6 +429,21 @@ public class PSTilingPattern {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return
+            0
+            ^ patternType
+            ^ ( ( xUID != null ) ? xUID.hashCode() : 0 )
+            ^ ( ( paintProc != null ) ? paintProc.hashCode() : 0 )
+            ^ ( ( bBox != null ) ? bBox.hashCode() : 0 )
+            ^ new Double(xStep).hashCode()
+            ^ new Double(yStep).hashCode()
+            ^ paintType
+            ^ tilingType
+            ^ ( ( texture != null ) ? texture.hashCode() : 0 );
+    }
+
     /**
      * Compares two patterns data (except their names).
      * {@inheritDoc}
@@ -451,8 +466,8 @@ public class PSTilingPattern {
 
         TexturePaint patternTexture = patternObj.getTexturePaint();
 
-        if ( ((patternTexture == null) && (texture != null)) ||
-             ((patternTexture != null) && (texture == null))) {
+        if ( ((patternTexture == null) && (texture != null))
+             || ((patternTexture != null) && (texture == null))) {
             return false;
         }
 
@@ -482,10 +497,9 @@ public class PSTilingPattern {
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             // compare PaintProc
-            if (! paintProc.toString().equals(patternObj.getPaintProc().toString())) {
+            if (!paintProc.toString().equals(patternObj.getPaintProc().toString())) {
                 return false;
             }
         }
@@ -503,11 +517,11 @@ public class PSTilingPattern {
         if (tilingType != patternObj.getTilingType()) {
             return false;
         }
-        if (! bBox.equals(patternObj.getBoundingBox())) {
+        if (!bBox.equals(patternObj.getBoundingBox())) {
             return false;
         }
         if ((xUID != null) && (patternObj.getXUID() != null)) {
-            if (! xUID.equals(patternObj.getXUID())) {
+            if (!xUID.equals(patternObj.getXUID())) {
                 return false;
             }
         }

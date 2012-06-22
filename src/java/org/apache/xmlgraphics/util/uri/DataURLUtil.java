@@ -32,7 +32,10 @@ import org.apache.xmlgraphics.util.io.Base64EncodeStream;
 /**
  * Utility classes for generating RFC 2397 data URLs.
  */
-public class DataURLUtil {
+public final class DataURLUtil {
+
+    private DataURLUtil() {
+    }
 
     /**
      * Creates a new data URL and returns it as a String.

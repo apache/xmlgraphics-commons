@@ -19,16 +19,23 @@
 
 package org.apache.xmlgraphics.image.codec.png;
 
-import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
-import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
-
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
+
+import org.apache.xmlgraphics.image.codec.util.ImageEncodeParam;
+import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
+
+// CSOFF: MemberName
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: NeedBraces
+// CSOFF: OperatorWrap
+// CSOFF: ParameterName
+// CSOFF: WhitespaceAround
 
 /**
  * An instance of <code>ImageEncodeParam</code> for encoding images in
@@ -1291,7 +1298,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     /**
      * An abs() function for use by the Paeth predictor.
      */
-    private static final int abs(int x) {
+    private static int abs(int x) {
         return (x < 0) ? -x : x;
     }
 
@@ -1300,7 +1307,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * is included as a convenience to subclasses that override the
      * <code>filterRow</code> method.
      */
-    public static final int paethPredictor(int a, int b, int c) {
+    public static int paethPredictor(int a, int b, int c) {
         int p = a + b - c;
         int pa = abs(p - a);
         int pb = abs(p - b);

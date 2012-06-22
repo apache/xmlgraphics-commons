@@ -41,6 +41,27 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53408" due-to="Luis Bernardo, Matthias Reischenbacher">
+        Add two PNG image loaders, one using internal XGC PNG code, the other using an externally supplied IDAT chunk (for raw decoding).
+      </action>
+      <action context="Code" dev="GA" type="update" fixes-bug="53327" due-to="Julien Aymé">
+        Fix corner cases involving long/double conversion and rounding error in double division when rounding 5E-N for certain N.
+      </action>
+      <action context="Code" dev="GA" type="update" fixes-bug="53327" due-to="Julien Aymé">
+        Fix determination of use of precise vs fast formatting in order to fix regression with value 5.22534294505995E-4, decimals: 17, precision: 17.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="53352">
+        Upgrade to checkstyle-5.5 and ensure no warnings.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="51149" due-to="Luis Bernardo">
+        Improve performance for certain kinds of PNG images.
+      </action>
+      <action context="Code" dev="GA" type="fix" fixes-bug="53327" due-to="Julien Aymé">
+        Fix handling of values less than 1E-300.
+      </action>
+      <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
+        Fix handling of NaN, {+,-}Infinity, and other edge cases.
+      </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="53184" due-to="Robert Meyer">
         Unify date formatting between FOP and XGC as well as tidying the date format code.
       </action>

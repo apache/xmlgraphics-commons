@@ -24,7 +24,10 @@ package org.apache.xmlgraphics.ps;
  *
  * @version $Id$
  */
-public class DSCConstants {
+public final class DSCConstants {
+
+    private DSCConstants() {
+    }
 
     // ----==== General Header Comments ====----
 

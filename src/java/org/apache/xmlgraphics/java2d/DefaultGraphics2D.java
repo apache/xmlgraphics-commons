@@ -34,6 +34,8 @@ import java.awt.image.RenderedImage;
 import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 
+// CSOFF: WhitespaceAround
+
 /**
  * This concrete implementation of <tt>AbstractGraphics2D</tt> is a
  * simple help to programmers to get started with their own
@@ -42,9 +44,10 @@ import java.text.AttributedCharacterIterator;
  * is <tt>AbstractGraphics2D</tt> and makes it easy to start
  * implementing a <tt>Graphic2D</tt> piece-meal.
  *
- * @author <a href="mailto:vincent.hardy@eng.sun.com">Vincent Hardy</a>
  * @version $Id$
  * @see org.apache.xmlgraphics.java2d.AbstractGraphics2D
+ *
+ * Originally authored by Vincent Hardy.
  */
 public class DefaultGraphics2D extends AbstractGraphics2D {
     /**

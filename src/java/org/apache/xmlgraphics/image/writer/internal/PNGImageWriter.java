@@ -25,7 +25,6 @@ import java.io.OutputStream;
 
 import org.apache.xmlgraphics.image.codec.png.PNGImageEncoder;
 import org.apache.xmlgraphics.image.writer.AbstractImageWriter;
-import org.apache.xmlgraphics.image.writer.ImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 
 /**

@@ -35,21 +35,26 @@ import java.awt.image.WritableRaster;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
+// CSOFF: NeedBraces
+// CSOFF: WhitespaceAfter
+// CSOFF: WhitespaceAround
+
 /**
  * This allows you to specify the ColorModel, Alpha premult and/or
  * SampleModel to be used for output.  If the input image lacks
  * Alpha and alpha is included in output then it is filled with
  * alpha=1.  In all other cases bands are simply copied.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
 public class FormatRed extends AbstractRed {
 
     public static CachableRed construct(CachableRed src, ColorModel cm) {
         ColorModel srcCM = src.getColorModel();
-        if ((cm.hasAlpha() != srcCM.hasAlpha()) ||
-            (cm.isAlphaPremultiplied() != srcCM.isAlphaPremultiplied()))
+        if ((cm.hasAlpha() != srcCM.hasAlpha())
+            || (cm.isAlphaPremultiplied() != srcCM.isAlphaPremultiplied()))
             return new FormatRed(src, cm);
 
         if (cm.getNumComponents() != srcCM.getNumComponents())
@@ -57,12 +62,12 @@ public class FormatRed extends AbstractRed {
                 ("Incompatible ColorModel given");
 
 
-        if ((srcCM instanceof ComponentColorModel) &&
-            (cm    instanceof ComponentColorModel))
+        if ((srcCM instanceof ComponentColorModel)
+            && (cm    instanceof ComponentColorModel))
             return src;
 
-        if ((srcCM instanceof DirectColorModel) &&
-            (cm    instanceof DirectColorModel))
+        if ((srcCM instanceof DirectColorModel)
+            && (cm    instanceof DirectColorModel))
             return src;
 
         return new FormatRed(src, cm);

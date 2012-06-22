@@ -41,10 +41,14 @@ import org.apache.commons.io.IOUtils;
  * interface is very similar to the one they describe which seems to
  * be missing in the JDK.
  *
- * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
+ *
+ * Originally authored by Thomas DeWeese.
  */
-public class Service {
+public final class Service {
+
+    private Service() {
+    }
 
     // Remember providers we have looked up before.
     static Map<String, List<String>> classMap = new java.util.HashMap<String, List<String>>();

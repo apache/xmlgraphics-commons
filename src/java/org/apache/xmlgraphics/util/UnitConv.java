@@ -26,6 +26,9 @@ import java.awt.geom.AffineTransform;
  */
 public final class UnitConv {
 
+    private UnitConv() {
+    }
+
     /** conversion factory from millimeters to inches. */
     public static final float IN2MM = 25.4f;
 
@@ -189,27 +192,21 @@ public final class UnitConv {
             if (value.toLowerCase().indexOf(PX) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 1000;
-            }
-            else if (value.toLowerCase().indexOf(INCH) > 0) {
+            } else if (value.toLowerCase().indexOf(INCH) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 72000;
-            }
-            else if (value.toLowerCase().indexOf(CM) > 0) {
+            } else if (value.toLowerCase().indexOf(CM) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 28346.4567;
-            }
-            else if (value.toLowerCase().indexOf(MM) > 0) {
+            } else if (value.toLowerCase().indexOf(MM) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 2834.64567;
-            }
-            else if (value.toLowerCase().indexOf(MPT) > 0) {
+            } else if (value.toLowerCase().indexOf(MPT) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 3));
-            }
-            else if (value.toLowerCase().indexOf(POINT) > 0) {
+            } else if (value.toLowerCase().indexOf(POINT) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 1000;
-            }
-            else if (value.toLowerCase().indexOf(PICA) > 0) {
+            } else if (value.toLowerCase().indexOf(PICA) > 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 12000;
             }

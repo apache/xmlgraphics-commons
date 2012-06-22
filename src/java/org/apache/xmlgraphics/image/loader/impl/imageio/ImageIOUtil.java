@@ -39,7 +39,10 @@ import org.apache.xmlgraphics.util.UnitConv;
 /**
  * Helper and convenience methods for ImageIO.
  */
-public class ImageIOUtil {
+public final class ImageIOUtil {
+
+    private ImageIOUtil() {
+    }
 
     /** Key for ImageInfo's custom objects to embed the ImageIO metadata */
     public static final Object IMAGEIO_METADATA = IIOMetadata.class;

@@ -21,6 +21,11 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 
+// CSOFF: InnerAssignment
+// CSOFF: MultipleVariableDeclarations
+// CSOFF: OperatorWrap
+// CSOFF: WhitespaceAround
+
 class TIFFFaxDecoder {
 
     private int bitPointer, bytePointer;
