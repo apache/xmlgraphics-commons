@@ -82,7 +82,7 @@ public final class PSProcSets {
         }
 
         public StdProcSet() {
-            super("Apache XML Graphics Std ProcSet", 1.1f, 0);
+            super("Apache XML Graphics Std ProcSet", 1.2f, 0);
         }
 
         public void writeTo(PSGenerator gen) throws IOException {
