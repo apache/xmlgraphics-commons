@@ -214,6 +214,16 @@ public class PSGenerator implements PSCommandMap {
     }
 
     /**
+     * Writes the given number to the stream in decimal format.
+     *
+     * @param n a number
+     * @throws IOException in case of an I/O problem
+     */
+    public void write(int n) throws IOException {
+        write(Integer.toString(n));
+    }
+
+    /**
      * Writes a PostScript command to the stream and ends the line.
      *
      * @param cmd              The PostScript code to be written.
