@@ -32,6 +32,8 @@ import java.util.Stack;
 
 import javax.xml.transform.Source;
 
+import org.apache.commons.io.IOUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -817,9 +819,6 @@ public class PSGenerator implements PSCommandMap {
         return getResourceTracker().isResourceSupplied(res);
     }
 
-<<<<<<< HEAD
- }
-=======
     /**
      * Embeds the Identity-H CMap file into the output stream, if that has not
      * already been done.
@@ -835,11 +834,11 @@ public class PSGenerator implements PSCommandMap {
             resTracker.registerNeededResource(getProcsetCIDInitResource());
             writeDSCComment(DSCConstants.BEGIN_DOCUMENT, IDENTITY_H);
             InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H);
-            int b;
-            while ((b = cmap.read()) != -1) {
-                out.write(b);
+            try {
+                IOUtils.copyLarge(cmap, out);
+            } finally {
+                IOUtils.closeQuietly(cmap);
             }
-            cmap.close();
             writeDSCComment(DSCConstants.END_DOCUMENT);
             resTracker.registerSuppliedResource(getIdentityHCMapResource());
             identityHEmbedded = true;
