@@ -129,7 +129,7 @@ public final class PSProcSets {
             // gen.writeln("  currentdict exch get");
             gen.writeln("  /Tf exch def");
             gen.writeln("  Tf findfont Tp scalefont setfont");
-            gen.writeln("  /cf Tf def  /cs Tp def  /cw ( ) stringwidth pop def");
+            gen.writeln("  /cf Tf def  /cs Tp def");
             gen.writeln("} bd");
 
             gen.writeln("/ULS {currentpoint /uy exch def /ux exch def} bd");
