@@ -38,6 +38,9 @@
   </contexts>
   <changes>
     <release version="1.5rc1" date="3 June 2012">
+      <action context="Code" dev="GA" type="fix" fixes-bug="53408" due-to="Luis Bernardo, Matthias Reischenbacher">
+        Add two PNG image loaders, one using internal XGC PNG code, the other using an externally supplied IDAT chunk (for raw decoding).
+      </action>
       <action context="Code" dev="GA" type="update" fixes-bug="53327" due-to="Julien Aymé">
         Fix corner cases involving long/double conversion and rounding error in double division when rounding 5E-N for certain N.
       </action>

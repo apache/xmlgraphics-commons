@@ -143,25 +143,23 @@ public class PSImageUtils {
 
     /**
      * Writes a bitmap image to the PostScript stream.
-     * @param img the bitmap image as a byte array
+     * @param encoder the image encoder
+     * @param imgDim the dimensions of the image
+     * @param imgDescription the name of the image
      * @param targetRect the target rectangle to place the image in
+     * @param colorModel the color model of the image
      * @param gen the PostScript generator
      * @throws IOException In case of an I/O exception
      */
-    private static void writeImage(RenderedImage img,
-            Rectangle2D targetRect, PSGenerator gen) throws IOException {
-        ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img);
-        String imgDescription = img.getClass().getName();
+    public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
+            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen)
+            throws IOException {
 
         gen.saveGraphicsState();
         translateAndScale(gen, null, targetRect);
-
         gen.commentln("%AXGBeginBitmap: " + imgDescription);
-
         gen.writeln("{{");
-        // Template: (RawData is used for the EOF signal only)
-        // gen.write("/RawData currentfile <first filter> filter def");
-        // gen.write("/Data RawData <second filter> <third filter> [...] def");
+
         String implicitFilter = encoder.getImplicitFilter();
         if (implicitFilter != null) {
             gen.writeln("/RawData currentfile /ASCII85Decode filter def");
@@ -175,11 +173,15 @@ public class PSImageUtils {
                 gen.writeln("/Data RawData /RunLengthDecode filter def");
             }
         }
+
         PSDictionary imageDict = new PSDictionary();
         imageDict.put("/DataSource", "Data");
-        writeImageCommand(img, imageDict, gen);
 
-        /* the following two lines could be enabled if something still goes wrong
+        populateImageDictionary(imgDim, colorModel, imageDict);
+        writeImageCommand(imageDict, colorModel, gen);
+
+        /*
+         * the following two lines could be enabled if something still goes wrong
          * gen.write("Data closefile");
          * gen.write("RawData flushfile");
          */
@@ -189,43 +191,40 @@ public class PSImageUtils {
 
         compressAndWriteBitmap(encoder, gen);
 
-        gen.writeln("");
+        gen.newLine();
         gen.commentln("%AXGEndBitmap");
         gen.restoreGraphicsState();
     }
 
-    private static ColorModel populateImageDictionary(
-                ImageEncodingHelper helper, PSDictionary imageDict) {
-        RenderedImage img = helper.getImage();
-        String w = Integer.toString(img.getWidth());
-        String h = Integer.toString(img.getHeight());
+    private static ColorModel populateImageDictionary(Dimension imgDim, ColorModel colorModel,
+            PSDictionary imageDict) {
+        String w = Integer.toString(imgDim.width);
+        String h = Integer.toString(imgDim.height);
         imageDict.put("/ImageType", "1");
         imageDict.put("/Width", w);
         imageDict.put("/Height", h);
 
-        ColorModel cm = helper.getEncodedColorModel();
-
         boolean invertColors = false;
-        String decodeArray = getDecodeArray(cm.getNumComponents(), invertColors);
-        int bitsPerComp = cm.getComponentSize(0);
+        String decodeArray = getDecodeArray(colorModel.getNumColorComponents(), invertColors);
+        int bitsPerComp = colorModel.getComponentSize(0);
 
         // Setup scanning for left-to-right and top-to-bottom
         imageDict.put("/ImageMatrix", "[" + w + " 0 0 " + h + " 0 0]");
 
-        if ((cm instanceof IndexColorModel)) {
-            IndexColorModel im = (IndexColorModel)cm;
-            int c = im.getMapSize();
+        if ((colorModel instanceof IndexColorModel)) {
+            IndexColorModel indexColorModel = (IndexColorModel) colorModel;
+            int c = indexColorModel.getMapSize();
             int hival = c - 1;
             if (hival > 4095) {
                 throw new UnsupportedOperationException("hival must not go beyond 4095");
             }
-            bitsPerComp = im.getPixelSize();
-            int ceiling = ((int)Math.pow(2, bitsPerComp)) - 1;
+            bitsPerComp = indexColorModel.getPixelSize();
+            int ceiling = ((int) Math.pow(2, bitsPerComp)) - 1;
             decodeArray = "[0 " + ceiling + "]";
         }
         imageDict.put("/BitsPerComponent", Integer.toString(bitsPerComp));
         imageDict.put("/Decode", decodeArray);
-        return cm;
+        return colorModel;
     }
 
     private static String getDecodeArray(int numComponents, boolean invertColors) {
@@ -288,8 +287,9 @@ public class PSImageUtils {
             PSDictionary imageDict, PSGenerator gen) throws IOException {
         ImageEncodingHelper helper = new ImageEncodingHelper(img, true);
         ColorModel cm = helper.getEncodedColorModel();
-        populateImageDictionary(helper, imageDict);
+        Dimension imgDim = new Dimension(img.getWidth(), img.getHeight());
 
+        populateImageDictionary(imgDim, cm, imageDict);
         writeImageCommand(imageDict, cm, gen);
     }
 
@@ -345,7 +345,13 @@ public class PSImageUtils {
                 float x, float y, float w, float h, PSGenerator gen)
                     throws IOException {
         Rectangle2D targetRect = new Rectangle2D.Double(x, y, w, h);
-        writeImage(img, targetRect, gen);
+        ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img);
+        Dimension imgDim = new Dimension(img.getWidth(), img.getHeight());
+        String imgDescription = img.getClass().getName();
+        ImageEncodingHelper helper = new ImageEncodingHelper(img);
+        ColorModel cm = helper.getEncodedColorModel();
+
+        writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen);
     }
 
     /**
