@@ -3,3 +3,4 @@ org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryRaw
 org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryRawCCITTFax
 org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryEPS
 org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryInternalTIFF
+org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryPNG

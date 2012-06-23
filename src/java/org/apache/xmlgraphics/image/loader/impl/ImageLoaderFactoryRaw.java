@@ -81,6 +81,8 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
     public ImageLoader newImageLoader(ImageFlavor targetFlavor) {
         if (targetFlavor.equals(ImageFlavor.RAW_JPEG)) {
             return new ImageLoaderRawJPEG();
+        } else if (targetFlavor.equals(ImageFlavor.RAW_PNG)) {
+            return new ImageLoaderRawPNG();
         } else {
             return new ImageLoaderRaw(targetFlavor);
         }
