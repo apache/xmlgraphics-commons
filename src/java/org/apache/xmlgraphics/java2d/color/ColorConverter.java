@@ -28,9 +28,7 @@ public interface ColorConverter {
 
     /**
      * @param color to convert
-    * @return converted color
-    */
-
+     * @return converted color
+     */
     Color convert(Color color);
-
 }

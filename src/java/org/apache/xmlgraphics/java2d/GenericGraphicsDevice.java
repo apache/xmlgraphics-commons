@@ -17,60 +17,75 @@
 
 /* $Id$ */
 
-package org.apache.xmlgraphics.java2d.ps;
+package org.apache.xmlgraphics.java2d;
 
 import java.awt.GraphicsConfigTemplate;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 
 /**
- * This implements the GraphicsDevice interface as appropriate for
- * a PSGraphics2D. This is quite simple since we only have one
- * GraphicsConfiguration for now.
+ * This implements the {@link GraphicsDevice} interface as appropriate for the various output
+ * configurations.
  */
-class PSGraphicsDevice extends GraphicsDevice {
-
-    /** The Graphics Config that created us... */
-    protected GraphicsConfiguration gc;
+public class GenericGraphicsDevice extends GraphicsDevice {
 
     /**
-     * Create a new PostScript graphics device.
-     *
-     * @param gc The graphics configuration we should reference
+     * The Graphics Config that created us...
      */
-    PSGraphicsDevice(GraphicsConfiguration gc) {
+    private final GraphicsConfiguration gc;
+
+    /**
+     * Create a new graphics2D device.
+     *
+     * @param The gc we should reference
+     */
+    public GenericGraphicsDevice(GraphicsConfiguration gc) {
         this.gc = gc;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Ignore template and return the only config we have
+     *
+     * @param gct the template configuration
+     * @return the best configuration which is the only one
+     */
     public GraphicsConfiguration getBestConfiguration(GraphicsConfigTemplate gct) {
         return gc;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return an array of our one GraphicsConfig
+     *
+     * @return an array containing the one graphics configuration
+     */
     public GraphicsConfiguration[] getConfigurations() {
         return new GraphicsConfiguration[] {gc};
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return out sole GraphicsConfig.
+     *
+     * @return the graphics configuration that created this object
+     */
     public GraphicsConfiguration getDefaultConfiguration() {
         return gc;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Generate an IdString..
+     *
+     * @return the ID string for this device, uses toString
+     */
     public String getIDstring() {
         return toString();
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Let the caller know that we are "a printer"
+     *
+     * @return the type which is always printer
+     */
     public int getType() {
         return GraphicsDevice.TYPE_PRINTER;
     }
-
 }
-

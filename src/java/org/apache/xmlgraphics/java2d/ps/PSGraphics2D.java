@@ -46,6 +46,7 @@ import java.io.IOException;
 
 import org.apache.xmlgraphics.java2d.AbstractGraphics2D;
 import org.apache.xmlgraphics.java2d.GraphicContext;
+import org.apache.xmlgraphics.java2d.GraphicsConfigurationWithoutTransparency;
 import org.apache.xmlgraphics.java2d.StrokingTextHandler;
 import org.apache.xmlgraphics.java2d.TextHandler;
 import org.apache.xmlgraphics.ps.PSGenerator;
@@ -822,7 +823,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @return the device configuration
      */
     public GraphicsConfiguration getDeviceConfiguration() {
-        return new PSGraphicsConfiguration();
+        return new GraphicsConfigurationWithoutTransparency();
     }
 
     /**
