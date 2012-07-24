@@ -25,14 +25,19 @@ import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import org.apache.commons.io.IOUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test case for the RFC 2397 data URL/URI resolver.
  */
-public class DataURIResolverTestCase extends TestCase {
+public class DataURIResolverTestCase {
 
     private static final byte[] TESTDATA = new byte[] { 0, 1, 2, 3, 4, 5 };
 
@@ -42,6 +47,7 @@ public class DataURIResolverTestCase extends TestCase {
      * @throws Exception
      *             if an error occurs
      */
+    @Test
     public void testRFC2397Generator() throws Exception {
         String url = DataURLUtil.createDataURL(new ByteArrayInputStream(
                 TESTDATA), null);
@@ -61,6 +67,7 @@ public class DataURIResolverTestCase extends TestCase {
      * @throws Exception
      *             if an error occurs
      */
+    @Test
     public void testNonMatchingContract() throws Exception {
         URIResolver resolver = new DataURIResolver();
         Source src;
@@ -89,6 +96,7 @@ public class DataURIResolverTestCase extends TestCase {
      * @throws Exception
      *             if an error occurs
      */
+    @Test
     public void testDataURLHandling() throws Exception {
         URIResolver resolver = new DataURIResolver();
         actualURLHAndlingTest(resolver);
@@ -138,4 +146,17 @@ public class DataURIResolverTestCase extends TestCase {
         assertEquals("\u038e\u03c9\u038e", text);
     }
 
+    /**
+     * Test that the system Id is not null for the resulting stream objects
+     * @throws Exception If an error occurs.
+     */
+    @Test
+    public void testSystemIdForNull() throws Exception {
+        URIResolver resolver = new DataURIResolver();
+        Source source = resolver.resolve("data:;base64,AAECAwQF", null);
+        assertNotNull(source.getSystemId());
+
+        source = resolver.resolve("data:text/plain;charset=iso-8859-7,%be%f9%be", null);
+        assertNotNull(source.getSystemId());
+    }
 }

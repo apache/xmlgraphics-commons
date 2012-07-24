@@ -72,7 +72,7 @@ public class DataURIResolver implements URIResolver {
             ByteArrayInputStream encodedStream = new ByteArrayInputStream(bytes);
             Base64DecodeStream decodedStream = new Base64DecodeStream(
                     encodedStream);
-            return new StreamSource(decodedStream);
+            return new StreamSource(decodedStream, href);
         } else {
             String encoding = "UTF-8";
             final int charsetpos = header.indexOf(";charset=");
@@ -83,7 +83,7 @@ public class DataURIResolver implements URIResolver {
                 final String unescapedString = URLDecoder
                         .decode(data, encoding);
                 return new StreamSource(new java.io.StringReader(
-                        unescapedString));
+                        unescapedString), href);
             } catch (IllegalArgumentException e) {
                 LOG.warn(e.getMessage());
             } catch (UnsupportedEncodingException e) {
