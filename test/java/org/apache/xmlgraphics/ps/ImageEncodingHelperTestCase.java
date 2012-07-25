@@ -19,16 +19,27 @@
 
 package org.apache.xmlgraphics.ps;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DirectColorModel;
+import java.awt.image.WritableRaster;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class ImageEncodingHelperTestCase extends TestCase {
 
@@ -49,6 +60,26 @@ public class ImageEncodingHelperTestCase extends TestCase {
         ig.draw(new Rectangle2D.Double(0.5, 0.5, 199, 149));
         ig.dispose();
         return image;
+    }
+
+    /**
+     * Tests encodeRenderedImageWithDirectColorModeAsRGB(). Tests the optimised method against the
+     * non-optimised method(encodeRenderedImageAsRGB) to ensure the BufferedImage produced are the
+     * same.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void testEncodeRenderedImageWithDirectColorModelAsRGB() throws IOException {
+        BufferedImage image = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
+        image = prepareImage(image);
+
+        ByteArrayOutputStream optimized = new ByteArrayOutputStream();
+        ImageEncodingHelper.encodeRenderedImageWithDirectColorModelAsRGB(image, optimized);
+
+        ByteArrayOutputStream nonoptimized = new ByteArrayOutputStream();
+        ImageEncodingHelper.encodeRenderedImageAsRGB(image, nonoptimized);
+
+        assertTrue(Arrays.equals(nonoptimized.toByteArray(), optimized.toByteArray()));
+
     }
 
     /**
@@ -75,4 +106,45 @@ public class ImageEncodingHelperTestCase extends TestCase {
         assertTrue(Arrays.equals(baosBGR.toByteArray(), baosRGB.toByteArray()));
     }
 
+    /**
+     * Tests encodeRenderedImageWithDirectColorModeAsRGB(). Uses mocking to test the method
+     * implementation.
+     * @throws FileNotFoundException if expected file was not found.
+     * @throws IOException if an I/O error occurs.
+     */
+    public void testMockedEncodeRenderedImageWithDirectColorModelAsRGB() throws IOException {
+        BufferedImage image = mock(BufferedImage.class);
+        final int[] templateMasks = new int[] { 0x00ff0000 /*R*/, 0x0000ff00 /*G*/,
+                                                    0x000000ff /*B*/, 0xff000000 /*A*/};
+        DirectColorModel dcm = new DirectColorModel(255, templateMasks[0], templateMasks[1],
+                templateMasks[2], templateMasks[3]);
+
+        WritableRaster raster = mock(WritableRaster.class);
+        DataBuffer buffer = mock(DataBuffer.class);
+
+        when(image.getColorModel()).thenReturn(dcm);
+        when(image.getRaster()).thenReturn(raster);
+        when(raster.getDataBuffer()).thenReturn(buffer);
+        when(buffer.getDataType()).thenReturn(DataBuffer.TYPE_INT);
+        when(image.getWidth()).thenReturn(3);
+        when(image.getHeight()).thenReturn(3);
+        final int expectedValue = 1 + 2 << 8 + 3 << 16;
+        Answer<Object> ans = new Answer<Object>() {
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                int[] data = (int[]) args[4];
+                Arrays.fill(data, expectedValue);
+                return null;
+            }
+        };
+        when(raster.getDataElements(anyInt(), anyInt(), anyInt(), anyInt(), anyObject()))
+                .thenAnswer(ans);
+
+        ByteArrayOutputStream optimized = new ByteArrayOutputStream();
+        ImageEncodingHelper.encodeRenderedImageWithDirectColorModelAsRGB(image, optimized);
+
+        byte[] expectedByteArray = new byte[27];
+        Arrays.fill(expectedByteArray, (byte) expectedValue);
+        assertTrue(Arrays.equals(expectedByteArray, optimized.toByteArray()));
+    }
 }

@@ -23,6 +23,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.apache.xmlgraphics.image.codec.png.PNGEncoderTest;
+import org.apache.xmlgraphics.ps.ImageEncodingHelperTestCase;
 import org.apache.xmlgraphics.ps.PSEscapeTestCase;
 import org.apache.xmlgraphics.ps.dsc.ListenerTestCase;
 import org.apache.xmlgraphics.ps.dsc.events.DSCValueParserTestCase;
@@ -54,6 +55,7 @@ public class StandardTestSuite {
         suite.addTest(new TestSuite(ServiceTest.class));
         suite.addTest(new TestSuite(ClasspathResourceTest.class));
         suite.addTest(new TestSuite(PSEscapeTestCase.class));
+        suite.addTest(new TestSuite(ImageEncodingHelperTestCase.class));
         suite.addTest(new TestSuite(DSCValueParserTestCase.class));
         suite.addTest(new TestSuite(DSCToolsTestCase.class));
         suite.addTest(new TestSuite(ListenerTestCase.class));
