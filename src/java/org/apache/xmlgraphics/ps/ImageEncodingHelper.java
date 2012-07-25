@@ -20,10 +20,12 @@
 package org.apache.xmlgraphics.ps;
 
 import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
+import java.awt.image.DirectColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
@@ -31,6 +33,7 @@ import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
@@ -111,6 +114,10 @@ public class ImageEncodingHelper {
     }
 
     private void writeRGBTo(OutputStream out) throws IOException {
+        boolean encoded = encodeRenderedImageWithDirectColorModelAsRGB(image, out);
+        if (encoded) {
+            return;
+        }
         encodeRenderedImageAsRGB(image, out);
     }
 
@@ -122,7 +129,7 @@ public class ImageEncodingHelper {
      */
     public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out)
                 throws IOException {
-        Raster raster = image.getData();
+        Raster raster = getRaster(image);
         Object data;
         int nbands = raster.getNumBands();
         int dataType = raster.getDataBuffer().getDataType();
@@ -143,13 +150,13 @@ public class ImageEncodingHelper {
             data = new double[nbands];
             break;
         default:
-            throw new IllegalArgumentException("Unknown data buffer type: "
-                                               + dataType);
+            throw new IllegalArgumentException("Unknown data buffer type: " + dataType);
         }
 
         ColorModel colorModel = image.getColorModel();
         int w = image.getWidth();
         int h = image.getHeight();
+
         byte[] buf = new byte[w * 3];
         for (int y = 0; y < h; y++) {
             int idx = -1;
@@ -160,6 +167,67 @@ public class ImageEncodingHelper {
                 buf[++idx] = (byte)(rgb);
             }
             out.write(buf);
+        }
+    }
+
+    /**
+     * Writes a RenderedImage to an OutputStream. This method optimizes the encoding
+     * of the {@link DirectColorModel} as it is returned by {@link ColorModel#getRGBdefault}.
+     * @param image the image
+     * @param out the OutputStream to write the pixels to
+     * @return true if this method encoded this image, false if the image is incompatible
+     * @throws IOException if an I/O error occurs
+     */
+    public static boolean encodeRenderedImageWithDirectColorModelAsRGB(
+            RenderedImage image, OutputStream out) throws IOException {
+        ColorModel cm = image.getColorModel();
+        if (cm.getColorSpace() != ColorSpace.getInstance(ColorSpace.CS_sRGB)) {
+            return false; //Need to go through color management
+        }
+        if (!(cm instanceof DirectColorModel)) {
+            return false; //Only DirectColorModel is supported here
+        }
+        DirectColorModel dcm = (DirectColorModel)cm;
+        final int[] templateMasks = new int[]
+                {0x00ff0000 /*R*/, 0x0000ff00 /*G*/, 0x000000ff /*B*/, 0xff000000 /*A*/};
+        int[] masks = dcm.getMasks();
+        if (!Arrays.equals(templateMasks, masks)) {
+            return false; //no flexibility here right now, might never be used anyway
+        }
+
+        Raster raster = getRaster(image);
+        int dataType = raster.getDataBuffer().getDataType();
+        if (dataType != DataBuffer.TYPE_INT) {
+            return false; //not supported
+        }
+
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        int[] data = new int[w];
+        byte[] buf = new byte[w * 3];
+        for (int y = 0; y < h; y++) {
+            int idx = -1;
+            raster.getDataElements(0, y, w, 1, data);
+            for (int x = 0; x < w; x++) {
+                int rgb = data[x];
+                buf[++idx] = (byte)(rgb >> 16);
+                buf[++idx] = (byte)(rgb >> 8);
+                buf[++idx] = (byte)(rgb);
+            }
+            out.write(buf);
+        }
+
+        return true;
+    }
+
+    private static Raster getRaster(RenderedImage image) {
+        if (image instanceof BufferedImage) {
+            return ((BufferedImage)image).getRaster();
+        } else {
+            //Note: this copies the image data (double memory consumption)
+            //TODO Investigate encoding in stripes: RenderedImage.copyData(WritableRaster)
+            return image.getData();
         }
     }
 
