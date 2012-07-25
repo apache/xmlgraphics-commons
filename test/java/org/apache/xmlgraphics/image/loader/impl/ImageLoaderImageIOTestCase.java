@@ -19,13 +19,12 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
-import static org.junit.Assert.assertTrue;
-
 import java.net.URL;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageContext;
@@ -50,7 +49,7 @@ public class ImageLoaderImageIOTestCase {
     @Test
     public void testGrayPNGWithCMYKProfile() throws Exception {
         URL imageURL = getClass().getResource("gray-vs-cmyk-profile.png");
-        Assert.assertNotNull(imageURL);
+        assertNotNull(imageURL);
         String uri = imageURL.toURI().toASCIIString();
 
         ImageLoaderImageIO loader = new ImageLoaderImageIO(ImageFlavor.RENDERED_IMAGE);

@@ -23,15 +23,20 @@ import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.image.writer.imageio.ImageIOPNGImageWriter;
 
 /**
  * Tests the {@link ImageWriterRegistry}.
  */
-public class ImageWriterRegistryTest extends TestCase {
+public class ImageWriterRegistryTestCase {
 
+    @Test
     public void testRegistry() throws Exception {
         ImageWriterRegistry registry = new ImageWriterRegistry();
 
@@ -67,10 +72,8 @@ public class ImageWriterRegistryTest extends TestCase {
                 throws IOException {
             //nop
         }
-
     }
 
     private static class OtherPNGWriter extends DummyPNGWriter {
-
     }
 }

@@ -21,12 +21,12 @@ package org.apache.xmlgraphics.util.uri;
 
 import javax.xml.transform.URIResolver;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test case for the {@link CommonURIResolver}.
  */
-public class CommonURIResolverTestCase extends TestCase {
+public class CommonURIResolverTestCase {
 
     /**
      * Test the DataURIResolver with correct values.
@@ -34,6 +34,8 @@ public class CommonURIResolverTestCase extends TestCase {
      * @throws Exception
      *             if an error occurs
      */
+
+    @Test
     public void testDataURLHandling() throws Exception {
         URIResolver resolver = CommonURIResolver.getDefaultURIResolver();
         DataURIResolverTestCase.actualURLHAndlingTest(resolver);

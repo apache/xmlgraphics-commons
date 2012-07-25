@@ -31,7 +31,11 @@ import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.apache.commons.io.IOUtils;
 
@@ -46,18 +50,15 @@ import org.apache.xmlgraphics.image.loader.spi.ImageLoaderFactory;
 /**
  * Tests for bundled ImageLoader implementations.
  */
-public class ImageLoaderTestCase extends TestCase {
+public class ImageLoaderTestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
-
-    public ImageLoaderTestCase(String name) {
-        super(name);
-    }
 
     private MyImageSessionContext createImageSessionContext() {
         return new MyImageSessionContext(imageContext);
     }
 
+    @Test
     public void testPNG() throws Exception {
         String uri = "asf-logo.png";
 
@@ -70,7 +71,7 @@ public class ImageLoaderTestCase extends TestCase {
         Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
-        ImageRendered imgRed = (ImageRendered)img;
+        ImageRendered imgRed = (ImageRendered) img;
         assertNotNull(imgRed.getRenderedImage());
         assertEquals(169, imgRed.getRenderedImage().getWidth());
         assertEquals(51, imgRed.getRenderedImage().getHeight());
@@ -81,6 +82,7 @@ public class ImageLoaderTestCase extends TestCase {
         sessionContext.checkAllStreamsClosed();
     }
 
+    @Test
     public void testGIF() throws Exception {
         String uri = "bgimg72dpi.gif";
 
@@ -93,7 +95,7 @@ public class ImageLoaderTestCase extends TestCase {
         Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
-        ImageRendered imgRed = (ImageRendered)img;
+        ImageRendered imgRed = (ImageRendered) img;
         assertNotNull(imgRed.getRenderedImage());
         assertEquals(192, imgRed.getRenderedImage().getWidth());
         assertEquals(192, imgRed.getRenderedImage().getHeight());
@@ -104,6 +106,7 @@ public class ImageLoaderTestCase extends TestCase {
         sessionContext.checkAllStreamsClosed();
     }
 
+    @Test
     public void testEPSASCII() throws Exception {
         String uri = "barcode.eps";
 
@@ -116,7 +119,7 @@ public class ImageLoaderTestCase extends TestCase {
         Image img = manager.getImage(info, ImageFlavor.RAW_EPS, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
-        ImageRawStream imgEPS = (ImageRawStream)img;
+        ImageRawStream imgEPS = (ImageRawStream) img;
         InputStream in = imgEPS.createInputStream();
         try {
             assertNotNull(in);
@@ -133,6 +136,7 @@ public class ImageLoaderTestCase extends TestCase {
         sessionContext.checkAllStreamsClosed();
     }
 
+    @Test
     public void testEPSBinary() throws Exception {
         String uri = "img-with-tiff-preview.eps";
 
@@ -145,7 +149,7 @@ public class ImageLoaderTestCase extends TestCase {
         Image img = manager.getImage(info, ImageFlavor.RAW_EPS, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
-        ImageRawStream imgEPS = (ImageRawStream)img;
+        ImageRawStream imgEPS = (ImageRawStream) img;
         InputStream in = imgEPS.createInputStream();
         try {
             assertNotNull(in);
@@ -162,19 +166,20 @@ public class ImageLoaderTestCase extends TestCase {
         sessionContext.checkAllStreamsClosed();
     }
 
+    @Test
     public void testICCProfiles() throws Exception {
         MyImageSessionContext sessionContext = createImageSessionContext();
-        List/* <ICC_Profile> */profiles = new ArrayList();
+        List<ICC_Profile> profiles = new ArrayList<ICC_Profile>();
 
         runReaders(profiles, sessionContext, "iccTest.png", "image/png",
                 ImageFlavor.RAW_PNG);
         runReaders(profiles, sessionContext, "iccTest.jpg", "image/jpeg",
                 ImageFlavor.RAW_JPEG);
 
-        ICC_Profile first = (ICC_Profile) profiles.get(0);
+        ICC_Profile first = profiles.get(0);
         byte[] firstData = first.getData();
         for (int i = 1; i < profiles.size(); i++) {
-            ICC_Profile icc = (ICC_Profile) profiles.get(i);
+            ICC_Profile icc = profiles.get(i);
             byte[] data = icc.getData();
             assertEquals("Embedded ICC Profiles are not the same size!",
                     firstData.length, data.length);
@@ -184,10 +189,10 @@ public class ImageLoaderTestCase extends TestCase {
             }
         }
     }
-    
-    private void runReaders(List profiles, ImageSessionContext isc, String uri,
+
+    private void runReaders(List<ICC_Profile> profiles, ImageSessionContext isc, String uri,
             String mime, ImageFlavor rawFlavor) throws Exception {
-        ImageLoaderFactory ilfs[] = ImageImplRegistry.getDefaultInstance()
+        ImageLoaderFactory[] ilfs = ImageImplRegistry.getDefaultInstance()
                 .getImageLoaderFactories(mime);
         if (ilfs != null) {
             for (int i = 0; i < ilfs.length; i++) {
@@ -222,6 +227,7 @@ public class ImageLoaderTestCase extends TestCase {
         }
     }
 
+    @Test
     public void testBrokenIccPng() throws Exception {
         String uri = "corrupt-icc.png";
 
@@ -234,7 +240,7 @@ public class ImageLoaderTestCase extends TestCase {
         Image img = manager.getImage(info, ImageFlavor.RENDERED_IMAGE, sessionContext);
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RENDERED_IMAGE, img.getFlavor());
-        ImageRendered imgRed = (ImageRendered)img;
+        ImageRendered imgRed = (ImageRendered) img;
         assertNotNull(imgRed.getRenderedImage());
         assertEquals(400, imgRed.getRenderedImage().getWidth());
         assertEquals(300, imgRed.getRenderedImage().getHeight());
@@ -253,7 +259,7 @@ public class ImageLoaderTestCase extends TestCase {
         public Source newSource(String uri) {
             Source src = super.newSource(uri);
             if (src instanceof ImageSource) {
-                ImageSource is = (ImageSource)src;
+                ImageSource is = (ImageSource) src;
                 ImageInputStream in = is.getImageInputStream();
                 //in = new ObservableImageInputStream(in, is.getSystemId());
                 in = ObservableStream.Factory.observe(in, is.getSystemId());
@@ -267,7 +273,7 @@ public class ImageLoaderTestCase extends TestCase {
         protected Source resolveURI(String uri) {
             Source src = super.resolveURI(uri);
             if (src instanceof StreamSource) {
-                StreamSource ss = (StreamSource)src;
+                StreamSource ss = (StreamSource) src;
                 if (ss.getInputStream() != null) {
                     InputStream in = new ObservableInputStream(
                             ss.getInputStream(), ss.getSystemId());
@@ -281,7 +287,7 @@ public class ImageLoaderTestCase extends TestCase {
         public void checkAllStreamsClosed() {
             Iterator iter = streams.iterator();
             while (iter.hasNext()) {
-                ObservableStream stream = (ObservableStream)iter.next();
+                ObservableStream stream = (ObservableStream) iter.next();
                 iter.remove();
                 if (!stream.isClosed()) {
                     fail(stream.getClass().getName() + " is NOT closed: " + stream.getSystemID());

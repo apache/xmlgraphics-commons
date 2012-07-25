@@ -19,16 +19,20 @@
 
 package org.apache.xmlgraphics.ps.dsc.tools;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentEndComments;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentPages;
 import org.apache.xmlgraphics.ps.dsc.events.DSCEvent;
 import org.apache.xmlgraphics.ps.dsc.events.PostScriptComment;
 import org.apache.xmlgraphics.ps.dsc.events.PostScriptLine;
 
-import junit.framework.TestCase;
+public class DSCToolsTestCase {
 
-public class DSCToolsTestCase extends TestCase {
-
+    @Test
     public void testEndComment() throws Exception {
         DSCEvent event;
 

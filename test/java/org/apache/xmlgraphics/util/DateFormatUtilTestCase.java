@@ -24,19 +24,23 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.xmlgraphics.xmp.XMPSchemaAdapter;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.apache.xmlgraphics.xmp.XMPSchemaAdapter;
 
 /**
  * Tests date formatting for XMP.
  */
-public class DateFormatUtilTestCase extends TestCase {
+public class DateFormatUtilTestCase {
 
     /**
      * Checks date formatting for XMP.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testDateFormattingISO8601() throws Exception {
         Date dt = createTestDate();
 
@@ -69,6 +73,7 @@ public class DateFormatUtilTestCase extends TestCase {
         return dt;
     }
 
+    @Test
     public void testDateFormattingPDF() throws Exception {
         Date dt = createTestDate();
 
@@ -88,14 +93,17 @@ public class DateFormatUtilTestCase extends TestCase {
         assertEquals("D:20080207041107-11'00'", s);
     }
 
+    @Test
     public void testParseInvalidDateNoColonUTC() {
         testInvalidDate("2008-02-07T151107Z");
     }
 
+    @Test
     public void testParseInvalidDateNoColonLocal() {
         testInvalidDate("2008-02-07T151107+0000");
     }
 
+    @Test
     public void testParseInvalidDateColonLast() {
         testInvalidDate("2008-02-07T151107Z:");
     }

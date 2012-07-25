@@ -19,7 +19,9 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 import org.apache.xmlgraphics.image.loader.ImageContext;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
@@ -30,11 +32,12 @@ import org.apache.xmlgraphics.image.loader.MockImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
- * Test case for {@link ImageLoaderRawCCITTFax}. 
+ * Test case for {@link ImageLoaderRawCCITTFax}.
  */
-public class ImageLoaderRawCCITTFaxTestCase extends TestCase {
+public class ImageLoaderRawCCITTFaxTestCase {
     private ImageLoaderRawCCITTFax sut;
 
+    @Test
     public void testLoadImage() throws Exception {
         ImageContext context = MockImageContext.newSafeInstance();
         ImageSessionContext session = new MockImageSessionContext(context);

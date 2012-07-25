@@ -52,6 +52,7 @@
   <property name="build.dir" value="${basedir}/build"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
+  <property name="build.unit.tests.dir" value="${basedir}/test/java"/>
   
   <property name="dist.bin.dir" value="${basedir}/dist-bin"/>
   <property name="dist.src.dir" value="${basedir}/dist-src"/>
@@ -293,7 +294,7 @@
            debug="${javac.debug}" deprecation="${javac.deprecation}"
            optimize="${javac.optimize}" source="${javac.source}"
            target="${javac.target}" includeAntRuntime="true">
-      <src path="${basedir}/test/java"/>
+      <src path="${build.unit.tests.dir}"/>
       <patternset refid="compile-pattern"/>
       <classpath>
         <path refid="libs-build-classpath"/>
@@ -304,7 +305,7 @@
     </javac>
     <copy todir="${build.dir}/test-classes" includeEmptyDirs="false">
       <fileset dir="${basedir}/test/resources"/>
-      <fileset dir="${basedir}/test/java">
+      <fileset dir="${build.unit.tests.dir}">
         <exclude name="**/*.java"/>
         <exclude name="**/*.html"/>
       </fileset>
@@ -327,7 +328,7 @@
         </fileset>
       </classpath>
       <batchtest fork="${junit.fork}" todir="${build.dir}/test-reports">
-        <fileset dir="${basedir}/test/java">
+        <fileset dir="${build.unit.tests.dir}">
           <include name="**/*Test*.java"/>
           <exclude name="**/*TestSuite.java"/>
           <exclude name="**/image/writer/internal/TIFFImageWriter*.java" if="internal-codecs.eff.disabled"/>

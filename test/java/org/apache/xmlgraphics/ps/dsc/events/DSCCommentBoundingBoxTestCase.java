@@ -22,28 +22,31 @@ package org.apache.xmlgraphics.ps.dsc.events;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 import org.apache.xmlgraphics.ps.dsc.DSCCommentFactory;
 
-public class DSCCommentBoundingBoxTestCase extends TestCase {
+public class DSCCommentBoundingBoxTestCase {
 
+    @Test
     public void testBoundingBox() throws Exception {
         DSCComment comment = DSCCommentFactory.createDSCCommentFor("BoundingBox");
-        DSCCommentBoundingBox bbox = (DSCCommentBoundingBox)comment;
+        DSCCommentBoundingBox bbox = (DSCCommentBoundingBox) comment;
         bbox.parseValue("289 412 306 429");
         Rectangle refRect = new Rectangle(289, 412, 306 - 289, 429 - 412);
         assertEquals(refRect, bbox.getBoundingBox());
 
         comment = DSCCommentFactory.createDSCCommentFor("BoundingBox");
-        bbox = (DSCCommentBoundingBox)comment;
+        bbox = (DSCCommentBoundingBox) comment;
         bbox.parseValue("289.12 412.2 306.777 429.11");
         Rectangle2D refRect2D = new Rectangle2D.Double(
                 289.12, 412.2, 306.777 - 289.12, 429.11 - 412.2);
         assertEquals(refRect2D, bbox.getBoundingBox());
 
         comment = DSCCommentFactory.createDSCCommentFor("HiResBoundingBox");
-        bbox = (DSCCommentHiResBoundingBox)comment;
+        bbox = (DSCCommentHiResBoundingBox) comment;
         bbox.parseValue("289.12 412.2 306.777 429.11");
         refRect2D = new Rectangle2D.Double(
                 289.12, 412.2, 306.777 - 289.12, 429.11 - 412.2);
