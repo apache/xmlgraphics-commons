@@ -19,19 +19,24 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 
 /**
  * Tests for the ImageUtil class.
  */
-public class ImageUtilTestCase extends TestCase {
+public class ImageUtilTestCase {
 
     /**
      * Tests {@link ImageUtil.needPageIndexFromURI(String)}.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testNeedPageIndex() throws Exception {
         int pageIndex;
 
@@ -66,6 +71,7 @@ public class ImageUtilTestCase extends TestCase {
      * Tests {@link ImageUtil.getPageIndexFromURI(String)}.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testGetPageIndex() throws Exception {
         Integer pageIndex;
 

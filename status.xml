@@ -42,6 +42,9 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="MH" type="update">
+        Updated the JUnit tests to JUnit v4.
+      </action>
       <action context="Code" dev="MH" type="fix" fixes-bug="53599" due-to="JM and MH collaboration">
         Performance improvement of DirectColorMode bitmap images
       </action>

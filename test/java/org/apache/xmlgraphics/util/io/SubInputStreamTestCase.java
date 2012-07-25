@@ -22,34 +22,29 @@ package org.apache.xmlgraphics.util.io;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test case for SubInputStream.
  */
-public class SubInputStreamTestCase extends TestCase {
-
-    /**
-     * Main constructor.
-     * @param name the test case's name
-     * @see junit.framework.TestCase#TestCase(String)
-     */
-    public SubInputStreamTestCase(String name) {
-        super(name);
-    }
+public class SubInputStreamTestCase {
 
     /**
      * Tests SubInputStream.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testMain() throws Exception {
         //Initialize test data
         byte[] data = new byte[256];
         for (int i = 0; i < data.length; i++) {
-            data[i] = (byte)(i & 0xff);
+            data[i] = (byte) (i & 0xff);
         }
 
-        int v, c;
+        int v;
+        int c;
         byte[] buf;
         String s;
 
@@ -65,17 +60,18 @@ public class SubInputStreamTestCase extends TestCase {
         s = new String(buf, "US-ASCII");
         assertEquals("\u0002\u0003\u0004\u0005", s);
 
-        Arrays.fill(buf, (byte)0);
+        Arrays.fill(buf, (byte) 0);
         c = subin.read(buf, 2, 2);
         assertEquals(2, c);
         s = new String(buf, "US-ASCII");
         assertEquals("\u0000\u0000\u0006\u0007", s);
 
-        Arrays.fill(buf, (byte)0);
+        Arrays.fill(buf, (byte) 0);
         c = subin.read(buf);
         assertEquals(2, c);
         s = new String(buf, "US-ASCII");
         assertEquals("\u0008\u0009\u0000\u0000", s);
+        subin.close();
     }
 
 }

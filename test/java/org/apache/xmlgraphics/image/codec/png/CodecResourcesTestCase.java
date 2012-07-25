@@ -21,7 +21,9 @@ package org.apache.xmlgraphics.image.codec.png;
 
 import java.io.InputStream;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,8 +33,9 @@ import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 /**
  * Checks for the presence of message resources for the internal codecs.
  */
-public class CodecResourcesTest extends TestCase {
+public class CodecResourcesTestCase {
 
+    @Test
     public void testResources() throws Exception {
 
         InputStream in = new java.io.FileInputStream("test/images/barcode.eps");
@@ -52,7 +55,5 @@ public class CodecResourcesTest extends TestCase {
             IOUtils.closeQuietly(seekStream);
             IOUtils.closeQuietly(in);
         }
-
     }
-
 }

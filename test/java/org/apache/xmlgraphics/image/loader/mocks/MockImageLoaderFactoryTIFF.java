@@ -22,7 +22,7 @@ package org.apache.xmlgraphics.image.loader.mocks;
 import java.io.IOException;
 import java.util.Map;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
@@ -57,7 +57,7 @@ public class MockImageLoaderFactoryTIFF extends AbstractImageLoaderFactory {
                 break;
             }
         }
-        Assert.assertTrue(found);
+        assertTrue(found);
     }
 
     /** {@inheritDoc} */

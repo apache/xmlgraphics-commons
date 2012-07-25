@@ -21,13 +21,18 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the {@link ColorWithAlternatives} class.
  */
-public class ColorWithAlternativesTest extends TestCase {
+public class ColorWithAlternativesTestCase {
 
+    @Test
     public void testEquals() throws Exception {
         Color col1 = new ColorWithAlternatives(255, 204, 0, null);
         Color col2 = new Color(255, 204, 0);
@@ -44,6 +49,7 @@ public class ColorWithAlternativesTest extends TestCase {
         assertEquals(col2, col1);
     }
 
+    @Test
     public void testSameColor() throws Exception {
         Color col1 = new ColorWithAlternatives(255, 204, 0, null);
         Color col2 = new Color(255, 204, 0);
@@ -64,5 +70,4 @@ public class ColorWithAlternativesTest extends TestCase {
         //sRGB values is calculated from Lab color and doesn't exactly match the selected fallback
         assertFalse(postgelbLab.equals(col1));
     }
-
 }

@@ -22,7 +22,10 @@ package org.apache.xmlgraphics.util;
 /**
  * Provides helper functions for converting hexadecimal strings.
  */
-public class HexUtil {
+public final class HexUtil {
+
+    private HexUtil() {
+    }
 
     private static final char[] DIGITS =
         {'0', '1', '2', '3', '4', '5', '6', '7',
@@ -33,7 +36,7 @@ public class HexUtil {
      * @param data the data to encode
      * @return String the resulting String
      */
-    public static final String toHex(byte[] data) {
+    public static String toHex(byte[] data) {
         final StringBuffer sb = new StringBuffer(data.length * 2);
         for (int i = 0; i < data.length; i++) {
             sb.append(DIGITS[(data[i] >>> 4) & 0x0F]);

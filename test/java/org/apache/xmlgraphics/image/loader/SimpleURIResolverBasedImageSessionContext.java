@@ -56,5 +56,4 @@ public class SimpleURIResolverBasedImageSessionContext
             return null;
         }
     }
-
 }

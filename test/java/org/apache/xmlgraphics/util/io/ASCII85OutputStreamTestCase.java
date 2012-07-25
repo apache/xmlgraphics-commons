@@ -21,14 +21,16 @@ package org.apache.xmlgraphics.util.io;
 
 import java.io.OutputStream;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
  * Test case for ASCII85OutputStream
  */
-public class ASCII85OutputStreamTestCase extends TestCase {
+public class ASCII85OutputStreamTestCase {
 
     /** Test data */
     public static final byte[] DATA = new byte[100];
@@ -36,15 +38,8 @@ public class ASCII85OutputStreamTestCase extends TestCase {
     static {
         //Fill in some data
         for (int i = 0; i < 100; i++) {
-            DATA[i] = (byte)i;
+            DATA[i] = (byte) i;
         }
-    }
-
-    /**
-     * @see junit.framework.TestCase#TestCase(String)
-     */
-    public ASCII85OutputStreamTestCase(String name) {
-        super(name);
     }
 
     private String encode(int count) throws Exception {
@@ -63,6 +58,7 @@ public class ASCII85OutputStreamTestCase extends TestCase {
      * Tests the output of ASCII85.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testOutput() throws Exception {
         String sz = encode(new byte[] {0, 0, 0, 0, 0, 0, 0, 0}, 8);
         assertEquals("zz~>", sz);

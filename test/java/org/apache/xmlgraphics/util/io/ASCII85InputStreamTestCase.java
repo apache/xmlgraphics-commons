@@ -23,12 +23,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.apache.xmlgraphics.util.HexUtil;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for ASCII85InputStream.
@@ -37,16 +40,9 @@ import junit.framework.TestCase;
  * ASCII85OutputStream. If something fails here make sure
  * ASCII85OutputStreamTestCase runs!
  */
-public class ASCII85InputStreamTestCase extends TestCase {
+public class ASCII85InputStreamTestCase {
 
     private static final boolean DEBUG = false;
-
-    /**
-     * @see junit.framework.TestCase#TestCase(String)
-     */
-    public ASCII85InputStreamTestCase(String name) {
-        super(name);
-    }
 
     private byte[] decode(String text) throws Exception {
         byte[] ascii85 = text.getBytes("US-ASCII");
@@ -97,8 +93,8 @@ public class ASCII85InputStreamTestCase extends TestCase {
      * Tests the output of ASCII85.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testDecode() throws Exception {
-        byte[] buf;
         innerTestDecode("1. Bodypart".getBytes("US-ASCII"));
         if (DEBUG) {
             System.out.println("===========================================");
@@ -160,6 +156,7 @@ public class ASCII85InputStreamTestCase extends TestCase {
      * Tests the full 8-bit ASCII range.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testFullASCIIRange() throws Exception {
         innerTestDecode(getFullASCIIRange());
     }

@@ -26,21 +26,21 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.xmlgraphics.java2d.GraphicContext;
-import org.apache.xmlgraphics.ps.PSGenerator;
-import org.apache.xmlgraphics.ps.PSState;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.xmlgraphics.java2d.GraphicContext;
+import org.apache.xmlgraphics.ps.PSGenerator;
+import org.apache.xmlgraphics.ps.PSState;
+
 public class PSGraphics2DTestCase {
 
     private PSGenerator gen;
     private PSGraphics2D gfx2d;
-    private final AffineTransform TRANSFORM = new AffineTransform(1, 0, 0, -1, 0, 792);
+    private final AffineTransform transform = new AffineTransform(1, 0, 0, -1, 0, 792);
 
     @Before
     public void setup() {
@@ -53,13 +53,13 @@ public class PSGraphics2DTestCase {
     private void createGraphics2D() {
         gfx2d = new PSGraphics2D(false, gen);
         gfx2d.setGraphicContext(new GraphicContext());
-        gfx2d.setTransform(TRANSFORM);
+        gfx2d.setTransform(transform);
     }
 
     @Test
     public void draw() throws IOException {
-        assertEquals(gfx2d.getTransform(), TRANSFORM);
+        assertEquals(gfx2d.getTransform(), transform);
         gfx2d.draw(new Rectangle(10, 10, 100, 100));
-        verify(gen, times(1)).concatMatrix(TRANSFORM);
+        verify(gen, times(1)).concatMatrix(transform);
     }
 }

@@ -27,19 +27,19 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Test;
 
-import org.apache.commons.io.IOUtils;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Test case for the RFC 2397 data URL/URI resolver.
  */
 public class DataURIResolverTestCase {
 
-    private static final byte[] TESTDATA = new byte[] { 0, 1, 2, 3, 4, 5 };
+    private static final byte[] TESTDATA = new byte[] {0, 1, 2, 3, 4, 5};
 
     /**
      * Tests DataURLUtil.

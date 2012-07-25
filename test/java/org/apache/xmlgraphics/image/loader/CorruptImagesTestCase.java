@@ -19,19 +19,19 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for error behaviour with corrupt images.
  */
-public class CorruptImagesTestCase extends TestCase {
+public class CorruptImagesTestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
 
-    public CorruptImagesTestCase(String name) {
-        super(name);
-    }
-
+    @Test
     public void testCorruptPNG() throws Exception {
         String uri = "corrupt-image.png";
 

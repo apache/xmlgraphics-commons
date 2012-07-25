@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.apache.commons.io.IOUtils;
 
@@ -35,12 +38,13 @@ import org.apache.xmlgraphics.ps.dsc.events.DSCEvent;
 /**
  * Tests the listener functionality on the DSC parser.
  */
-public class ListenerTestCase extends TestCase {
+public class ListenerTestCase {
 
     /**
      * Tests {@link DSCParser#setFilter(DSCFilter)}.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testFilter() throws Exception {
         InputStream in = getClass().getResourceAsStream("test1.txt");
         try {
@@ -69,6 +73,7 @@ public class ListenerTestCase extends TestCase {
      * Tests listeners on DSCParser.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testListeners() throws Exception {
         InputStream in = getClass().getResourceAsStream("test1.txt");
         try {
@@ -104,7 +109,7 @@ public class ListenerTestCase extends TestCase {
                 public void processEvent(DSCEvent event, DSCParser parser)
                         throws IOException, DSCException {
                     if (event instanceof DSCCommentLanguageLevel) {
-                        DSCCommentLanguageLevel level = (DSCCommentLanguageLevel)event;
+                        DSCCommentLanguageLevel level = (DSCCommentLanguageLevel) event;
                         results.put("level", new Integer(level.getLanguageLevel()));
                     }
                 }

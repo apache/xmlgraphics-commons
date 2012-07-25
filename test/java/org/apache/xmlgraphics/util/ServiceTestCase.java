@@ -21,19 +21,23 @@ package org.apache.xmlgraphics.util;
 
 import java.util.Iterator;
 
-import org.apache.xmlgraphics.image.writer.ImageWriter;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.xmlgraphics.image.writer.ImageWriter;
 
 /**
  * Test for the Service class.
  */
-public class ServiceTest extends TestCase {
+public class ServiceTestCase {
 
     /**
      * Tests the mode where Service returns instances.
      * @throws Exception in case of an error
      */
+    @Test
     public void testWithInstances() throws Exception {
         Class cls = ImageWriter.class;
         boolean found = false;
@@ -80,6 +84,7 @@ public class ServiceTest extends TestCase {
      * Tests the mode where Service returns class names.
      * @throws Exception in case of an error
      */
+    @Test
     public void testWithClassNames() throws Exception {
         Class cls = ImageWriter.class;
         boolean found = true;
@@ -104,5 +109,4 @@ public class ServiceTest extends TestCase {
             assertTrue("Returned object must be a class name", obj instanceof String);
         }
     }
-
 }

@@ -20,38 +20,36 @@
 package org.apache.xmlgraphics.util.io;
 
 import java.io.File;
-import java.io.PipedOutputStream;
-import java.io.PipedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
-
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.URL;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * This test validates that the Base64 encoder/decoders work properly.
  *
- * @author <a href="mailto:deweese@apache.org">Thomas DeWeese</a>
  * @version $Id$
  */
-public class Base64Test extends TestCase {
+public class Base64TestCase {
 
     private void innerBase64Test(String action, URL in, URL ref) throws Exception {
         InputStream inIS = in.openStream();
 
-        if (action.equals("ROUND"))
+        if (action.equals("ROUND")) {
             ref = in;
-        else if (!action.equals("ENCODE") &&
-                 !action.equals("DECODE")) {
+        } else if (!action.equals("ENCODE") && !action.equals("DECODE")) {
             fail("Bad action string");
         }
 
         InputStream refIS = ref.openStream();
 
-        if (action.equals("ENCODE") ||
-            action.equals("ROUND")) {
+        if (action.equals("ENCODE") || action.equals("ROUND")) {
             // We need to encode the incomming data
             PipedOutputStream pos = new PipedOutputStream();
             OutputStream os = new Base64EncodeStream(pos);
@@ -64,8 +62,7 @@ public class Base64Test extends TestCase {
             t.start();
         }
 
-        if (action.equals("DECODE")||
-            action.equals("ROUND")) {
+        if (action.equals("DECODE") || action.equals("ROUND")) {
             inIS = new Base64DecodeStream(inIS);
         }
 
@@ -96,6 +93,7 @@ public class Base64Test extends TestCase {
      * This method will only throw exceptions if some aspect
      * of the test's internal operation fails.
      */
+    @Test
     public void testBase64() throws Exception {
         System.out.println(new File(".").getCanonicalPath());
         testBase64Group("zeroByte");
@@ -128,85 +126,87 @@ public class Base64Test extends TestCase {
                 int len2 = is2.read(data2, off2, data2.length - off2);
 
                 if (off1 != 0) {
-                    if (len1 == -1)
+                    if (len1 == -1) {
                         len1 = off1;
-                    else
+                    } else {
                         len1 += off1;
+                    }
                 }
 
                 if (off2 != 0) {
-                    if (len2 == -1)
+                    if (len2 == -1) {
                         len2 = off2;
-                    else
+                    } else {
                         len2 += off2;
+                    }
                 }
 
                 if (len1 == -1) {
-                    if (len2 == -1)
+                    if (len2 == -1) {
                         break; // Both done...
-
+                    }
                     // Only is1 is done...
-                    if (!skipws)
+                    if (!skipws) {
                         return idx;
-
+                    }
                     // check if the rest of is2 is whitespace...
-                    for (int i2 = 0; i2 < len2; i2++)
-                        if ((data2[i2] != '\n') &&
-                            (data2[i2] != '\r') &&
-                            (data2[i2] != ' '))
+                    for (int i2 = 0; i2 < len2; i2++) {
+                        if ((data2[i2] != '\n') && (data2[i2] != '\r') && (data2[i2] != ' ')) {
                             return idx + i2;
+                        }
+                    }
                     off1 = off2 = 0;
                     continue;
                 }
 
                 if (len2 == -1) {
                     // Only is2 is done...
-                    if (!skipws)
+                    if (!skipws) {
                         return idx;
+                    }
 
                     // Check if rest of is1 is whitespace...
-                    for (int i1 = 0; i1 < len1; i1++)
-                        if ((data1[i1] != '\n') &&
-                            (data1[i1] != '\r') &&
-                            (data1[i1] != ' '))
+                    for (int i1 = 0; i1 < len1; i1++) {
+                        if ((data1[i1] != '\n') && (data1[i1] != '\r') && (data1[i1] != ' ')) {
                             return idx + i1;
+                        }
+                    }
                     off1 = off2 = 0;
                     continue;
                 }
 
-                int i1=0;
-                int i2=0;
-                while((i1 < len1) && (i2 < len2)) {
+                int i1 = 0;
+                int i2 = 0;
+                while ((i1 < len1) && (i2 < len2)) {
                     if (skipws) {
-                        if ((data1[i1] == '\n') ||
-                            (data1[i1] == '\r') ||
-                            (data1[i1] == ' ')) {
+                        if ((data1[i1] == '\n') || (data1[i1] == '\r') || (data1[i1] == ' ')) {
                             i1++;
                             continue;
                         }
-                        if ((data2[i2] == '\n') ||
-                            (data2[i2] == '\r') ||
-                            (data2[i2] == ' ')) {
+                        if ((data2[i2] == '\n') || (data2[i2] == '\r') || (data2[i2] == ' ')) {
                             i2++;
                             continue;
                         }
                     }
-                    if (data1[i1] != data2[i2])
-                        return idx+i2;
+                    if (data1[i1] != data2[i2]) {
+                        return idx + i2;
+                    }
 
                     i1++;
                     i2++;
                 }
 
-                if (i1 != len1)
+                if (i1 != len1) {
                     System.arraycopy(data1, i1, data1, 0, len1 - i1);
-                if (i2 != len2)
+                }
+                if (i2 != len2) {
                     System.arraycopy(data2, i2, data2, 0, len2 - i2);
+                }
                 off1 = len1 - i1;
                 off2 = len2 - i2;
                 idx += i2;
             }
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             return idx;
         }
@@ -230,7 +230,9 @@ public class Base64Test extends TestCase {
                 byte[] data = new byte[1000];
                 while (true) {
                     int len = src.read(data, 0, data.length);
-                    if (len == -1) break;
+                    if (len == -1) {
+                        break;
+                    }
 
                     dst.write(data, 0, len);
                 }
