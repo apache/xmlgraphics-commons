@@ -22,10 +22,14 @@ package org.apache.xmlgraphics.java2d.color;
 import java.awt.Color;
 import java.awt.color.ColorSpace;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ColorConverterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+public class ColorConverterTestCase {
+
+    @Test
     public void testToGray() throws Exception {
         ColorConverter converter = GrayScaleColorConverter.getInstance();
         Color rgb = new Color(255, 184, 0);

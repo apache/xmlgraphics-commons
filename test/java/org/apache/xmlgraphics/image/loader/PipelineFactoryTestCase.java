@@ -19,7 +19,11 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.codec.tiff.TIFFImage;
 import org.apache.xmlgraphics.image.loader.impl.ImageLoaderRawCCITTFax;
@@ -32,12 +36,13 @@ import org.apache.xmlgraphics.image.loader.util.Penalty;
 /**
  * Tests the pipeline factory.
  */
-public class PipelineFactoryTestCase extends TestCase {
+public class PipelineFactoryTestCase {
 
     /**
      * Tests the pipeline factory by checking to load a TIFF image.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testPipelineFactoryPlain() throws Exception {
         MockImageContext imageContext = MockImageContext.newSafeInstance();
         ImageManager manager = imageContext.getImageManager();
@@ -96,6 +101,7 @@ public class PipelineFactoryTestCase extends TestCase {
      * Similar test as above but here we take raw CCITT loading into consideration, too.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testPipelineFactoryImageInfoDependency() throws Exception {
         MockImageContext imageContext = MockImageContext.newSafeInstance();
         ImageManager manager = imageContext.getImageManager();
@@ -149,6 +155,7 @@ public class PipelineFactoryTestCase extends TestCase {
      * Similar test as above but now we're playing with additional penalties in the registry.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testPipelineFactoryAdditionalPenalty() throws Exception {
         MockImageContext imageContext = MockImageContext.newSafeInstance();
         ImageManager manager = imageContext.getImageManager();

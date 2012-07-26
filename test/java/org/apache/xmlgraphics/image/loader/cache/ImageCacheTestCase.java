@@ -21,7 +21,14 @@ package org.apache.xmlgraphics.image.loader.cache;
 
 import java.io.FileNotFoundException;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
@@ -33,7 +40,7 @@ import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 /**
  * Tests for bundled ImageLoader implementations.
  */
-public class ImageCacheTestCase extends TestCase {
+public class ImageCacheTestCase {
 
     private static final boolean DEBUG = false;
 
@@ -44,9 +51,8 @@ public class ImageCacheTestCase extends TestCase {
                 ? new ImageCacheLoggingStatistics(true) : new ImageCacheStatistics(true));
 
     /** {@inheritDoc} */
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         manager.getCache().clearCache();
         statistics.reset();
         manager.getCache().setCacheListener(statistics);
@@ -56,6 +62,7 @@ public class ImageCacheTestCase extends TestCase {
      * Tests the ImageInfo cache.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testImageInfoCache() throws Exception {
         String invalid1 = "invalid1.jpg";
         String invalid2 = "invalid2.jpg";
@@ -63,7 +70,8 @@ public class ImageCacheTestCase extends TestCase {
         String valid2 = "big-image.png";
 
 
-        ImageInfo info1, info2;
+        ImageInfo info1;
+        ImageInfo info2;
         info1 = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info1);
         assertEquals(valid1, info1.getOriginalURI());
@@ -113,6 +121,7 @@ public class ImageCacheTestCase extends TestCase {
         statistics.reset();
     }
 
+    @Test
     public void testInvalidURIExpiration() throws Exception {
         MockTimeStampProvider provider = new MockTimeStampProvider();
         ImageCache cache = new ImageCache(provider, new DefaultExpirationPolicy(2));
@@ -155,18 +164,19 @@ public class ImageCacheTestCase extends TestCase {
      * Tests the image cache reusing a cacheable Image created by the ImageLoader.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testImageCache1() throws Exception {
         String valid1 = "bgimg72dpi.gif";
 
         ImageInfo info = manager.getImageInfo(valid1, sessionContext);
         assertNotNull(info);
 
-        ImageBuffered img1 = (ImageBuffered)manager.getImage(
+        ImageBuffered img1 = (ImageBuffered) manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         assertNotNull(img1);
         assertNotNull(img1.getBufferedImage());
 
-        ImageBuffered img2 = (ImageBuffered)manager.getImage(
+        ImageBuffered img2 = (ImageBuffered) manager.getImage(
                 info, ImageFlavor.BUFFERED_IMAGE, sessionContext);
         //ImageBuffered does not have to be the same instance but we want at least the
         //BufferedImage to be reused.
@@ -177,11 +187,12 @@ public class ImageCacheTestCase extends TestCase {
         assertEquals(1, statistics.getImageCacheMisses());
     }
 
-    
+
     /**
      * Test to check if doInvalidURIHouseKeeping() throws a
      * ConcurrentModificationException.
      */
+    @Test
     public void testImageCacheHouseKeeping() {
         ImageCache imageCache = new ImageCache(new TimeStampProvider(),
                 new DefaultExpirationPolicy(1));

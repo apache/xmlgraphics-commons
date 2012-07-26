@@ -27,6 +27,7 @@
 	  <person name="Adrian Cumiskey"   email="acumiskey@apache.org"     id="AC"/>
 	  <person name="Christian Geisert" email="chrisg@apache.org"        id="CG"/>
 	  <person name="Vincent Hennebert" email="vhennebert@apache.org"    id="VH"/>
+	  <person name="Mehdi Houshmand"   email="mehdi@apache.org"         id="MH"/>
 	  <person name="Clay Leeds"        email="clay@apache.org"          id="CL"/>
 	  <person name="Jeremias Märki"    email="jeremias@apache.org"      id="JM"/>
 	  <person name="Cameron McCormack" email="cam@apache.org"           id="CM"/>
@@ -41,6 +42,12 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
+      <action context="Code" dev="MH" type="update">
+        Updated the JUnit tests to JUnit v4.
+      </action>
+      <action context="Code" dev="MH" type="fix" fixes-bug="53599" due-to="JM and MH collaboration">
+        Performance improvement of DirectColorMode bitmap images
+      </action>
       <action context="Code" dev="MH" type="fix" fixes-bug="53570" due-to="Robert Meyer">
         Set the systemID of the StreamSource within the DataURIResolver
       </action>

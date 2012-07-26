@@ -19,19 +19,20 @@
 
 package org.apache.xmlgraphics.util;
 
-import org.apache.xmlgraphics.util.UnitConv;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for UnitConv.
  */
-public class UnitConvTestCase extends TestCase {
+public class UnitConvTestCase {
 
     /**
      * Test all kinds of unit conversions.
      * @throws Exception if the test fails
      */
+    @Test
     public void testConversions() throws Exception {
         assertEquals("in2mm", 25.4, UnitConv.in2mm(1), 0.00001);
         assertEquals("mm2in", 1.0, UnitConv.mm2in(25.4), 0.00001);
@@ -44,5 +45,4 @@ public class UnitConvTestCase extends TestCase {
         assertEquals("mm2px/72dpi", 841.8897764234434, UnitConv.mm2px(297.0, 72), 0);
         assertEquals("mm2px/300dpi", 3507.8740684310146, UnitConv.mm2px(297.0, 300), 0);
     }
-
 }

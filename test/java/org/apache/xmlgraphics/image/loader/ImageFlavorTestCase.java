@@ -19,17 +19,24 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
  * Tests for image flavors.
  */
-public class ImageFlavorTestCase extends TestCase {
+public class ImageFlavorTestCase {
 
+    @Test
     public void testBasicFlavors() throws Exception {
-        ImageFlavor f1, f2;
+        ImageFlavor f1;
+        ImageFlavor f2;
 
         f1 = ImageFlavor.RAW_JPEG;
         f2 = ImageFlavor.RAW_PNG;
@@ -46,8 +53,10 @@ public class ImageFlavorTestCase extends TestCase {
         assertNull(f1.getNamespace());
     }
 
+    @Test
     public void testRefinedFlavors() throws Exception {
-        ImageFlavor f1, f2;
+        ImageFlavor f1;
+        ImageFlavor f2;
 
         f1 = ImageFlavor.RENDERED_IMAGE;
         f2 = ImageFlavor.BUFFERED_IMAGE;

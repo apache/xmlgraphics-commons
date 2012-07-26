@@ -19,17 +19,22 @@
 
 package org.apache.xmlgraphics.image.loader.cache;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * Tests {@link DefaultExpirationPolicy}.
  */
-public class DefaultExpirationPolicyTestCase extends TestCase {
+public class DefaultExpirationPolicyTestCase {
 
     /**
      * Never expire.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testNeverExpire() throws Exception {
         ExpirationPolicy policy;
         policy = new DefaultExpirationPolicy(DefaultExpirationPolicy.EXPIRATION_NEVER);
@@ -46,6 +51,7 @@ public class DefaultExpirationPolicyTestCase extends TestCase {
      * Normal expiration
      * @throws Exception if an error occurs
      */
+    @Test
     public void testNormalExpiration() throws Exception {
         ExpirationPolicy policy;
         policy = new DefaultExpirationPolicy(2);

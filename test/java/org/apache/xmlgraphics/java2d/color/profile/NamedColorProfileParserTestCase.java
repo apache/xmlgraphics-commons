@@ -22,7 +22,10 @@ package org.apache.xmlgraphics.java2d.color.profile;
 import java.awt.color.ICC_Profile;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.apache.commons.io.IOUtils;
 
@@ -32,10 +35,11 @@ import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 /**
  * Tests the {@link NamedColorProfileParser}.
  */
-public class NamedColorProfileParserTest extends TestCase {
+public class NamedColorProfileParserTestCase {
 
     private static final String NCP_EXAMPLE_FILE = "ncp-example.icc";
 
+    @Test
     public void testParser() throws Exception {
         InputStream in = getClass().getResourceAsStream(NCP_EXAMPLE_FILE);
         assertNotNull(NCP_EXAMPLE_FILE + " is missing!", in);
@@ -63,5 +67,4 @@ public class NamedColorProfileParserTest extends TestCase {
         ncs = namedColors[1];
         assertEquals("MyRed", ncs.getColorName());
     }
-
 }

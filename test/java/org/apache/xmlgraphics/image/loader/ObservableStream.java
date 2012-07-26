@@ -49,7 +49,7 @@ public interface ObservableStream {
     public static class Factory {
 
         public static ImageInputStream observe(ImageInputStream iin, String systemID) {
-            return (ImageInputStream)Proxy.newProxyInstance(
+            return (ImageInputStream) Proxy.newProxyInstance(
                     Factory.class.getClassLoader(),
                     new Class[] {ImageInputStream.class, ObservableStream.class},
                     new ObservingImageInputStreamInvocationHandler(iin, systemID));

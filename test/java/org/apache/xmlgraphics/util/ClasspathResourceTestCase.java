@@ -23,12 +23,14 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for the Service class.
  */
-public class ClasspathResourceTest extends TestCase {
+public class ClasspathResourceTestCase {
 
     /**
      * Tests whether the file /sample.txt with mime-type text/plain exists.
@@ -36,6 +38,7 @@ public class ClasspathResourceTest extends TestCase {
      * @throws Exception
      *             in case of an error
      */
+    @Test
     public void testSampleResource() throws Exception {
         final List list = ClasspathResource.getInstance()
                 .listResourcesOfMimeType("text/plain");
@@ -56,10 +59,10 @@ public class ClasspathResourceTest extends TestCase {
      * @throws Exception
      *             in case of an error
      */
+    @Test
     public void testNonexistingResource() throws Exception {
         final List list = ClasspathResource.getInstance()
                 .listResourcesOfMimeType("nota/mime-type");
         assertTrue(list.isEmpty());
     }
-
 }
