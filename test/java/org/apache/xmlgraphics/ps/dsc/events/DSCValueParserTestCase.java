@@ -21,16 +21,17 @@ package org.apache.xmlgraphics.ps.dsc.events;
 
 import java.util.List;
 
-import org.apache.xmlgraphics.ps.dsc.events.DSCCommentBeginResource;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class DSCValueParserTestCase extends TestCase {
+public class DSCValueParserTestCase {
 
     private String[] toArray(List params) {
-        return (String[])params.toArray(new String[params.size()]);
+        return (String[]) params.toArray(new String[params.size()]);
     }
 
+    @Test
     public void testText() throws Exception {
         DSCCommentBeginResource obj = new DSCCommentBeginResource();
         String[] res = toArray(obj.splitParams("procset Test"));
@@ -44,6 +45,7 @@ public class DSCValueParserTestCase extends TestCase {
         assertEquals("Test", res[1]);
     }
 
+    @Test
     public void testParentheseText() throws Exception {
         DSCCommentBeginResource obj = new DSCCommentBeginResource();
         String[] res = toArray(obj.splitParams("procset (Hello World!)"));

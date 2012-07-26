@@ -25,18 +25,22 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Random;
 
-import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class of DoubleFormatUtil
  */
-public class DoubleFormatUtilTest extends TestCase {
+public class DoubleFormatUtilTestCase {
 
     /**
      * Test simple values as specified in the format contract.
      * <p>
      * Note: Some of these tests will fail if formatFast is used.
      */
+    @Test
     public void testSimple() {
         int decimals = 4;
         int precision = 8;
@@ -151,6 +155,7 @@ public class DoubleFormatUtilTest extends TestCase {
         assertEquals(value, 265, 265, expected, actual);
     }
 
+    @Test
     public void testLimits() {
         int decimals = 19;
         int precision = 19;
@@ -245,7 +250,8 @@ public class DoubleFormatUtilTest extends TestCase {
      * AssertEquals with a more detailed message
      */
     private static void assertEquals(double value, int decimals, int precision, String expected, String actual) {
-        assertEquals("value: " + value + ", decimals: " + decimals + ", precision: " + precision, expected, actual);
+        assertTrue("value: " + value + ", decimals: " + decimals + ", precision: " + precision,
+                expected.equals(actual));
     }
 
     /**
@@ -327,6 +333,7 @@ public class DoubleFormatUtilTest extends TestCase {
     /**
      * Tests the formatPrecise method against the reference, with random values
      */
+    @Test
     public void testPrecise() {
         long seed = System.currentTimeMillis();
         Random r = new Random();
@@ -335,7 +342,7 @@ public class DoubleFormatUtilTest extends TestCase {
         double value, highValue, lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
-        
+
         String actual, expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
@@ -360,6 +367,7 @@ public class DoubleFormatUtilTest extends TestCase {
     /**
      * Tests the format method against the reference, with random values
      */
+    @Test
     public void testFormat() {
         long seed = System.currentTimeMillis();
         Random r = new Random();
@@ -394,6 +402,8 @@ public class DoubleFormatUtilTest extends TestCase {
      * Tests the formatFast method against the reference, with random values.
      * Disabled since the formatFast method is not accurate.
      */
+    @Test
+    @Ignore("Disabled since the formatFast method is not accurate.")
     public void fast() {
         long seed = System.currentTimeMillis();
         Random r = new Random();
@@ -402,7 +412,7 @@ public class DoubleFormatUtilTest extends TestCase {
         double value, highValue, lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
-        
+
         String actual, expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
@@ -415,6 +425,8 @@ public class DoubleFormatUtilTest extends TestCase {
             highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
             expected = refFormat(highValue, decimals, precision);
             actual = formatFast(highValue, decimals, precision);
+            System.out.println(expected);
+            System.out.println(actual);
             assertEquals(highValue, decimals, precision, expected, actual);
 
             lowValue = (value - 1) / 1000;
@@ -428,6 +440,7 @@ public class DoubleFormatUtilTest extends TestCase {
      * Performance comparison of the differents formatXXX methods,
      * to see which one is the fastest in the same conditions.
      */
+    @Test
     public void performanceCompare() {
         // Rename this method in testPerformanceCompare to run it within JUnit tests
         // This method is quite long (depends of the value of nbTest).
@@ -544,6 +557,7 @@ public class DoubleFormatUtilTest extends TestCase {
         System.out.println("toString duration: " + toStringDuration + "ms to format " + (3 * nbTest) + " doubles");
     }
 
+    @Test
     public void testAllDoubleRanges() {
         double[] values = {0, 1, 5, 4.9999, 5.0001, 9.9999, 1234567890, 0 /* The last one is random */};
         Random r = new Random();
@@ -574,7 +588,7 @@ public class DoubleFormatUtilTest extends TestCase {
                     assertEquals(value, scale, scale, expected, actual);
                 }
             }
-            
+
         }
     }
 }

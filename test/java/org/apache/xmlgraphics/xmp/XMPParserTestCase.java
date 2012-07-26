@@ -24,7 +24,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
@@ -36,8 +40,9 @@ import org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema;
 /**
  * Tests for the XMP parser.
  */
-public class XMPParserTest extends TestCase {
+public class XMPParserTestCase {
 
+    @Test
     public void testParseBasics() throws Exception {
         URL url = getClass().getResource("test-basics.xmp");
         Metadata meta = XMPParser.parseXMP(url);
@@ -70,6 +75,7 @@ public class XMPParserTest extends TestCase {
         assertEquals("1.4", pdfAdapter.getPDFVersion());
     }
 
+    @Test
     public void testParse1() throws Exception {
         URL url = getClass().getResource("unknown-schema.xmp");
         Metadata meta = XMPParser.parseXMP(url);
@@ -87,6 +93,7 @@ public class XMPParserTest extends TestCase {
         assertEquals("Dummy!", prop.getValue().toString());
     }
 
+    @Test
     public void testParseStructures() throws Exception {
         URL url = getClass().getResource("test-structures.xmp");
         Metadata meta = XMPParser.parseXMP(url);
@@ -123,6 +130,7 @@ public class XMPParserTest extends TestCase {
 
     }
 
+    @Test
     public void testAttributeValues() throws Exception {
         URL url = getClass().getResource("test-attribute-values.xmp");
         Metadata meta = XMPParser.parseXMP(url);
@@ -132,6 +140,7 @@ public class XMPParserTest extends TestCase {
         assertEquals("Orson Scott Card", dcAdapter.getCreators()[0]);
     }
 
+    @Test
     public void testParseDates() throws Exception {
         URL url = getClass().getResource("test-dates.xmp");
         Metadata meta = XMPParser.parseXMP(url);
@@ -164,6 +173,7 @@ public class XMPParserTest extends TestCase {
         assertEquals(cal.getTime(), dcAdapter.getDate());
     }
 
+    @Test
     public void testParseEmptyValues() throws Exception {
         URL url = getClass().getResource("empty-values.xmp");
         Metadata meta = XMPParser.parseXMP(url);

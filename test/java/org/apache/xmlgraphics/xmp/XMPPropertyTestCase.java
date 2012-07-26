@@ -30,7 +30,13 @@ import java.util.TimeZone;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
@@ -41,8 +47,9 @@ import org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema;
 /**
  * Tests property access methods.
  */
-public class XMPPropertyTest extends TestCase {
+public class XMPPropertyTestCase {
 
+    @Test
     public void testPropertyAccess() throws Exception {
         Metadata xmp = new Metadata();
         DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
@@ -66,6 +73,7 @@ public class XMPPropertyTest extends TestCase {
         assertNull(dc.getContributors());
     }
 
+    @Test
     public void testPropertyRemovalLangAlt() throws Exception {
         Metadata xmp = new Metadata();
         DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
@@ -87,6 +95,7 @@ public class XMPPropertyTest extends TestCase {
         assertNull(title);
     }
 
+    @Test
     public void testReplaceLangAlt() throws Exception {
         Metadata xmp = new Metadata();
         DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
@@ -107,6 +116,7 @@ public class XMPPropertyTest extends TestCase {
         assertEquals("Updated title", array.getValue(0));
     }
 
+    @Test
     public void testPropertyValues() throws Exception {
         Metadata xmp = new Metadata();
         DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
@@ -147,6 +157,7 @@ public class XMPPropertyTest extends TestCase {
         assertNull(title);
     }
 
+    @Test
     public void testDates() throws Exception {
         Metadata xmp = new Metadata();
         XMPBasicAdapter basic = XMPBasicSchema.getAdapter(xmp);
@@ -162,6 +173,7 @@ public class XMPPropertyTest extends TestCase {
         assertEquals(dt2, dt);
     }
 
+    @Test
     public void testQualifiers() throws Exception {
         Metadata xmp = new Metadata();
         XMPBasicAdapter basic = XMPBasicSchema.getAdapter(xmp);
@@ -172,7 +184,7 @@ public class XMPPropertyTest extends TestCase {
 
         String[] ids = basic.getIdentifiers();
         assertEquals(3, ids.length);
-        Set set = new java.util.HashSet(Arrays.asList(ids));
+        Set<String> set = new java.util.HashSet<String>(Arrays.asList(ids));
         assertTrue(set.contains("x123"));
         assertTrue(set.contains("id1"));
         assertTrue(set.contains("12345"));

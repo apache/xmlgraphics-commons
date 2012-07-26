@@ -19,15 +19,16 @@
 
 package org.apache.xmlgraphics.ps;
 
-import org.apache.xmlgraphics.ps.PSGenerator;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests literal text string escaping.
  */
-public class PSEscapeTestCase extends TestCase {
+public class PSEscapeTestCase {
 
+    @Test
     public void testBasics() throws Exception {
         StringBuffer sb = new StringBuffer();
 
@@ -50,6 +51,7 @@ public class PSEscapeTestCase extends TestCase {
         assertEquals("0\\t\\(x\\)\\n\\036\\344?", sb.toString());
     }
 
+    @Test
     public void testStringToDSC() throws Exception {
         String escaped;
         escaped = PSGenerator.convertStringToDSC("0\t(x)\n\u001E\u00E4\u20AC");

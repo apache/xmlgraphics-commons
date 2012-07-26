@@ -19,46 +19,40 @@
 
 package org.apache.xmlgraphics;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import org.apache.xmlgraphics.image.codec.png.PNGEncoderTest;
+import org.apache.xmlgraphics.image.codec.png.PNGEncoderTestCase;
+import org.apache.xmlgraphics.ps.ImageEncodingHelperTestCase;
 import org.apache.xmlgraphics.ps.PSEscapeTestCase;
 import org.apache.xmlgraphics.ps.dsc.ListenerTestCase;
 import org.apache.xmlgraphics.ps.dsc.events.DSCValueParserTestCase;
 import org.apache.xmlgraphics.ps.dsc.tools.DSCToolsTestCase;
-import org.apache.xmlgraphics.util.ClasspathResourceTest;
-import org.apache.xmlgraphics.util.ServiceTest;
+import org.apache.xmlgraphics.util.ClasspathResourceTestCase;
+import org.apache.xmlgraphics.util.ServiceTestCase;
 import org.apache.xmlgraphics.util.UnitConvTestCase;
 import org.apache.xmlgraphics.util.io.ASCII85InputStreamTestCase;
 import org.apache.xmlgraphics.util.io.ASCII85OutputStreamTestCase;
-import org.apache.xmlgraphics.util.io.Base64Test;
+import org.apache.xmlgraphics.util.io.Base64TestCase;
 
 /**
  * Test suite for basic functionality of XML Graphics Commons.
  */
+@RunWith(Suite.class)
+@SuiteClasses({
+        Base64TestCase.class,
+        ASCII85InputStreamTestCase.class,
+        ASCII85OutputStreamTestCase.class,
+        PNGEncoderTestCase.class,
+        ServiceTestCase.class,
+        ClasspathResourceTestCase.class,
+        PSEscapeTestCase.class,
+        ImageEncodingHelperTestCase.class,
+        DSCValueParserTestCase.class,
+        DSCToolsTestCase.class,
+        ListenerTestCase.class,
+        UnitConvTestCase.class
+})
 public class StandardTestSuite {
-
-    /**
-     * Builds the test suite
-     * @return the test suite
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(
-            "Basic functionality test suite for XML Graphics Commons");
-        //$JUnit-BEGIN$
-        suite.addTest(new TestSuite(Base64Test.class));
-        suite.addTest(new TestSuite(ASCII85InputStreamTestCase.class));
-        suite.addTest(new TestSuite(ASCII85OutputStreamTestCase.class));
-        suite.addTest(new TestSuite(PNGEncoderTest.class));
-        suite.addTest(new TestSuite(ServiceTest.class));
-        suite.addTest(new TestSuite(ClasspathResourceTest.class));
-        suite.addTest(new TestSuite(PSEscapeTestCase.class));
-        suite.addTest(new TestSuite(DSCValueParserTestCase.class));
-        suite.addTest(new TestSuite(DSCToolsTestCase.class));
-        suite.addTest(new TestSuite(ListenerTestCase.class));
-        suite.addTest(new TestSuite(UnitConvTestCase.class));
-        //$JUnit-END$
-        return suite;
-    }
 }

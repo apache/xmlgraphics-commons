@@ -21,7 +21,12 @@ package org.apache.xmlgraphics.image.loader;
 
 import java.awt.Dimension;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.image.loader.impl.ImageConverterBuffered2Rendered;
 import org.apache.xmlgraphics.image.loader.impl.ImageConverterG2D2Bitmap;
@@ -37,14 +42,11 @@ import org.apache.xmlgraphics.util.MimeConstants;
 /**
  * Tests for the image pipeline functionality.
  */
-public class ImagePipelineTestCase extends TestCase {
+public class ImagePipelineTestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
 
-    public ImagePipelineTestCase(String name) {
-        super(name);
-    }
-
+    @Test
     public void testPipelineWithLoader() throws Exception {
         String uri = "bgimg72dpi.gif";
 
@@ -68,6 +70,7 @@ public class ImagePipelineTestCase extends TestCase {
         assertEquals(MimeConstants.MIME_PNG, img.getFlavor().getMimeType());
     }
 
+    @Test
     public void testPipelineWithoutLoader() throws Exception {
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
@@ -107,6 +110,7 @@ public class ImagePipelineTestCase extends TestCase {
         return g2dImage;
     }
 
+    @Test
     public void testPipelineFromURIThroughManager() throws Exception {
         String uri = "asf-logo.png";
 
@@ -126,6 +130,7 @@ public class ImagePipelineTestCase extends TestCase {
         assertTrue(img instanceof ImageRawStream);
     }
 
+    @Test
     public void testPipelineWithoutURIThroughManager() throws Exception {
         ImageManager manager = imageContext.getImageManager();
 

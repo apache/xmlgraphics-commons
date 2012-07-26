@@ -19,13 +19,17 @@
 
 package org.apache.xmlgraphics.fonts;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests for the Glyphs class.
  */
-public class GlyphsTest extends TestCase {
+public class GlyphsTestCase {
 
+    @Test
     public void testGetUnicodeSequenceForGlyphName() throws Exception {
         String glyph;
         String unicodes;
@@ -77,6 +81,7 @@ public class GlyphsTest extends TestCase {
         assertNull(unicodes);
     }
 
+    @Test
     public void testGetCharNameAlternativesFor() throws Exception {
         String[] alts = Glyphs.getCharNameAlternativesFor("Omega");
         assertEquals(1, alts.length);

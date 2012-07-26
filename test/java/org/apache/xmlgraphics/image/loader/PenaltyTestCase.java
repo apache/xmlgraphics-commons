@@ -19,19 +19,23 @@
 
 package org.apache.xmlgraphics.image.loader;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.image.loader.util.Penalty;
 
 /**
  * Tests for the {@link Penalty}.
  */
-public class PenaltyTestCase extends TestCase {
+public class PenaltyTestCase {
 
     /**
      * Tests for penalty handling.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testTruncatePenalty() throws Exception {
         assertEquals(0, Penalty.truncate(0));
         long penalty = Integer.MAX_VALUE;
@@ -41,7 +45,7 @@ public class PenaltyTestCase extends TestCase {
         penalty++;
         assertEquals(Integer.MAX_VALUE, Penalty.truncate(penalty));
         //For comparison, normal casting does this
-        assertEquals(Integer.MIN_VALUE, (int)penalty);
+        assertEquals(Integer.MIN_VALUE, (int) penalty);
 
         //Now on the other end of the spectrum...
         penalty = Integer.MIN_VALUE;
@@ -51,13 +55,14 @@ public class PenaltyTestCase extends TestCase {
         penalty -= 500;
         assertEquals(Integer.MIN_VALUE, Penalty.truncate(penalty));
         //For comparison, normal casting does this
-        assertEquals(Integer.MAX_VALUE - 499, (int)penalty);
+        assertEquals(Integer.MAX_VALUE - 499, (int) penalty);
     }
 
     /**
      * Tests for the {@link Penalty} class.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testPenalty() throws Exception {
         Penalty p1 = Penalty.toPenalty(100);
         assertEquals(100, p1.getValue());

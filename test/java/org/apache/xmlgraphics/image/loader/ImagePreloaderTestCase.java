@@ -28,9 +28,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXSource;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.xml.sax.InputSource;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.spi.ImageLoaderFactory;
 import org.apache.xmlgraphics.util.MimeConstants;
@@ -38,14 +41,11 @@ import org.apache.xmlgraphics.util.MimeConstants;
 /**
  * Tests for bundled Imagepreloader implementations.
  */
-public class ImagePreloaderTestCase extends TestCase {
+public class ImagePreloaderTestCase {
 
     private MockImageContext imageContext = MockImageContext.getInstance();
 
-    public ImagePreloaderTestCase(String name) {
-        super(name);
-    }
-
+    @Test
     public void testImageLoaderFactory() throws Exception {
         ImageManager manager = imageContext.getImageManager();
         ImageInfo info = new ImageInfo(null, MimeConstants.MIME_PNG);
@@ -54,19 +54,21 @@ public class ImagePreloaderTestCase extends TestCase {
         assertNotNull(ilf);
     }
 
+    @Test
     public void testFileNotFound() throws Exception {
         String uri = "doesnotexistanywhere.png";
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
         try {
-            ImageInfo info = manager.preloadImage(uri, sessionContext);
+            manager.preloadImage(uri, sessionContext);
             fail("Expected a FileNotFoundException!");
         } catch (FileNotFoundException e) {
             //expected!
         }
     }
 
+    @Test
     public void testPNG() throws Exception {
         String uri = "asf-logo.png";
 
@@ -84,6 +86,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(38245, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testPNGNoResolution() throws Exception {
         String uri = "no-resolution.png";
         //This file contains a pHYs chunk but the resolution is set to zero.
@@ -104,6 +107,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(24000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testTIFF() throws Exception {
         String uri = "tiff_group4.tif";
 
@@ -121,6 +125,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(66706, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testTIFFNoResolution() throws Exception {
         String uri = "no-resolution.tif";
 
@@ -138,6 +143,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(24000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testGIF() throws Exception {
         String uri = "bgimg72dpi.gif";
 
@@ -155,6 +161,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(192000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testEMF() throws Exception {
         String uri = "img.emf";
 
@@ -172,6 +179,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(56665, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testJPEG1() throws Exception {
         String uri = "bgimg300dpi.jpg";
 
@@ -189,6 +197,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(46080, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testJPEG2() throws Exception {
         String uri = "cmyk.jpg";
 
@@ -206,6 +215,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(35000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testJPEG3() throws Exception {
         String uri = "cmyk-pxcm.jpg"; //Contains resolution as pixels per centimeter
 
@@ -223,6 +233,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(35433, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testBMP() throws Exception {
         String uri = "bgimg300dpi.bmp";
 
@@ -240,6 +251,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(46092, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testBMPNoResolution() throws Exception {
         String uri = "no-resolution.bmp";
 
@@ -257,6 +269,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(50000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testEPSAscii() throws Exception {
         String uri = "barcode.eps";
 
@@ -274,6 +287,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(42525, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testEPSBinary() throws Exception {
         String uri = "img-with-tiff-preview.eps";
 
@@ -291,6 +305,7 @@ public class ImagePreloaderTestCase extends TestCase {
         assertEquals(17000, info.getSize().getHeightMpt());
     }
 
+    @Test
     public void testSAXSourceWithSystemID() throws Exception {
         URIResolver resolver = new URIResolver() {
             public Source resolve(String href, String base) throws TransformerException {
@@ -306,6 +321,7 @@ public class ImagePreloaderTestCase extends TestCase {
         checkImageFound("img:asf-logo.png", resolver);
     }
 
+    @Test
     public void testSAXSourceWithInputStream() throws Exception {
         URIResolver resolver = new URIResolver() {
             public Source resolve(String href, String base) throws TransformerException {
