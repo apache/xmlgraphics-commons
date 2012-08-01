@@ -44,6 +44,7 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
+import org.apache.xmlgraphics.io.URIResolverAdapter;
 
 /**
  * Abstract base class for classes implementing ImageSessionContext. This class provides all the
@@ -54,14 +55,14 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     /** logger */
     private static Log log = LogFactory.getLog(AbstractImageSessionContext.class);
 
-    private static boolean noSourceReuse = false;
+    private static boolean noSourceReuse;
 
     static {
         //TODO Temporary measure to track down a problem
         //See: http://markmail.org/message/k6mno3jsxmovaz2e
-        String v = System.getProperty(
-                AbstractImageSessionContext.class.getName() + ".no-source-reuse");
-        noSourceReuse = Boolean.valueOf(v).booleanValue();
+        String noSourceReuseString = System.getProperty(
+                         AbstractImageSessionContext.class.getName() + ".no-source-reuse");
+        noSourceReuse = Boolean.valueOf(noSourceReuseString);
     }
 
     /**
@@ -99,7 +100,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
         if (f != null) {
             boolean directFileAccess = true;
             assert (source instanceof StreamSource) || (source instanceof SAXSource);
-            InputStream in = ImageUtil.getInputStream(source);
+            InputStream in = URIResolverAdapter.getInputStream(source);
             if (in == null) {
                 try {
                     in = new java.io.FileInputStream(f);
@@ -157,7 +158,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                 return source;
             }
             // Got a valid source, obtain an InputStream from it
-            InputStream in = ImageUtil.getInputStream(source);
+            InputStream in = URIResolverAdapter.getInputStream(source);
             if (in == null && url != null) {
                 try {
                     in = url.openStream();
@@ -188,7 +189,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
     protected ImageInputStream createImageInputStream(InputStream in) throws IOException {
         ImageInputStream iin = ImageIO.createImageInputStream(in);
-        return (ImageInputStream)Proxy.newProxyInstance(
+        return (ImageInputStream) Proxy.newProxyInstance(
                 ImageInputStream.class.getClassLoader(),
                 new Class[] {ImageInputStream.class},
                 new ObservingImageInputStreamInvocationHandler(iin, in));
@@ -266,7 +267,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
     /** {@inheritDoc} */
     public Source getSource(String uri) {
-        return (Source)sessionSources.remove(uri);
+        return (Source) sessionSources.remove(uri);
     }
 
     /** {@inheritDoc} */
@@ -323,7 +324,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             return false;
         }
         if (src instanceof ImageSource) {
-            ImageSource is = (ImageSource)src;
+            ImageSource is = (ImageSource) src;
             if (is.getImageInputStream() != null) {
                 return true;
             }

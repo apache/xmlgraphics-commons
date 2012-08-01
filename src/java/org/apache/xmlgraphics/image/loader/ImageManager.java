@@ -171,7 +171,7 @@ public class ImageManager {
             throws ImageException, IOException {
         Iterator iter = registry.getPreloaderIterator();
         while (iter.hasNext()) {
-            ImagePreloader preloader = (ImagePreloader)iter.next();
+            ImagePreloader preloader = (ImagePreloader) iter.next();
             ImageInfo info = preloader.preloadImage(uri, src, imageContext);
             if (info != null) {
                 return info;

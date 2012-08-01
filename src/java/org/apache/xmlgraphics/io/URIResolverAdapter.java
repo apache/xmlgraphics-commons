@@ -34,6 +34,9 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.xmlgraphics.image.loader.ImageSource;
+import org.apache.xmlgraphics.image.loader.util.ImageInputStreamAdapter;
+
 /**
  * An adapter between {@link URIResolver} to {@link ResourceResolver}. This adapter allows users
  * to utilize the resolvers from the XML library for resource acquisition.
@@ -58,16 +61,7 @@ public class URIResolverAdapter implements ResourceResolver {
         try {
             Source src = resolver.resolve(uri.toASCIIString(), null);
             InputStream resourceStream = null;
-            if (src instanceof StreamSource) {
-                resourceStream = ((StreamSource) src).getInputStream();
-            } else if (src instanceof DOMSource) {
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                StreamResult xmlSource = new StreamResult(outStream);
-                TransformerFactory.newInstance().newTransformer().transform(src, xmlSource);
-                resourceStream = new ByteArrayInputStream(outStream.toByteArray());
-            } else if (src instanceof SAXSource) {
-                resourceStream = ((SAXSource) src).getInputSource().getByteStream();
-            }
+
 
             if (resourceStream == null) {
                 URL url = new URL(src.getSystemId());
@@ -82,5 +76,31 @@ public class URIResolverAdapter implements ResourceResolver {
     /** {@inheritDoc} */
     public OutputStream getOutputStream(URI uri) throws IOException {
         return outputStreamResolver.getOutputStream(uri);
+    }
+
+    /**
+     * Returns the {@link InputStream} that is backing the given {@link Source} object.
+     *
+     * @param src is backed by an {@link InputStream}
+     * @return the input stream
+     */
+    public static InputStream getInputStream(Source src) {
+        try {
+            if (src instanceof StreamSource) {
+                return ((StreamSource) src).getInputStream();
+            } else if (src instanceof DOMSource) {
+                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                StreamResult xmlSource = new StreamResult(outStream);
+                TransformerFactory.newInstance().newTransformer().transform(src, xmlSource);
+                return new ByteArrayInputStream(outStream.toByteArray());
+            } else if (src instanceof SAXSource) {
+                return ((SAXSource) src).getInputSource().getByteStream();
+            } else if (src instanceof ImageSource) {
+                return new ImageInputStreamAdapter(((ImageSource) src).getImageInputStream());
+            }
+        } catch (Exception e) {
+            // TODO: How do we want to handle these? They all come from the TransformerFactory
+        }
+        return null;
     }
 }
