@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   <rewriteURI uriStartString="test:catalog:resolver:" rewritePrefix="./"/>
+  <rewriteURI uriStartString="test:http:protocol:" rewritePrefix="http://svn.apache.org/repos/asf/xmlgraphics/fop/trunk/test/resources/images/"/>
 </catalog>

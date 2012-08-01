@@ -43,6 +43,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.image.loader.ImageProcessingHints;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.ImageSource;
+import org.apache.xmlgraphics.io.URIResolverAdapter;
 
 /**
  * Helper and convenience methods for working with the image package.
@@ -53,32 +54,13 @@ public final class ImageUtil {
     }
 
     /**
-     * Returns the InputStream of a Source object.
-     * @param src the Source object
-     * @return the InputStream (or null if there's not InputStream available)
-     */
-    public static InputStream getInputStream(Source src) {
-        if (src instanceof StreamSource) {
-            return ((StreamSource)src).getInputStream();
-        } else if (src instanceof ImageSource) {
-            return new ImageInputStreamAdapter(((ImageSource)src).getImageInputStream());
-        } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource)src).getInputSource();
-            if (is != null) {
-                return is.getByteStream();
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns the ImageInputStream of a Source object.
      * @param src the Source object
      * @return the ImageInputStream (or null if there's not ImageInputStream available)
      */
     public static ImageInputStream getImageInputStream(Source src) {
         if (src instanceof ImageSource) {
-            return ((ImageSource)src).getImageInputStream();
+            return ((ImageSource) src).getImageInputStream();
         } else {
             return null;
         }
@@ -91,7 +73,7 @@ public final class ImageUtil {
      * @return the InputStream
      */
     public static InputStream needInputStream(Source src) {
-        InputStream in = getInputStream(src);
+        InputStream in = URIResolverAdapter.getInputStream(src);
         if (in != null) {
             return in;
         } else {
@@ -109,7 +91,7 @@ public final class ImageUtil {
      */
     public static ImageInputStream needImageInputStream(Source src) {
         if (src instanceof ImageSource) {
-            ImageSource isrc = (ImageSource)src;
+            ImageSource isrc = (ImageSource) src;
             if (isrc.getImageInputStream() == null) {
                 throw new IllegalArgumentException(
                         "ImageInputStream is null/cleared on ImageSource");
@@ -126,18 +108,11 @@ public final class ImageUtil {
      * @return true if an InputStream is available
      */
     public static boolean hasInputStream(Source src) {
-        if (src instanceof StreamSource) {
-            InputStream in = ((StreamSource)src).getInputStream();
-            return (in != null);
-        } else if (src instanceof ImageSource) {
-            return hasImageInputStream(src);
-        } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource)src).getInputSource();
-            if (is != null) {
-                return (is.getByteStream() != null);
-            }
+        InputStream stream = URIResolverAdapter.getInputStream(src);
+        if (stream != null) {
+            return true;
         }
-        return false;
+        return hasImageInputStream(src);
     }
 
     /**
@@ -147,10 +122,10 @@ public final class ImageUtil {
      */
     public static boolean hasReader(Source src) {
         if (src instanceof StreamSource) {
-            Reader reader = ((StreamSource)src).getReader();
+            Reader reader = ((StreamSource) src).getReader();
             return (reader != null);
         } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource)src).getInputSource();
+            InputSource is = ((SAXSource) src).getInputSource();
             if (is != null) {
                 return (is.getCharacterStream() != null);
             }
@@ -164,13 +139,7 @@ public final class ImageUtil {
      * @return true if an ImageInputStream is available
      */
     public static boolean hasImageInputStream(Source src) {
-        if (src instanceof ImageSource) {
-            ImageInputStream in = ((ImageSource)src).getImageInputStream();
-            if (in != null) {
-                return true;
-            }
-        }
-        return false;
+        return getImageInputStream(src) != null;
     }
 
     /**
@@ -180,14 +149,14 @@ public final class ImageUtil {
      */
     public static void removeStreams(Source src) {
         if (src instanceof ImageSource) {
-            ImageSource isrc = (ImageSource)src;
+            ImageSource isrc = (ImageSource) src;
             isrc.setImageInputStream(null);
         } else if (src instanceof StreamSource) {
-            StreamSource ssrc = (StreamSource)src;
+            StreamSource ssrc = (StreamSource) src;
             ssrc.setInputStream(null);
             ssrc.setReader(null);
         } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource)src).getInputSource();
+            InputSource is = ((SAXSource) src).getInputSource();
             if (is != null) {
                 is.setByteStream(null);
                 is.setCharacterStream(null);
@@ -203,24 +172,23 @@ public final class ImageUtil {
     public static void closeQuietly(Source src) {
         if (src == null) {
             return;
-        } else if (src instanceof StreamSource) {
-            StreamSource streamSource = (StreamSource)src;
-            IOUtils.closeQuietly(streamSource.getInputStream());
+        }
+        if (src instanceof StreamSource) {
+            StreamSource streamSource = (StreamSource) src;
             streamSource.setInputStream(null);
             IOUtils.closeQuietly(streamSource.getReader());
             streamSource.setReader(null);
         } else if (src instanceof ImageSource) {
-            ImageSource imageSource = (ImageSource)src;
-            if (imageSource.getImageInputStream() != null) {
+            if (getImageInputStream(src) != null) {
                 try {
-                    imageSource.getImageInputStream().close();
+                    getImageInputStream(src).close();
                 } catch (IOException ioe) {
-                    //ignore
+                    // ignore
                 }
-                imageSource.setImageInputStream(null);
+                ((ImageSource) src).setImageInputStream(null);
             }
         } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource)src).getInputSource();
+            InputSource is = ((SAXSource) src).getInputSource();
             if (is != null) {
                 IOUtils.closeQuietly(is.getByteStream());
                 is.setByteStream(null);
@@ -237,7 +205,7 @@ public final class ImageUtil {
      * @return the decorated ImageInputStream
      */
     public static ImageInputStream ignoreFlushing(final ImageInputStream in) {
-        return (ImageInputStream)Proxy.newProxyInstance(in.getClass().getClassLoader(),
+        return (ImageInputStream) Proxy.newProxyInstance(in.getClass().getClassLoader(),
                 new Class[] {ImageInputStream.class},
                 new InvocationHandler() {
                     public Object invoke(Object proxy, Method method, Object[] args)
@@ -261,7 +229,7 @@ public final class ImageUtil {
      * GZIP header magic number bytes, like found in a gzipped
      * files, which are encoded in Intel format (i.&#x2e;e&#x2e; little indian).
      */
-    private static final byte[] GZIP_MAGIC = {(byte)0x1f, (byte)0x8b};
+    private static final byte[] GZIP_MAGIC = {(byte) 0x1f, (byte) 0x8b};
 
     /**
      * Indicates whether an InputStream is GZIP compressed. The InputStream must support
