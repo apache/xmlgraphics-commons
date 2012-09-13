@@ -30,6 +30,7 @@ import org.apache.xmlgraphics.image.codec.tiff.TIFFImageEncoder;
 import org.apache.xmlgraphics.image.writer.AbstractImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.MultiImageWriter;
+import org.apache.xmlgraphics.image.writer.ResolutionUnit;
 
 /**
  * ImageWriter implementation that uses the internal TIFF codec to
@@ -73,22 +74,36 @@ public class TIFFImageWriter extends AbstractImageWriter {
             }
 
             if (params.getResolution() != null) {
-                // Set target resolution
-                float pixSzMM = 25.4f / params.getResolution().floatValue();
-                // num Pixs in 100 Meters
-                int numPix = (int)(((1000 * 100) / pixSzMM) + 0.5);
-                int denom = 100 * 100;  // Centimeters per 100 Meters;
-                long [] rational = {numPix, denom};
+                int numPixX;
+                int numPixY;
+                int denom;
+
+                if (ResolutionUnit.INCH == params.getResolutionUnit()) {
+                    numPixX = params.getXResolution().intValue();
+                    numPixY = params.getYResolution().intValue();
+                    denom = 1;
+                } else {
+                    // Set target resolution
+                    float pixXSzMM = 25.4f / params.getXResolution().floatValue();
+                    float pixYSzMM = 25.4f / params.getYResolution().floatValue();
+                    // num Pixs in 100 Meters
+                    numPixX = (int)(((1000 * 100) / pixXSzMM) + 0.5);
+                    numPixY = (int)(((1000 * 100) / pixYSzMM) + 0.5);
+                    denom = 100 * 100;  // Centimeters per 100 Meters;
+                }
+
+                long [] xRational = {numPixX, denom};
+                long [] yRational = {numPixY, denom};
                 TIFFField [] fields = {
                     new TIFFField(TIFFImageDecoder.TIFF_RESOLUTION_UNIT,
                                   TIFFField.TIFF_SHORT, 1,
-                                  new char[] {(char)3}),
+                                  new char[] {(char)params.getResolutionUnit().getValue()}),
                     new TIFFField(TIFFImageDecoder.TIFF_X_RESOLUTION,
                                   TIFFField.TIFF_RATIONAL, 1,
-                                  new long[][] {rational}),
+                                  new long[][] {xRational}),
                     new TIFFField(TIFFImageDecoder.TIFF_Y_RESOLUTION,
                                   TIFFField.TIFF_RATIONAL, 1,
-                                  new long[][] {rational})
+                                  new long[][] {yRational})
                         };
                 encodeParams.setExtraFields(fields);
             }
@@ -102,11 +117,13 @@ public class TIFFImageWriter extends AbstractImageWriter {
     }
 
     /** {@inheritDoc} */
+    @Override
     public MultiImageWriter createMultiImageWriter(OutputStream out) throws IOException {
         return new TIFFMultiImageWriter(out);
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean supportsMultiImageWriter() {
         return true;
     }
