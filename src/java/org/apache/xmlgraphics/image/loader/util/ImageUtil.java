@@ -21,7 +21,6 @@ package org.apache.xmlgraphics.image.loader.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,17 +32,11 @@ import java.util.zip.GZIPInputStream;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
-
-import org.xml.sax.InputSource;
-
-import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.image.loader.ImageProcessingHints;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.ImageSource;
-import org.apache.xmlgraphics.io.URIResolverAdapter;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 
 /**
  * Helper and convenience methods for working with the image package.
@@ -71,15 +64,10 @@ public final class ImageUtil {
      * if there's no InputStream instance available from the Source object.
      * @param src the Source object
      * @return the InputStream
+     * @deprecated use {@link XmlSourceUtil#needInputStream(Source)} instead
      */
     public static InputStream needInputStream(Source src) {
-        InputStream in = URIResolverAdapter.getInputStream(src);
-        if (in != null) {
-            return in;
-        } else {
-            throw new IllegalArgumentException("Source must be a StreamSource with an InputStream"
-                    + " or an ImageSource");
-        }
+        return XmlSourceUtil.needInputStream(src);
     }
 
     /**
@@ -108,29 +96,17 @@ public final class ImageUtil {
      * @return true if an InputStream is available
      */
     public static boolean hasInputStream(Source src) {
-        InputStream stream = URIResolverAdapter.getInputStream(src);
-        if (stream != null) {
-            return true;
-        }
-        return hasImageInputStream(src);
+        return XmlSourceUtil.hasInputStream(src) || hasImageInputStream(src);
     }
 
     /**
      * Indicates whether the Source object has a Reader instance.
      * @param src the Source object
      * @return true if an Reader is available
+     * @deprecated use {@link XmlSourceUtil#hasReader(Source)} instead
      */
     public static boolean hasReader(Source src) {
-        if (src instanceof StreamSource) {
-            Reader reader = ((StreamSource) src).getReader();
-            return (reader != null);
-        } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource) src).getInputSource();
-            if (is != null) {
-                return (is.getCharacterStream() != null);
-            }
-        }
-        return false;
+        return XmlSourceUtil.hasReader(src);
     }
 
     /**
@@ -146,56 +122,20 @@ public final class ImageUtil {
      * Removes any references to InputStreams or Readers from the given Source to prohibit
      * accidental/unwanted use by a component further downstream.
      * @param src the Source object
+     * @deprecated use {@link XmlSourceUtil#removeStreams(Source)} instead
      */
     public static void removeStreams(Source src) {
-        if (src instanceof ImageSource) {
-            ImageSource isrc = (ImageSource) src;
-            isrc.setImageInputStream(null);
-        } else if (src instanceof StreamSource) {
-            StreamSource ssrc = (StreamSource) src;
-            ssrc.setInputStream(null);
-            ssrc.setReader(null);
-        } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource) src).getInputSource();
-            if (is != null) {
-                is.setByteStream(null);
-                is.setCharacterStream(null);
-            }
-        }
+        XmlSourceUtil.removeStreams(src);
     }
 
     /**
      * Closes the InputStreams or ImageInputStreams of Source objects. Any exception occurring
      * while closing the stream is ignored.
      * @param src the Source object
+     * @deprecated use {@link XmlSourceUtil#closeQuietly(Source)} instead
      */
     public static void closeQuietly(Source src) {
-        if (src == null) {
-            return;
-        }
-        if (src instanceof StreamSource) {
-            StreamSource streamSource = (StreamSource) src;
-            streamSource.setInputStream(null);
-            IOUtils.closeQuietly(streamSource.getReader());
-            streamSource.setReader(null);
-        } else if (src instanceof ImageSource) {
-            if (getImageInputStream(src) != null) {
-                try {
-                    getImageInputStream(src).close();
-                } catch (IOException ioe) {
-                    // ignore
-                }
-                ((ImageSource) src).setImageInputStream(null);
-            }
-        } else if (src instanceof SAXSource) {
-            InputSource is = ((SAXSource) src).getInputSource();
-            if (is != null) {
-                IOUtils.closeQuietly(is.getByteStream());
-                is.setByteStream(null);
-                IOUtils.closeQuietly(is.getCharacterStream());
-                is.setCharacterStream(null);
-            }
-        }
+        XmlSourceUtil.closeQuietly(src);
     }
 
     /**

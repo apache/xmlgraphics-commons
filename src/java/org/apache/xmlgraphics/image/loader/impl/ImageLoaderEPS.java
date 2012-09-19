@@ -30,7 +30,7 @@ import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
-import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
 import org.apache.xmlgraphics.util.io.SubInputStream;
 
@@ -58,8 +58,8 @@ public class ImageLoaderEPS extends AbstractImageLoader {
                     "ImageInfo must be from a image with MIME type: " + MimeConstants.MIME_EPS);
         }
         Source src = session.needSource(info.getOriginalURI());
-        InputStream in = ImageUtil.needInputStream(src);
-        ImageUtil.removeStreams(src); //so others cannot close them, we take them over
+        InputStream in = XmlSourceUtil.needInputStream(src);
+        XmlSourceUtil.removeStreams(src); //so others cannot close them, we take them over
 
         PreloaderEPS.EPSBinaryFileHeader binaryHeader;
         binaryHeader = (PreloaderEPS.EPSBinaryFileHeader)info.getCustomObjects().get(

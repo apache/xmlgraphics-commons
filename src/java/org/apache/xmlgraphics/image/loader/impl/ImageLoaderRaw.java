@@ -29,7 +29,7 @@ import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
-import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 
 /**
  * ImageLoader for formats consumed "raw" (undecoded). Provides a raw/undecoded stream.
@@ -62,7 +62,7 @@ public class ImageLoaderRaw extends AbstractImageLoader {
         }
         Source src = session.needSource(info.getOriginalURI());
         ImageRawStream rawImage = new ImageRawStream(info, getTargetFlavor(),
-                ImageUtil.needInputStream(src));
+                XmlSourceUtil.needInputStream(src));
         return rawImage;
     }
 

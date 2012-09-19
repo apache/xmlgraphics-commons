@@ -53,7 +53,6 @@ public class URIResolverAdapterTestCase {
         CatalogResolver catalogResolver = new CatalogResolver();
         Source src = catalogResolver.resolve(textFileURI.toASCIIString(), null);
         if (src instanceof SAXSource) {
-            System.out.println(src.getSystemId());
             testInputStream(new URL(src.getSystemId()).openStream());
         }
     }
@@ -61,7 +60,7 @@ public class URIResolverAdapterTestCase {
     @Test
     @Ignore("Literally no idea why this doesn't work... Gonna look at the catalog resolver source")
     public void testCatalogResolverInAdapter() throws IOException {
-        ResourceResolver resourceResolver = new URIResolverAdapter(new CatalogResolver(), null);
+        ResourceResolver resourceResolver = new URIResolverAdapter(new CatalogResolver());
         testInputStream(resourceResolver.getResource(textFileURI));
     }
 

@@ -43,6 +43,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 
 /**
  * Tests for AbstractImageSessionContext.
@@ -154,7 +155,7 @@ public class ImageSessionContextTestCase {
 
         Source src = resolve(uri, resolver);
         assertTrue(src instanceof StreamSource); //Source remains unchanged
-        assertTrue(ImageUtil.hasReader(src));
+        assertTrue(XmlSourceUtil.hasReader(src));
     }
 
     private ImageSource checkImageInputStreamAvailable(String uri, URIResolver resolver) {
@@ -234,7 +235,7 @@ public class ImageSessionContextTestCase {
 
         Source src = resolve(uri, resolver);
         assertTrue(src instanceof SAXSource); //Source remains unchanged
-        assertTrue(ImageUtil.hasReader(src));
+        assertTrue(XmlSourceUtil.hasReader(src));
     }
 
     private static final String SOME_XML = "<root><child id='1'>Hello World!</child></root>";
