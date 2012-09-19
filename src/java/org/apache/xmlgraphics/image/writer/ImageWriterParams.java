@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.image.writer;
 
+
 /**
  * Parameters for the encoder which is accessed through the
  * ImageWriter interface.
@@ -27,10 +28,18 @@ package org.apache.xmlgraphics.image.writer;
  */
 public class ImageWriterParams {
 
-    private Integer resolution;
+    /** Forces a single strip for the whole image. */
+    public static final int SINGLE_STRIP = -1;
+    /** Used for generating exactly one strip for each row */
+    public static final int ONE_ROW_PER_STRIP = 1;
+
+    private Integer xResolution = null;
+    private Integer yResolution = null;
     private Float jpegQuality;
     private Boolean jpegForceBaseline;
     private String compressionMethod;
+    private ResolutionUnit resolutionUnit = ResolutionUnit.INCH;
+    private int rowsPerStrip = ONE_ROW_PER_STRIP;
 
     /**
      * Default constructor.
@@ -40,10 +49,17 @@ public class ImageWriterParams {
     }
 
     /**
+     * @return true if resolution has been set
+     */
+    public boolean hasResolution() {
+        return getXResolution() != null && getYResolution() != null;
+    }
+
+    /**
      * @return the image resolution in dpi, or null if undefined
      */
     public Integer getResolution() {
-        return this.resolution;
+        return getXResolution();
     }
 
     /**
@@ -68,11 +84,13 @@ public class ImageWriterParams {
     }
 
     /**
-     * Sets the target resolution of the bitmap image to be written.
-     * @param dpi the resolution in dpi
+     * Sets the target resolution of the bitmap image to be written
+     * (sets both the horizontal and vertical resolution to the same value).
+     * @param resolution the resolution
      */
-    public void setResolution(int dpi) {
-        this.resolution = new Integer(dpi);
+    public void setResolution(int resolution) {
+        setXResolution(resolution);
+        setYResolution(resolution);
     }
 
     /**
@@ -91,5 +109,88 @@ public class ImageWriterParams {
      */
     public void setCompressionMethod(String method) {
         this.compressionMethod = method;
+    }
+
+    /**
+     * Checks if image is single strip (required by some fax processors).
+     * @return true if one row per strip.
+     */
+    public boolean isSingleStrip() {
+        return rowsPerStrip == SINGLE_STRIP;
+    }
+
+    /**
+     * Convenience method to set rows per strip to single strip,
+     * otherwise sets to one row per strip.
+     * @param isSingle true if a single strip shall be produced, false if multiple strips are ok
+     */
+    public void setSingleStrip(boolean isSingle) {
+        rowsPerStrip = isSingle ? SINGLE_STRIP : ONE_ROW_PER_STRIP;
+    }
+
+    /**
+     * Sets the rows per strip (default is one row per strip);
+     * if set to -1 (single strip), will use height of the current page,
+     * required by some fax processors.
+     * @param rowsPerStrip the value to set.
+     */
+    public void setRowsPerStrip(int rowsPerStrip) {
+        this.rowsPerStrip = rowsPerStrip;
+    }
+
+    /**
+     * The number of rows per strip of the TIFF image, default 1.  A value of -1
+     * indicates a single strip per page will be used and RowsPerStrip will be set
+     * to image height for the associated page.
+     * @return the number of rows per strip, default 1.
+     */
+    public int getRowsPerStrip() {
+        return rowsPerStrip;
+    }
+
+    /**
+     * Returns the unit in which resolution values are given (ex. units per inch).
+     * @return the resolution unit.
+     */
+    public ResolutionUnit getResolutionUnit() {
+        return resolutionUnit;
+    }
+
+    /**
+     * Sets the resolution unit of the image for calculating resolution.
+     * @param resolutionUnit the resolution unit (inches, centimeters etc.)
+     */
+    public void setResolutionUnit(ResolutionUnit resolutionUnit) {
+        this.resolutionUnit = resolutionUnit;
+    }
+
+    /**
+     * @return the horizontal image resolution in the current resolution unit, or null if undefined
+     */
+    public Integer getXResolution() {
+        return xResolution;
+    }
+
+    /**
+     * Sets the target horizontal resolution of the bitmap image to be written.
+     * @param resolution the resolution value
+     */
+    public void setXResolution(int resolution) {
+        xResolution = Integer.valueOf(resolution);
+    }
+
+    /**
+     * @return the vertical image resolution in the current resolution unit, or null if undefined
+     */
+    public Integer getYResolution() {
+        return yResolution;
+    }
+
+    /**
+     * Sets the target vertical resolution of the bitmap image to be written.
+     * @param resolution the resolution value
+     */
+    public void setYResolution(int resolution) {
+        yResolution = Integer.valueOf(resolution);
     }
 }
