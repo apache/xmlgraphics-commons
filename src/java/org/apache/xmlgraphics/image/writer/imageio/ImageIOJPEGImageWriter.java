@@ -47,17 +47,12 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
         super("image/jpeg");
     }
 
-    /**
-     * @see ImageIOImageWriter#updateMetadata(javax.imageio.metadata.IIOMetadata, ImageWriterParams)
-     */
-    protected IIOMetadata updateMetadata(IIOMetadata meta, ImageWriterParams params) {
-        //ImageIODebugUtil.dumpMetadata(meta);
+    @Override
+    protected IIOMetadata updateMetadata(RenderedImage image, IIOMetadata meta,
+            ImageWriterParams params) {
         if (JPEG_NATIVE_FORMAT.equals(meta.getNativeMetadataFormatName())) {
             meta = addAdobeTransform(meta);
-
             IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(JPEG_NATIVE_FORMAT);
-            //IIOMetadataNode root = new IIOMetadataNode(jpegmeta);
-
             IIOMetadataNode jv = getChildNode(root, "JPEGvariety");
             if (jv == null) {
                 jv = new IIOMetadataNode("JPEGvariety");
@@ -75,21 +70,21 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
                 //(or not at all) when using standard metadata format.
                 child.setAttribute("majorVersion", null);
                 child.setAttribute("minorVersion", null);
-                child.setAttribute("resUnits", "1"); //dots per inch
-                child.setAttribute("Xdensity", params.getResolution().toString());
-                child.setAttribute("Ydensity", params.getResolution().toString());
+                switch (params.getResolutionUnit()) {
+                case INCH:
+                    child.setAttribute("resUnits", "1"); //dots per inch
+                    break;
+                case CENTIMETER:
+                    child.setAttribute("resUnits", "2"); //dots per cm
+                    break;
+                default:
+                    child.setAttribute("resUnits", "0"); //no unit
+                }
+                child.setAttribute("Xdensity", params.getXResolution().toString());
+                child.setAttribute("Ydensity", params.getYResolution().toString());
                 child.setAttribute("thumbWidth", null);
                 child.setAttribute("thumbHeight", null);
-
             }
-
-            /*
-            IIOMetadataNode ms = getChildNode(root, "markerSequence");
-            if (ms == null) {
-                ms = new IIOMetadataNode("markerSequence");
-                root.appendChild(ms);
-            }*/
-
             try {
                 meta.setFromTree(JPEG_NATIVE_FORMAT, root);
                 //meta.mergeTree(JPEG_NATIVE_FORMAT, root);
@@ -97,13 +92,7 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
                 throw new RuntimeException("Cannot update image metadata: "
                             + e.getMessage(), e);
             }
-
-            //ImageIODebugUtil.dumpMetadata(meta);
-
-            //meta = super.updateMetadata(meta, params);
-            //ImageIODebugUtil.dumpMetadata(meta);
         }
-
         return meta;
     }
 
@@ -138,9 +127,8 @@ public class ImageIOJPEGImageWriter extends ImageIOImageWriter {
         return meta;
     }
 
-    /**
-     * @see ImageIOImageWriter#getDefaultWriteParam(javax.imageio.ImageWriter, java.awt.image.RenderedImage, ImageWriterParams)
-     */
+    /** {@inheritDoc} */
+    @Override
     protected ImageWriteParam getDefaultWriteParam(
             ImageWriter iiowriter, RenderedImage image,
             ImageWriterParams params) {

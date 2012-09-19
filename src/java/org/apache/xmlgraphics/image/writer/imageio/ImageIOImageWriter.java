@@ -40,6 +40,8 @@ import org.w3c.dom.NodeList;
 import org.apache.xmlgraphics.image.writer.ImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.MultiImageWriter;
+import org.apache.xmlgraphics.image.writer.ResolutionUnit;
+import org.apache.xmlgraphics.util.UnitConv;
 
 /**
  * ImageWriter implementation that uses Image I/O to write images.
@@ -47,6 +49,10 @@ import org.apache.xmlgraphics.image.writer.MultiImageWriter;
  * @version $Id$
  */
 public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener {
+
+    private static final String DIMENSION = "Dimension";
+    private static final String VERTICAL_PIXEL_SIZE = "VerticalPixelSize";
+    private static final String HORIZONTAL_PIXEL_SIZE = "HorizontalPixelSize";
 
     private static final String STANDARD_METADATA_FORMAT = "javax_imageio_1.0";
 
@@ -60,16 +66,12 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
         this.targetMIME = mime;
     }
 
-    /**
-     * @see ImageWriter#writeImage(java.awt.image.RenderedImage, java.io.OutputStream)
-     */
+    /** {@inheritDoc} */
     public void writeImage(RenderedImage image, OutputStream out) throws IOException {
         writeImage(image, out, null);
     }
 
-    /**
-     * @see ImageWriter#writeImage(java.awt.image.RenderedImage, java.io.OutputStream, ImageWriterParams)
-     */
+    /** {@inheritDoc} */
     public void writeImage(RenderedImage image, OutputStream out,
             ImageWriterParams params)
                 throws IOException {
@@ -93,7 +95,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
                     type, iwParam);
             //meta might be null for some JAI codecs as they don't support metadata
             if (params != null && meta != null) {
-                meta = updateMetadata(meta, params);
+                meta = updateMetadata(image, meta, params);
             }
 
             //Write image
@@ -108,10 +110,10 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
     }
 
     private javax.imageio.ImageWriter getIIOImageWriter() {
-        Iterator iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
+        Iterator<javax.imageio.ImageWriter> iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
         javax.imageio.ImageWriter iiowriter = null;
         if (iter.hasNext()) {
-            iiowriter = (javax.imageio.ImageWriter)iter.next();
+            iiowriter = iter.next();
         }
         if (iiowriter == null) {
             throw new UnsupportedOperationException("No ImageIO codec for writing "
@@ -141,39 +143,80 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
 
     /**
      * Updates the metadata information based on the parameters to this writer.
+     * @param image the current image being rendered
      * @param meta the metadata
      * @param params the parameters
      * @return the updated metadata
      */
-    protected IIOMetadata updateMetadata(IIOMetadata meta, ImageWriterParams params) {
-        if (meta.isStandardMetadataFormatSupported()) {
-            IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(STANDARD_METADATA_FORMAT);
-            IIOMetadataNode dim = getChildNode(root, "Dimension");
-            IIOMetadataNode child;
-            if (params.getResolution() != null) {
-                child = getChildNode(dim, "HorizontalPixelSize");
-                if (child == null) {
-                    child = new IIOMetadataNode("HorizontalPixelSize");
-                    dim.appendChild(child);
-                }
-                child.setAttribute("value",
-                        Double.toString(params.getResolution().doubleValue() / 25.4));
-                child = getChildNode(dim, "VerticalPixelSize");
-                if (child == null) {
-                    child = new IIOMetadataNode("VerticalPixelSize");
-                    dim.appendChild(child);
-                }
-                child.setAttribute("value",
-                        Double.toString(params.getResolution().doubleValue() / 25.4));
-            }
-            try {
-                meta.mergeTree(STANDARD_METADATA_FORMAT, root);
-            } catch (IIOInvalidTreeException e) {
-                throw new RuntimeException("Cannot update image metadata: "
-                            + e.getMessage());
+    protected IIOMetadata updateMetadata(RenderedImage image, IIOMetadata meta,
+                ImageWriterParams params) {
+        if (meta.isStandardMetadataFormatSupported() && params.getResolution() != null) {
+
+            //NOTE: There are several bugs in ImageIO codecs concerning resolution handling
+            //http://www.tracemodeler.com/articles/aging-bugs-and-setting-dpi-with-java-image-io/
+
+            float multiplier = (ResolutionUnit.CENTIMETER == params.getResolutionUnit()) ? 10f : UnitConv.IN2MM;
+            double pixelWidthInMillimeters = multiplier / params.getXResolution().doubleValue();
+            double pixelHeightInMillimeters = multiplier / params.getYResolution().doubleValue();
+
+            //Try with the right value as per the ImageIO spec
+            updatePixelSize(meta, pixelWidthInMillimeters, pixelHeightInMillimeters);
+
+            //Check the merge result
+            double checkMerged = getHorizontalPixelSize(meta);
+            if (!equals(checkMerged, pixelWidthInMillimeters, 0.00001)) {
+                //Merging bug in Sun/Oracle JRE encountered
+                //Try compensation strategy for PNG bug:
+                //http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=5106305
+                double horzValue = 1 / pixelWidthInMillimeters;
+                double vertValue = 1 / pixelHeightInMillimeters;
+                updatePixelSize(meta, horzValue, vertValue);
             }
         }
         return meta;
+    }
+
+    private static boolean equals(double d1, double d2, double maxDelta) {
+        return Math.abs(d1 - d2) <= maxDelta;
+    }
+
+    private double getHorizontalPixelSize(IIOMetadata meta) {
+        double result = 0;
+        IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(STANDARD_METADATA_FORMAT);
+        IIOMetadataNode dim = getChildNode(root, DIMENSION);
+        if (dim != null) {
+            IIOMetadataNode horz = getChildNode(dim, HORIZONTAL_PIXEL_SIZE);
+            if (horz != null) {
+                result = Double.parseDouble(horz.getAttribute("value"));
+            }
+        }
+        return result;
+    }
+
+    private void updatePixelSize(IIOMetadata meta, double horzValue, double vertValue) {
+        IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(STANDARD_METADATA_FORMAT);
+        IIOMetadataNode dim = getChildNode(root, DIMENSION);
+        IIOMetadataNode child;
+
+        child = getChildNode(dim, HORIZONTAL_PIXEL_SIZE);
+        if (child == null) {
+            child = new IIOMetadataNode(HORIZONTAL_PIXEL_SIZE);
+            dim.appendChild(child);
+        }
+        child.setAttribute("value", Double.toString(horzValue));
+
+        child = getChildNode(dim, VERTICAL_PIXEL_SIZE);
+        if (child == null) {
+            child = new IIOMetadataNode(VERTICAL_PIXEL_SIZE);
+            dim.appendChild(child);
+        }
+        child.setAttribute("value", Double.toString(vertValue));
+        try {
+            meta.mergeTree(STANDARD_METADATA_FORMAT, root);
+        } catch (IIOInvalidTreeException e) {
+            throw new RuntimeException("Cannot update image metadata: "
+                        + e.getMessage());
+        }
     }
 
     /**
@@ -193,37 +236,31 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
         return null;
     }
 
-    /** @see ImageWriter#getMIMEType() */
+    /** {@inheritDoc} */
     public String getMIMEType() {
         return this.targetMIME;
     }
 
-    /** @see org.apache.xmlgraphics.image.writer.ImageWriter#isFunctional() */
+    /** {@inheritDoc} */
     public boolean isFunctional() {
-        Iterator iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
+        Iterator<javax.imageio.ImageWriter> iter = ImageIO.getImageWritersByMIMEType(getMIMEType());
         //Only return true if an IIO ImageWriter is available in the current environment
         return (iter.hasNext());
     }
 
-    /**
-     * @see javax.imageio.event.IIOWriteWarningListener#warningOccurred(
-     *          javax.imageio.ImageWriter, int, java.lang.String)
-     */
+    /** {@inheritDoc} */
     public void warningOccurred(javax.imageio.ImageWriter source,
             int imageIndex, String warning) {
         System.err.println("Problem while writing image using ImageI/O: "
                 + warning);
     }
 
-    /**
-     * @see org.apache.xmlgraphics.image.writer.ImageWriter#createMultiImageWriter(
-     *          java.io.OutputStream)
-     */
+    /** {@inheritDoc} */
     public MultiImageWriter createMultiImageWriter(OutputStream out) throws IOException {
         return new IIOMultiImageWriter(out);
     }
 
-    /** @see org.apache.xmlgraphics.image.writer.ImageWriter#supportsMultiImageWriter() */
+    /** {@inheritDoc} */
     public boolean supportsMultiImageWriter() {
         javax.imageio.ImageWriter iiowriter = getIIOImageWriter();
         try {
@@ -269,7 +306,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
                     type, iwParam);
             //meta might be null for some JAI codecs as they don't support metadata
             if (params != null && meta != null) {
-                meta = updateMetadata(meta, params);
+                meta = updateMetadata(image, meta, params);
             }
 
             //Write image
