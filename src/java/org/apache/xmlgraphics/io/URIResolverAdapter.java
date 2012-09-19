@@ -17,8 +17,6 @@
 
 package org.apache.xmlgraphics.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,15 +25,7 @@ import java.net.URL;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.xmlgraphics.image.loader.ImageSource;
-import org.apache.xmlgraphics.image.loader.util.ImageInputStreamAdapter;
 
 /**
  * An adapter between {@link URIResolver} to {@link ResourceResolver}. This adapter allows users
@@ -45,23 +35,18 @@ public class URIResolverAdapter implements ResourceResolver {
 
     private final URIResolver resolver;
 
-    private final ResourceResolver outputStreamResolver;
-
     /**
      * @param resolver the desired {@link URIResolver}
-     * @param outputStreamResolver a resource resolver used only for creating {@link OutputStream}s
      */
-    public URIResolverAdapter(URIResolver resolver, ResourceResolver outputStreamResolver) {
+    public URIResolverAdapter(URIResolver resolver) {
         this.resolver = resolver;
-        this.outputStreamResolver = outputStreamResolver;
     }
 
     /** {@inheritDoc} */
     public Resource getResource(URI uri) throws IOException {
         try {
             Source src = resolver.resolve(uri.toASCIIString(), null);
-            InputStream resourceStream = null;
-
+            InputStream resourceStream = XmlSourceUtil.getInputStream(src);
 
             if (resourceStream == null) {
                 URL url = new URL(src.getSystemId());
@@ -75,32 +60,11 @@ public class URIResolverAdapter implements ResourceResolver {
 
     /** {@inheritDoc} */
     public OutputStream getOutputStream(URI uri) throws IOException {
-        return outputStreamResolver.getOutputStream(uri);
-    }
-
-    /**
-     * Returns the {@link InputStream} that is backing the given {@link Source} object.
-     *
-     * @param src is backed by an {@link InputStream}
-     * @return the input stream
-     */
-    public static InputStream getInputStream(Source src) {
         try {
-            if (src instanceof StreamSource) {
-                return ((StreamSource) src).getInputStream();
-            } else if (src instanceof DOMSource) {
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                StreamResult xmlSource = new StreamResult(outStream);
-                TransformerFactory.newInstance().newTransformer().transform(src, xmlSource);
-                return new ByteArrayInputStream(outStream.toByteArray());
-            } else if (src instanceof SAXSource) {
-                return ((SAXSource) src).getInputSource().getByteStream();
-            } else if (src instanceof ImageSource) {
-                return new ImageInputStreamAdapter(((ImageSource) src).getImageInputStream());
-            }
-        } catch (Exception e) {
-            // TODO: How do we want to handle these? They all come from the TransformerFactory
+            Source src = resolver.resolve(uri.toASCIIString(), null);
+            return new URL(src.getSystemId()).openConnection().getOutputStream();
+        } catch (TransformerException te) {
+            throw new IOException(te.getMessage());
         }
-        return null;
     }
 }

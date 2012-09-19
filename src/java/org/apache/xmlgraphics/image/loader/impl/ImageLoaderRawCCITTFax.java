@@ -42,6 +42,7 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SeekableStreamAdapter;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
 import org.apache.xmlgraphics.util.io.SubInputStream;
 
@@ -139,14 +140,14 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
         }
 
         in.seek(stripOffset);
-        InputStream subin = new SubInputStream(ImageUtil.needInputStream(src), stripLength, true);
+        InputStream subin = new SubInputStream(XmlSourceUtil.needInputStream(src), stripLength, true);
         if (fillOrder == 2) {
             //Decorate to flip bit order
             subin = new FillOrderChangeInputStream(subin);
         }
         ImageRawCCITTFax rawImage = new ImageRawCCITTFax(info, subin, compression);
         //Strip stream from source as we pass it on internally
-        ImageUtil.removeStreams(src);
+        XmlSourceUtil.removeStreams(src);
         return rawImage;
     }
 
