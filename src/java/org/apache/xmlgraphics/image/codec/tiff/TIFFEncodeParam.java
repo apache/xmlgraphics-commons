@@ -45,59 +45,9 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
  */
 public class TIFFEncodeParam implements ImageEncodeParam {
 
-    /** No compression. */
-    public static final int COMPRESSION_NONE          = 1;
+    private CompressionValue compression = CompressionValue.NONE;
 
-    /**
-     * Modified Huffman Compression (CCITT Group 3 1D facsimile compression).
-     * <p><b>Not currently supported.</b>
-     */
-    public static final int COMPRESSION_GROUP3_1D     = 2;
-
-    /**
-     * CCITT T.4 bilevel compression (CCITT Group 3 2D facsimile compression).
-     * <p><b>Not currently supported.</b>
-     */
-    public static final int COMPRESSION_GROUP3_2D     = 3;
-
-    /**
-     * CCITT T.6 bilevel compression (CCITT Group 4 facsimile compression).
-     * <p><b>Not currently supported.</b>
-     */
-    public static final int COMPRESSION_GROUP4        = 4;
-
-    /**
-     * LZW compression.
-     * <p><b>Not supported.</b>
-     */
-    public static final int COMPRESSION_LZW           = 5;
-
-    /**
-     * Code for original JPEG-in-TIFF compression which has been
-     * depricated (for many good reasons) in favor of Tech Note 2
-     * JPEG compression (compression scheme 7).
-     * <p><b>Not supported.</b>
-     */
-    public static final int COMPRESSION_JPEG_BROKEN   = 6;
-
-    /**
-     * <a href="ftp://ftp.sgi.com/graphics/tiff/TTN2.draft.txt">
-     * JPEG-in-TIFF</a> compression.
-     */
-    public static final int COMPRESSION_JPEG_TTN2     = 7;
-
-    /** Byte-oriented run-length encoding "PackBits" compression. */
-    public static final int COMPRESSION_PACKBITS      = 32773;
-
-    /**
-     * <a href="http://info.internet.isi.edu:80/in-notes/rfc/files/rfc1951.txt">
-     * DEFLATE</a> lossless compression (also known as "Zip-in-TIFF").
-     */
-    public static final int COMPRESSION_DEFLATE       = 32946;
-
-    private int compression = COMPRESSION_NONE;
-
-    private boolean writeTiled = false;
+    private boolean writeTiled;
     private int tileWidth;
     private int tileHeight;
 
@@ -117,10 +67,8 @@ public class TIFFEncodeParam implements ImageEncodeParam {
         //nop
     }
 
-    /**
-     * Returns the value of the compression parameter.
-     */
-    public int getCompression() {
+    /** Returns the value of the compression parameter. */
+    public CompressionValue getCompression() {
         return compression;
     }
 
@@ -141,12 +89,12 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      *
      * @param compression    The compression type.
      */
-    public void setCompression(int compression) {
+    public void setCompression(CompressionValue compression) {
 
         switch(compression) {
-        case COMPRESSION_NONE:
-        case COMPRESSION_PACKBITS:
-        case COMPRESSION_DEFLATE:
+        case NONE:
+        case PACKBITS:
+        case DEFLATE:
             // Do nothing.
             break;
         default:
