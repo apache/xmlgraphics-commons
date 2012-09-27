@@ -44,6 +44,7 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 
 /**
  * Abstract base class for classes implementing ImageSessionContext. This class provides all the
@@ -54,14 +55,28 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     /** logger */
     private static Log log = LogFactory.getLog(AbstractImageSessionContext.class);
 
-    private static boolean noSourceReuse = false;
+    private static boolean noSourceReuse;
 
     static {
         //TODO Temporary measure to track down a problem
         //See: http://markmail.org/message/k6mno3jsxmovaz2e
-        String v = System.getProperty(
-                AbstractImageSessionContext.class.getName() + ".no-source-reuse");
-        noSourceReuse = Boolean.valueOf(v).booleanValue();
+        String noSourceReuseString = System.getProperty(
+                         AbstractImageSessionContext.class.getName() + ".no-source-reuse");
+        noSourceReuse = Boolean.valueOf(noSourceReuseString);
+    }
+
+    private final FallbackResolver fallbackResolver;
+
+    public AbstractImageSessionContext() {
+        fallbackResolver = new UnrestrictedFallbackResolver();
+    }
+
+    /**
+     * @param fallbackResolver the fallback resolution mechanism to be used when simply getting an
+     * {@link InputStream} that backs a {@link Source} isn't possible.
+     */
+    public AbstractImageSessionContext(FallbackResolver fallbackResolver) {
+        this.fallbackResolver = fallbackResolver;
     }
 
     /**
@@ -75,120 +90,16 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     /** {@inheritDoc} */
     public Source newSource(String uri) {
         Source source = resolveURI(uri);
-        if (source == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("URI could not be resolved: " + uri);
-            }
-            return null;
+        if (source instanceof StreamSource || source instanceof SAXSource) {
+            return fallbackResolver.createSource(source, uri);
         }
-        if (!(source instanceof StreamSource) && !(source instanceof SAXSource)) {
-            //Return any non-stream Sources and let the ImageLoaders deal with them
-            return source;
-        }
-
-        ImageSource imageSource = null;
-
-        String resolvedURI = source.getSystemId();
-        URL url;
-        try {
-            url = new URL(resolvedURI);
-        } catch (MalformedURLException e) {
-            url = null;
-        }
-        File f = /*FileUtils.*/toFile(url);
-        if (f != null) {
-            boolean directFileAccess = true;
-            assert (source instanceof StreamSource) || (source instanceof SAXSource);
-            InputStream in = ImageUtil.getInputStream(source);
-            if (in == null) {
-                try {
-                    in = new java.io.FileInputStream(f);
-                } catch (FileNotFoundException fnfe) {
-                    log.error("Error while opening file."
-                            + " Could not load image from system identifier '"
-                            + source.getSystemId() + "' (" + fnfe.getMessage() + ")");
-                    return null;
-                }
-            }
-            if (in != null) {
-                in = ImageUtil.decorateMarkSupported(in);
-                try {
-                    if (ImageUtil.isGZIPCompressed(in)) {
-                        //GZIPped stream are not seekable, so buffer/cache like other URLs
-                        directFileAccess = false;
-                    }
-                } catch (IOException ioe) {
-                    log.error("Error while checking the InputStream for GZIP compression."
-                            + " Could not load image from system identifier '"
-                            + source.getSystemId() + "' (" + ioe.getMessage() + ")");
-                    return null;
-                }
-            }
-
-            if (directFileAccess) {
-                //Close as the file is reopened in a more optimal way
-                IOUtils.closeQuietly(in);
-                try {
-                    // We let the OS' file system cache do the caching for us
-                    // --> lower Java memory consumption, probably no speed loss
-                    final ImageInputStream newInputStream = ImageIO
-                            .createImageInputStream(f);
-                    if (newInputStream == null) {
-                        log.error("Unable to create ImageInputStream for local file "
-                                        + f
-                                        + " from system identifier '"
-                                        + source.getSystemId() + "'");
-                        return null;
-                    } else {
-                        imageSource = new ImageSource(newInputStream,
-                                resolvedURI, true);
-                    }
-                } catch (IOException ioe) {
-                    log.error("Unable to create ImageInputStream for local file"
-                            + " from system identifier '"
-                            + source.getSystemId() + "' (" + ioe.getMessage() + ")");
-                }
-            }
-        }
-
-        if (imageSource == null) {
-            if (ImageUtil.hasReader(source) && !ImageUtil.hasInputStream(source)) {
-                //We don't handle Reader instances here so return the Source unchanged
-                return source;
-            }
-            // Got a valid source, obtain an InputStream from it
-            InputStream in = ImageUtil.getInputStream(source);
-            if (in == null && url != null) {
-                try {
-                    in = url.openStream();
-                } catch (Exception ex) {
-                    log.error("Unable to obtain stream from system identifier '"
-                        + source.getSystemId() + "'");
-                }
-            }
-            if (in == null) {
-                log.error("The Source that was returned from URI resolution didn't contain"
-                        + " an InputStream for URI: " + uri);
-                return null;
-            }
-
-            try {
-                //Buffer and uncompress if necessary
-                in = ImageUtil.autoDecorateInputStream(in);
-                imageSource = new ImageSource(
-                        createImageInputStream(in), source.getSystemId(), false);
-            } catch (IOException ioe) {
-                log.error("Unable to create ImageInputStream for InputStream"
-                        + " from system identifier '"
-                        + source.getSystemId() + "' (" + ioe.getMessage() + ")");
-            }
-        }
-        return imageSource;
+        //Return any non-stream Sources and let the ImageLoaders deal with them
+        return source;
     }
 
-    protected ImageInputStream createImageInputStream(InputStream in) throws IOException {
+    protected static ImageInputStream createImageInputStream(InputStream in) throws IOException {
         ImageInputStream iin = ImageIO.createImageInputStream(in);
-        return (ImageInputStream)Proxy.newProxyInstance(
+        return (ImageInputStream) Proxy.newProxyInstance(
                 ImageInputStream.class.getClassLoader(),
                 new Class[] {ImageInputStream.class},
                 new ObservingImageInputStreamInvocationHandler(iin, in));
@@ -266,7 +177,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
     /** {@inheritDoc} */
     public Source getSource(String uri) {
-        return (Source)sessionSources.remove(uri);
+        return (Source) sessionSources.remove(uri);
     }
 
     /** {@inheritDoc} */
@@ -299,7 +210,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             }
         } catch (IOException ioe) {
             //Ignore exception
-            ImageUtil.closeQuietly(src);
+            XmlSourceUtil.closeQuietly(src);
         }
 
         if (isReusable(src)) {
@@ -308,7 +219,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             sessionSources.put(uri, src);
         } else {
             //Otherwise, try to close if possible and forget about it
-            ImageUtil.closeQuietly(src);
+            XmlSourceUtil.closeQuietly(src);
         }
     }
 
@@ -323,7 +234,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             return false;
         }
         if (src instanceof ImageSource) {
-            ImageSource is = (ImageSource)src;
+            ImageSource is = (ImageSource) src;
             if (is.getImageInputStream() != null) {
                 return true;
             }
@@ -332,5 +243,164 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
             return true;
         }
         return false;
+    }
+
+    /**
+     * Implementations of this interface will be used as the mechanism for creating the
+     * {@link Source} that wraps resources. This interface allows clients to define their own
+     * implementations so that they have fine-grained control over how resources are acquired.
+     */
+    public interface FallbackResolver {
+
+        /**
+         * The fallback mechanism used to create the source which takes in both the {@link Source}
+         * that the the regular mechanisms attempted to create and the URI that the user provided.
+         *
+         * @param source the source
+         * @param uri the URI provided by the user
+         * @return the source that the contingency mechanism has been acquired
+         */
+        Source createSource(Source source, String uri);
+    }
+
+    /**
+     * An unrestricted resolver that has various contingency mechanisms that access the file-system.
+     * This is most suitable for use via the CLI or in environments where controlling I/O isn't a
+     * priority.
+     */
+    public static final class UnrestrictedFallbackResolver implements FallbackResolver {
+
+        /** {@inheritDoc} */
+        public Source createSource(Source source, String uri) {
+            if (source == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("URI could not be resolved: " + uri);
+                }
+                return null;
+            }
+            ImageSource imageSource = null;
+
+            String resolvedURI = source.getSystemId();
+            URL url;
+            try {
+                url = new URL(resolvedURI);
+            } catch (MalformedURLException e) {
+                url = null;
+            }
+            File f = /*FileUtils.*/toFile(url);
+            if (f != null) {
+                boolean directFileAccess = true;
+                assert (source instanceof StreamSource) || (source instanceof SAXSource);
+                InputStream in = XmlSourceUtil.getInputStream(source);
+                if (in == null) {
+                    try {
+                        in = new java.io.FileInputStream(f);
+                    } catch (FileNotFoundException fnfe) {
+                        log.error("Error while opening file."
+                                + " Could not load image from system identifier '"
+                                + source.getSystemId() + "' (" + fnfe.getMessage() + ")");
+                        return null;
+                    }
+                }
+                if (in != null) {
+                    in = ImageUtil.decorateMarkSupported(in);
+                    try {
+                        if (ImageUtil.isGZIPCompressed(in)) {
+                            //GZIPped stream are not seekable, so buffer/cache like other URLs
+                            directFileAccess = false;
+                        }
+                    } catch (IOException ioe) {
+                        log.error("Error while checking the InputStream for GZIP compression."
+                                + " Could not load image from system identifier '"
+                                + source.getSystemId() + "' (" + ioe.getMessage() + ")");
+                        return null;
+                    }
+                }
+
+                if (directFileAccess) {
+                    //Close as the file is reopened in a more optimal way
+                    IOUtils.closeQuietly(in);
+                    try {
+                        // We let the OS' file system cache do the caching for us
+                        // --> lower Java memory consumption, probably no speed loss
+                        final ImageInputStream newInputStream = ImageIO
+                                                                       .createImageInputStream(f);
+                        if (newInputStream == null) {
+                            log.error("Unable to create ImageInputStream for local file "
+                                    + f
+                                    + " from system identifier '"
+                                    + source.getSystemId() + "'");
+                            return null;
+                        } else {
+                            imageSource = new ImageSource(newInputStream,
+                                    resolvedURI, true);
+                        }
+                    } catch (IOException ioe) {
+                        log.error("Unable to create ImageInputStream for local file"
+                                + " from system identifier '"
+                                + source.getSystemId() + "' (" + ioe.getMessage() + ")");
+                    }
+                }
+            }
+
+            if (imageSource == null) {
+                if (XmlSourceUtil.hasReader(source) && !ImageUtil.hasInputStream(source)) {
+                    //We don't handle Reader instances here so return the Source unchanged
+                    return source;
+                }
+                // Got a valid source, obtain an InputStream from it
+                InputStream in = XmlSourceUtil.getInputStream(source);
+                if (in == null && url != null) {
+                    try {
+                        in = url.openStream();
+                    } catch (Exception ex) {
+                        log.error("Unable to obtain stream from system identifier '"
+                                + source.getSystemId() + "'");
+                    }
+                }
+                if (in == null) {
+                    log.error("The Source that was returned from URI resolution didn't contain"
+                            + " an InputStream for URI: " + uri);
+                    return null;
+                }
+                return createImageSource(in, source);
+            }
+            return imageSource;
+        }
+    }
+
+    private static ImageSource createImageSource(InputStream in, Source source) {
+        try {
+            //Buffer and uncompress if necessary
+            return new ImageSource(createImageInputStream(ImageUtil.autoDecorateInputStream(in)),
+                    source.getSystemId(), false);
+        } catch (IOException ioe) {
+            log.error("Unable to create ImageInputStream for InputStream"
+                    + " from system identifier '"
+                    + source.getSystemId() + "' (" + ioe.getMessage() + ")");
+        }
+        return null;
+    }
+
+    /**
+     * This fallback resolver is to be used in environments where controlling file access is of
+     * critical importance. It disallows any contingency mechanisms by which a {@link Source} object
+     * would be created.
+     */
+    public static final class RestrictedFallbackResolver implements FallbackResolver {
+
+        /** {@inheritDoc} */
+        public Source createSource(Source source, String uri) {
+            if (source == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("URI could not be resolved: " + uri);
+                }
+                return null;
+            }
+            if (ImageUtil.hasInputStream(source)) {
+                return createImageSource(XmlSourceUtil.getInputStream(source), source);
+            }
+            throw new UnsupportedOperationException("There are no contingency mechanisms for I/O.");
+        }
     }
 }

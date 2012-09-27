@@ -39,6 +39,7 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.java2d.color.ColorSpaces;
 import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
@@ -211,7 +212,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
         }
 
         ImageRawJPEG rawImage = new ImageRawJPEG(info,
-                ImageUtil.needInputStream(src),
+                XmlSourceUtil.needInputStream(src),
                 sofType, colorSpace, iccProfile, invertImage);
         return rawImage;
     }

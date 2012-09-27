@@ -22,7 +22,6 @@ package org.apache.xmlgraphics.image.codec.tiff;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 
-import org.apache.xmlgraphics.image.codec.util.ImageDecodeParam;
 import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
@@ -74,8 +73,7 @@ public class TIFFImageDecoder extends ImageDecoderImpl {
 
     public static final int TIFF_ICC_PROFILE                = 34675;
 
-    public TIFFImageDecoder(SeekableStream input,
-                            ImageDecodeParam param) {
+    public TIFFImageDecoder(SeekableStream input, TIFFDecodeParam param) {
         super(input, param);
     }
 
@@ -87,6 +85,6 @@ public class TIFFImageDecoder extends ImageDecoderImpl {
         if  ((page < 0) || (page >= getNumPages())) {
             throw new IOException(PropertyUtil.getString("TIFFImageDecoder0"));
         }
-        return new TIFFImage(input, (TIFFDecodeParam)param, page);
+        return new TIFFImage(input, (TIFFDecodeParam) param, page);
     }
 }

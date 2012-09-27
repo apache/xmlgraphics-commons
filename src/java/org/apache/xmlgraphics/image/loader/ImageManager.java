@@ -35,6 +35,7 @@ import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.apache.xmlgraphics.image.loader.spi.ImagePreloader;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.Penalty;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 
 /**
  * ImageManager is the central starting point for image access.
@@ -171,7 +172,7 @@ public class ImageManager {
             throws ImageException, IOException {
         Iterator iter = registry.getPreloaderIterator();
         while (iter.hasNext()) {
-            ImagePreloader preloader = (ImagePreloader)iter.next();
+            ImagePreloader preloader = (ImagePreloader) iter.next();
             ImageInfo info = preloader.preloadImage(uri, src, imageContext);
             if (info != null) {
                 return info;
@@ -231,7 +232,7 @@ public class ImageManager {
                     "Cannot load image (no suitable loader/converter combination available) for "
                         + info);
         }
-        ImageUtil.closeQuietly(session.getSource(info.getOriginalURI()));
+        XmlSourceUtil.closeQuietly(session.getSource(info.getOriginalURI()));
         return img;
     }
 
@@ -272,7 +273,7 @@ public class ImageManager {
                     "Cannot load image (no suitable loader/converter combination available) for "
                             + info);
         }
-        ImageUtil.closeQuietly(session.getSource(info.getOriginalURI()));
+        XmlSourceUtil.closeQuietly(session.getSource(info.getOriginalURI()));
         return img;
     }
 
