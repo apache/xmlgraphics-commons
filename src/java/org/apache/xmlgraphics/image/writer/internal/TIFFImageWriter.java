@@ -23,6 +23,7 @@ import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.xmlgraphics.image.codec.tiff.CompressionValue;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFEncodeParam;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFField;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFImageDecoder;
@@ -57,21 +58,9 @@ public class TIFFImageWriter extends AbstractImageWriter {
     private TIFFEncodeParam createTIFFEncodeParams(ImageWriterParams params) {
         TIFFEncodeParam encodeParams = new TIFFEncodeParam();
         if (params == null) {
-            encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_NONE);
+            encodeParams.setCompression(CompressionValue.NONE);
         } else {
-            if (params.getCompressionMethod() == null) {
-                //PackBits as default
-                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
-            } else if ("PackBits".equalsIgnoreCase(params.getCompressionMethod())) {
-                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_PACKBITS);
-            } else if ("NONE".equalsIgnoreCase(params.getCompressionMethod())) {
-                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_NONE);
-            } else if ("Deflate".equalsIgnoreCase(params.getCompressionMethod())) {
-                encodeParams.setCompression(TIFFEncodeParam.COMPRESSION_DEFLATE);
-            } else {
-                throw new UnsupportedOperationException("Compression method not supported: "
-                        + params.getCompressionMethod());
-            }
+            encodeParams.setCompression(CompressionValue.getValue(params.getCompressionMethod()));
 
             if (params.getResolution() != null) {
                 int numPixX;

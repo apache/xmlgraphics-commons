@@ -65,6 +65,7 @@ import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 
 /**
@@ -167,7 +168,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 }
             }
         } finally {
-            ImageUtil.closeQuietly(src);
+            XmlSourceUtil.closeQuietly(src);
             //TODO Some codecs may do late reading.
         }
         if (firstException != null) {
