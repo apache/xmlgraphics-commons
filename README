@@ -81,11 +81,10 @@ License labeling (according to http://www.apache.org/legal/3party.html):
 For more detailed info about the changes, please see:
 http://xmlgraphics.apache.org/commons/changes.html
 
-Version 1.5rc1
+Version 1.5
 --------------
 
-This is a candidate release of the next, minor (dot) release, Version 1.5,
-of Apache XML Graphics Commons. This release primarily addresses bug fixes
+This release of Apache XML Graphics Commons  primarily addresses bug fixes
 and also adds a number of new features.
 
 Version 1.4
