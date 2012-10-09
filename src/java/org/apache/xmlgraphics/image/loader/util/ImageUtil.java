@@ -47,6 +47,17 @@ public final class ImageUtil {
     }
 
     /**
+     * Returns the InputStream of a Source object.
+     * @param src the Source object
+     * @return the InputStream (or null if there's not InputStream available)
+     * @deprecated Please use {@link XmlSourceUtil#getInputStream(Source)} instead.
+     */
+    @Deprecated
+    public static InputStream getInputStream(Source src) {
+        return XmlSourceUtil.getInputStream(src);
+    }
+
+    /**
      * Returns the ImageInputStream of a Source object.
      * @param src the Source object
      * @return the ImageInputStream (or null if there's not ImageInputStream available)
@@ -66,6 +77,7 @@ public final class ImageUtil {
      * @return the InputStream
      * @deprecated use {@link XmlSourceUtil#needInputStream(Source)} instead
      */
+    @Deprecated
     public static InputStream needInputStream(Source src) {
         return XmlSourceUtil.needInputStream(src);
     }
@@ -105,6 +117,7 @@ public final class ImageUtil {
      * @return true if an Reader is available
      * @deprecated use {@link XmlSourceUtil#hasReader(Source)} instead
      */
+    @Deprecated
     public static boolean hasReader(Source src) {
         return XmlSourceUtil.hasReader(src);
     }
@@ -124,6 +137,7 @@ public final class ImageUtil {
      * @param src the Source object
      * @deprecated use {@link XmlSourceUtil#removeStreams(Source)} instead
      */
+    @Deprecated
     public static void removeStreams(Source src) {
         XmlSourceUtil.removeStreams(src);
     }
@@ -134,6 +148,7 @@ public final class ImageUtil {
      * @param src the Source object
      * @deprecated use {@link XmlSourceUtil#closeQuietly(Source)} instead
      */
+    @Deprecated
     public static void closeQuietly(Source src) {
         XmlSourceUtil.closeQuietly(src);
     }
