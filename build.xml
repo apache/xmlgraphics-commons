@@ -103,6 +103,7 @@
   <fileset dir="${basedir}" id="dist.src">
     <include name="src/**"/>
     <patternset refid="dist.lib"/>
+    <include name="lib/build/**"/>
     <include name="test/**"/>
     <include name="examples/**"/>
     <include name="LICENSE"/>
