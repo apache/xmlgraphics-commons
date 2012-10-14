@@ -25,7 +25,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="year" value="1999-2010"/>
+  <property name="year" value="1999-2012"/>
 
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
@@ -104,6 +104,7 @@
   <fileset dir="${basedir}" id="dist.src">
     <include name="src/**"/>
     <patternset refid="dist.lib"/>
+    <include name="lib/build/**"/>
     <include name="test/**"/>
     <include name="examples/**"/>
     <include name="LICENSE"/>
