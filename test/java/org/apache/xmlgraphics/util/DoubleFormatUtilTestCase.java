@@ -441,6 +441,7 @@ public class DoubleFormatUtilTestCase {
      * to see which one is the fastest in the same conditions.
      */
     @Test
+    @Ignore("Disabled since this doesn't test correctness.")
     public void performanceCompare() {
         // Rename this method in testPerformanceCompare to run it within JUnit tests
         // This method is quite long (depends of the value of nbTest).
