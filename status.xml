@@ -37,7 +37,7 @@
     <context id="Docs" title="Changes to Documentation"/>
   </contexts>
   <changes>
-    <release version="1.5" date="18 October 2012">
+    <release version="1.5" date="20 October 2012">
       <action context="Code" dev="GA" type="fix" fixes-bug="53408" due-to="Luis Bernardo, Matthias Reischenbacher">
         Add two PNG image loaders, one using internal XGC PNG code, the other using an externally supplied IDAT chunk (for raw decoding).
       </action>
