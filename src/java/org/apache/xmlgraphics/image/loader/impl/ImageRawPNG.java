@@ -40,6 +40,7 @@ public class ImageRawPNG extends ImageRawStream {
     private int redTransparentAlpha;
     private int greenTransparentAlpha;
     private int blueTransparentAlpha;
+    private int renderingIntent = -1;
 
     /**
      * Main constructor.
@@ -139,6 +140,22 @@ public class ImageRawPNG extends ImageRawStream {
             color = new Color(this.grayTransparentAlpha, 0, 0);
         }
         return color;
+    }
+
+    /**
+     * Used to set the rendering intent when the color space is sRGB.
+     * @param intent the rendering intent of the sRGB color space
+     */
+    public void setRenderingIntent(int intent) {
+        renderingIntent = intent;
+    }
+
+    /**
+     * Returns the rendering intent of the sRGB color space.
+     * @return the rendering intent
+     */
+    public int getRenderingIntent() {
+      return this.renderingIntent;
     }
 
 }
