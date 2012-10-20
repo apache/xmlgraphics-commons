@@ -20,11 +20,12 @@
 package org.apache.xmlgraphics.java2d.color.profile;
 
 import java.awt.color.ColorSpace;
-import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
+import java.awt.color.ICC_ProfileRGB;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 // CSOFF: MethodName
 
@@ -64,12 +65,24 @@ public final class ColorProfileUtil {
      * @return true if it is the default sRGB profile
      */
     public static boolean isDefaultsRGB(ICC_Profile profile) {
-        ColorSpace sRGB = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-        ICC_Profile sRGBProfile = null;
-        if (sRGB instanceof ICC_ColorSpace) {
-            sRGBProfile = ((ICC_ColorSpace)sRGB).getProfile();
+        if (!(profile instanceof ICC_ProfileRGB)) {
+          return false;
         }
-        return profile == sRGBProfile;
+        // not sure what the best way to compare two profiles is, but comparing instances is not the right way
+        ICC_Profile sRGBProfile = ICC_Profile.getInstance(ColorSpace.CS_sRGB);
+        if (profile.getProfileClass() != sRGBProfile.getProfileClass()) {
+          return false;
+        }
+        if (profile.getMajorVersion() != sRGBProfile.getMajorVersion()) {
+          return false;
+        }
+        if (profile.getMinorVersion() != sRGBProfile.getMinorVersion()) {
+          return false;
+        }
+        if (!Arrays.equals(profile.getData(), sRGBProfile.getData())) {
+          return false;
+        }
+        return true;
     }
 
     /**

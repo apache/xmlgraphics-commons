@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.awt.color.ColorSpace;
+import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
@@ -34,6 +35,8 @@ import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import org.apache.xmlgraphics.image.codec.png.PNGChunk;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
@@ -49,6 +52,7 @@ class PNGFile implements PNGConstants {
 
     private ColorModel colorModel;
     private ICC_Profile iccProfile;
+    private int sRGBRenderingIntent = -1;
     private int bitDepth;
     private int colorType;
     private boolean isTransparent;
@@ -96,6 +100,12 @@ class PNGFile implements PNGConstants {
                 } else if (chunkType.equals(PNGChunk.ChunkType.tRNS.name())) {
                     chunk = PNGChunk.readChunk(distream);
                     parse_tRNS_chunk(chunk);
+                } else if (chunkType.equals(PNGChunk.ChunkType.iCCP.name())) {
+                    chunk = PNGChunk.readChunk(distream);
+                    parse_iCCP_chunk(chunk);
+                } else if (chunkType.equals(PNGChunk.ChunkType.sRGB.name())) {
+                  chunk = PNGChunk.readChunk(distream);
+                  parse_sRGB_chunk(chunk);
                 } else {
                     // chunk = PNGChunk.readChunk(distream);
                     PNGChunk.skipChunk(distream);
@@ -110,6 +120,7 @@ class PNGFile implements PNGConstants {
 
     public ImageRawPNG getImageRawPNG(ImageInfo info) throws ImageException {
         InputStream seqStream = new SequenceInputStream(Collections.enumeration(streamVec));
+        ColorSpace rgbCS = null;
         switch (colorType) {
         case PNG_COLOR_GRAY:
             if (hasPalette) {
@@ -119,9 +130,14 @@ class PNGFile implements PNGConstants {
                     ColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
             break;
         case PNG_COLOR_RGB:
-            // actually a check of the sRGB chunk would be necessary to confirm if it's really sRGB
-            colorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), false, false,
-                    ColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
+            if (iccProfile != null) {
+                rgbCS = new ICC_ColorSpace(iccProfile);
+            } else if (sRGBRenderingIntent != -1) {
+                rgbCS = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+            } else {
+                rgbCS = ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB);
+            }
+            colorModel = new ComponentColorModel(rgbCS, false, false, ColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
             break;
         case PNG_COLOR_PALETTE:
             if (hasAlphaPalette) {
@@ -140,9 +156,15 @@ class PNGFile implements PNGConstants {
                     ColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
             break;
         case PNG_COLOR_RGB_ALPHA:
-            // actually a check of the sRGB chunk would be necessary to confirm if it's really sRGB
-            colorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), true, false,
-                    ColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+            if (iccProfile != null) {
+                rgbCS = new ICC_ColorSpace(iccProfile);
+            } else if (sRGBRenderingIntent != -1) {
+                rgbCS = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+            } else {
+                rgbCS = ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB);
+            }
+            colorModel = new ComponentColorModel(rgbCS, true, false, ColorModel.TRANSLUCENT,
+                    DataBuffer.TYPE_BYTE);
             break;
         default:
             throw new ImageException("Unsupported color type: " + colorType);
@@ -160,6 +182,9 @@ class PNGFile implements PNGConstants {
             } else {
                 //
             }
+        }
+        if (sRGBRenderingIntent != -1) {
+          rawImage.setRenderingIntent(sRGBRenderingIntent);
         }
         return rawImage;
     }
@@ -233,6 +258,30 @@ class PNGFile implements PNGConstants {
             throw new RuntimeException(msg);
         }
         isTransparent = true;
+    }
+
+    private void parse_iCCP_chunk(PNGChunk chunk) {
+        int length = chunk.getLength();
+        String name = ""; // todo simplify this
+        byte b;
+        int textIndex = 0;
+        while ((b = chunk.getByte(textIndex++)) != 0) {
+            name += (char) b;
+        }
+        byte compression = chunk.getByte(textIndex++);
+        byte[] profile = new byte[length - textIndex];
+        System.arraycopy(chunk.getData(), textIndex, profile, 0, length - textIndex);
+        ByteArrayInputStream bais = new ByteArrayInputStream(profile);
+        InflaterInputStream iis = new InflaterInputStream(bais, new Inflater());
+        try {
+            iccProfile = ICC_Profile.getInstance(iis);
+        } catch (IOException ioe) {
+            // this is OK; the profile will be null
+        }
+    }
+
+    private void parse_sRGB_chunk(PNGChunk chunk) {
+      sRGBRenderingIntent = chunk.getByte(0);
     }
 
 }
