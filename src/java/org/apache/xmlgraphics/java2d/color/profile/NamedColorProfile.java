@@ -49,7 +49,8 @@ public class NamedColorProfile {
 
     /**
      * Returns the color profile's rendering intent.
-     * @return the rendering intent (See {@link ICC_Profile}.ic*)
+     * @return the rendering intent
+     * (See {@link java.awt.color.ICC_Profile}.ic*)
      */
     public RenderingIntent getRenderingIntent() {
         return this.renderingIntent;

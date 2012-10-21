@@ -101,10 +101,18 @@
     </patternset>
   </fileset>
 
+  <fileset dir="${basedir}" id="dist.src.lib.build">
+    <patternset id="dist.lib.build">
+      <include name="lib/build/hamcrest.core*"/>
+      <include name="lib/build/mockito-core*"/>
+      <include name="lib/build/objenesis*"/>
+    </patternset>
+  </fileset>
+
   <fileset dir="${basedir}" id="dist.src">
     <include name="src/**"/>
     <patternset refid="dist.lib"/>
-    <include name="lib/build/**"/>
+    <patternset refid="dist.lib.build"/>
     <include name="test/**"/>
     <include name="examples/**"/>
     <include name="LICENSE"/>
@@ -115,6 +123,8 @@
     <include name="*.pom"/>
     <include name="build.*"/>
     <include name="forrest.*"/>
+    <include name="checkstyle*"/>
+    <exclude name="checkstyle-noframes.xsl"/>
   </fileset>
 
   <!-- =================================================================== -->
@@ -400,7 +410,6 @@ NOTE:
       <sourcepath>
         <pathelement path="${src.java.dir}"/>
       </sourcepath>
-      <tag name="todo" scope="all" description="To do:"/>
       <group title="Images">
         <package name="org.apache.xmlgraphics.image"/>
         <package name="org.apache.xmlgraphics.image.*"/>
