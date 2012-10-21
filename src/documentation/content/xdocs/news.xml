@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <news>
+  <item date="2012-06-03" title="Version 1.5rc1 Available">
+    <p>
+      This is a candidate release for an upcoming Version 1.5 (stable) release,
+      consisting primarily of bug fixes, improved code practices, and improved coverage of
+      CCITTFax Group 3 image formats. For details, please see
+      <a href="changes.html#version_1.5rc1">Changes</a>.
+    </p>
+  </item>
   <item date="2010-07-07" title="Version 1.4 Released">
     <p>
       This release adds the option to generate smaller PostScript
