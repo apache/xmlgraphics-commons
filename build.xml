@@ -400,7 +400,6 @@ NOTE:
       <sourcepath>
         <pathelement path="${src.java.dir}"/>
       </sourcepath>
-      <tag name="todo" scope="all" description="To do:"/>
       <group title="Images">
         <package name="org.apache.xmlgraphics.image"/>
         <package name="org.apache.xmlgraphics.image.*"/>
