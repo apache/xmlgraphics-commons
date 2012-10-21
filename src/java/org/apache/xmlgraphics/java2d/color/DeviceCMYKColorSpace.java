@@ -33,8 +33,8 @@ public class DeviceCMYKColorSpace extends AbstractDeviceSpecificColorSpace
     public static final String PSEUDO_PROFILE_NAME = "#CMYK";
 
     /**
-     * Constructs an uncalibrated CMYK ColorSpace object with {@link ColorSpace#TYPE_CMYK} and
-     * 4 components.
+     * Constructs an uncalibrated CMYK ColorSpace object with
+     * {@link java.awt.color.ColorSpace#TYPE_CMYK} and 4 components.
      * @see java.awt.color.ColorSpace#ColorSpace(int, int)
      */
     public DeviceCMYKColorSpace() {
