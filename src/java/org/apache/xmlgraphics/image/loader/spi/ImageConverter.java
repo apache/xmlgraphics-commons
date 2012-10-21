@@ -40,8 +40,8 @@ public interface ImageConverter {
 
     /**
      * Converts an image into a different representation.
-     * <p> The new image returned shall preserve the original {@link ImageInfo} instance.
-     * Consumers can get the effective MIME type (if any) from the associated {@link ImageFlavor}.
+     * <p>Consumers can get the effective MIME type (if any) from the
+     * associated {@link ImageFlavor}.
      * @param src the source image
      * @param hints the conversion hints
      * @return the converted image
