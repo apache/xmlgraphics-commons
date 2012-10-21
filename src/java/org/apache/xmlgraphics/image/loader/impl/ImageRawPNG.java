@@ -46,13 +46,14 @@ public class ImageRawPNG extends ImageRawStream {
      * Main constructor.
      * @param info the image info object
      * @param in the ImageInputStream with the raw content
-     * @param colorSpace the color space
+     * @param colorModel the color model
+     * @param bitDepth the bit depth
      * @param iccProfile an ICC color profile or null if no profile is associated
      */
-    public ImageRawPNG(ImageInfo info, InputStream in, ColorModel cm, int bitDepth, ICC_Profile iccProfile) {
+    public ImageRawPNG(ImageInfo info, InputStream in, ColorModel colorModel, int bitDepth, ICC_Profile iccProfile) {
         super(info, ImageFlavor.RAW_PNG, in);
         this.iccProfile = iccProfile;
-        this.cm = cm;
+        this.cm = colorModel;
         this.bitDepth = bitDepth;
     }
 
