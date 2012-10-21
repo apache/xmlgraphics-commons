@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <news>
-  <item date="2012-07-02" title="Version 1.5rc1 Available">
+  <item date="2012-10-20" title="Version 1.5 Released">
     <p>
-      This is a candidate release for an upcoming Version 1.5 (stable) release,
-      consisting primarily of bug fixes, improved code practices, and improved coverage of
+      This release consists primarily of bug fixes, improved code practices, and improved coverage of
       CCITTFax Group 3 image formats. For details, please see
-      <a href="changes.html#version_1.5rc1">Changes</a>.
+      <a href="changes.html#version_1.5">Changes</a>.
     </p>
   </item>
   <item date="2010-07-07" title="Version 1.4 Released">
