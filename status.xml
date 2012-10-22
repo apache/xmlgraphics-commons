@@ -21,6 +21,7 @@
   <developers>
     <person name="Glenn Adams"       email="gadams@apache.org"        id="GA"/>
     <person name="Max Berger"        email="mayberger@apache.org"     id="MB"/>
+    <person name="Luis Bernardo"     email="lbernardo@apache.org"     id="LB"/>
     <person name="Chris Bowditch"    email="cbowditch@apache.org"     id="CB"/>
     <person name="Adrian Cumiskey"   email="acumiskey@apache.org"     id="AC"/>
     <person name="Christian Geisert" email="chrisg@apache.org"        id="CG"/>
@@ -68,7 +69,7 @@
         Fix handling of values less than 1E-300.
       </action>
       <action context="Code" dev="GA" type="update" fixes-bug="43940" due-to="Julien Aymé">
-        Fix handling of NaN, {+,-}Infinity, and other edge cases.
+        Fix handling of NaN, {+,-}Infinity, and other edge cases in double format utility.
       </action>
       <action context="Code" dev="GA" type="fix" fixes-bug="53184" due-to="Robert Meyer">
         Unify date formatting between FOP and XGC as well as tidying the date format code.
@@ -355,7 +356,7 @@
   <todo>
     <actions>
       <action dev="JM" type="update" context="Code">
-        Complete the move of the PDF and font library code her from FOP.
+        Complete the move of the PDF and font library code here from FOP.
       </action>
     </actions>
   </todo>
