@@ -428,6 +428,9 @@ public class GraphicContext implements Cloneable{
         this.paint = paint;
         if(paint instanceof Color) {
             foreground = (Color)paint;
+        } else {
+            // use default; otherwise the previous Color will be used
+            foreground = Color.black;
         }
     }
 
