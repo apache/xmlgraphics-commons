@@ -83,6 +83,8 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
 
             ImageWriteParam iwParam = getDefaultWriteParam(iiowriter, image, params);
 
+            IIOMetadata streamMetadata = createStreamMetadata(iiowriter, iwParam, params);
+
             ImageTypeSpecifier type;
             if (iwParam.getDestinationType() != null) {
                 type = iwParam.getDestinationType();
@@ -101,12 +103,26 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
             //Write image
             iiowriter.setOutput(imgout);
             IIOImage iioimg = new IIOImage(image, null, meta);
-            iiowriter.write(null, iioimg, iwParam);
+            iiowriter.write(streamMetadata, iioimg, iwParam);
 
         } finally {
             imgout.close();
             iiowriter.dispose();
         }
+    }
+
+    /**
+     * Creates the stream metadata for image. By default, this method returns null which
+     * causes the default stream metadata to be used. Subclasses can override this to
+     * supply special stream metadata (see TIFF for an example).
+     * @param writer the image write
+     * @param writeParam the ImageIO write parameters
+     * @param params the ImageWriter write parameters
+     * @return the stream metadata (or null if no special metadata needs to be produced)
+     */
+    protected IIOMetadata createStreamMetadata(javax.imageio.ImageWriter writer,
+            ImageWriteParam writeParam, ImageWriterParams params) {
+        return null; //leave the default
     }
 
     private javax.imageio.ImageWriter getIIOImageWriter() {
@@ -274,6 +290,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
 
         private javax.imageio.ImageWriter iiowriter;
         private ImageOutputStream imageStream;
+        private boolean prepared = false;
 
         public IIOMultiImageWriter(OutputStream out) throws IOException {
             this.iiowriter = getIIOImageWriter();
@@ -285,7 +302,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
 
             imageStream = ImageIO.createImageOutputStream(out);
             iiowriter.setOutput(imageStream);
-            iiowriter.prepareWriteSequence(null);
+
         }
 
         public void writeImage(RenderedImage image, ImageWriterParams params) throws IOException {
@@ -293,6 +310,13 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
                 throw new IllegalStateException("MultiImageWriter already closed!");
             }
             ImageWriteParam iwParam = getDefaultWriteParam(iiowriter, image, params);
+
+            if (!prepared) {
+                //Only prepare once
+                IIOMetadata streamMetadata = createStreamMetadata(iiowriter, iwParam, params);
+                iiowriter.prepareWriteSequence(streamMetadata);
+                prepared = true;
+            }
 
             ImageTypeSpecifier type;
             if (iwParam.getDestinationType() != null) {
