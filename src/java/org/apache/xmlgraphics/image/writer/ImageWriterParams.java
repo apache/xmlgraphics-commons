@@ -40,6 +40,7 @@ public class ImageWriterParams {
     private String compressionMethod;
     private ResolutionUnit resolutionUnit = ResolutionUnit.INCH;
     private int rowsPerStrip = ONE_ROW_PER_STRIP;
+    private Endianness endianness = Endianness.DEFAULT;
 
     /**
      * Default constructor.
@@ -193,4 +194,21 @@ public class ImageWriterParams {
     public void setYResolution(int resolution) {
         yResolution = Integer.valueOf(resolution);
     }
+
+    /**
+     * Returns the endianness selected for the image.
+     * @return the endianness
+     */
+    public Endianness getEndianness() {
+        return this.endianness;
+    }
+
+    /**
+     * Sets the endianness selected for the image.
+     * @param endianness the endianness
+     */
+    public void setEndianness(Endianness endianness) {
+        this.endianness = endianness;
+    }
+
 }

@@ -55,9 +55,9 @@ public class ResolutionTestCase {
         testDir.mkdirs();
         runChecksForFormat(testDir, "image/png", "png");
         runChecksForFormat(testDir, "image/jpeg", "jpg");
-        /* TODO this test passed with jai_imagio.jar on the classpath.
-         * Should this become a compile time dependency of XGC? */
-        //runChecksForFormat(testDir, "image/tiff", "tif");
+        if (ImageIOCheckUtility.isSunTIFFImageWriterAvailable()) {
+            runChecksForFormat(testDir, "image/tiff", "tif");
+        }
     }
 
     private void runChecksForFormat(File testDir, String format, String ext)
@@ -77,7 +77,8 @@ public class ResolutionTestCase {
 
         testFile = new File(testDir, "ResolutionTest2." + ext);
         writeImage(params2, testFile, format);
-        checkStdMetadata(testFile, 10f / 118f, 10f / 79f);
+        float multiplier = (!format.equals("image/tiff")) ? 10f : UnitConv.IN2MM;
+        checkStdMetadata(testFile, multiplier / 118f, multiplier / 79f);
     }
 
     private void writeImage(ImageWriterParams params, File testFile, String mime) throws FileNotFoundException,

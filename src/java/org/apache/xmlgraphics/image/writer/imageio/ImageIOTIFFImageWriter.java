@@ -20,12 +20,18 @@
 package org.apache.xmlgraphics.image.writer.imageio;
 
 import java.awt.image.RenderedImage;
+import java.util.Arrays;
+import java.util.Set;
 
+import javax.imageio.ImageWriteParam;
 import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 
+import org.w3c.dom.Node;
+
 import org.apache.xmlgraphics.image.codec.tiff.TIFFImageDecoder;
+import org.apache.xmlgraphics.image.writer.Endianness;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.ResolutionUnit;
 
@@ -40,6 +46,8 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
 
     private static final String SUN_TIFF_NATIVE_FORMAT
             = "com_sun_media_imageio_plugins_tiff_image_1.0";
+    private static final String SUN_TIFF_NATIVE_STREAM_FORMAT
+            = "com_sun_media_imageio_plugins_tiff_stream_1.0";
 
     /**
      * Main constructor.
@@ -52,6 +60,7 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
     @Override
     protected IIOMetadata updateMetadata(RenderedImage image, IIOMetadata meta,
             ImageWriterParams params) {
+        meta = super.updateMetadata(image, meta, params);
         //We set the resolution manually using the native format since it appears that
         //it doesn't work properly through the standard metadata. Haven't figured out why
         //that happens.
@@ -74,6 +83,7 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
                 int rows = params.isSingleStrip() ? image.getHeight() : params.getRowsPerStrip();
                 ifd.appendChild(createShortMetadataNode(TIFFImageDecoder.TIFF_ROWS_PER_STRIP,
                         "RowsPerStrip", Integer.toString(rows)));
+
                 try {
                     meta.mergeTree(SUN_TIFF_NATIVE_FORMAT, root);
                 } catch (IIOInvalidTreeException e) {
@@ -82,7 +92,7 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
                 }
             }
         }
-        return super.updateMetadata(image, meta, params);
+        return meta;
     }
 
     //number of pixels in 100 Meters
@@ -197,4 +207,32 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
         field.setAttribute("name", name);
         return field;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    protected IIOMetadata createStreamMetadata(javax.imageio.ImageWriter writer,
+            ImageWriteParam writeParam, ImageWriterParams params) {
+        Endianness endian = (params != null ? params.getEndianness() : Endianness.DEFAULT);
+        if (endian == Endianness.DEFAULT || endian == null) {
+            return super.createStreamMetadata(writer, writeParam, params);
+        }
+
+        //Try changing the Byte Order
+        IIOMetadata streamMetadata = writer.getDefaultStreamMetadata(writeParam);
+        Set<String> names = new java.util.HashSet<String>(
+                Arrays.asList(streamMetadata.getMetadataFormatNames()));
+        if (names.contains(SUN_TIFF_NATIVE_STREAM_FORMAT)) {
+            Node root = streamMetadata.getAsTree(SUN_TIFF_NATIVE_STREAM_FORMAT);
+            root.getFirstChild().getAttributes().item(0).setNodeValue(endian.toString());
+            try {
+                streamMetadata.setFromTree(SUN_TIFF_NATIVE_STREAM_FORMAT, root);
+            } catch (IIOInvalidTreeException e) {
+                //This should not happen since we check if the format is supported.
+                throw new IllegalStateException(
+                        "Could not replace TIFF stream metadata: " + e.getMessage(), e);
+            }
+        }
+        return streamMetadata;
+    }
+
 }
