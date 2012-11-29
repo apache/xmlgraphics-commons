@@ -20,7 +20,7 @@
 package org.apache.xmlgraphics.java2d;
 
 import java.awt.Color;
-import java.awt.LinearGradientPaint;
+import java.awt.GradientPaint;
 import java.awt.geom.Point2D;
 
 import org.junit.Test;
@@ -37,10 +37,8 @@ public class GraphicContextTestCase {
         assertEquals(red, gc.getColor());
         Point2D start = new Point2D.Float(0, 0);
         Point2D end = new Point2D.Float(50, 50);
-        float[] dist = {0.0f, 0.2f, 1.0f};
-        Color[] colors = {Color.RED, Color.WHITE, Color.BLUE};
-        LinearGradientPaint lgp = new LinearGradientPaint(start, end, dist, colors);
-        gc.setPaint(lgp);
+        GradientPaint gp = new GradientPaint(start, Color.RED, end, Color.BLUE);
+        gc.setPaint(gp);
         assertEquals(Color.BLACK, gc.getColor());
     }
 }
