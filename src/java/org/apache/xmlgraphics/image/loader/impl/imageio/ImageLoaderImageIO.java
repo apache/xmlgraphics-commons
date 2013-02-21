@@ -203,11 +203,16 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                         imageData = bi;
                         cm = cm2;
                     } catch (IllegalArgumentException iae) {
-                        log.warn("Image " + info.getOriginalURI()
+                        String msg = "Image " + info.getOriginalURI()
                                 + " has an incompatible color profile."
                                 + " The color profile will be ignored."
                                 + "\nColor model of loaded bitmap: " + cm
-                                + "\nColor model of color profile: " + cm2);
+                                + "\nColor model of color profile: " + cm2;
+                        if (info.getCustomObjects().get("warningincustomobject") != null) {
+                            info.getCustomObjects().put("warning", msg);
+                        } else {
+                            log.warn(msg);
+                        }
                     }
                 }
             }
