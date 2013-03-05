@@ -39,10 +39,6 @@
   </contexts>
   <changes>
     <release version="Trunk" date="n/a">
-      <action context="Code" dev="CB" type="fix" fixes-bug="XGC-76" due-to="Robert Meyer">
-         Dependant on FOP-2174 - Change to XGC to support the changes in FOP for image scaling. 
-         Scaling by resolution is removed to avoid duplicate scaling.
-      </action>	
       <action context="Code" dev="MH" type="update">
         Updated the JUnit tests to JUnit v4.
       </action>
