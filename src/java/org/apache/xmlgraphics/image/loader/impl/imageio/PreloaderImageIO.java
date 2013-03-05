@@ -34,7 +34,6 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.apache.xmlgraphics.image.loader.impl.AbstractImagePreloader;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
-import org.apache.xmlgraphics.util.UnitConv;
 
 /**
  * Image preloader for images supported by ImageIO.
@@ -97,8 +96,8 @@ public class PreloaderImageIO extends AbstractImagePreloader {
             }
         }
 
-        //Resolution set to default as scaling is now handled elsewhere
-        size.setResolution(UnitConv.IN2PT);
+        //Resolution (first a default, then try to read the metadata)
+        size.setResolution(context.getSourceResolution());
         ImageIOUtil.extractResolution(iiometa, size);
         if (size.getWidthPx() <= 0 || size.getHeightPx() <= 0) {
             //Watch out for a special case: a TGA image was erroneously identified
