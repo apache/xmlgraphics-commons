@@ -314,6 +314,18 @@ public class ImageManager {
     }
 
     /**
+     * Closes the resources associated to the given image. This method should be
+     * used only when none of the {@code getImage} methods is called by the
+     * client application.
+     *
+     * @param uri the URI of the image
+     * @param session the session context that was used to resolve the URI
+     */
+    public void closeImage(String uri, ImageSessionContext session) {
+        XmlSourceUtil.closeQuietly(session.getSource(uri));
+    }
+
+    /**
      * Converts an image. The caller can indicate what kind of image flavors are requested. When
      * this method is called the code looks for a suitable combination of ImageConverters so it
      * can return the image in exactly the form the caller needs.
