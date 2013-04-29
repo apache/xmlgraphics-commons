@@ -262,7 +262,6 @@ public class PSGraphics2D extends AbstractGraphics2D {
         java.awt.Graphics2D g = buf.createGraphics();
         g.setComposite(AlphaComposite.SrcOver);
         g.setBackground(new Color(1, 1, 1, 0));
-        g.setPaint(new Color(1, 1, 1, 0));
         g.fillRect(0, 0, width, height);
         g.clip(new Rectangle(0, 0, buf.getWidth(), buf.getHeight()));
 
