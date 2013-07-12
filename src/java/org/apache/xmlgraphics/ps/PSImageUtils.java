@@ -25,6 +25,7 @@ import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
@@ -141,6 +142,11 @@ public class PSImageUtils {
         gen.restoreGraphicsState();
     }
 
+    public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
+                                  Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen) throws IOException {
+        writeImage(encoder, imgDim, imgDescription, targetRect, colorModel, gen, null);
+    }
+
     /**
      * Writes a bitmap image to the PostScript stream.
      * @param encoder the image encoder
@@ -152,7 +158,7 @@ public class PSImageUtils {
      * @throws IOException In case of an I/O exception
      */
     public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
-            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen)
+            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen, RenderedImage ri)
             throws IOException {
 
         gen.saveGraphicsState();
@@ -178,6 +184,13 @@ public class PSImageUtils {
         imageDict.put("/DataSource", "Data");
 
         populateImageDictionary(imgDim, colorModel, imageDict);
+
+        if (ri != null) {
+            DataBuffer buffer = ri.getData().getDataBuffer();
+            if (!(buffer instanceof DataBufferByte)) {
+                imageDict.put("/BitsPerComponent", 8);
+            }
+        }
         writeImageCommand(imageDict, colorModel, gen);
 
         /*
@@ -351,7 +364,7 @@ public class PSImageUtils {
         ImageEncodingHelper helper = new ImageEncodingHelper(img);
         ColorModel cm = helper.getEncodedColorModel();
 
-        writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen);
+        writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img);
     }
 
     /**

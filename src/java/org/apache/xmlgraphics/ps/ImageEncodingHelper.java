@@ -51,6 +51,8 @@ public class ImageEncodingHelper {
     private boolean firstTileDump;
     private boolean enableCMYK;
     private boolean isBGR;
+    private boolean outputbw;
+    private boolean bwinvert;
 
     /**
      * Main constructor
@@ -58,6 +60,7 @@ public class ImageEncodingHelper {
      */
     public ImageEncodingHelper(RenderedImage image) {
         this(image, false);
+        outputbw = true;
     }
 
     /**
@@ -118,7 +121,12 @@ public class ImageEncodingHelper {
         if (encoded) {
             return;
         }
-        encodeRenderedImageAsRGB(image, out);
+        encodeRenderedImageAsRGB(image, out, outputbw, bwinvert);
+    }
+
+    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out)
+            throws IOException {
+        encodeRenderedImageAsRGB(image, out, false, false);
     }
 
     /**
@@ -127,7 +135,7 @@ public class ImageEncodingHelper {
      * @param out the OutputStream to write the pixels to
      * @throws IOException if an I/O error occurs
      */
-    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out)
+    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out, boolean outputbw, boolean bwinvert)
                 throws IOException {
         Raster raster = getRaster(image);
         Object data;
@@ -138,7 +146,7 @@ public class ImageEncodingHelper {
             data = new byte[nbands];
             break;
         case DataBuffer.TYPE_USHORT:
-            data = new short[nbands];
+            data = null;
             break;
         case DataBuffer.TYPE_INT:
             data = new int[nbands];
@@ -157,13 +165,23 @@ public class ImageEncodingHelper {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        byte[] buf = new byte[w * 3];
+        int numDataElements = raster.getNumDataElements();
+        if (numDataElements > 1 || !outputbw) {
+            numDataElements = 3;
+        }
+
+        byte[] buf = new byte[w * numDataElements];
+
         for (int y = 0; y < h; y++) {
             int idx = -1;
             for (int x = 0; x < w; x++) {
                 int rgb = colorModel.getRGB(raster.getDataElements(x, y, data));
-                buf[++idx] = (byte)(rgb >> 16);
-                buf[++idx] = (byte)(rgb >> 8);
+                if (numDataElements > 1) {
+                    buf[++idx] = (byte)(rgb >> 16);
+                    buf[++idx] = (byte)(rgb >> 8);
+                } else if (bwinvert && rgb == -1) {
+                    rgb = 1;
+                }
                 buf[++idx] = (byte)(rgb);
             }
             out.write(buf);
@@ -438,7 +456,7 @@ public class ImageEncodingHelper {
      */
     public static void encodePackedColorComponents(RenderedImage image, OutputStream out)
                 throws IOException {
-        ImageEncodingHelper helper = new ImageEncodingHelper(image, true);
+        ImageEncodingHelper helper = new ImageEncodingHelper(image);
         helper.encode(out);
     }
 
@@ -469,7 +487,9 @@ public class ImageEncodingHelper {
         public String getImplicitFilter() {
             return null; //No implicit filters with RenderedImage instances
         }
-
     }
 
+    public void setBWInvert(boolean v) {
+        bwinvert = v;
+    }
 }

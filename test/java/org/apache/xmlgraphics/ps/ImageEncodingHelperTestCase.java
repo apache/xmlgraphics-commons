@@ -97,8 +97,8 @@ public class ImageEncodingHelperTestCase {
         BufferedImage imageRGB = new BufferedImage(100, 75, BufferedImage.TYPE_INT_BGR);
         imageRGB = prepareImage(imageRGB);
 
-        ImageEncodingHelper imageEncodingHelperBGR = new ImageEncodingHelper(imageBGR);
-        ImageEncodingHelper imageEncodingHelperRGB = new ImageEncodingHelper(imageRGB);
+        ImageEncodingHelper imageEncodingHelperBGR = new ImageEncodingHelper(imageBGR, false);
+        ImageEncodingHelper imageEncodingHelperRGB = new ImageEncodingHelper(imageRGB, false);
 
         ByteArrayOutputStream baosBGR = new ByteArrayOutputStream();
         imageEncodingHelperBGR.encode(baosBGR);
