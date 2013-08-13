@@ -247,6 +247,18 @@ public final class PSProcSets {
             gen.writeln("} if");
             gen.writeln("} bd");
 
+            gen.writeln("/RE { % /NewFontName [NewEncodingArray] /FontName RE -");
+            gen.writeln("  findfont dup length dict begin");
+            gen.writeln("  {");
+            gen.writeln("    1 index /FID ne");
+            gen.writeln("    {def} {pop pop} ifelse");
+            gen.writeln("  } forall");
+            gen.writeln("  /Encoding exch def");
+            gen.writeln("  /FontName 1 index def");
+            gen.writeln("  currentdict definefont pop");
+            gen.writeln("  end");
+            gen.writeln("} bind def");
+
             gen.writeDSCComment(DSCConstants.END_RESOURCE);
             gen.getResourceTracker().registerSuppliedResource(this);
         }
