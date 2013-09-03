@@ -65,20 +65,20 @@ public class JPEGFile implements JPEGConstants {
     /**
      * Reads the next marker segment identifier and returns it.
      * @return the marker segment identifier
-     * @throws IOException if an I/O error occurs while reading from the image file or if
-     *                  the stream is not positioned at a marker segment header
+     * @throws IOException if an I/O error occurs while reading from the image file
      */
     public int readMarkerSegment() throws IOException {
         int marker;
-        int count = 0;
         do {
             marker = in.readByte() & 0xFF;
-            count++;
+            //Skip any non-0xFF bytes (useful for JPEG files with bad record lengths)
         } while (marker != MARK);
-        if (count > 1) {
-            throw new IOException("Stream not positioned at a marker segment header");
-        }
-        int segID = in.readByte() & 0xFF;
+
+        int segID;
+        do {
+            segID = in.readByte() & 0xFF;
+            //Skip any pad bytes (0xFF) which are legal here.
+        } while (segID == 0xFF);
         return segID;
     }
 
@@ -86,7 +86,7 @@ public class JPEGFile implements JPEGConstants {
      * Reads the segment length of the current marker segment and returns it.
      * The method assumes the file cursor is right after the segment header.
      * @return the segment length
-     * @throws IOException
+     * @throws IOException if an I/O error occurs while reading from the image file
      */
     public int readSegmentLength() throws IOException {
         int reclen = in.readUnsignedShort();
