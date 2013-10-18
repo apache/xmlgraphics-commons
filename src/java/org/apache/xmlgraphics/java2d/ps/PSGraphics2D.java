@@ -36,6 +36,7 @@ import java.awt.Stroke;
 import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -489,6 +490,10 @@ public class PSGraphics2D extends AbstractGraphics2D {
     public boolean shouldBeClipped(Shape clip, Shape s) {
         if (clip == null || s == null) {
             return false;
+        }
+        if (s instanceof Line2D) {
+            //Line shapes don't work with intersections so always clip
+            return true;
         }
         Area as = new Area(s);
         Area imclip = new Area(clip);
