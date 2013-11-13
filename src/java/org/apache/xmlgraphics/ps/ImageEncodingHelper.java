@@ -166,7 +166,7 @@ public class ImageEncodingHelper {
         int h = image.getHeight();
 
         int numDataElements = raster.getNumDataElements();
-        if (numDataElements > 1 || !outputbw) {
+        if (numDataElements > 1 || !outputbw || nbands > 1) {
             numDataElements = 3;
         }
 

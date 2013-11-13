@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.ps;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Dimension2D;
@@ -209,11 +210,90 @@ public class PSImageUtils {
         gen.restoreGraphicsState();
     }
 
+    /**
+     * Writes a bitmap image to the PostScript stream.
+     * @param encoder the image encoder
+     * @param imgDim the dimensions of the image
+     * @param imgDescription the name of the image
+     * @param targetRect the target rectangle to place the image in
+     * @param colorModel the color model of the image
+     * @param gen the PostScript generator
+     * @throws IOException In case of an I/O exception
+     */
+    public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
+            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen, RenderedImage ri,
+            Color maskColor)
+            throws IOException {
+
+        gen.saveGraphicsState();
+        translateAndScale(gen, null, targetRect);
+        gen.commentln("%AXGBeginBitmap: " + imgDescription);
+        gen.writeln("{{");
+
+        String implicitFilter = encoder.getImplicitFilter();
+        if (implicitFilter != null) {
+            gen.writeln("/RawData currentfile /ASCII85Decode filter def");
+            gen.writeln("/Data RawData " + implicitFilter + " filter def");
+        } else {
+            if (gen.getPSLevel() >= 3) {
+                gen.writeln("/RawData currentfile /ASCII85Decode filter def");
+                gen.writeln("/Data RawData /FlateDecode filter def");
+            } else {
+                gen.writeln("/RawData currentfile /ASCII85Decode filter def");
+                gen.writeln("/Data RawData /RunLengthDecode filter def");
+            }
+        }
+
+        PSDictionary imageDict = new PSDictionary();
+        imageDict.put("/DataSource", "Data");
+
+        populateImageDictionary(imgDim, colorModel, imageDict, maskColor);
+
+        if (ri != null) {
+            DataBuffer buffer = ri.getData().getDataBuffer();
+            if (!(buffer instanceof DataBufferByte)) {
+                imageDict.put("/BitsPerComponent", 8);
+            }
+        }
+        writeImageCommand(imageDict, colorModel, gen);
+
+        /*
+         * the following two lines could be enabled if something still goes wrong
+         * gen.write("Data closefile");
+         * gen.write("RawData flushfile");
+         */
+        gen.writeln("} stopped {handleerror} if");
+        gen.writeln("  RawData flushfile");
+        gen.writeln("} exec");
+
+        compressAndWriteBitmap(encoder, gen);
+
+        gen.newLine();
+        gen.commentln("%AXGEndBitmap");
+        gen.restoreGraphicsState();
+    }
+
     private static ColorModel populateImageDictionary(Dimension imgDim, ColorModel colorModel,
             PSDictionary imageDict) {
+        imageDict.put("/ImageType", "1");
+        colorModel = writeImageDictionary(imgDim, imageDict, colorModel);
+        return colorModel;
+    }
+
+    private static ColorModel populateImageDictionary(Dimension imgDim, ColorModel colorModel,
+            PSDictionary imageDict, Color maskColor) {
+        imageDict.put("/ImageType", "4");
+
+        colorModel = writeImageDictionary(imgDim, imageDict, colorModel);
+        imageDict.put("/MaskColor", String.format("[ %d %d %d ]", maskColor.getRed(),
+                maskColor.getGreen(), maskColor.getBlue()));
+        return colorModel;
+    }
+
+    private static ColorModel writeImageDictionary(Dimension imgDim, PSDictionary imageDict,
+            ColorModel colorModel) {
         String w = Integer.toString(imgDim.width);
         String h = Integer.toString(imgDim.height);
-        imageDict.put("/ImageType", "1");
         imageDict.put("/Width", w);
         imageDict.put("/Height", h);
 
