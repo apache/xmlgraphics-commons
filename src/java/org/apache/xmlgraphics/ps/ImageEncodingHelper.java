@@ -59,7 +59,7 @@ public class ImageEncodingHelper {
      * @param image the image
      */
     public ImageEncodingHelper(RenderedImage image) {
-        this(image, false);
+        this(image, true);
         outputbw = true;
     }
 
