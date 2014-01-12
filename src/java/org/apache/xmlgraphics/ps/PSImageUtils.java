@@ -33,6 +33,7 @@ import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
 
@@ -348,32 +349,59 @@ public class PSImageUtils {
         if ((cm instanceof IndexColorModel)) {
             ColorSpace cs = cm.getColorSpace();
             IndexColorModel im = (IndexColorModel)cm;
-            gen.write("[/Indexed " + getColorSpaceName(cs));
+            boolean isDeviceGray;
             int c = im.getMapSize();
+            int[] palette = new int[c];
+            im.getRGBs(palette);
+            byte[] reds = new byte[c];
+            byte[] greens = new byte[c];
+            byte[] blues = new byte[c];
+            im.getReds(reds);
+            im.getGreens(greens);
+            im.getBlues(blues);
             int hival = c - 1;
             if (hival > 4095) {
                 throw new UnsupportedOperationException("hival must not go beyond 4095");
             }
+            isDeviceGray = Arrays.equals(reds, blues) && Arrays.equals(blues, greens);
+            if (isDeviceGray) {
+                gen.write("[/Indexed " + "/DeviceGray");
+            } else {
+                gen.write("[/Indexed " + getColorSpaceName(cs));
+            }
             gen.writeln(" " + Integer.toString(hival));
             gen.write("  <");
-            int[] palette = new int[c];
-            im.getRGBs(palette);
-            for (int i = 0; i < c; i++) {
-                if (i > 0) {
-                    if ((i % 8) == 0) {
-                        gen.newLine();
-                        gen.write("   ");
-                    } else {
-                        gen.write(" ");
+            if (isDeviceGray) {
+                gen.write(toHexString(blues));
+            } else {
+                for (int i = 0; i < c; i++) {
+                    if (i > 0) {
+                        if ((i % 8) == 0) {
+                            gen.newLine();
+                            gen.write("   ");
+                        } else {
+                            gen.write(" ");
+                        }
                     }
+                    gen.write(rgb2Hex(palette[i]));
                 }
-                gen.write(rgb2Hex(palette[i]));
             }
             gen.writeln(">");
             gen.writeln("] setcolorspace");
         } else {
             gen.writeln(getColorSpaceName(cm.getColorSpace()) + " setcolorspace");
         }
+    }
+
+    static String toHexString(byte[] color) {
+        char[] hexChars = new char[color.length * 2];
+        int x;
+        for (int i = 0; i < color.length; i++) {
+            x = color[i] & 0xFF;
+            hexChars[i * 2] = HEX[x >>> 4];
+            hexChars[i * 2 + 1] = HEX[x & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     static void writeImageCommand(RenderedImage img,
