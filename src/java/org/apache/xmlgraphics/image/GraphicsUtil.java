@@ -69,7 +69,7 @@ public final class GraphicsUtil {
     private GraphicsUtil() {
     }
 
-    public static AffineTransform IDENTITY = new AffineTransform();
+    public static final AffineTransform IDENTITY = new AffineTransform();
 
     /**
      * Standard prebuilt Linear_sRGB color model with no alpha */

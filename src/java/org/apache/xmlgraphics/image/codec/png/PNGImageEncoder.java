@@ -196,7 +196,7 @@ class ChunkStream extends OutputStream implements DataOutput {
 
 class IDATOutputStream extends FilterOutputStream {
 
-    private static final byte[] typeSignature
+    private static final byte[] TYPE_SIGNATURE
          = {(byte)'I', (byte)'D', (byte)'A', (byte)'T'};
 
     private int bytesWritten = 0;
@@ -231,12 +231,12 @@ class IDATOutputStream extends FilterOutputStream {
         // Length
         writeInt(bytesWritten);
         // 'IDAT' signature
-        out.write(typeSignature);
+        out.write(TYPE_SIGNATURE);
         // Data
         out.write(buffer, 0, bytesWritten);
 
         int crc = 0xffffffff;
-        crc = CRC.updateCRC(crc, typeSignature, 0, 4);
+        crc = CRC.updateCRC(crc, TYPE_SIGNATURE, 0, 4);
         crc = CRC.updateCRC(crc, buffer, 0, bytesWritten);
 
         // CRC
@@ -532,7 +532,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         cs.close();
     }
 
-    private static final float[] srgbChroma = {
+    private static final float[] SRGB_CHROMA = {
         0.31270F, 0.329F, 0.64F, 0.33F, 0.3F, 0.6F, 0.15F, 0.06F
     };
 
@@ -544,7 +544,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             if (!param.isSRGBIntentSet()) {
                 chroma = param.getChromaticity();
             } else {
-                chroma = srgbChroma; // SRGB chromaticities
+                chroma = SRGB_CHROMA; // SRGB chromaticities
             }
 
             for (int i = 0; i < 8; i++) {
@@ -576,8 +576,8 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     private void writeICCP() throws IOException {
         if (param.isICCProfileDataSet()) {
             ChunkStream cs = new ChunkStream("iCCP");
-            byte[] ICCProfileData = param.getICCProfileData();
-            cs.write(ICCProfileData);
+            byte[] iccProfileData = param.getICCProfileData();
+            cs.write(iccProfileData);
             cs.writeToStream(dataOutput);
             cs.close();
         }

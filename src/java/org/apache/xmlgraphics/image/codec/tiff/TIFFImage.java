@@ -780,9 +780,9 @@ public class TIFFImage extends AbstractRed {
         int iswap;
 
         // Save original file pointer position and seek to tile data location.
-        long save_offset = 0;
+        long saveOffset = 0;
         try {
-            save_offset = stream.getFilePointer();
+            saveOffset = stream.getFilePointer();
             stream.seek(tileOffsets[tileY * tilesX + tileX]);
         } catch (IOException ioe) {
             throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -845,7 +845,7 @@ public class TIFFImage extends AbstractRed {
                     stream.readFully(bdata, 0, byteCount);
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
             } catch (IOException ioe) {
                 throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
                                        + ioe.getMessage());
@@ -912,7 +912,7 @@ public class TIFFImage extends AbstractRed {
                             readShorts(byteCount / 2, tempData);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1016,7 +1016,7 @@ public class TIFFImage extends AbstractRed {
                             readShorts(byteCount / 2, sdata);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1066,7 +1066,7 @@ public class TIFFImage extends AbstractRed {
                                                        + compression);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1124,7 +1124,7 @@ public class TIFFImage extends AbstractRed {
                                                        + ": " + compression);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1144,7 +1144,7 @@ public class TIFFImage extends AbstractRed {
 
                     try {
                         stream.readFully(data, 0, byteCount);
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
                                        + ioe.getMessage());
@@ -1232,7 +1232,7 @@ public class TIFFImage extends AbstractRed {
                             stream.readFully(bdata, 0, byteCount);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
                         throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1273,7 +1273,7 @@ public class TIFFImage extends AbstractRed {
                     stream.readFully(bdata, 0, byteCount);
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
             } catch (IOException ioe) {
                 throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
                                        + ioe.getMessage());
@@ -1396,7 +1396,7 @@ public class TIFFImage extends AbstractRed {
                     }
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
 
             } catch (IOException ioe) {
                 throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
@@ -1528,13 +1528,13 @@ public class TIFFImage extends AbstractRed {
                 for (int j = 0; j < numV; j++) {
                     int x = newRect.x;
                     for (int i = 0; i < numH; i++) {
-                        int Cb = tempData[bOffset + offsetCb];
-                        int Cr = tempData[bOffset + offsetCr];
+                        int cb = tempData[bOffset + offsetCb];
+                        int cr = tempData[bOffset + offsetCr];
                         int k = 0;
                         while (k < samplesPerDataUnit) {
                             pixels[k++] = tempData[bOffset++];
-                            pixels[k++] = Cb;
-                            pixels[k++] = Cr;
+                            pixels[k++] = cb;
+                            pixels[k++] = cr;
                         }
                         bOffset += 2;
                         tile.setPixels(x, y, chromaSubH, chromaSubV, pixels);
@@ -1693,7 +1693,7 @@ public class TIFFImage extends AbstractRed {
      boolean isAlphaPremultiplied, int transparency) {
 
         ComponentColorModel ccm = null;
-        int[] RGBBits = null;
+        int[] rgbBits = null;
         ColorSpace cs = null;
         switch(numBands) {
             case 2: // gray+alpha
@@ -1724,13 +1724,13 @@ public class TIFFImage extends AbstractRed {
                                                    + dataType);
         }
 
-        RGBBits = new int[numBands];
+        rgbBits = new int[numBands];
         for (int i = 0; i < numBands; i++) {
-            RGBBits[i] = componentSize;
+            rgbBits[i] = componentSize;
         }
 
         ccm = new ComponentColorModel(cs,
-                                      RGBBits,
+                                      rgbBits,
                                       true,
                                       isAlphaPremultiplied,
                                       transparency,

@@ -77,7 +77,7 @@ public class TIFFDirectory implements Serializable {
     Map fieldIndex = new HashMap();
 
     /** The offset of this IFD. */
-    long IFDOffset = 8;
+    long ifdOffset = 8;
 
     /** The offset of the next IFD. */
     long nextIFDOffset = 0;
@@ -102,8 +102,8 @@ public class TIFFDirectory implements Serializable {
     public TIFFDirectory(SeekableStream stream, int directory)
         throws IOException {
 
-        long global_save_offset = stream.getFilePointer();
-        long ifd_offset;
+        long globalSaveOffset = stream.getFilePointer();
+        long ifdOffset;
 
         // Read the TIFF header
         stream.seek(0L);
@@ -119,26 +119,26 @@ public class TIFFDirectory implements Serializable {
         }
 
         // Get the initial ifd offset as an unsigned int (using a long)
-        ifd_offset = readUnsignedInt(stream);
+        ifdOffset = readUnsignedInt(stream);
 
         for (int i = 0; i < directory; i++) {
-            if (ifd_offset == 0L) {
+            if (ifdOffset == 0L) {
                 throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory3"));
             }
 
-            stream.seek(ifd_offset);
+            stream.seek(ifdOffset);
             long entries = readUnsignedShort(stream);
             stream.skip(12 * entries);
 
-            ifd_offset = readUnsignedInt(stream);
+            ifdOffset = readUnsignedInt(stream);
         }
-        if (ifd_offset == 0L) {
+        if (ifdOffset == 0L) {
             throw new IllegalArgumentException(PropertyUtil.getString("TIFFDirectory3"));
         }
 
-        stream.seek(ifd_offset);
+        stream.seek(ifdOffset);
         initialize(stream);
-        stream.seek(global_save_offset);
+        stream.seek(globalSaveOffset);
     }
 
     /**
@@ -149,15 +149,15 @@ public class TIFFDirectory implements Serializable {
      * sequence of IFDs.
      *
      * @param stream a SeekableStream to read from.
-     * @param ifd_offset the long byte offset of the directory.
+     * @param ifdOffset the long byte offset of the directory.
      * @param directory the index of the directory to read beyond the
      *        one at the current stream offset; zero indicates the IFD
      *        at the current offset.
      */
-    public TIFFDirectory(SeekableStream stream, long ifd_offset, int directory)
+    public TIFFDirectory(SeekableStream stream, long ifdOffset, int directory)
         throws IOException {
 
-        long global_save_offset = stream.getFilePointer();
+        long globalSaveOffset = stream.getFilePointer();
         stream.seek(0L);
         int endian = stream.readUnsignedShort();
         if (!isValidEndianTag(endian)) {
@@ -166,7 +166,7 @@ public class TIFFDirectory implements Serializable {
         isBigEndian = (endian == 0x4d4d);
 
         // Seek to the first IFD.
-        stream.seek(ifd_offset);
+        stream.seek(ifdOffset);
 
         // Seek to desired IFD if necessary.
         int dirNum = 0;
@@ -175,20 +175,20 @@ public class TIFFDirectory implements Serializable {
             long numEntries = readUnsignedShort(stream);
 
             // Skip to the next IFD offset value field.
-            stream.seek(ifd_offset + 12 * numEntries);
+            stream.seek(ifdOffset + 12 * numEntries);
 
             // Read the offset to the next IFD beyond this one.
-            ifd_offset = readUnsignedInt(stream);
+            ifdOffset = readUnsignedInt(stream);
 
             // Seek to the next IFD.
-            stream.seek(ifd_offset);
+            stream.seek(ifdOffset);
 
             // Increment the directory.
             dirNum++;
         }
 
         initialize(stream);
-        stream.seek(global_save_offset);
+        stream.seek(globalSaveOffset);
     }
 
     private static final int[] SIZE_OF_TYPE = {
@@ -212,7 +212,7 @@ public class TIFFDirectory implements Serializable {
         int i;
         int j;
 
-        IFDOffset = stream.getFilePointer();
+        ifdOffset = stream.getFilePointer();
 
         numEntries = readUnsignedShort(stream);
         fields = new TIFFField[numEntries];
@@ -627,7 +627,7 @@ public class TIFFDirectory implements Serializable {
      * <code>TIFFDirectory</code>.
      */
     public long getIFDOffset() {
-        return IFDOffset;
+        return ifdOffset;
     }
 
     /**
