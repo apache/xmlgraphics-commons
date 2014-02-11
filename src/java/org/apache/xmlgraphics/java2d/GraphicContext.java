@@ -677,29 +677,29 @@ public class GraphicContext implements Cloneable {
      * the result by the original <code>Transform</code> Cx.  In other
      * words, Cx'(p) = Cx(Tx(p)).  A copy of the Tx is made, if necessary,
      * so further modifications to Tx do not affect rendering.
-     * @param Tx the <code>AffineTransform</code> object to be composed with
+     * @param tx the <code>AffineTransform</code> object to be composed with
      * the current <code>Transform</code>
      * @see #setTransform
      * @see AffineTransform
      */
-    public void transform(AffineTransform Tx) {
-        transform.concatenate(Tx);
-        transformStack.add(TransformStackElement.createGeneralTransformElement(Tx));
+    public void transform(AffineTransform tx) {
+        transform.concatenate(tx);
+        transformStack.add(TransformStackElement.createGeneralTransformElement(tx));
     }
 
     /**
      * Sets the <code>Transform</code> in the <code>Graphics2D</code>
      * context.
-     * @param Tx the <code>AffineTransform</code> object to be used in the
+     * @param tx the <code>AffineTransform</code> object to be used in the
      * rendering process
      * @see #transform
      * @see AffineTransform
      */
-    public void setTransform(AffineTransform Tx) {
-        transform = new AffineTransform(Tx);
+    public void setTransform(AffineTransform tx) {
+        transform = new AffineTransform(tx);
         invalidateTransformStack();
-        if (!Tx.isIdentity()) {
-            transformStack.add(TransformStackElement.createGeneralTransformElement(Tx));
+        if (!tx.isIdentity()) {
+            transformStack.add(TransformStackElement.createGeneralTransformElement(tx));
         }
     }
 

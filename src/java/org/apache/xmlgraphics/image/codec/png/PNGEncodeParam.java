@@ -796,8 +796,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // iCCP chunk
 
-    private byte[] ICCProfileData = null;
-    private boolean ICCProfileDataSet = false;
+    private byte[] iccProfileData = null;
+    private boolean iccProfileDataSet = false;
 
     /**
      * Sets the ICC profile data to be stored with this image.
@@ -805,9 +805,9 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      *
      * <p> The 'iCCP' chunk will encode this information.
      */
-    public void setICCProfileData(byte[] ICCProfileData) {
-        this.ICCProfileData = (byte[])(ICCProfileData.clone());
-        ICCProfileDataSet = true;
+    public void setICCProfileData(byte[] iccProfileData) {
+        this.iccProfileData = (byte[])(iccProfileData.clone());
+        iccProfileDataSet = true;
     }
 
     /**
@@ -819,25 +819,25 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * @throws IllegalStateException if the ICC profile is not set.
      */
     public byte[] getICCProfileData() {
-        if (!ICCProfileDataSet) {
+        if (!iccProfileDataSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam15"));
         }
-        return (byte[])(ICCProfileData.clone());
+        return (byte[])(iccProfileData.clone());
     }
 
     /**
      * Suppresses the 'iCCP' chunk from being output.
      */
     public void unsetICCProfileData() {
-        ICCProfileData = null;
-        ICCProfileDataSet = false;
+        iccProfileData = null;
+        iccProfileDataSet = false;
     }
 
     /**
      * Returns true if a 'iCCP' chunk will be output.
      */
     public boolean isICCProfileDataSet() {
-        return ICCProfileDataSet;
+        return iccProfileDataSet;
     }
 
     // pHYS chunk
@@ -1010,8 +1010,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // sRGB chunk
 
-    private int SRGBIntent;
-    private boolean SRGBIntentSet = false;
+    private int srgbIntent;
+    private boolean srgbIntentSet = false;
 
     /**
      * Sets the sRGB rendering intent to be stored with this image.
@@ -1021,9 +1021,9 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      *
      * <p> The 'sRGB' chunk will encode this information.
      */
-    public void setSRGBIntent(int SRGBIntent) {
-        this.SRGBIntent = SRGBIntent;
-        SRGBIntentSet = true;
+    public void setSRGBIntent(int srgbIntent) {
+        this.srgbIntent = srgbIntent;
+        srgbIntentSet = true;
     }
 
     /**
@@ -1035,24 +1035,24 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * @throws IllegalStateException if the sRGB intent is not set.
      */
     public int getSRGBIntent() {
-        if (!SRGBIntentSet) {
+        if (!srgbIntentSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam19"));
         }
-        return SRGBIntent;
+        return srgbIntent;
     }
 
     /**
      * Suppresses the 'sRGB' chunk from being output.
      */
     public void unsetSRGBIntent() {
-        SRGBIntentSet = false;
+        srgbIntentSet = false;
     }
 
     /**
      * Returns true if an 'sRGB' chunk will be output.
      */
     public boolean isSRGBIntentSet() {
-        return SRGBIntentSet;
+        return srgbIntentSet;
     }
 
     // tEXt chunk

@@ -88,29 +88,29 @@ public class Base64DecodeStream extends InputStream {
 
     public void close()
         throws IOException {
-        EOF = true;
+        eof = true;
     }
 
     public int available()
         throws IOException {
-        return 3 - out_offset;
+        return 3 - outOffset;
     }
 
-    byte[] decode_buffer = new byte[4];
-    byte[] out_buffer = new byte[3];
-    int  out_offset = 3;
-    boolean EOF = false;
+    byte[] decodeBuffer = new byte[4];
+    byte[] outBuffer = new byte[3];
+    int  outOffset = 3;
+    boolean eof = false;
 
     public int read() throws IOException {
 
-        if (out_offset == 3) {
-            if (EOF || getNextAtom()) {
-                EOF = true;
+        if (outOffset == 3) {
+            if (eof || getNextAtom()) {
+                eof = true;
                 return -1;
             }
         }
 
-        return ((int)out_buffer[out_offset++]) & 0xFF;
+        return ((int)outBuffer[outOffset++]) & 0xFF;
     }
 
     public int read(byte []out, int offset, int len)
@@ -118,9 +118,9 @@ public class Base64DecodeStream extends InputStream {
 
         int idx = 0;
         while (idx < len) {
-            if (out_offset == 3) {
-                if (EOF || getNextAtom()) {
-                    EOF = true;
+            if (outOffset == 3) {
+                if (eof || getNextAtom()) {
+                    eof = true;
                     if (idx == 0) {
                         return -1;
                     } else {
@@ -129,7 +129,7 @@ public class Base64DecodeStream extends InputStream {
                 }
             }
 
-            out[offset + idx] = out_buffer[out_offset++];
+            out[offset + idx] = outBuffer[outOffset++];
 
             idx++;
         }
@@ -145,7 +145,7 @@ public class Base64DecodeStream extends InputStream {
 
         int off = 0;
         while (off != 4) {
-            count = src.read(decode_buffer, off, 4 - off);
+            count = src.read(decodeBuffer, off, 4 - off);
             if (count == -1) {
                 return true;
             }
@@ -153,10 +153,10 @@ public class Base64DecodeStream extends InputStream {
             int in = off;
             int out = off;
             while (in < off + count) {
-                if ((decode_buffer[in] != '\n')
-                    && (decode_buffer[in] != '\r')
-                    && (decode_buffer[in] != ' ')) {
-                    decode_buffer[out++] = decode_buffer[in];
+                if ((decodeBuffer[in] != '\n')
+                    && (decodeBuffer[in] != '\r')
+                    && (decodeBuffer[in] != ' ')) {
+                    decodeBuffer[out++] = decodeBuffer[in];
                 }
                 in++;
             }
@@ -164,29 +164,29 @@ public class Base64DecodeStream extends InputStream {
             off = out;
         }
 
-        a = PEM_ARRAY[((int)decode_buffer[0]) & 0xFF];
-        b = PEM_ARRAY[((int)decode_buffer[1]) & 0xFF];
-        c = PEM_ARRAY[((int)decode_buffer[2]) & 0xFF];
-        d = PEM_ARRAY[((int)decode_buffer[3]) & 0xFF];
+        a = PEM_ARRAY[((int)decodeBuffer[0]) & 0xFF];
+        b = PEM_ARRAY[((int)decodeBuffer[1]) & 0xFF];
+        c = PEM_ARRAY[((int)decodeBuffer[2]) & 0xFF];
+        d = PEM_ARRAY[((int)decodeBuffer[3]) & 0xFF];
 
-        out_buffer[0] = (byte)((a << 2) | (b >>> 4));
-        out_buffer[1] = (byte)((b << 4) | (c >>> 2));
-        out_buffer[2] = (byte)((c << 6) |  d);
+        outBuffer[0] = (byte)((a << 2) | (b >>> 4));
+        outBuffer[1] = (byte)((b << 4) | (c >>> 2));
+        outBuffer[2] = (byte)((c << 6) |  d);
 
-        if (decode_buffer[3] != '=') {
+        if (decodeBuffer[3] != '=') {
             // All three bytes are good.
-            out_offset = 0;
-        } else if (decode_buffer[2] == '=') {
+            outOffset = 0;
+        } else if (decodeBuffer[2] == '=') {
             // Only one byte of output.
-            out_buffer[2] = out_buffer[0];
-            out_offset = 2;
-            EOF = true;
+            outBuffer[2] = outBuffer[0];
+            outOffset = 2;
+            eof = true;
         } else {
             // Only two bytes of output.
-            out_buffer[2] = out_buffer[1];
-            out_buffer[1] = out_buffer[0];
-            out_offset = 1;
-            EOF = true;
+            outBuffer[2] = outBuffer[1];
+            outBuffer[1] = outBuffer[0];
+            outOffset = 1;
+            eof = true;
         }
 
         return false;
