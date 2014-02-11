@@ -497,7 +497,8 @@ public class DoubleFormatUtilTestCase {
             formatPrecise(lowValue, decimals, precision);
         }
         long preciseFormatDuration = System.currentTimeMillis() - start;
-        System.out.println("Format Precise duration: " + preciseFormatDuration + "ms to format " + (3 * nbTest) + " doubles");
+        System.out.println("Format Precise duration: " + preciseFormatDuration
+                + "ms to format " + (3 * nbTest) + " doubles");
 
         r.setSeed(seed);
         start = System.currentTimeMillis();

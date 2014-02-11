@@ -180,14 +180,20 @@ public class Base64EncodeStream extends OutputStream {
         if (atomLen != 0) {
             switch(atomLen) {
             case 1:
-                atom[1] = data[offset++]; len--; atomLen++;
+                atom[1] = data[offset++];
+                len--;
+                atomLen++;
                 if (len == 0) {
                     return;
                 }
-                atom[2] = data[offset++]; len--; atomLen++;
+                atom[2] = data[offset++];
+                len--;
+                atomLen++;
                 break;
             case 2:
-                atom[2] = data[offset++]; len--; atomLen++;
+                atom[2] = data[offset++];
+                len--;
+                atomLen++;
                 break;
             default:
             }

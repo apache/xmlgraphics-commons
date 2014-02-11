@@ -901,8 +901,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdBlue = bluePalette[bkgdIndex] & 0xff;
 
             if (encodeParam != null) {
-                ((PNGEncodeParam.Palette)encodeParam).
-                    setBackgroundPaletteIndex(bkgdIndex);
+                ((PNGEncodeParam.Palette)encodeParam).setBackgroundPaletteIndex(bkgdIndex);
             }
             break;
         case PNG_COLOR_GRAY: case PNG_COLOR_GRAY_ALPHA:
@@ -910,8 +909,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdRed = bkgdGreen = bkgdBlue = bkgdGray;
 
             if (encodeParam != null) {
-                ((PNGEncodeParam.Gray)encodeParam).
-                    setBackgroundGray(bkgdGray);
+                ((PNGEncodeParam.Gray)encodeParam).setBackgroundGray(bkgdGray);
             }
             break;
         case PNG_COLOR_RGB: case PNG_COLOR_RGB_ALPHA:
@@ -924,8 +922,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdRGB[1] = bkgdGreen;
             bkgdRGB[2] = bkgdBlue;
             if (encodeParam != null) {
-                ((PNGEncodeParam.RGB)encodeParam).
-                    setBackgroundRGB(bkgdRGB);
+                ((PNGEncodeParam.RGB)encodeParam).setBackgroundRGB(bkgdRGB);
             }
             break;
         }
@@ -1205,8 +1202,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                 }
 
                 if (encodeParam != null) {
-                    ((PNGEncodeParam.Gray)encodeParam).
-                        setTransparentGray(grayTransparentAlpha);
+                    ((PNGEncodeParam.Gray)encodeParam).setTransparentGray(grayTransparentAlpha);
                 }
             }
         } else if (colorType == PNG_COLOR_RGB) {
@@ -1223,8 +1219,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     rgbTrans[0] = redTransparentAlpha;
                     rgbTrans[1] = greenTransparentAlpha;
                     rgbTrans[2] = blueTransparentAlpha;
-                    ((PNGEncodeParam.RGB)encodeParam).
-                        setTransparentRGB(rgbTrans);
+                    ((PNGEncodeParam.RGB)encodeParam).setTransparentRGB(rgbTrans);
                 }
             }
         } else if (colorType == PNG_COLOR_GRAY_ALPHA
