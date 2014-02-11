@@ -911,8 +911,8 @@ public final class GraphicsUtil {
                     int aFP = (0x00FF0000 / a);
                     pixels[sp] =
                         ((a << 24) |
-                         (((((pixel & 0xFF0000) >> 16) * aFP) & 0xFF0000)    ) |
-                         (((((pixel & 0x00FF00) >> 8) * aFP) & 0xFF0000) >> 8 ) |
+                         (((((pixel & 0xFF0000) >> 16) * aFP) & 0xFF0000)) |
+                         (((((pixel & 0x00FF00) >> 8) * aFP) & 0xFF0000) >> 8) |
                          (((((pixel & 0x0000FF))    * aFP) & 0xFF0000) >> 16));
                 }
                 sp++;

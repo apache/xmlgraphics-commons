@@ -198,7 +198,7 @@ public class Any2LsRGBRed extends AbstractRed {
             // lead to out of range values.
             ColorModel srcBICM = srcCM;
             WritableRaster srcWr;
-            if ( srcCM.hasAlpha() && srcCM.isAlphaPremultiplied() ) {
+            if (srcCM.hasAlpha() && srcCM.isAlphaPremultiplied()) {
                 Rectangle wrR = wr.getBounds();
                 SampleModel sm = srcCM.createCompatibleSampleModel
                     (wrR.width, wrR.height);

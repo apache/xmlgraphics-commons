@@ -808,7 +808,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             bpixels[li++] = (byte)((value & 0xff000000) >>> 24);
                             bpixels[li++] = (byte)((value & 0x00ff0000) >>> 16);
                             bpixels[li++] = (byte)((value & 0x0000ff00) >>> 8);
-                            bpixels[li++] = (byte)( value & 0x000000ff);
+                            bpixels[li++] = (byte)(value & 0x000000ff);
                         }
                     } else { // DataBuffer.TYPE_FLOAT
                         int lf = 0;
@@ -817,7 +817,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             bpixels[lf++] = (byte)((value & 0xff000000) >>> 24);
                             bpixels[lf++] = (byte)((value & 0x00ff0000) >>> 16);
                             bpixels[lf++] = (byte)((value & 0x0000ff00) >>> 8);
-                            bpixels[lf++] = (byte)( value & 0x000000ff);
+                            bpixels[lf++] = (byte)(value & 0x000000ff);
                         }
                     }
                     if (compression == CompressionValue.NONE) {
@@ -1263,7 +1263,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
     // stored in 2 bytes.
     private void writeUnsignedShort(int s) throws IOException {
         output.write((s & 0xff00) >>> 8);
-        output.write( s & 0x00ff);
+        output.write(s & 0x00ff);
     }
 
     /**

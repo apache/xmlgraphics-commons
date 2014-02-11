@@ -502,7 +502,7 @@ public class PNGRed extends AbstractRed {
                               + (char)((type >> 24) & 0xff)
                               + (char)((type >> 16) & 0xff)
                               + (char)((type >>  8) & 0xff)
-                              + (char)( type        & 0xff);
+                              + (char)(type        & 0xff);
             return typeString;
         } catch (Exception e) {
             e.printStackTrace();
@@ -758,7 +758,7 @@ public class PNGRed extends AbstractRed {
 
         // Parse prior IDAT chunks
         InputStream seqStream =
-            new SequenceInputStream( Collections.enumeration( streamVec ));
+            new SequenceInputStream(Collections.enumeration(streamVec));
         InputStream infStream =
             new InflaterInputStream(seqStream, new Inflater());
         dataStream = new DataInputStream(infStream);
@@ -1379,8 +1379,8 @@ public class PNGRed extends AbstractRed {
                 value.append((char)c);
             }
 
-            ztextKeys.add(key.toString() );
-            ztextStrings.add(value.toString() );
+            ztextKeys.add(key.toString());
+            ztextStrings.add(value.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

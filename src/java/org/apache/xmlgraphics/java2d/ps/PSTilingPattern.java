@@ -434,14 +434,14 @@ public class PSTilingPattern {
         return
             0
             ^ patternType
-            ^ ( ( xUID != null ) ? xUID.hashCode() : 0 )
-            ^ ( ( paintProc != null ) ? paintProc.hashCode() : 0 )
-            ^ ( ( bBox != null ) ? bBox.hashCode() : 0 )
+            ^ ((xUID != null) ? xUID.hashCode() : 0)
+            ^ ((paintProc != null) ? paintProc.hashCode() : 0)
+            ^ ((bBox != null) ? bBox.hashCode() : 0)
             ^ new Double(xStep).hashCode()
             ^ new Double(yStep).hashCode()
             ^ paintType
             ^ tilingType
-            ^ ( ( texture != null ) ? texture.hashCode() : 0 );
+            ^ ((texture != null) ? texture.hashCode() : 0);
     }
 
     /**
@@ -452,7 +452,7 @@ public class PSTilingPattern {
         if (pattern == null) {
             return false;
         }
-        if ( !(pattern instanceof PSTilingPattern)) {
+        if (!(pattern instanceof PSTilingPattern)) {
             return false;
         }
         if (this == pattern) {
@@ -466,7 +466,7 @@ public class PSTilingPattern {
 
         TexturePaint patternTexture = patternObj.getTexturePaint();
 
-        if ( ((patternTexture == null) && (texture != null))
+        if (((patternTexture == null) && (texture != null))
              || ((patternTexture != null) && (texture == null))) {
             return false;
         }

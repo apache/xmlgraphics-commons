@@ -160,7 +160,7 @@ public class Base64DecodeStream extends InputStream {
 
         out_buffer[0] = (byte)((a << 2) | (b >>> 4));
         out_buffer[1] = (byte)((b << 4) | (c >>> 2));
-        out_buffer[2] = (byte)((c << 6) |  d     );
+        out_buffer[2] = (byte)((c << 6) |  d);
 
         if (decode_buffer[3] != '=') {
             // All three bytes are good.
