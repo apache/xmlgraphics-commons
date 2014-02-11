@@ -149,12 +149,12 @@ public class RenderedImageCachableRed implements CachableRed {
     }
 
     public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn) {
-        throw new IndexOutOfBoundsException
-            ("Nonexistant source requested.");
+        throw new IndexOutOfBoundsException(
+            "Nonexistant source requested.");
     }
 
     public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn) {
-        throw new IndexOutOfBoundsException
-            ("Nonexistant source requested.");
+        throw new IndexOutOfBoundsException(
+            "Nonexistant source requested.");
     }
 }

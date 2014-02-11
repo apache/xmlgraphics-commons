@@ -58,8 +58,8 @@ public class FormatRed extends AbstractRed {
             return new FormatRed(src, cm);
 
         if (cm.getNumComponents() != srcCM.getNumComponents())
-            throw new IllegalArgumentException
-                ("Incompatible ColorModel given");
+            throw new IllegalArgumentException(
+                "Incompatible ColorModel given");
 
 
         if ((srcCM instanceof ComponentColorModel)
@@ -119,11 +119,11 @@ public class FormatRed extends AbstractRed {
                                                              wr.getMinY()));
         getSource().copyData(srcWR);
 
-        BufferedImage srcBI = new BufferedImage
-            (srcCM, srcWR.createWritableTranslatedChild(0, 0),
+        BufferedImage srcBI = new BufferedImage(
+            srcCM, srcWR.createWritableTranslatedChild(0, 0),
              srcCM.isAlphaPremultiplied(), null);
-        BufferedImage dstBI = new BufferedImage
-            (cm, wr.createWritableTranslatedChild(0, 0),
+        BufferedImage dstBI = new BufferedImage(
+            cm, wr.createWritableTranslatedChild(0, 0),
              cm.isAlphaPremultiplied(), null);
 
         GraphicsUtil.copyData(srcBI, dstBI);
@@ -151,8 +151,8 @@ public class FormatRed extends AbstractRed {
         case DataBuffer.TYPE_USHORT: bits = 16; break;
         case DataBuffer.TYPE_INT:    bits = 32; break;
         default:
-            throw new IllegalArgumentException
-                ("Unsupported DataBuffer type: " + dt);
+            throw new IllegalArgumentException(
+                "Unsupported DataBuffer type: " + dt);
         }
 
         boolean hasAlpha = srcCM.hasAlpha();
@@ -163,14 +163,14 @@ public class FormatRed extends AbstractRed {
             if (bands == srcCM.getNumComponents() - 1)
                 hasAlpha = false;
             else if (bands != srcCM.getNumComponents())
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands in and out");
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands in and out");
         } else {
             if (bands == srcCM.getNumComponents() + 1)
                 hasAlpha = true;
             else if (bands != srcCM.getNumComponents())
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands in and out");
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands in and out");
         }
 
         boolean preMult  = srcCM.isAlphaPremultiplied();
@@ -182,8 +182,8 @@ public class FormatRed extends AbstractRed {
             for (int i = 0; i < bands; i++)
                 bitsPer[i] = bits;
 
-            return new ComponentColorModel
-                (cs, bitsPer, hasAlpha, preMult,
+            return new ComponentColorModel(
+                cs, bitsPer, hasAlpha, preMult,
                  hasAlpha ? Transparency.TRANSLUCENT : Transparency.OPAQUE,
                  dt);
         } else if (sm instanceof SinglePixelPackedSampleModel) {
@@ -191,18 +191,18 @@ public class FormatRed extends AbstractRed {
             sppsm = (SinglePixelPackedSampleModel)sm;
             int[] masks  = sppsm.getBitMasks();
             if (bands == 4)
-                return new DirectColorModel
-                    (cs, bits, masks[0], masks[1], masks[2], masks[3],
+                return new DirectColorModel(
+                    cs, bits, masks[0], masks[1], masks[2], masks[3],
                      preMult, dt);
             else if (bands == 3)
-                return new DirectColorModel
-                    (cs, bits, masks[0], masks[1], masks[2], 0x0,
+                return new DirectColorModel(
+                    cs, bits, masks[0], masks[1], masks[2], 0x0,
                      preMult, dt);
             else
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands out for ColorModel");
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands out for ColorModel");
         }
-        throw new IllegalArgumentException
-            ("Unsupported SampleModel Type");
+        throw new IllegalArgumentException(
+            "Unsupported SampleModel Type");
     }
 }

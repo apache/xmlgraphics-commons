@@ -74,8 +74,8 @@ public final class GraphicsUtil {
     /**
      * Standard prebuilt Linear_sRGB color model with no alpha */
     public static final ColorModel Linear_sRGB =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_LINEAR_RGB), 24,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_LINEAR_RGB), 24,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0x0, false,
                              DataBuffer.TYPE_INT);
@@ -83,8 +83,8 @@ public final class GraphicsUtil {
      * Standard prebuilt Linear_sRGB color model with premultiplied alpha.
      */
     public static final ColorModel Linear_sRGB_Pre =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_LINEAR_RGB), 32,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_LINEAR_RGB), 32,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0xFF000000, true,
                              DataBuffer.TYPE_INT);
@@ -92,8 +92,8 @@ public final class GraphicsUtil {
      * Standard prebuilt Linear_sRGB color model with unpremultiplied alpha.
      */
     public static final ColorModel Linear_sRGB_Unpre =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_LINEAR_RGB), 32,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_LINEAR_RGB), 32,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0xFF000000, false,
                              DataBuffer.TYPE_INT);
@@ -102,8 +102,8 @@ public final class GraphicsUtil {
      * Standard prebuilt sRGB color model with no alpha.
      */
     public static final ColorModel sRGB =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_sRGB), 24,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_sRGB), 24,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0x0, false,
                              DataBuffer.TYPE_INT);
@@ -111,8 +111,8 @@ public final class GraphicsUtil {
      * Standard prebuilt sRGB color model with premultiplied alpha.
      */
     public static final ColorModel sRGB_Pre =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_sRGB), 32,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_sRGB), 32,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0xFF000000, true,
                              DataBuffer.TYPE_INT);
@@ -120,8 +120,8 @@ public final class GraphicsUtil {
      * Standard prebuilt sRGB color model with unpremultiplied alpha.
      */
     public static final ColorModel sRGB_Unpre =
-        new DirectColorModel(ColorSpace.getInstance
-                             (ColorSpace.CS_sRGB), 32,
+        new DirectColorModel(ColorSpace.getInstance(
+                             ColorSpace.CS_sRGB), 32,
                              0x00FF0000, 0x0000FF00,
                              0x000000FF, 0xFF000000, false,
                              DataBuffer.TYPE_INT);
@@ -312,7 +312,7 @@ public final class GraphicsUtil {
 
         for (int y = y0; y <= y1; y++)  {
             data = src.getPixels(x0, y, width, 1, data);
-            dst.setPixels       (x0, y, width, 1, data);
+            dst.setPixels(x0, y, width, 1, data);
         }
     }
 
@@ -371,11 +371,11 @@ public final class GraphicsUtil {
      * @return    A writable copy of <tt>ras</tt>
      */
     public static WritableRaster copyRaster(Raster ras, int minX, int minY) {
-        WritableRaster ret = Raster.createWritableRaster
-            (ras.getSampleModel(),
+        WritableRaster ret = Raster.createWritableRaster(
+            ras.getSampleModel(),
              new Point(0, 0));
-        ret = ret.createWritableChild
-            (ras.getMinX() - ras.getSampleModelTranslateX(),
+        ret = ret.createWritableChild(
+            ras.getMinX() - ras.getSampleModelTranslateX(),
              ras.getMinY() - ras.getSampleModelTranslateY(),
              ras.getWidth(), ras.getHeight(),
              minX, minY, null);
@@ -384,8 +384,8 @@ public final class GraphicsUtil {
         DataBuffer srcDB = ras.getDataBuffer();
         DataBuffer retDB = ret.getDataBuffer();
         if (srcDB.getDataType() != retDB.getDataType()) {
-            throw new IllegalArgumentException
-                ("New DataBuffer doesn't match original");
+            throw new IllegalArgumentException(
+                "New DataBuffer doesn't match original");
         }
         int len   = srcDB.getSize();
         int banks = srcDB.getNumBanks();
@@ -477,12 +477,12 @@ public final class GraphicsUtil {
      */
     public static WritableRaster makeRasterWritable(Raster ras,
                                                     int minX, int minY) {
-        WritableRaster ret = Raster.createWritableRaster
-            (ras.getSampleModel(),
+        WritableRaster ret = Raster.createWritableRaster(
+            ras.getSampleModel(),
              ras.getDataBuffer(),
              new Point(0, 0));
-        ret = ret.createWritableChild
-            (ras.getMinX() - ras.getSampleModelTranslateX(),
+        ret = ret.createWritableChild(
+            ras.getMinX() - ras.getSampleModelTranslateX(),
              ras.getMinY() - ras.getSampleModelTranslateY(),
              ras.getWidth(), ras.getHeight(),
              minX, minY, null);

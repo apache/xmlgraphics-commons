@@ -135,14 +135,14 @@ public class TIFFImage extends AbstractRed {
         inflater.reset();
     }
 
-    private static SampleModel createPixelInterleavedSampleModel
-        (int dataType, int tileWidth, int tileHeight, int bands) {
+    private static SampleModel createPixelInterleavedSampleModel(
+        int dataType, int tileWidth, int tileHeight, int bands) {
         int [] bandOffsets = new int[bands];
         for (int i = 0; i < bands; i++) {
             bandOffsets[i] = i;
         }
-        return new PixelInterleavedSampleModel
-            (dataType, tileWidth, tileHeight, bands,
+        return new PixelInterleavedSampleModel(
+            dataType, tileWidth, tileHeight, bands,
              tileWidth * bands, bandOffsets);
     }
 
@@ -351,8 +351,8 @@ public class TIFFImage extends AbstractRed {
             }
 
             // Set basic image layout
-            Rectangle bounds = new Rectangle
-                (0, 0,
+            Rectangle bounds = new Rectangle(
+                0, 0,
                  (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_WIDTH),
                  (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_LENGTH));
 
@@ -557,18 +557,18 @@ public class TIFFImage extends AbstractRed {
                 for (int i = 0; i < numBands; i++) {
                     reverseOffsets[i] = numBands - 1 - i;
                 }
-                sampleModel = new PixelInterleavedSampleModel
-                    (dataType, tileWidth, tileHeight,
+                sampleModel = new PixelInterleavedSampleModel(
+                    dataType, tileWidth, tileHeight,
                      numBands, numBands * tileWidth, reverseOffsets);
 
                 if (imageType == TYPE_GRAY) {
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_GRAY),
                      new int[] {sampleSize}, false, false,
                      Transparency.OPAQUE, dataType);
                 } else if (imageType == TYPE_RGB) {
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_sRGB),
                      new int[] {sampleSize, sampleSize, sampleSize},
                      false, false, Transparency.OPAQUE, dataType);
                 } else { // hasAlpha
@@ -602,8 +602,8 @@ public class TIFFImage extends AbstractRed {
                     bandOffsets[i] = i;
                 }
 
-                sampleModel = new PixelInterleavedSampleModel
-                    (dataType, tileWidth, tileHeight,
+                sampleModel = new PixelInterleavedSampleModel(
+                    dataType, tileWidth, tileHeight,
                      numBands, numBands * tileWidth, bandOffsets);
                 colorModel = null;
                 break;
@@ -634,11 +634,11 @@ public class TIFFImage extends AbstractRed {
                     // Data will have to be unpacked into a 3 band short image
                     // as we do not have a IndexColorModel that can deal with
                     // a colormodel whose entries are of short data type.
-                    sampleModel = createPixelInterleavedSampleModel
-                        (dataType, tileWidth, tileHeight, numBands);
+                    sampleModel = createPixelInterleavedSampleModel(
+                        dataType, tileWidth, tileHeight, numBands);
 
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_sRGB),
                      new int[] {16, 16, 16}, false, false,
                      Transparency.OPAQUE, dataType);
 
@@ -650,13 +650,13 @@ public class TIFFImage extends AbstractRed {
                         // Pixel data will not be unpacked, will use
                         // MPPSM to store packed data and
                         // IndexColorModel to do the unpacking.
-                        sampleModel = new MultiPixelPackedSampleModel
-                            (DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
+                        sampleModel = new MultiPixelPackedSampleModel(
+                            DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
                              sampleSize);
                     } else if (sampleSize == 8) {
 
-                        sampleModel = createPixelInterleavedSampleModel
-                            (DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
+                        sampleModel = createPixelInterleavedSampleModel(
+                            DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
                              numBands);
                     } else if (sampleSize == 16) {
 
@@ -666,8 +666,8 @@ public class TIFFImage extends AbstractRed {
                         // actual palette entries are allowed to be
                         // negative.
                         dataType = DataBuffer.TYPE_USHORT;
-                        sampleModel = createPixelInterleavedSampleModel
-                            (DataBuffer.TYPE_USHORT, tileWidth, tileHeight,
+                        sampleModel = createPixelInterleavedSampleModel(
+                            DataBuffer.TYPE_USHORT, tileWidth, tileHeight,
                              numBands);
                     }
 
@@ -682,23 +682,23 @@ public class TIFFImage extends AbstractRed {
                     if (dataType == DataBuffer.TYPE_SHORT) {
 
                         for (int i = 0; i < bandLength; i++) {
-                            r[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[i]);
-                            g[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[gIndex + i]);
-                            b[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[bIndex + i]);
+                            r[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[i]);
+                            g[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[gIndex + i]);
+                            b[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[bIndex + i]);
                         }
 
                     } else {
 
                         for (int i = 0; i < bandLength; i++) {
-                            r[i] = param.decode16BitsTo8Bits
-                                (colormap[i] & 0xffff);
-                            g[i] = param.decode16BitsTo8Bits
-                                (colormap[gIndex + i] & 0xffff);
-                            b[i] = param.decode16BitsTo8Bits
-                                (colormap[bIndex + i] & 0xffff);
+                            r[i] = param.decode16BitsTo8Bits(
+                                colormap[i] & 0xffff);
+                            g[i] = param.decode16BitsTo8Bits(
+                                colormap[gIndex + i] & 0xffff);
+                            b[i] = param.decode16BitsTo8Bits(
+                                colormap[bIndex + i] & 0xffff);
                         }
 
                     }
@@ -1675,8 +1675,8 @@ public class TIFFImage extends AbstractRed {
 
     // Need a createColorModel().
     // Create ComponentColorModel for TYPE_RGB images
-    private ComponentColorModel createAlphaComponentColorModel
-    (int dataType, int numBands,
+    private ComponentColorModel createAlphaComponentColorModel(
+    int dataType, int numBands,
      boolean isAlphaPremultiplied, int transparency) {
 
         ComponentColorModel ccm = null;

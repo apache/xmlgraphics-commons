@@ -118,8 +118,8 @@ public abstract class TransformStackElement implements Cloneable {
             };
     }
 
-    public static TransformStackElement createGeneralTransformElement
-        (AffineTransform txf) {
+    public static TransformStackElement createGeneralTransformElement(
+        AffineTransform txf) {
         double[] matrix = new double[6];
         txf.getMatrix(matrix);
         return new TransformStackElement(TransformType.GENERAL, matrix) {

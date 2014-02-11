@@ -357,14 +357,14 @@ public class Any2sRGBRed extends AbstractRed {
             }
         }
         if (alpha)
-            return new SinglePixelPackedSampleModel
-                (DataBuffer.TYPE_INT,
+            return new SinglePixelPackedSampleModel(
+                DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF, 0xFF000000});
         else
-            return new SinglePixelPackedSampleModel
-                (DataBuffer.TYPE_INT,
+            return new SinglePixelPackedSampleModel(
+                DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF});
