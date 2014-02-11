@@ -339,11 +339,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -373,11 +376,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -409,11 +415,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -449,7 +458,9 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         long start = System.currentTimeMillis();
         int nbTest = 1000000;
         int maxDecimals = 16;
@@ -563,8 +574,10 @@ public class DoubleFormatUtilTestCase {
         double[] values = {0, 1, 5, 4.9999, 5.0001, 9.9999, 1234567890, 0 /* The last one is random */};
         Random r = new Random();
         double value;
-        String expected, actual;
-        int minScale, maxScale;
+        String expected;
+        String actual;
+        int minScale;
+        int maxScale;
         for (int i = -330; i <= 315; i++) {
             values[values.length - 1] = r.nextDouble();
             double pow = Math.pow(10.0, i);

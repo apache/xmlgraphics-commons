@@ -83,7 +83,8 @@ public class TIFFImage extends AbstractRed {
 
     SeekableStream stream;
     int tileSize;
-    int tilesX, tilesY;
+    int tilesX;
+    int tilesY;
     long[] tileOffsets;
     long[] tileByteCounts;
     char[] colormap;
@@ -363,7 +364,8 @@ public class TIFFImage extends AbstractRed {
             TIFFField efield = dir.getField(TIFFImageDecoder.TIFF_EXTRA_SAMPLES);
             int extraSamples = efield == null ? 0 : (int)efield.getAsLong(0);
 
-            int tileWidth, tileHeight;
+            int tileWidth;
+            int tileHeight;
             if (dir.getField(TIFFImageDecoder.TIFF_TILE_OFFSETS) != null) {
                 tiled = true;
                 // Image is in tiled format
@@ -922,7 +924,9 @@ public class TIFFImage extends AbstractRed {
                         // Expand the palette image into an rgb image with ushort
                         // data type.
                         int cmapValue;
-                        int count = 0, lookup, len = colormap.length / 3;
+                        int count = 0;
+                        int lookup;
+                        int len = colormap.length / 3;
                         int len2 = len * 2;
                         for (int i = 0; i < unitsBeforeLookup; i++) {
                             // Get the index into the colormap
@@ -943,7 +947,9 @@ public class TIFFImage extends AbstractRed {
                         // Expand the palette image into an rgb image with
                         // short data type.
                         int cmapValue;
-                        int count = 0, lookup, len = colormap.length / 3;
+                        int count = 0;
+                        int lookup;
+                        int len = colormap.length / 3;
                         int len2 = len * 2;
                         for (int i = 0; i < unitsBeforeLookup; i++) {
                             // Get the index into the colormap
@@ -1070,7 +1076,9 @@ public class TIFFImage extends AbstractRed {
                     // Expand the palette image into an rgb image with ushort
                     // data type.
                     int cmapValue;
-                    int count = 0, lookup, len = colormap.length / 3;
+                    int count = 0;
+                    int lookup;
+                    int len = colormap.length / 3;
                     int len2 = len * 2;
                     for (int i = 0; i < unitsBeforeLookup; i++) {
                         // Get the index into the colormap
@@ -1168,7 +1176,8 @@ public class TIFFImage extends AbstractRed {
                     // Unpack the 2 pixels packed into each byte.
                     data = new byte[bytes];
 
-                    int srcCount = 0, dstCount = 0;
+                    int srcCount = 0;
+                    int dstCount = 0;
                     for (int j = 0; j < newRect.height; j++) {
                         for (int i = 0; i < newRect.width / 2; i++) {
                             data[dstCount++] =
@@ -1185,7 +1194,8 @@ public class TIFFImage extends AbstractRed {
 
                     int len = colormap.length / 3;
                     int len2 = len * 2;
-                    int cmapValue, lookup;
+                    int cmapValue;
+                    int lookup;
                     int count = 0;
                     for (int i = 0; i < bytes; i++) {
                         lookup = data[i] & 0xff;
@@ -1581,7 +1591,8 @@ public class TIFFImage extends AbstractRed {
                                         int shortCount) {
 
         int j = 0;
-        int firstByte, secondByte;
+        int firstByte;
+        int secondByte;
 
         if (isBigEndian) {
 
@@ -1636,8 +1647,10 @@ public class TIFFImage extends AbstractRed {
             dst = new byte[arraySize];
         }
 
-        int srcCount = 0, dstCount = 0;
-        byte repeat, b;
+        int srcCount = 0;
+        int dstCount = 0;
+        byte repeat;
+        byte b;
 
         try {
 

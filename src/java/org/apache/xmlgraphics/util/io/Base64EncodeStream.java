@@ -119,7 +119,9 @@ public class Base64EncodeStream extends OutputStream {
      * padding characters.
      */
     void encodeAtom() throws IOException {
-        byte a, b, c;
+        byte a;
+        byte b;
+        byte c;
 
         switch (atomLen) {
         case 0: return;
@@ -164,7 +166,9 @@ public class Base64EncodeStream extends OutputStream {
      */
     void encodeFromArray(byte[] data, int offset, int len)
         throws IOException {
-        byte a, b, c;
+        byte a;
+        byte b;
+        byte c;
         if (len == 0) {
             return;
         }

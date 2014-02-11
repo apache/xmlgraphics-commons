@@ -137,7 +137,11 @@ public class Base64DecodeStream extends InputStream {
     }
 
     final boolean getNextAtom() throws IOException {
-        int count, a, b, c, d;
+        int count;
+        int a;
+        int b;
+        int c;
+        int d;
 
         int off = 0;
         while (off != 4) {
@@ -146,7 +150,8 @@ public class Base64DecodeStream extends InputStream {
                 return true;
             }
 
-            int in = off, out = off;
+            int in = off;
+            int out = off;
             while (in < off + count) {
                 if ((decode_buffer[in] != '\n')
                     && (decode_buffer[in] != '\r')

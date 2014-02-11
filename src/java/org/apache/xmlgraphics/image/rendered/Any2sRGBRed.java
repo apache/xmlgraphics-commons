@@ -157,7 +157,8 @@ public class Any2sRGBRed extends AbstractRed {
         final int height     = wr.getHeight();
         final int scanStride = sm.getScanlineStride();
 
-        int end, pix;
+        int end;
+        int pix;
 
         // For alpha premult we need to multiply all comps.
         for (int y = 0; y < height; y++) {
@@ -295,7 +296,8 @@ public class Any2sRGBRed extends AbstractRed {
             srcBICM = GraphicsUtil.coerceData(srcWr, srcCM, false);
         }
 
-        BufferedImage srcBI, dstBI;
+        BufferedImage srcBI;
+        BufferedImage dstBI;
         srcBI = new BufferedImage(srcBICM,
                                   srcWr.createWritableTranslatedChild(0, 0),
                                   false,

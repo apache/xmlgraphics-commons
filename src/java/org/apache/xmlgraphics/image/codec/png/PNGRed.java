@@ -1054,7 +1054,9 @@ public class PNGRed extends AbstractRed {
         }
 
         if (emitProperties) {
-            int r = 0, g = 0, b = 0;
+            int r = 0;
+            int g = 0;
+            int b = 0;
             if ((colorType == PNG_COLOR_PALETTE) || (bitDepth == 8)) {
                 r = bkgdRed;
                 g = bkgdGreen;
@@ -1478,7 +1480,8 @@ public class PNGRed extends AbstractRed {
 
     private static void decodePaethFilter(byte[] curr, byte[] prev,
                                           int count, int bpp) {
-        int priorPixel, priorRowPixel;
+        int priorPixel;
+        int priorRowPixel;
 
         for (int i = 0; i < bpp; i++) {
             int raw = curr[i] & 0xff;
@@ -1502,7 +1505,8 @@ public class PNGRed extends AbstractRed {
     private void processPixels(int process,
                                Raster src, WritableRaster dst,
                                int xOffset, int step, int y, int width) {
-        int srcX, dstX;
+        int srcX;
+        int dstX;
 
         // Create an array suitable for holding one pixel
         int[] ps = src.getPixel(0, 0, (int[])null);
@@ -1788,7 +1792,8 @@ public class PNGRed extends AbstractRed {
         }
 
         // Decode the (sub)image row-by-row
-        int srcY, dstY;
+        int srcY;
+        int dstY;
         for (srcY = 0, dstY = yOffset;
              srcY < passHeight;
              srcY++, dstY += yStep) {

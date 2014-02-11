@@ -571,7 +571,12 @@ public final class GraphicsUtil {
             int [] pixel = null;
             int    bands = wr.getNumBands();
             float  norm = 1f / 255f;
-            int x0, x1, y0, y1, a, b;
+            int x0;
+            int x1;
+            int y0;
+            int y1;
+            int a;
+            int b;
             float alpha;
             x0 = wr.getMinX();
             x1 = x0 + wr.getWidth();
@@ -599,7 +604,12 @@ public final class GraphicsUtil {
         } else if (is_INT_PACK_Data(wr.getSampleModel(), true)) {
             divide_INT_PACK_Data(wr);
         } else {
-            int x0, x1, y0, y1, a, b;
+            int x0;
+            int x1;
+            int y0;
+            int y1;
+            int a;
+            int b;
             float ialpha;
             int    bands = wr.getNumBands();
             int [] pixel = null;
@@ -702,7 +712,8 @@ public final class GraphicsUtil {
                 out -= bands;
             }
 
-            int b, in;
+            int b;
+            int in;
             for (int y = y0; y <= y1; y++) {
                 pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in  = w * (bands - 1) - 1;
@@ -729,7 +740,12 @@ public final class GraphicsUtil {
         } else if (dstAlpha && dst.isAlphaPremultiplied()) {
             // Src and dest have Alpha but we need to multiply it for dst.
             // System.out.println("Mult Case");
-            int a, b, alpha, in, fpNorm = (1 << 24) / 255, pt5 = 1 << 23;
+            int a;
+            int b;
+            int alpha;
+            int in;
+            int fpNorm = (1 << 24) / 255;
+            int pt5 = 1 << 23;
             for (int y = y0; y <= y1; y++) {
                 pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in = bands * w - 1;
@@ -768,7 +784,12 @@ public final class GraphicsUtil {
         } else if (dstAlpha && !dst.isAlphaPremultiplied()) {
             // Src and dest have Alpha but we need to divide it out for dst.
             // System.out.println("Div Case");
-            int a, b, ialpha, in, fpNorm = 0x00FF0000, pt5 = 1 << 15;
+            int a;
+            int b;
+            int ialpha;
+            int in;
+            int fpNorm = 0x00FF0000;
+            int pt5 = 1 << 15;
             for (int y = y0; y <= y1; y++) {
                 pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in = (bands * w) - 1;
@@ -808,7 +829,13 @@ public final class GraphicsUtil {
             int [] oPix = new int[bands * w];
             // Src has alpha dest does not so unpremult and store...
             // System.out.println("Remove Alpha, Div Case");
-            int a, b, ialpha, in, out, fpNorm = 0x00FF0000, pt5 = 1 << 15;
+            int a;
+            int b;
+            int ialpha;
+            int in;
+            int out;
+            int fpNorm = 0x00FF0000;
+            int pt5 = 1 << 15;
             for (int y = y0; y <= y1; y++) {
                 pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in  = (bands + 1) * w - 1;
@@ -863,7 +890,8 @@ public final class GraphicsUtil {
         int dx = dR.x - sR.x;
         sR = sR.intersection(src.getBounds());
         dR = dR.intersection(dst.getBounds());
-        int width, height;
+        int width;
+        int height;
         if (dR.width  < sR.width) {
             width  = dR.width;
         } else {
