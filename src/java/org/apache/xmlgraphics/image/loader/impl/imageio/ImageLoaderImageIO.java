@@ -82,7 +82,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
 
     private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
 
-    private static final Set providersIgnoringICC = new HashSet(); // CSOK: ConstantName
+    private static final Set PROVIDERS_IGNORING_ICC = new HashSet();
 
     /**
      * Main constructor.
@@ -270,7 +270,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         if (log.isDebugEnabled()) {
             log.debug("Image Provider: " + b.toString());
         }
-        return ImageLoaderImageIO.providersIgnoringICC.contains(b.toString());
+        return ImageLoaderImageIO.PROVIDERS_IGNORING_ICC.contains(b.toString());
     }
 
     /**
@@ -390,9 +390,9 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
 
     static {
         // TODO: This list could be kept in a resource file.
-        providersIgnoringICC
+        PROVIDERS_IGNORING_ICC
                 .add("Standard PNG image reader/Sun Microsystems, Inc./1.0");
-        providersIgnoringICC
+        PROVIDERS_IGNORING_ICC
                 .add("Standard JPEG Image Reader/Sun Microsystems, Inc./0.5");
     }
 }

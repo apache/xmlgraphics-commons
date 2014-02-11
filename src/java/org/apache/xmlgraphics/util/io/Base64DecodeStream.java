@@ -62,25 +62,25 @@ public class Base64DecodeStream extends InputStream {
         this.src = src;
     }
 
-    private static final byte[] pem_array = new byte[256];
+    private static final byte[] PEM_ARRAY = new byte[256];
     static {
-        for (int i = 0; i < pem_array.length; i++)
-            pem_array[i] = -1;
+        for (int i = 0; i < PEM_ARRAY.length; i++)
+            PEM_ARRAY[i] = -1;
 
         int idx = 0;
         for (char c = 'A'; c <= 'Z'; c++) {
-            pem_array[c] = (byte)idx++;
+            PEM_ARRAY[c] = (byte)idx++;
         }
         for (char c = 'a'; c <= 'z'; c++) {
-            pem_array[c] = (byte)idx++;
+            PEM_ARRAY[c] = (byte)idx++;
         }
 
         for (char c = '0'; c <= '9'; c++) {
-            pem_array[c] = (byte)idx++;
+            PEM_ARRAY[c] = (byte)idx++;
         }
 
-        pem_array['+'] = (byte)idx++;
-        pem_array['/'] = (byte)idx++;
+        PEM_ARRAY['+'] = (byte)idx++;
+        PEM_ARRAY['/'] = (byte)idx++;
     }
 
     public boolean markSupported() { return false; }
@@ -153,10 +153,10 @@ public class Base64DecodeStream extends InputStream {
             off = out;
         }
 
-        a = pem_array[((int)decode_buffer[0]) & 0xFF];
-        b = pem_array[((int)decode_buffer[1]) & 0xFF];
-        c = pem_array[((int)decode_buffer[2]) & 0xFF];
-        d = pem_array[((int)decode_buffer[3]) & 0xFF];
+        a = PEM_ARRAY[((int)decode_buffer[0]) & 0xFF];
+        b = PEM_ARRAY[((int)decode_buffer[1]) & 0xFF];
+        c = PEM_ARRAY[((int)decode_buffer[2]) & 0xFF];
+        d = PEM_ARRAY[((int)decode_buffer[3]) & 0xFF];
 
         out_buffer[0] = (byte)((a << 2) | (b >>> 4));
         out_buffer[1] = (byte)((b << 4) | (c >>> 2));

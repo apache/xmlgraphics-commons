@@ -46,7 +46,7 @@ import java.io.PrintStream;
 public class Base64EncodeStream extends OutputStream {
 
     /** This array maps the 6 bit values to their characters */
-    private static final byte[] pem_array = {
+    private static final byte[] PEM_ARRAY = {
     //   0   1   2   3   4   5   6   7
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', // 0
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 1
@@ -123,26 +123,26 @@ public class Base64EncodeStream extends OutputStream {
         case 0: return;
         case 1:
             a = atom[0];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[((a <<  4) & 0x30)];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[((a <<  4) & 0x30)];
             encodeBuf[2] = encodeBuf[3] = '=';
             break;
         case 2:
             a = atom[0];
             b = atom[1];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[((b  << 2) & 0x3C)];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[((b  << 2) & 0x3C)];
             encodeBuf[3] = '=';
             break;
         default:
             a = atom[0];
             b = atom[1];
             c = atom[2];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
-            encodeBuf[3] = pem_array[c & 0x3F];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
+            encodeBuf[3] = PEM_ARRAY[c & 0x3F];
         }
         if (lineLen == 64) {
             out.println();
@@ -190,10 +190,10 @@ public class Base64EncodeStream extends OutputStream {
             b = data[offset++];
             c = data[offset++];
 
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
-            encodeBuf[3] = pem_array[c & 0x3F];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
+            encodeBuf[3] = PEM_ARRAY[c & 0x3F];
             out.write(encodeBuf);
 
             lineLen += 4;
