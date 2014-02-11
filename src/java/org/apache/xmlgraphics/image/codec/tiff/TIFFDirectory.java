@@ -191,7 +191,7 @@ public class TIFFDirectory implements Serializable {
         stream.seek(global_save_offset);
     }
 
-    private static final int[] sizeOfType = {
+    private static final int[] SIZE_OF_TYPE = {
         0, //  0 = n/a
         1, //  1 = byte
         1, //  2 = ascii
@@ -228,7 +228,7 @@ public class TIFFDirectory implements Serializable {
             try {
                 // If the tag data can't fit in 4 bytes, the next 4 bytes
                 // contain the starting offset of the data
-                if (count * sizeOfType[type] > 4) {
+                if (count * SIZE_OF_TYPE[type] > 4) {
                     value = (int)(readUnsignedInt(stream));
                     stream.seek(value);
                 }

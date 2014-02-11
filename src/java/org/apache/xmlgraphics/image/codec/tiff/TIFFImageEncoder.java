@@ -1008,7 +1008,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             TIFFField field = (TIFFField)iter.next();
 
             // Determine the size of the field value.
-            int valueSize = field.getCount() * sizeOfType[field.getType()];
+            int valueSize = field.getCount() * SIZE_OF_TYPE[field.getType()];
 
             // Add any excess size.
             if (valueSize > 4) {
@@ -1106,12 +1106,12 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 }
             }
         } else {
-            valueSize = count * sizeOfType[type];
+            valueSize = count * SIZE_OF_TYPE[type];
         }
         return valueSize;
     }
 
-    private static final int[] sizeOfType = {
+    private static final int[] SIZE_OF_TYPE = {
         0, //  0 = n/a
         1, //  1 = byte
         1, //  2 = ascii

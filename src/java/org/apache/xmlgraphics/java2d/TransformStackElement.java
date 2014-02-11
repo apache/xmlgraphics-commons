@@ -66,7 +66,9 @@ public abstract class TransformStackElement implements Cloneable {
         // start with a shallow copy to get our implementations right
         try {
             newElement = (TransformStackElement) super.clone();
-        } catch (java.lang.CloneNotSupportedException ex) { }
+        } catch (java.lang.CloneNotSupportedException ex) {
+            throw new AssertionError();
+        }
 
         // now deep copy the parameter array
         double[] transformParameters = new double[this.transformParameters.length];

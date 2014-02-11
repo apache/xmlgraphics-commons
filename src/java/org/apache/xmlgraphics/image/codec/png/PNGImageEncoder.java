@@ -288,7 +288,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     private static final int PNG_COLOR_GRAY_ALPHA = 4;
     private static final int PNG_COLOR_RGB_ALPHA = 6;
 
-    private static final byte[] magic = {
+    private static final byte[] MAGIC = {
         (byte)137, (byte) 80, (byte) 78, (byte) 71,
         (byte) 13, (byte) 10, (byte) 26, (byte) 10
     };
@@ -328,7 +328,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     }
 
     private void writeMagic() throws IOException {
-        dataOutput.write(magic);
+        dataOutput.write(MAGIC);
     }
 
     private void writeIHDR() throws IOException {
