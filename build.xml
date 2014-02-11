@@ -484,6 +484,7 @@ NOTE:
         <pathelement location="${build.codegen-classes.dir}"/>
       </classpath>
       <fileset dir="${src.dir}" includes="**/*.java"/>
+      <fileset dir="${basedir}/test" includes="**/*.java"/>
       <formatter type="xml" toFile="${build.dir}/report_checkstyle.xml"/>
     </checkstyle>
     <xslt in="${build.dir}/report_checkstyle.xml" out="${build.dir}/report_checkstyle.html" style="${checkstyle.noframes.xslt}"/>
