@@ -182,7 +182,7 @@ class ChunkStream extends OutputStream implements DataOutput {
     @Override
     public void close() throws IOException {
 
-        if ( baos != null ) {
+        if (baos != null) {
             baos.close();
             baos = null;
         }

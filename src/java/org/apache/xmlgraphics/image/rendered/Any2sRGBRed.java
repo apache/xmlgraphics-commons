@@ -149,10 +149,10 @@ public class Any2sRGBRed extends AbstractRed {
             while (sp < end) {
                 pix = pixels[sp];
                 pixels[sp] =
-                    ((     pix      & 0xFF000000) |
+                    ((pix & 0xFF000000) |
                      (lut[(pix >>> 16) & 0xFF] << 16) |
                      (lut[(pix >>> 8) & 0xFF] << 8) |
-                     (lut[(pix     ) & 0xFF]    ));
+                     (lut[pix & 0xFF]));
                 sp++;
             }
         }

@@ -262,7 +262,7 @@ public class TIFFDirectory implements Serializable {
 
                         // When we encountered zero, means one string has ended
                         v.add(new String(bvalues, prevIndex,
-                                         (index - prevIndex)) );
+                                         (index - prevIndex)));
                         prevIndex = index;
                     }
 

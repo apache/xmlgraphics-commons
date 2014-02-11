@@ -1120,7 +1120,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         StringBuffer key = new StringBuffer();
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
 
         StringBuilder value = new StringBuilder();
@@ -1239,7 +1239,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         StringBuffer key = new StringBuffer();
         byte b;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
         /* int method = */ chunk.getByte(textIndex++);
 

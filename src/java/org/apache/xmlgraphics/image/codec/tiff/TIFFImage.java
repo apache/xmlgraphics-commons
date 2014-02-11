@@ -1615,7 +1615,7 @@ public class TIFFImage extends AbstractRed {
                 intArray[i] = (((byteArray[j++] & 0xff) << 24) |
                                ((byteArray[j++] & 0xff) << 16) |
                                ((byteArray[j++] & 0xff) << 8) |
-                               ( byteArray[j++] & 0xff));
+                               (byteArray[j++] & 0xff));
             }
 
         } else {
