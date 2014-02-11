@@ -76,13 +76,13 @@ public class Any2LsRGBRed extends AbstractRed {
      * Gamma for linear to sRGB convertion
      */
     private static final double GAMMA = 2.4;
-    private static final double LFACT = 1.0/12.92;
+    private static final double LFACT = 1.0 / 12.92;
 
 
     public static final double sRGBToLsRGB(double value) {
-        if(value <= 0.003928)
-            return value*LFACT;
-        return Math.pow((value+0.055)/1.055, GAMMA);
+        if (value <= 0.003928)
+            return value * LFACT;
+        return Math.pow((value + 0.055) / 1.055, GAMMA);
     }
 
     /**
@@ -93,12 +93,12 @@ public class Any2LsRGBRed extends AbstractRed {
      */
     private static final int[] sRGBToLsRGBLut = new int[256];
     static {
-        final double scale = 1.0/255;
+        final double scale = 1.0 / 255;
 
         // System.out.print("S2L: ");
-        for(int i=0; i<256; i++){
-            double value = sRGBToLsRGB(i*scale);
-            sRGBToLsRGBLut[i] = (int)Math.round(value*255.0);
+        for (int i = 0; i < 256; i++) {
+            double value = sRGBToLsRGB(i * scale);
+            sRGBToLsRGBLut[i] = (int)Math.round(value * 255.0);
             // System.out.print(sRGBToLsRGBLut[i] + ",");
         }
         // System.out.println("");
@@ -185,8 +185,8 @@ public class Any2LsRGBRed extends AbstractRed {
                                                     wr.getDataBuffer(),
                                                     new Point(0,0));
                 dstWr = dstWr.createWritableChild
-                    (wr.getMinX()-wr.getSampleModelTranslateX(),
-                     wr.getMinY()-wr.getSampleModelTranslateY(),
+                    (wr.getMinX() - wr.getSampleModelTranslateX(),
+                     wr.getMinY() - wr.getSampleModelTranslateY(),
                      wr.getWidth(), wr.getHeight(),
                      0, 0, null);
 
@@ -229,8 +229,8 @@ public class Any2LsRGBRed extends AbstractRed {
             op.filter(srcBI, dstBI);
 
             if (dstCM.hasAlpha())
-                copyBand(srcWr, srcSM.getNumBands()-1,
-                         wr,    getSampleModel().getNumBands()-1);
+                copyBand(srcWr, srcSM.getNumBands() - 1,
+                         wr,    getSampleModel().getNumBands() - 1);
         }
         return wr;
     }

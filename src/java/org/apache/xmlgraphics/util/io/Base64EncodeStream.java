@@ -82,7 +82,7 @@ public class Base64EncodeStream extends OutputStream {
             out.flush();
             if (closeOutOnClose)
                 out.close();
-            out=null;
+            out = null;
         }
     }
 
@@ -161,7 +161,7 @@ public class Base64EncodeStream extends OutputStream {
      * padding characters.
      */
     void encodeFromArray(byte[] data, int offset, int len)
-        throws IOException{
+        throws IOException {
         byte a, b, c;
         if (len == 0)
             return;
@@ -185,7 +185,7 @@ public class Base64EncodeStream extends OutputStream {
             encodeAtom();
         }
 
-        while (len >=3) {
+        while (len >= 3) {
             a = data[offset++];
             b = data[offset++];
             c = data[offset++];
@@ -202,7 +202,7 @@ public class Base64EncodeStream extends OutputStream {
                 lineLen = 0;
             }
 
-            len -=3;
+            len -= 3;
         }
 
         switch (len) {
@@ -211,7 +211,7 @@ public class Base64EncodeStream extends OutputStream {
             break;
         case 2:
             atom[0] = data[offset];
-            atom[1] = data[offset+1];
+            atom[1] = data[offset + 1];
             break;
         default:
         }

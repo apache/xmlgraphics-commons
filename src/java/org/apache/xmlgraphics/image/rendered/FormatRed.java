@@ -146,27 +146,27 @@ public class FormatRed extends AbstractRed {
         int bits;
         int dt = sm.getDataType();
         switch (dt) {
-        case DataBuffer.TYPE_BYTE:   bits=8;  break;
-        case DataBuffer.TYPE_SHORT:  bits=16; break;
-        case DataBuffer.TYPE_USHORT: bits=16; break;
-        case DataBuffer.TYPE_INT:    bits=32; break;
+        case DataBuffer.TYPE_BYTE:   bits = 8;  break;
+        case DataBuffer.TYPE_SHORT:  bits = 16; break;
+        case DataBuffer.TYPE_USHORT: bits = 16; break;
+        case DataBuffer.TYPE_INT:    bits = 32; break;
         default:
             throw new IllegalArgumentException
                 ("Unsupported DataBuffer type: " + dt);
         }
 
         boolean hasAlpha = srcCM.hasAlpha();
-        if (hasAlpha){
+        if (hasAlpha) {
             // if Src has Alpha then our out bands must
             // either be one less than the source (no out alpha)
             // or equal (still has alpha)
-            if (bands == srcCM.getNumComponents()-1)
+            if (bands == srcCM.getNumComponents() - 1)
                 hasAlpha = false;
             else if (bands != srcCM.getNumComponents())
                 throw new IllegalArgumentException
                     ("Incompatible number of bands in and out");
         } else {
-            if (bands == srcCM.getNumComponents()+1)
+            if (bands == srcCM.getNumComponents() + 1)
                 hasAlpha = true;
             else if (bands != srcCM.getNumComponents())
                 throw new IllegalArgumentException
@@ -179,7 +179,7 @@ public class FormatRed extends AbstractRed {
 
         if (sm instanceof ComponentSampleModel) {
             int [] bitsPer = new int[bands];
-            for (int i=0; i<bands; i++)
+            for (int i = 0; i < bands; i++)
                 bitsPer[i] = bits;
 
             return new ComponentColorModel

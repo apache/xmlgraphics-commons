@@ -111,7 +111,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     public static class Palette extends PNGEncodeParam {
 
         /** Constructs an instance of <code>PNGEncodeParam.Palette</code>. */
-        public Palette() {}
+        public Palette() { }
 
         // bKGD chunk
 
@@ -162,7 +162,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          * @param rgb An array of <code>int</code>s.
          */
         public void setPalette(int[] rgb) {
-            if (rgb.length < 1*3 || rgb.length > 256*3) {
+            if (rgb.length < 1 * 3 || rgb.length > 256 * 3) {
                 throw new
                   IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam0"));
             }
@@ -281,7 +281,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     public static class Gray extends PNGEncodeParam {
 
         /** Constructs an instance of <code>PNGEncodeParam.Gray</code>. */
-        public Gray() {}
+        public Gray() { }
 
         // bKGD chunk
 
@@ -445,7 +445,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     public static class RGB extends PNGEncodeParam {
 
         /** Constructs an instance of <code>PNGEncodeParam.RGB</code>. */
-        public RGB() {}
+        public RGB() { }
 
         // bKGD chunk
 
@@ -1400,17 +1400,17 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             // sub filter
             diff = curr - left;
             scratchRows[1][i]  = (byte)diff;
-            badness    [1]    +=   (diff>0)?diff:-diff;
+            badness    [1]    +=   (diff > 0) ? diff : -diff;
 
             // up filter
             diff = curr - up;
             scratchRows[2][i]  = (byte)diff;
-            badness    [2]    +=   (diff>=0)?diff:-diff;
+            badness    [2]    +=   (diff >= 0) ? diff : -diff;
 
             // average filter
-            diff = curr - ((left+up)>>1);
+            diff = curr - ((left + up) >> 1);
             scratchRows[3][i]  = (byte)diff;
-            badness    [3]    +=   (diff>=0)?diff:-diff;
+            badness    [3]    +=   (diff >= 0) ? diff : -diff;
 
             // paeth filter
 
@@ -1430,65 +1430,65 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             /// else
             ///   diff = curr-upleft;
 
-            pa = up  -upleft;
-            pb = left-upleft;
-            if (pa<0) {
-              if (pb<0) {
+            pa = up  - upleft;
+            pb = left - upleft;
+            if (pa < 0) {
+              if (pb < 0) {
                 // both pa & pb neg so pc is always greater than or
                 // equal to pa or pb;
                 if (pa >= pb) // since pa & pb neg check sense is reversed.
-                  diff = curr-left;
+                  diff = curr - left;
                 else
-                  diff = curr-up;
+                  diff = curr - up;
               } else {
                 // pa neg pb pos so we must compute pc...
-                pc = pa+pb;
-                pa=-pa;
+                pc = pa + pb;
+                pa = -pa;
                 if (pa <= pb)     // pc is positive and less than pb
                   if (pa <= pc)
-                    diff = curr-left;
+                    diff = curr - left;
                   else
-                    diff = curr-upleft;
+                    diff = curr - upleft;
                 else
                   // pc is negative and less than or equal to pa,
                   // but since pa is greater than pb this isn't an issue...
                   if (pb <= -pc)
-                    diff = curr-up;
+                    diff = curr - up;
                   else
-                    diff = curr-upleft;
+                    diff = curr - upleft;
               }
             } else {
-              if (pb<0) {
-                pb =-pb; // make it positive...
+              if (pb < 0) {
+                pb = -pb; // make it positive...
                 if (pa <= pb) {
                   // pc would be negative and less than or equal to pb
-                  pc = pb-pa;
+                  pc = pb - pa;
                   if (pa <= pc)
-                    diff = curr-left;
+                    diff = curr - left;
                   else if (pb == pc)
                     // if pa is zero then pc==pb otherwise
                     // pc must be less than pb.
-                    diff = curr-up;
+                    diff = curr - up;
                   else
-                    diff = curr-upleft;
+                    diff = curr - upleft;
                 } else {
                   // pc would be positive and less than pa.
-                  pc = pa-pb;
+                  pc = pa - pb;
                   if (pb <= pc)
-                    diff = curr-up;
+                    diff = curr - up;
                   else
-                    diff = curr-upleft;
+                    diff = curr - upleft;
                 }
               } else {
                 // both pos so pa+pb is always greater than pa/pb
                 if (pa <= pb)
-                  diff = curr-left;
+                  diff = curr - left;
                 else
-                  diff = curr-up;
+                  diff = curr - up;
               }
             }
             scratchRows[4][i]  = (byte)diff;
-            badness    [4]    +=   (diff>=0)?diff:-diff;
+            badness    [4]    +=   (diff >= 0) ? diff : -diff;
         }
         int filterType = 0;
         int minBadness = badness[0];

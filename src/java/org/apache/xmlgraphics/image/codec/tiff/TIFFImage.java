@@ -307,9 +307,9 @@ public class TIFFImage extends AbstractRed {
                 } else if (sampleSize == 4 && samplesPerPixel == 1) {
                     imageType = TYPE_GRAY_4BIT;
                 } else if (sampleSize % 8 == 0) {
-                    if(samplesPerPixel == 1) {
+                    if (samplesPerPixel == 1) {
                         imageType = TYPE_GRAY;
-                    } else if(samplesPerPixel == 2) {
+                    } else if (samplesPerPixel == 2) {
                         imageType = TYPE_GRAY_ALPHA;
                     } else {
                         imageType = TYPE_GENERIC;
@@ -395,7 +395,7 @@ public class TIFFImage extends AbstractRed {
 
                     tileHeight =
                         dir.getField(TIFFImageDecoder.TIFF_TILE_LENGTH) != null ?
-                        (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_LENGTH):
+                        (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_LENGTH) :
                         bounds.height;
                 } else {
                     long l = field.getAsLong(0);

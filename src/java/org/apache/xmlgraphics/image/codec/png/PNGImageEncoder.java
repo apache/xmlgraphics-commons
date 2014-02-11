@@ -366,15 +366,15 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         xOffset *= numBands;
         xSkip   *= numBands;
 
-        int samplesPerByte = 8/bitDepth;
+        int samplesPerByte = 8 / bitDepth;
 
-        int numSamples = width*numBands;
+        int numSamples = width * numBands;
         int[] samples = new int[numSamples];
 
-        int pixels = (numSamples - xOffset + xSkip - 1)/xSkip;
-        int bytesPerRow = pixels*numBands;
+        int pixels = (numSamples - xOffset + xSkip - 1) / xSkip;
+        int bytesPerRow = pixels * numBands;
         if (bitDepth < 8) {
-            bytesPerRow = (bytesPerRow + samplesPerByte - 1)/samplesPerByte;
+            bytesPerRow = (bytesPerRow + samplesPerByte - 1) / samplesPerByte;
         } else if (bitDepth == 16) {
             bytesPerRow *= 2;
         }
@@ -422,7 +422,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
 
                 // Left shift the last byte
                 if (pos != 0) {
-                    tmp <<= (samplesPerByte - pos)*bitDepth;
+                    tmp <<= (samplesPerByte - pos) * bitDepth;
                     currRow[count++] = (byte)tmp;
                 }
                 break;
@@ -548,7 +548,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             }
 
             for (int i = 0; i < 8; i++) {
-                cs.writeInt((int)(chroma[i]*100000));
+                cs.writeInt((int)(chroma[i] * 100000));
             }
             cs.writeToStream(dataOutput);
             cs.close();
@@ -563,11 +563,11 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             if (!param.isSRGBIntentSet()) {
                 gamma = param.getGamma();
             } else {
-                gamma = 1.0F/2.2F; // SRGB gamma
+                gamma = 1.0F / 2.2F; // SRGB gamma
             }
             // TD should include the .5 but causes regard to say
             // everything is different.
-            cs.writeInt((int)(gamma*100000/*+0.5*/));
+            cs.writeInt((int)(gamma * 100000/*+0.5*/));
             cs.writeToStream(dataOutput);
             cs.close();
         }
@@ -770,9 +770,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         if (param.isTextSet()) {
             String[] text = param.getText();
 
-            for (int i = 0; i < text.length/2; i++) {
-                byte[] keyword = text[2*i].getBytes();
-                byte[] value = text[2*i + 1].getBytes();
+            for (int i = 0; i < text.length / 2; i++) {
+                byte[] keyword = text[2 * i].getBytes();
+                byte[] value = text[2 * i + 1].getBytes();
 
                 ChunkStream cs = new ChunkStream("tEXt");
 
@@ -790,9 +790,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         if (param.isCompressedTextSet()) {
             String[] text = param.getCompressedText();
 
-            for (int i = 0; i < text.length/2; i++) {
-                byte[] keyword = text[2*i].getBytes();
-                byte[] value = text[2*i + 1].getBytes();
+            for (int i = 0; i < text.length / 2; i++) {
+                byte[] keyword = text[2 * i].getBytes();
+                byte[] value = text[2 * i + 1].getBytes();
 
                 ChunkStream cs = new ChunkStream("zTXt");
 
@@ -839,11 +839,11 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         PNGEncodeParam.Gray param = new PNGEncodeParam.Gray();
         int numTransparent = 0;
 
-        int grayFactor = 255/((1 << bitDepth) - 1);
+        int grayFactor = 255 / ((1 << bitDepth) - 1);
         int entries = 1 << bitDepth;
         for (int i = 0; i < entries; i++) {
             byte red = redPalette[i];
-            if ((red != i*grayFactor) ||
+            if ((red != i * grayFactor) ||
                 (red != greenPalette[i]) ||
                 (red != bluePalette[i])) {
                 return null;
@@ -923,7 +923,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         }
 
         this.numBands = sampleModel.getNumBands();
-        this.bpp = numBands*((bitDepth == 16) ? 2 : 1);
+        this.bpp = numBands * ((bitDepth == 16) ? 2 : 1);
 
         ColorModel colorModel = image.getColorModel();
         if (colorModel instanceof IndexColorModel) {
@@ -966,7 +966,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 PNGEncodeParam.Palette parami = (PNGEncodeParam.Palette)param;
                 if (parami.isPaletteSet()) {
                     int[] palette = parami.getPalette();
-                    size = palette.length/3;
+                    size = palette.length / 3;
 
                     int index = 0;
                     for (int i = 0; i < size; i++) {

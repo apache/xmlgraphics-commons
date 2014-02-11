@@ -784,7 +784,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     }
 
                     if (compression == CompressionValue.NONE) {
-                        output.write(bpixels, 0, size*2);
+                        output.write(bpixels, 0, size * 2);
                     } else if (compression == CompressionValue.PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
@@ -821,7 +821,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         }
                     }
                     if (compression == CompressionValue.NONE) {
-                        output.write(bpixels, 0, size*4);
+                        output.write(bpixels, 0, size * 4);
                     } else if (compression == CompressionValue.PACKBITS) {
                         int numCompressedBytes =
                             compressPackBits(bpixels, rows,
