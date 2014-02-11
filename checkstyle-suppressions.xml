@@ -10,4 +10,6 @@
   <suppress checks="MethodName" files="org/apache/xmlgraphics/image/codec/png/PNGRed.java"/>
   <suppress checks="MethodName" files="org/apache/xmlgraphics/image/loader/impl/PNGFile.java"/>
   <suppress checks="MethodName" files="org/apache/xmlgraphics/java2d/color/profile/ColorProfileUtil.java"/>
+  <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSFontUtils.java"/>
+  <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSImageUtils.java"/>
 </suppressions>
