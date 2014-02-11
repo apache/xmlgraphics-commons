@@ -12,4 +12,9 @@
   <suppress checks="MethodName" files="org/apache/xmlgraphics/java2d/color/profile/ColorProfileUtil.java"/>
   <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSFontUtils.java"/>
   <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSImageUtils.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGImageDecoder.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGImageEncoder.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGRed.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/tiff/TIFFImage.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/tiff/TIFFImageEncoder.java"/>
 </suppressions>
