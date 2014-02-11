@@ -104,7 +104,7 @@ public class BufferedImageCachableRed extends AbstractRed {
             return null;
         }
         r = r.intersection(getBounds());
-        r.translate(-getMinX(), - getMinY());
+        r.translate(-getMinX(), -getMinY());
 
         Raster ret = bi.getData(r);
         return ret.createTranslatedChild(ret.getMinX() + getMinX(),

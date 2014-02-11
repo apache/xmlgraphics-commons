@@ -758,9 +758,12 @@ public final class GraphicsUtil {
                         } else {
                             in--;
                             alpha = fpNorm * a;
-                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24; in--;
-                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24; in--;
-                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24; in--;
+                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24;
+                            in--;
+                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24;
+                            in--;
+                            pixel[in] = (pixel[in] * alpha + pt5) >>> 24;
+                            in--;
                         }
                     }
                     break;
@@ -802,9 +805,12 @@ public final class GraphicsUtil {
                         } else {
                             in--;
                             ialpha = fpNorm / a;
-                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16; in--;
-                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16; in--;
-                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16; in--;
+                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16;
+                            in--;
+                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16;
+                            in--;
+                            pixel[in] = (pixel[in] * ialpha + pt5) >>> 16;
+                            in--;
                         }
                     }
                     break;
@@ -841,7 +847,8 @@ public final class GraphicsUtil {
                 in  = (bands + 1) * w - 1;
                 out = (bands * w) - 1;
                 while (in >= 0) {
-                    a = pixel[in]; in--;
+                    a = pixel[in];
+                    in--;
                     if (a > 0) {
                         if (a < 255) {
                             ialpha = fpNorm / a;
