@@ -106,14 +106,14 @@ public class BufferedImageCachableRed extends AbstractRed {
         r.translate(-getMinX(), - getMinY());
 
         Raster ret = bi.getData(r);
-        return ret.createTranslatedChild(ret.getMinX()+getMinX(),
-                                         ret.getMinY()+getMinY());
+        return ret.createTranslatedChild(ret.getMinX() + getMinX(),
+                                         ret.getMinY() + getMinY());
     }
 
     public WritableRaster copyData(WritableRaster wr) {
         WritableRaster wr2 = wr.createWritableTranslatedChild
-            (wr.getMinX()-getMinX(),
-             wr.getMinY()-getMinY());
+            (wr.getMinX() - getMinX(),
+             wr.getMinY() - getMinY());
 
         GraphicsUtil.copyData(bi.getRaster(), wr2);
 

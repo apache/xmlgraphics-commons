@@ -75,19 +75,19 @@ public class Any2sRGBRed extends AbstractRed {
     }
 
     public static boolean is_INT_PACK_COMP(SampleModel sm) {
-        if(!(sm instanceof SinglePixelPackedSampleModel)) return false;
+        if (!(sm instanceof SinglePixelPackedSampleModel)) return false;
 
         // Check transfer types
-        if(sm.getDataType() != DataBuffer.TYPE_INT)       return false;
+        if (sm.getDataType() != DataBuffer.TYPE_INT)       return false;
 
         SinglePixelPackedSampleModel sppsm;
         sppsm = (SinglePixelPackedSampleModel)sm;
 
         int [] masks = sppsm.getBitMasks();
         if ((masks.length != 3) && (masks.length != 4)) return false;
-        if(masks[0] != 0x00ff0000) return false;
-        if(masks[1] != 0x0000ff00) return false;
-        if(masks[2] != 0x000000ff) return false;
+        if (masks[0] != 0x00ff0000) return false;
+        if (masks[1] != 0x0000ff00) return false;
+        if (masks[2] != 0x000000ff) return false;
         if ((masks.length == 4) &&
             (masks[3] != 0xff000000)) return false;
 
@@ -107,17 +107,17 @@ public class Any2sRGBRed extends AbstractRed {
      */
     private static final int[] linearToSRGBLut = new int[256];
     static {
-        final double scale = 1.0/255;
-        final double exp   = 1.0/GAMMA;
+        final double scale = 1.0 / 255;
+        final double exp   = 1.0 / GAMMA;
         // System.out.print("L2S: ");
-        for(int i=0; i<256; i++){
-            double value = i*scale;
-            if(value <= 0.0031308)
+        for (int i = 0; i < 256; i++) {
+            double value = i * scale;
+            if (value <= 0.0031308)
                 value *= 12.92;
             else
                 value = 1.055 * Math.pow(value, exp) - 0.055;
 
-            linearToSRGBLut[i] = (int)Math.round(value*255.);
+            linearToSRGBLut[i] = (int)Math.round(value * 255.);
             // System.out.print(linearToSRGBLut[i] + ",");
         }
         // System.out.println("");
@@ -131,8 +131,8 @@ public class Any2sRGBRed extends AbstractRed {
 
         final int     srcBase
             = (db.getOffset() +
-               sm.getOffset(wr.getMinX()-wr.getSampleModelTranslateX(),
-                            wr.getMinY()-wr.getSampleModelTranslateY()));
+               sm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+                            wr.getMinY() - wr.getSampleModelTranslateY()));
         // Access the pixel data array
         final int[] pixels   = db.getBankData()[0];
         final int width      = wr.getWidth();
@@ -142,17 +142,17 @@ public class Any2sRGBRed extends AbstractRed {
         int end, pix;
 
         // For alpha premult we need to multiply all comps.
-        for (int y=0; y<height; y++) {
-            int sp  = srcBase + y*scanStride;
+        for (int y = 0; y < height; y++) {
+            int sp  = srcBase + y * scanStride;
             end = sp + width;
 
-            while (sp<end) {
+            while (sp < end) {
                 pix = pixels[sp];
                 pixels[sp] =
-                    ((     pix      &0xFF000000)|
-                     (lut[(pix>>>16)&0xFF]<<16) |
-                     (lut[(pix>>> 8)&0xFF]<< 8) |
-                     (lut[(pix     )&0xFF]    ));
+                    ((     pix      & 0xFF000000) |
+                     (lut[(pix >>> 16) & 0xFF] << 16) |
+                     (lut[(pix >>> 8) & 0xFF] << 8) |
+                     (lut[(pix     ) & 0xFF]    ));
                 sp++;
             }
         }
@@ -290,12 +290,12 @@ public class Any2sRGBRed extends AbstractRed {
         // System.out.println("After filter:");
 
         WritableRaster wr00 = wr.createWritableTranslatedChild(0,0);
-        for (int i=0; i<dstCM.getColorSpace().getNumComponents(); i++)
+        for (int i = 0; i < dstCM.getColorSpace().getNumComponents(); i++)
             copyBand(dstBI.getRaster(), i, wr00,    i);
 
         if (dstCM.hasAlpha())
-            copyBand(srcWr, srcSM.getNumBands()-1,
-                     wr,    getSampleModel().getNumBands()-1);
+            copyBand(srcWr, srcSM.getNumBands() - 1,
+                     wr,    getSampleModel().getNumBands() - 1);
         return wr;
     }
 

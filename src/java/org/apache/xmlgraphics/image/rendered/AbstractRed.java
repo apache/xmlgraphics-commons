@@ -136,8 +136,8 @@ public abstract class AbstractRed implements CachableRed {
                           ColorModel cm, SampleModel sm,
                           Map props) {
         init(src, bounds, cm, sm,
-             (src==null)?0:src.getTileGridXOffset(),
-             (src==null)?0:src.getTileGridYOffset(),
+             (src == null) ? 0 : src.getTileGridXOffset(),
+             (src == null) ? 0 : src.getTileGridYOffset(),
              props);
     }
 
@@ -202,7 +202,7 @@ public abstract class AbstractRed implements CachableRed {
         this.tileGridYOff = tileGridYOff;
 
         this.props        = new HashMap();
-        if(props != null){
+        if (props != null) {
             this.props.putAll(props);
         }
 
@@ -305,7 +305,7 @@ public abstract class AbstractRed implements CachableRed {
                         int tileGridXOff, int tileGridYOff,
                         Map props) {
         this.srcs = new Vector();
-        if(srcs != null){
+        if (srcs != null) {
             this.srcs.addAll(srcs);
         }
 
@@ -320,7 +320,7 @@ public abstract class AbstractRed implements CachableRed {
         this.tileGridXOff = tileGridXOff;
         this.tileGridYOff = tileGridYOff;
         this.props        = new HashMap();
-        if(props != null){
+        if (props != null) {
             this.props.putAll(props);
         }
 
@@ -357,13 +357,13 @@ public abstract class AbstractRed implements CachableRed {
         minTileX = getXTile(bounds.x);
         minTileY = getYTile(bounds.y);
 
-        x1       = bounds.x + bounds.width-1;     // Xloc of right edge
+        x1       = bounds.x + bounds.width - 1;     // Xloc of right edge
         maxTileX = getXTile(x1);
-        numXTiles = maxTileX-minTileX+1;
+        numXTiles = maxTileX - minTileX + 1;
 
-        y1       = bounds.y + bounds.height-1;     // Yloc of right edge
+        y1       = bounds.y + bounds.height - 1;     // Yloc of right edge
         maxTileY = getYTile(y1);
-        numYTiles = maxTileY-minTileY+1;
+        numYTiles = maxTileY - minTileY + 1;
     }
 
 
@@ -455,7 +455,7 @@ public abstract class AbstractRed implements CachableRed {
             RenderedImage ri = (RenderedImage)iter.next();
             String[] srcProps = ri.getPropertyNames();
             if (srcProps.length != 0) {
-                String[] tmp = new String[ret.length+srcProps.length];
+                String[] tmp = new String[ret.length + srcProps.length];
                 System.arraycopy(ret, 0, tmp, 0, ret.length);
                 System.arraycopy(srcProps, 0, tmp, ret.length, srcProps.length);
                 ret = tmp;
@@ -527,12 +527,12 @@ public abstract class AbstractRed implements CachableRed {
      * @return The tile index under xloc (may be outside tile grid).
      */
     public final int getXTile(int xloc) {
-        int tgx = xloc-tileGridXOff;
+        int tgx = xloc - tileGridXOff;
         // We need to round to -infinity...
-        if (tgx>=0)
-            return tgx/tileWidth;
+        if (tgx >= 0)
+            return tgx / tileWidth;
         else
-            return (tgx-tileWidth+1)/tileWidth;
+            return (tgx - tileWidth + 1) / tileWidth;
     }
 
     /**
@@ -541,12 +541,12 @@ public abstract class AbstractRed implements CachableRed {
      * @return The tile index under yloc (may be outside tile grid).
      */
     public final int getYTile(int yloc) {
-        int tgy = yloc-tileGridYOff;
+        int tgy = yloc - tileGridYOff;
         // We need to round to -infinity...
-        if (tgy>=0)
-            return tgy/tileHeight;
+        if (tgy >= 0)
+            return tgy / tileHeight;
         else
-            return (tgy-tileHeight+1)/tileHeight;
+            return (tgy - tileHeight + 1) / tileHeight;
     }
 
     /**
@@ -558,20 +558,20 @@ public abstract class AbstractRed implements CachableRed {
     public void copyToRaster(WritableRaster wr) {
         int tx0 = getXTile(wr.getMinX());
         int ty0 = getYTile(wr.getMinY());
-        int tx1 = getXTile(wr.getMinX()+wr.getWidth() -1);
-        int ty1 = getYTile(wr.getMinY()+wr.getHeight()-1);
+        int tx1 = getXTile(wr.getMinX() + wr.getWidth() - 1);
+        int ty1 = getYTile(wr.getMinY() + wr.getHeight() - 1);
 
         if (tx0 < minTileX) tx0 = minTileX;
         if (ty0 < minTileY) ty0 = minTileY;
 
-        if (tx1 >= minTileX+numXTiles) tx1 = minTileX+numXTiles-1;
-        if (ty1 >= minTileY+numYTiles) ty1 = minTileY+numYTiles-1;
+        if (tx1 >= minTileX + numXTiles) tx1 = minTileX + numXTiles - 1;
+        if (ty1 >= minTileY + numYTiles) ty1 = minTileY + numYTiles - 1;
 
         final boolean isIntPack =
             GraphicsUtil.is_INT_PACK_Data(getSampleModel(), false);
 
-        for (int y=ty0; y<=ty1; y++)
-            for (int x=tx0; x<=tx1; x++) {
+        for (int y = ty0; y <= ty1; y++)
+            for (int x = tx0; x <= tx1; x++) {
                 Raster r = getTile(x, y);
                 if (isIntPack)
                     GraphicsUtil.copyData_INT_PACK(r, wr);
@@ -594,14 +594,14 @@ public abstract class AbstractRed implements CachableRed {
      *   falles outside of the bounds of the tile grid for the image.
      */
     public WritableRaster makeTile(int tileX, int tileY) {
-        if ((tileX < minTileX) || (tileX >= minTileX+numXTiles)
-            || (tileY < minTileY) || (tileY >= minTileY+numYTiles))
+        if ((tileX < minTileX) || (tileX >= minTileX + numXTiles)
+            || (tileY < minTileY) || (tileY >= minTileY + numYTiles))
             throw new IndexOutOfBoundsException
                 ("Requested Tile (" + tileX + ',' + tileY
                  + ") lies outside the bounds of image");
 
-        Point pt = new Point(tileGridXOff+tileX*tileWidth,
-                             tileGridYOff+tileY*tileHeight);
+        Point pt = new Point(tileGridXOff + tileX * tileWidth,
+                             tileGridYOff + tileY * tileHeight);
 
         WritableRaster wr;
         wr = Raster.createWritableRaster(sm, pt);
@@ -625,19 +625,19 @@ public abstract class AbstractRed implements CachableRed {
 
         int x0 = wr.getMinX();
         int y0 = wr.getMinY();
-        int x1 = x0+wr.getWidth() -1;
-        int y1 = y0+wr.getHeight()-1;
+        int x1 = x0 + wr.getWidth() - 1;
+        int y1 = y0 + wr.getHeight() - 1;
 
-        if ((x0 < bounds.x) || (x1 >= (bounds.x+bounds.width))
-            || (y0 < bounds.y) || (y1 >= (bounds.y+bounds.height))) {
+        if ((x0 < bounds.x) || (x1 >= (bounds.x + bounds.width))
+            || (y0 < bounds.y) || (y1 >= (bounds.y + bounds.height))) {
             // Part of this raster lies outside our bounds so subset
             // it so it only advertises the stuff inside our bounds.
             if (x0 < bounds.x) x0 = bounds.x;
             if (y0 < bounds.y) y0 = bounds.y;
-            if (x1 >= (bounds.x+bounds.width))  x1 = bounds.x+bounds.width-1;
-            if (y1 >= (bounds.y+bounds.height)) y1 = bounds.y+bounds.height-1;
+            if (x1 >= (bounds.x + bounds.width))  x1 = bounds.x + bounds.width - 1;
+            if (y1 >= (bounds.y + bounds.height)) y1 = bounds.y + bounds.height - 1;
 
-            wr = wr.createWritableChild(x0, y0, x1-x0+1, y1-y0+1,
+            wr = wr.createWritableChild(x0, y0, x1 - x0 + 1, y1 - y0 + 1,
                                         x0, y0, null);
         }
         return wr;
@@ -653,7 +653,7 @@ public abstract class AbstractRed implements CachableRed {
         Rectangle cpR  = srcR.intersection(dstR);
 
         int [] samples = null;
-        for (int y=cpR.y; y< cpR.y+cpR.height; y++) {
+        for (int y = cpR.y; y < cpR.y + cpR.height; y++) {
             samples = src.getSamples(cpR.x, y, cpR.width, 1, srcBand, samples);
             dst.setSamples(cpR.x, y, cpR.width, 1, dstBand, samples);
         }

@@ -64,18 +64,18 @@ public class Base64DecodeStream extends InputStream {
 
     private static final byte[] pem_array = new byte[256];
     static {
-        for (int i=0; i<pem_array.length; i++)
+        for (int i = 0; i < pem_array.length; i++)
             pem_array[i] = -1;
 
         int idx = 0;
-        for (char c='A'; c<='Z'; c++) {
+        for (char c = 'A'; c <= 'Z'; c++) {
             pem_array[c] = (byte)idx++;
         }
-        for (char c='a'; c<='z'; c++) {
+        for (char c = 'a'; c <= 'z'; c++) {
             pem_array[c] = (byte)idx++;
         }
 
-        for (char c='0'; c<='9'; c++) {
+        for (char c = '0'; c <= '9'; c++) {
             pem_array[c] = (byte)idx++;
         }
 
@@ -92,7 +92,7 @@ public class Base64DecodeStream extends InputStream {
 
     public int available()
         throws IOException {
-        return 3-out_offset;
+        return 3 - out_offset;
     }
 
     byte[] decode_buffer = new byte[4];
@@ -109,7 +109,7 @@ public class Base64DecodeStream extends InputStream {
             }
         }
 
-        return ((int)out_buffer[out_offset++])&0xFF;
+        return ((int)out_buffer[out_offset++]) & 0xFF;
     }
 
     public int read(byte []out, int offset, int len)
@@ -125,7 +125,7 @@ public class Base64DecodeStream extends InputStream {
                 }
             }
 
-            out[offset+idx] = out_buffer[out_offset++];
+            out[offset + idx] = out_buffer[out_offset++];
 
             idx++;
         }
@@ -136,13 +136,13 @@ public class Base64DecodeStream extends InputStream {
         int count, a, b, c, d;
 
         int off = 0;
-        while(off != 4) {
-            count = src.read(decode_buffer, off, 4-off);
+        while (off != 4) {
+            count = src.read(decode_buffer, off, 4 - off);
             if (count == -1)
                 return true;
 
-            int in=off, out=off;
-            while(in < off+count) {
+            int in = off, out = off;
+            while (in < off + count) {
                 if ((decode_buffer[in] != '\n') &&
                     (decode_buffer[in] != '\r') &&
                     (decode_buffer[in] != ' '))
@@ -153,29 +153,29 @@ public class Base64DecodeStream extends InputStream {
             off = out;
         }
 
-        a = pem_array[((int)decode_buffer[0])&0xFF];
-        b = pem_array[((int)decode_buffer[1])&0xFF];
-        c = pem_array[((int)decode_buffer[2])&0xFF];
-        d = pem_array[((int)decode_buffer[3])&0xFF];
+        a = pem_array[((int)decode_buffer[0]) & 0xFF];
+        b = pem_array[((int)decode_buffer[1]) & 0xFF];
+        c = pem_array[((int)decode_buffer[2]) & 0xFF];
+        d = pem_array[((int)decode_buffer[3]) & 0xFF];
 
-        out_buffer[0] = (byte)((a<<2) | (b>>>4));
-        out_buffer[1] = (byte)((b<<4) | (c>>>2));
-        out_buffer[2] = (byte)((c<<6) |  d     );
+        out_buffer[0] = (byte)((a << 2) | (b >>> 4));
+        out_buffer[1] = (byte)((b << 4) | (c >>> 2));
+        out_buffer[2] = (byte)((c << 6) |  d     );
 
         if (decode_buffer[3] != '=') {
             // All three bytes are good.
-            out_offset=0;
+            out_offset = 0;
         } else if (decode_buffer[2] == '=') {
             // Only one byte of output.
             out_buffer[2] = out_buffer[0];
             out_offset = 2;
-            EOF=true;
+            EOF = true;
         } else {
             // Only two bytes of output.
             out_buffer[2] = out_buffer[1];
             out_buffer[1] = out_buffer[0];
             out_offset = 1;
-            EOF=true;
+            EOF = true;
         }
 
         return false;

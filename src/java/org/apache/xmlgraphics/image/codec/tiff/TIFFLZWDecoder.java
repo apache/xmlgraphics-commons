@@ -65,7 +65,7 @@ public class TIFFLZWDecoder {
      */
     public byte[] decode(byte[] data, byte[] uncompData, int h) {
 
-        if(data[0] == (byte)0x00 && data[1] == (byte)0x01) {
+        if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
             throw new UnsupportedOperationException(PropertyUtil.getString("TIFFLZWDecoder0"));
         }
 
@@ -152,7 +152,7 @@ public class TIFFLZWDecoder {
 
         stringTable = new byte[4096][];
 
-        for (int i=0; i<256; i++) {
+        for (int i = 0; i < 256; i++) {
             stringTable[i] = new byte[1];
             stringTable[i][0] = (byte)i;
         }
@@ -166,7 +166,7 @@ public class TIFFLZWDecoder {
      */
     public void writeString(byte[] string) {
 
-        for (int i=0; i<string.length; i++) {
+        for (int i = 0; i < string.length; i++) {
             uncompData[dstIndex++] = string[i];
         }
     }
@@ -237,11 +237,11 @@ public class TIFFLZWDecoder {
             }
 
             int code =
-                (nextData >> (nextBits - bitsToGet)) & andTable[bitsToGet-9];
+                (nextData >> (nextBits - bitsToGet)) & andTable[bitsToGet - 9];
             nextBits -= bitsToGet;
 
             return code;
-        } catch(ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             // Strip not terminated as expected: return EndOfInformation code.
             return 257;
         }

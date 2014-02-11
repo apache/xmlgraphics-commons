@@ -56,7 +56,7 @@ public class RenderedImageCachableRed implements CachableRed {
     private Vector srcs = new Vector(0);
 
     public RenderedImageCachableRed(RenderedImage src) {
-        if(src == null){
+        if (src == null) {
             throw new NullPointerException();
         }
         this.src = src;

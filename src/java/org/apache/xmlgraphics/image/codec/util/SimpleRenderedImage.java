@@ -85,7 +85,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
     /** A Hashtable containing the image properties. */
     protected Map properties = new HashMap();
 
-    public SimpleRenderedImage() {}
+    public SimpleRenderedImage() { }
 
     /** Returns the X coordinate of the leftmost column of the image. */
     public int getMinX() {
@@ -300,7 +300,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
         if (x < 0) {
             x += 1 - tileWidth; // Force round to -infinity
         }
-        return x/tileWidth;
+        return x / tileWidth;
     }
 
     /**
@@ -313,7 +313,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
         if (y < 0) {
             y += 1 - tileHeight; // Force round to -infinity
         }
-        return y/tileHeight;
+        return y / tileHeight;
     }
 
     /**
@@ -346,7 +346,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * by its X offset and tile width.
      */
     public static int tileXToX(int tx, int tileGridXOffset, int tileWidth) {
-        return tx*tileWidth + tileGridXOffset;
+        return tx * tileWidth + tileGridXOffset;
     }
 
     /**
@@ -355,7 +355,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * specified by its Y offset and tile height.
      */
     public static int tileYToY(int ty, int tileGridYOffset, int tileHeight) {
-        return ty*tileHeight + tileGridYOffset;
+        return ty * tileHeight + tileGridYOffset;
     }
 
     /**
@@ -367,7 +367,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * @return the X coordinate of the tile's upper left pixel.
      */
     public int tileXToX(int tx) {
-        return tx*tileWidth + tileGridXOffset;
+        return tx * tileWidth + tileGridXOffset;
     }
 
     /**
@@ -379,7 +379,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * @return the Y coordinate of the tile's upper left pixel.
      */
     public int tileYToY(int ty) {
-        return ty*tileHeight + tileGridYOffset;
+        return ty * tileHeight + tileGridYOffset;
     }
 
     public Vector getSources() {

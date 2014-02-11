@@ -578,7 +578,7 @@ class TIFFFaxDecoder {
         this.data = compData;
 
         int lineOffset = 0;
-        int scanlineStride = (w + 7)/8;
+        int scanlineStride = (w + 7) / 8;
 
         bitPointer = 0;
         bytePointer = 0;
@@ -739,7 +739,7 @@ class TIFFFaxDecoder {
         bitPointer = 0;
         bytePointer = 0;
 
-        int scanlineStride = (w + 7)/8;
+        int scanlineStride = (w + 7) / 8;
 
         int a0, a1, b1, b2;
         int[] b = new int[2];
@@ -890,7 +890,7 @@ class TIFFFaxDecoder {
         bitPointer = 0;
         bytePointer = 0;
 
-        int scanlineStride = (w + 7)/8;
+        int scanlineStride = (w + 7) / 8;
 
         int a0, a1, b1, b2;
         int entry, code, bits;
@@ -1093,7 +1093,7 @@ class TIFFFaxDecoder {
     private void setToBlack(byte[] buffer,
                             int lineOffset, int bitOffset,
                             int numBits) {
-        int bitNum = 8*lineOffset + bitOffset;
+        int bitNum = 8 * lineOffset + bitOffset;
         int lastBit = bitNum + numBits;
 
         int byteNum = bitNum >> 3;
