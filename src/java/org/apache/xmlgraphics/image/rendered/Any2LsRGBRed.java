@@ -164,8 +164,8 @@ public class Any2LsRGBRed extends AbstractRed {
             if (!dstCM.hasAlpha()) {
                 // No alpha ao we don't have to work around the bug
                 // in the color convert op.
-                dstBI = new BufferedImage
-                    (dstCM, wr.createWritableTranslatedChild(0, 0),
+                dstBI = new BufferedImage(
+                    dstCM, wr.createWritableTranslatedChild(0, 0),
                      dstCM.isAlphaPremultiplied(), null);
             } else {
                 // All this nonsense is to work around the fact that
@@ -174,8 +174,8 @@ public class Any2LsRGBRed extends AbstractRed {
                 SinglePixelPackedSampleModel dstSM;
                 dstSM = (SinglePixelPackedSampleModel)wr.getSampleModel();
                 int [] masks = dstSM.getBitMasks();
-                SampleModel dstSMNoA = new SinglePixelPackedSampleModel
-                    (dstSM.getDataType(), dstSM.getWidth(), dstSM.getHeight(),
+                SampleModel dstSMNoA = new SinglePixelPackedSampleModel(
+                    dstSM.getDataType(), dstSM.getWidth(), dstSM.getHeight(),
                      dstSM.getScanlineStride(),
                      new int[] {masks[0], masks[1], masks[2]});
                 ColorModel dstCMNoA = GraphicsUtil.Linear_sRGB;
@@ -184,8 +184,8 @@ public class Any2LsRGBRed extends AbstractRed {
                 dstWr = Raster.createWritableRaster(dstSMNoA,
                                                     wr.getDataBuffer(),
                                                     new Point(0, 0));
-                dstWr = dstWr.createWritableChild
-                    (wr.getMinX() - wr.getSampleModelTranslateX(),
+                dstWr = dstWr.createWritableChild(
+                    wr.getMinX() - wr.getSampleModelTranslateX(),
                      wr.getMinY() - wr.getSampleModelTranslateY(),
                      wr.getWidth(), wr.getHeight(),
                      0, 0, null);
@@ -200,11 +200,11 @@ public class Any2LsRGBRed extends AbstractRed {
             WritableRaster srcWr;
             if (srcCM.hasAlpha() && srcCM.isAlphaPremultiplied()) {
                 Rectangle wrR = wr.getBounds();
-                SampleModel sm = srcCM.createCompatibleSampleModel
-                    (wrR.width, wrR.height);
+                SampleModel sm = srcCM.createCompatibleSampleModel(
+                    wrR.width, wrR.height);
 
-                srcWr = Raster.createWritableRaster
-                    (sm, new Point(wrR.x, wrR.y));
+                srcWr = Raster.createWritableRaster(
+                    sm, new Point(wrR.x, wrR.y));
                 src.copyData(srcWr);
                 srcBICM = GraphicsUtil.coerceData(srcWr, srcCM, false);
             } else {
@@ -293,14 +293,14 @@ public class Any2LsRGBRed extends AbstractRed {
             }
         }
         if (alpha)
-            return new SinglePixelPackedSampleModel
-                (DataBuffer.TYPE_INT,
+            return new SinglePixelPackedSampleModel(
+                DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF, 0xFF000000});
         else
-            return new SinglePixelPackedSampleModel
-                (DataBuffer.TYPE_INT,
+            return new SinglePixelPackedSampleModel(
+                DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF});

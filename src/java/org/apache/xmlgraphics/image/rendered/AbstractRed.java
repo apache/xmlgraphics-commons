@@ -207,8 +207,8 @@ public abstract class AbstractRed implements CachableRed {
         }
 
         if (cm == null)
-            cm = new ComponentColorModel
-                (ColorSpace.getInstance(ColorSpace.CS_GRAY),
+            cm = new ComponentColorModel(
+                ColorSpace.getInstance(ColorSpace.CS_GRAY),
                  new int [] { 8 }, false, false, Transparency.OPAQUE,
                  DataBuffer.TYPE_BYTE);
 
@@ -325,8 +325,8 @@ public abstract class AbstractRed implements CachableRed {
         }
 
         if (cm == null)
-            cm = new ComponentColorModel
-                (ColorSpace.getInstance(ColorSpace.CS_GRAY),
+            cm = new ComponentColorModel(
+                ColorSpace.getInstance(ColorSpace.CS_GRAY),
                  new int [] { 8 }, false, false, Transparency.OPAQUE,
                  DataBuffer.TYPE_BYTE);
 
@@ -467,8 +467,8 @@ public abstract class AbstractRed implements CachableRed {
 
     public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn) {
         if ((srcIndex < 0) || (srcIndex > srcs.size()))
-            throw new IndexOutOfBoundsException
-                ("Nonexistent source requested.");
+            throw new IndexOutOfBoundsException(
+                "Nonexistent source requested.");
 
         // Return empty rect if they don't intersect.
         if (!outputRgn.intersects(bounds))
@@ -481,8 +481,8 @@ public abstract class AbstractRed implements CachableRed {
 
     public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn) {
         if (srcIndex != 0)
-            throw new IndexOutOfBoundsException
-                ("Nonexistent source requested.");
+            throw new IndexOutOfBoundsException(
+                "Nonexistent source requested.");
 
         // Return empty rect if they don't intersect.
         if (!inputRgn.intersects(bounds))
@@ -511,8 +511,8 @@ public abstract class AbstractRed implements CachableRed {
     }
 
     public Raster getData(Rectangle rect) {
-        SampleModel smRet = sm.createCompatibleSampleModel
-            (rect.width, rect.height);
+        SampleModel smRet = sm.createCompatibleSampleModel(
+            rect.width, rect.height);
 
         Point pt = new Point(rect.x, rect.y);
         WritableRaster wr = Raster.createWritableRaster(smRet, pt);
@@ -596,8 +596,8 @@ public abstract class AbstractRed implements CachableRed {
     public WritableRaster makeTile(int tileX, int tileY) {
         if ((tileX < minTileX) || (tileX >= minTileX + numXTiles)
             || (tileY < minTileY) || (tileY >= minTileY + numYTiles))
-            throw new IndexOutOfBoundsException
-                ("Requested Tile (" + tileX + ',' + tileY
+            throw new IndexOutOfBoundsException(
+                "Requested Tile (" + tileX + ',' + tileY
                  + ") lies outside the bounds of image");
 
         Point pt = new Point(tileGridXOff + tileX * tileWidth,

@@ -76,7 +76,7 @@ public class Base64EncodeStream extends OutputStream {
         this.closeOutOnClose = closeOutOnClose;
     }
 
-    public void close () throws IOException {
+    public void close() throws IOException {
         if (out != null) {
             encodeAtom();
             out.flush();
