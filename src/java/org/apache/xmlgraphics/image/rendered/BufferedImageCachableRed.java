@@ -89,7 +89,7 @@ public class BufferedImageCachableRed extends AbstractRed {
     }
 
     public Raster getTile(int tileX, int tileY) {
-        return bi.getTile(tileX,tileY);
+        return bi.getTile(tileX, tileY);
     }
 
     public Raster getData() {

@@ -311,8 +311,8 @@ public final class GraphicsUtil {
         int [] data = null;
 
         for (int y = y0; y <= y1; y++)  {
-            data = src.getPixels(x0,y,width,1,data);
-            dst.setPixels       (x0,y,width,1,data);
+            data = src.getPixels(x0, y, width, 1, data);
+            dst.setPixels       (x0, y, width, 1, data);
         }
     }
 
@@ -373,7 +373,7 @@ public final class GraphicsUtil {
     public static WritableRaster copyRaster(Raster ras, int minX, int minY) {
         WritableRaster ret = Raster.createWritableRaster
             (ras.getSampleModel(),
-             new Point(0,0));
+             new Point(0, 0));
         ret = ret.createWritableChild
             (ras.getMinX() - ras.getSampleModelTranslateX(),
              ras.getMinY() - ras.getSampleModelTranslateY(),
@@ -480,7 +480,7 @@ public final class GraphicsUtil {
         WritableRaster ret = Raster.createWritableRaster
             (ras.getSampleModel(),
              ras.getDataBuffer(),
-             new Point(0,0));
+             new Point(0, 0));
         ret = ret.createWritableChild
             (ras.getMinX() - ras.getSampleModelTranslateX(),
              ras.getMinY() - ras.getSampleModelTranslateY(),
@@ -505,7 +505,7 @@ public final class GraphicsUtil {
         // Easiest way to build proper colormodel for new Alpha state...
         // Eventually this should switch on known ColorModel types and
         // only fall back on this hack when the CM type is unknown.
-        WritableRaster wr = cm.createCompatibleWritableRaster(1,1);
+        WritableRaster wr = cm.createCompatibleWritableRaster(1, 1);
         return cm.coerceData(wr, newAlphaPreMult);
     }
 
@@ -559,13 +559,13 @@ public final class GraphicsUtil {
             y1 = y0 + wr.getHeight();
             for (int y = y0; y < y1; y++)
                 for (int x = x0; x < x1; x++) {
-                    pixel = wr.getPixel(x,y,pixel);
+                    pixel = wr.getPixel(x, y, pixel);
                     a = pixel[bands - 1];
                     if ((a >= 0) && (a < 255)) {
                         alpha = a * norm;
                         for (b = 0; b < bands - 1; b++)
                             pixel[b] = (int)(pixel[b] * alpha + 0.5f);
-                        wr.setPixel(x,y,pixel);
+                        wr.setPixel(x, y, pixel);
                     }
                 }
         }
@@ -588,13 +588,13 @@ public final class GraphicsUtil {
             y1 = y0 + wr.getHeight();
             for (int y = y0; y < y1; y++)
                 for (int x = x0; x < x1; x++) {
-                    pixel = wr.getPixel(x,y,pixel);
+                    pixel = wr.getPixel(x, y, pixel);
                     a = pixel[bands - 1];
                     if ((a > 0) && (a < 255)) {
                         ialpha = 255 / (float)a;
                         for (b = 0; b < bands - 1; b++)
                             pixel[b] = (int)(pixel[b] * ialpha + 0.5f);
-                        wr.setPixel(x,y,pixel);
+                        wr.setPixel(x, y, pixel);
                     }
                 }
         }
@@ -611,7 +611,7 @@ public final class GraphicsUtil {
         copyData(BufferedImage src, BufferedImage dst) {
         Rectangle srcRect = new Rectangle(0, 0,
                                           src.getWidth(), src.getHeight());
-        copyData(src, srcRect, dst, new Point(0,0));
+        copyData(src, srcRect, dst, new Point(0, 0));
     }
 
 
@@ -679,7 +679,7 @@ public final class GraphicsUtil {
 
             int b, in;
             for (int y = y0; y <= y1; y++) {
-                pixel = srcR.getPixels(x0,y,w,1,pixel);
+                pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in  = w * (bands - 1) - 1;
                 out = (w * bands) - 2; // The 2 skips alpha channel on last pix
                 switch (bands) {
@@ -705,7 +705,7 @@ public final class GraphicsUtil {
             // System.out.println("Mult Case");
             int a, b, alpha, in, fpNorm = (1 << 24) / 255, pt5 = 1 << 23;
             for (int y = y0; y <= y1; y++) {
-                pixel = srcR.getPixels(x0,y,w,1,pixel);
+                pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in = bands * w - 1;
                 switch (bands) {
                 case 4:
@@ -744,7 +744,7 @@ public final class GraphicsUtil {
             // System.out.println("Div Case");
             int a, b, ialpha, in, fpNorm = 0x00FF0000, pt5 = 1 << 15;
             for (int y = y0; y <= y1; y++) {
-                pixel = srcR.getPixels(x0,y,w,1,pixel);
+                pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in = (bands * w) - 1;
                 switch(bands) {
                 case 4:
@@ -784,7 +784,7 @@ public final class GraphicsUtil {
             // System.out.println("Remove Alpha, Div Case");
             int a, b, ialpha, in, out, fpNorm = 0x00FF0000, pt5 = 1 << 15;
             for (int y = y0; y <= y1; y++) {
-                pixel = srcR.getPixels(x0,y,w,1,pixel);
+                pixel = srcR.getPixels(x0, y, w, 1, pixel);
                 in  = (bands + 1) * w - 1;
                 out = (bands * w) - 1;
                 while (in >= 0) {

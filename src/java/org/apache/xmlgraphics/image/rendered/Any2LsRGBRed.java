@@ -58,7 +58,7 @@ public class Any2LsRGBRed extends AbstractRed {
      * @param src The image to convert to a luminance image
      */
     public Any2LsRGBRed(CachableRed src) {
-        super(src,src.getBounds(),
+        super(src, src.getBounds(),
               fixColorModel(src),
               fixSampleModel(src),
               src.getTileGridXOffset(),
@@ -165,7 +165,7 @@ public class Any2LsRGBRed extends AbstractRed {
                 // No alpha ao we don't have to work around the bug
                 // in the color convert op.
                 dstBI = new BufferedImage
-                    (dstCM, wr.createWritableTranslatedChild(0,0),
+                    (dstCM, wr.createWritableTranslatedChild(0, 0),
                      dstCM.isAlphaPremultiplied(), null);
             } else {
                 // All this nonsense is to work around the fact that
@@ -183,7 +183,7 @@ public class Any2LsRGBRed extends AbstractRed {
                 WritableRaster dstWr;
                 dstWr = Raster.createWritableRaster(dstSMNoA,
                                                     wr.getDataBuffer(),
-                                                    new Point(0,0));
+                                                    new Point(0, 0));
                 dstWr = dstWr.createWritableChild
                     (wr.getMinX() - wr.getSampleModelTranslateX(),
                      wr.getMinY() - wr.getSampleModelTranslateY(),
@@ -214,7 +214,7 @@ public class Any2LsRGBRed extends AbstractRed {
 
             BufferedImage srcBI;
             srcBI = new BufferedImage(srcBICM,
-                                      srcWr.createWritableTranslatedChild(0,0),
+                                      srcWr.createWritableTranslatedChild(0, 0),
                                       false,
                                       null);
 
