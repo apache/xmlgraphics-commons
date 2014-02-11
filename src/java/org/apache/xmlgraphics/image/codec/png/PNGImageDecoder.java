@@ -423,8 +423,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         bitDepth = chunk.getInt1(8);
 
-        if ((bitDepth != 1) && (bitDepth != 2) && (bitDepth != 4) &&
-            (bitDepth != 8) && (bitDepth != 16)) {
+        if ((bitDepth != 1) && (bitDepth != 2) && (bitDepth != 4)
+            && (bitDepth != 8) && (bitDepth != 16)) {
             // Error -- bad bit depth
             String msg = PropertyUtil.getString("PNGImageDecoder3");
             throw new RuntimeException(msg);
@@ -432,11 +432,11 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         maxOpacity = (1 << bitDepth) - 1;
 
         colorType = chunk.getInt1(9);
-        if ((colorType != PNG_COLOR_GRAY) &&
-            (colorType != PNG_COLOR_RGB) &&
-            (colorType != PNG_COLOR_PALETTE) &&
-            (colorType != PNG_COLOR_GRAY_ALPHA) &&
-            (colorType != PNG_COLOR_RGB_ALPHA)) {
+        if ((colorType != PNG_COLOR_GRAY)
+            && (colorType != PNG_COLOR_RGB)
+            && (colorType != PNG_COLOR_PALETTE)
+            && (colorType != PNG_COLOR_GRAY_ALPHA)
+            && (colorType != PNG_COLOR_RGB_ALPHA)) {
             System.out.println(PropertyUtil.getString("PNGImageDecoder4"));
         }
 
@@ -471,8 +471,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         if (generateEncodeParam) {
             if (colorType == PNG_COLOR_PALETTE) {
                 encodeParam = new PNGEncodeParam.Palette();
-            } else if (colorType == PNG_COLOR_GRAY ||
-                       colorType == PNG_COLOR_GRAY_ALPHA) {
+            } else if (colorType == PNG_COLOR_GRAY
+                       || colorType == PNG_COLOR_GRAY_ALPHA) {
                 encodeParam = new PNGEncodeParam.Gray();
             } else {
                 encodeParam = new PNGEncodeParam.RGB();
@@ -655,8 +655,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         // Create an empty WritableRaster
         int depth = bitDepth;
-        if ((colorType == PNG_COLOR_GRAY) &&
-            (bitDepth < 8) && output8BitGray) {
+        if ((colorType == PNG_COLOR_GRAY)
+            && (bitDepth < 8) && output8BitGray) {
             depth = 8;
         }
         if ((colorType == PNG_COLOR_PALETTE) && expandPalette) {
@@ -673,9 +673,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         if (performGammaCorrection && (gammaLut == null)) {
             initGammaLut(bitDepth);
         }
-        if ((postProcess == POST_GRAY_LUT) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
+        if ((postProcess == POST_GRAY_LUT)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
             initGrayLut(bitDepth);
         }
 
@@ -697,8 +697,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                                                  greenPalette,
                                                  bluePalette);
             }
-        } else if ((colorType == PNG_COLOR_GRAY) &&
-                   (bitDepth < 8) && !output8BitGray) {
+        } else if ((colorType == PNG_COLOR_GRAY)
+                   && (bitDepth < 8) && !output8BitGray) {
             byte[] palette = expandBits[bitDepth];
             colorModel = new IndexColorModel(bitDepth,
                                              palette.length,
@@ -1225,8 +1225,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                         setTransparentRGB(rgbTrans);
                 }
             }
-        } else if (colorType == PNG_COLOR_GRAY_ALPHA ||
-                   colorType == PNG_COLOR_RGB_ALPHA) {
+        } else if (colorType == PNG_COLOR_GRAY_ALPHA
+                   || colorType == PNG_COLOR_RGB_ALPHA) {
             // Error -- GA or RGBA image can't have a tRNS chunk.
             String msg = PropertyUtil.getString("PNGImageDecoder15");
             throw new RuntimeException(msg);
@@ -1489,9 +1489,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     pd[1] = g;
                     pd[2] = b;
                 }
-                if ((r == redTransparentAlpha) &&
-                    (g == greenTransparentAlpha) &&
-                    (b == blueTransparentAlpha)) {
+                if ((r == redTransparentAlpha)
+                    && (g == greenTransparentAlpha)
+                    && (b == blueTransparentAlpha)) {
                     pd[3] = 0;
                 } else {
                     pd[3] = maxOpacity;

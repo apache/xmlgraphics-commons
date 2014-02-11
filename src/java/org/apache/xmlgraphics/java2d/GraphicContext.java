@@ -885,8 +885,8 @@ public class GraphicContext implements Cloneable {
         //
         Object antialiasingHint = hints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
         boolean isAntialiased = true;
-        if (antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON &&
-           antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+        if (antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+           && antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
 
             // If antialias was not turned off, then use the general rendering
             // hint.
@@ -894,8 +894,8 @@ public class GraphicContext implements Cloneable {
                 antialiasingHint = hints.get(RenderingHints.KEY_ANTIALIASING);
 
                 // Test general hint
-                if (antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON &&
-                   antialiasingHint != RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
+                if (antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON
+                   && antialiasingHint != RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
                     // Antialiasing was not requested. However, if it was not turned
                     // off explicitly, use it.
                     if (antialiasingHint == RenderingHints.VALUE_ANTIALIAS_OFF) {

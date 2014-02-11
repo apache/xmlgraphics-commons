@@ -148,9 +148,9 @@ public class Base64DecodeStream extends InputStream {
 
             int in = off, out = off;
             while (in < off + count) {
-                if ((decode_buffer[in] != '\n') &&
-                    (decode_buffer[in] != '\r') &&
-                    (decode_buffer[in] != ' ')) {
+                if ((decode_buffer[in] != '\n')
+                    && (decode_buffer[in] != '\r')
+                    && (decode_buffer[in] != ' ')) {
                     decode_buffer[out++] = decode_buffer[in];
                 }
                 in++;

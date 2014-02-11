@@ -260,8 +260,8 @@ public final class GraphicsUtil {
         DataBufferInt srcDB         = (DataBufferInt)src.getDataBuffer();
         final int []  srcPixels     = srcDB.getBankData()[0];
         final int     srcBase =
-            (srcDB.getOffset() +
-             srcSPPSM.getOffset(x0 - src.getSampleModelTranslateX(),
+            (srcDB.getOffset()
+             + srcSPPSM.getOffset(x0 - src.getSampleModelTranslateX(),
                                 y0 - src.getSampleModelTranslateY()));
 
 
@@ -272,12 +272,12 @@ public final class GraphicsUtil {
         DataBufferInt dstDB         = (DataBufferInt)dst.getDataBuffer();
         final int []  dstPixels     = dstDB.getBankData()[0];
         final int     dstBase =
-            (dstDB.getOffset() +
-             dstSPPSM.getOffset(x0 - dst.getSampleModelTranslateX(),
+            (dstDB.getOffset()
+             + dstSPPSM.getOffset(x0 - dst.getSampleModelTranslateX(),
                                 y0 - dst.getSampleModelTranslateY()));
 
-        if ((srcScanStride == dstScanStride) &&
-            (srcScanStride == width)) {
+        if ((srcScanStride == dstScanStride)
+            && (srcScanStride == width)) {
             // System.out.println("VERY Fast copyData");
 
             System.arraycopy(srcPixels, srcBase, dstPixels, dstBase,
@@ -342,8 +342,8 @@ public final class GraphicsUtil {
      * @param dst The destination for the data.
      */
     public static void copyData(Raster src, WritableRaster dst) {
-        if (is_INT_PACK_Data(src.getSampleModel(), false) &&
-            is_INT_PACK_Data(dst.getSampleModel(), false)) {
+        if (is_INT_PACK_Data(src.getSampleModel(), false)
+            && is_INT_PACK_Data(dst.getSampleModel(), false)) {
             copyData_INT_PACK(src, dst);
             return;
         }
@@ -668,8 +668,8 @@ public final class GraphicsUtil {
         //                    " is: " + dst.isAlphaPremultiplied());
 
         if (srcAlpha == dstAlpha) {
-            if (!srcAlpha ||
-                    src.isAlphaPremultiplied() == dst.isAlphaPremultiplied()) {
+            if (!srcAlpha
+                    || src.isAlphaPremultiplied() == dst.isAlphaPremultiplied()) {
                 // They match one another so just copy everything...
                 copyData(src.getRaster(), dst.getRaster());
                 return;
@@ -915,8 +915,8 @@ public final class GraphicsUtil {
         if (masks[2] != 0x000000ff) {
             return false;
         }
-        if ((masks.length == 4) &&
-            (masks[3] != 0xff000000)) {
+        if ((masks.length == 4)
+            && (masks[3] != 0xff000000)) {
             return false;
         }
 
@@ -948,8 +948,8 @@ public final class GraphicsUtil {
         final int scanStride = sppsm.getScanlineStride();
         DataBufferInt db = (DataBufferInt)wr.getDataBuffer();
         final int base
-            = (db.getOffset() +
-               sppsm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+            = (db.getOffset()
+               + sppsm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
                                wr.getMinY() - wr.getSampleModelTranslateY()));
 
         // Access the pixel data array
@@ -965,10 +965,10 @@ public final class GraphicsUtil {
                 } else if (a < 255) {
                     int aFP = (0x00FF0000 / a);
                     pixels[sp] =
-                        ((a << 24) |
-                         (((((pixel & 0xFF0000) >> 16) * aFP) & 0xFF0000)) |
-                         (((((pixel & 0x00FF00) >> 8) * aFP) & 0xFF0000) >> 8) |
-                         (((((pixel & 0x0000FF))    * aFP) & 0xFF0000) >> 16));
+                        ((a << 24)
+                         | (((((pixel & 0xFF0000) >> 16) * aFP) & 0xFF0000))
+                         | (((((pixel & 0x00FF00) >> 8) * aFP) & 0xFF0000) >> 8)
+                         | (((((pixel & 0x0000FF))    * aFP) & 0xFF0000) >> 16));
                 }
                 sp++;
             }
@@ -986,8 +986,8 @@ public final class GraphicsUtil {
         final int scanStride = sppsm.getScanlineStride();
         DataBufferInt db = (DataBufferInt)wr.getDataBuffer();
         final int base
-            = (db.getOffset() +
-               sppsm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+            = (db.getOffset()
+               + sppsm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
                                wr.getMinY() - wr.getSampleModelTranslateY()));
         // Access the pixel data array
         final int[] pixels = db.getBankData()[0];
@@ -998,10 +998,10 @@ public final class GraphicsUtil {
                 int pixel = pixels[sp];
                 int a = pixel >>> 24;
                 if ((a >= 0) && (a < 255)) {   // this does NOT include a == 255 (0xff) !
-                    pixels[sp] = ((a << 24) |
-                                  ((((pixel & 0xFF0000) * a) >> 8) & 0xFF0000) |
-                                  ((((pixel & 0x00FF00) * a) >> 8) & 0x00FF00) |
-                                  ((((pixel & 0x0000FF) * a) >> 8) & 0x0000FF));
+                    pixels[sp] = ((a << 24)
+                                  | ((((pixel & 0xFF0000) * a) >> 8) & 0xFF0000)
+                                  | ((((pixel & 0x00FF00) * a) >> 8) & 0x00FF00)
+                                  | ((((pixel & 0x0000FF) * a) >> 8) & 0x0000FF));
                 }
                 sp++;
             }
@@ -1023,8 +1023,8 @@ public final class GraphicsUtil {
 
         DataBufferByte db = (DataBufferByte)wr.getDataBuffer();
         final int base
-            = (db.getOffset() +
-               csm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+            = (db.getOffset()
+               + csm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
                              wr.getMinY() - wr.getSampleModelTranslateY()));
 
         int aOff = bandOff[bandOff.length - 1];
@@ -1067,8 +1067,8 @@ public final class GraphicsUtil {
 
         DataBufferByte db = (DataBufferByte)wr.getDataBuffer();
         final int base
-            = (db.getOffset() +
-               csm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+            = (db.getOffset()
+               + csm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
                              wr.getMinY() - wr.getSampleModelTranslateY()));
 
 

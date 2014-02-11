@@ -137,8 +137,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          * <code>IllegalArgumentException</code> will be thrown.
          */
         public void setBitDepth(int bitDepth) {
-            if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4 &&
-                bitDepth != 8) {
+            if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4
+                && bitDepth != 8) {
                 throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam2"));
             }
             this.bitDepth = bitDepth;
@@ -312,8 +312,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
          * values will be shifted and left-filled with zeroes.
          */
         public void setBitDepth(int bitDepth) {
-            if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4 &&
-                bitDepth != 8 && bitDepth != 16) {
+            if (bitDepth != 1 && bitDepth != 2 && bitDepth != 4
+                && bitDepth != 8 && bitDepth != 16) {
                 throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam2"));
             }
             this.bitDepth = bitDepth;

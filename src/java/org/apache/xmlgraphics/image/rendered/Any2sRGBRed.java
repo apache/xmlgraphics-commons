@@ -103,8 +103,8 @@ public class Any2sRGBRed extends AbstractRed {
         if (masks[2] != 0x000000ff) {
             return false;
         }
-        if ((masks.length == 4) &&
-            (masks[3] != 0xff000000)) {
+        if ((masks.length == 4)
+            && (masks[3] != 0xff000000)) {
             return false;
         }
 
@@ -148,8 +148,8 @@ public class Any2sRGBRed extends AbstractRed {
         DataBufferInt db = (DataBufferInt)wr.getDataBuffer();
 
         final int     srcBase
-            = (db.getOffset() +
-               sm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
+            = (db.getOffset()
+               + sm.getOffset(wr.getMinX() - wr.getSampleModelTranslateX(),
                             wr.getMinY() - wr.getSampleModelTranslateY()));
         // Access the pixel data array
         final int[] pixels   = db.getBankData()[0];
@@ -167,10 +167,10 @@ public class Any2sRGBRed extends AbstractRed {
             while (sp < end) {
                 pix = pixels[sp];
                 pixels[sp] =
-                    ((pix & 0xFF000000) |
-                     (lut[(pix >>> 16) & 0xFF] << 16) |
-                     (lut[(pix >>> 8) & 0xFF] << 8) |
-                     (lut[pix & 0xFF]));
+                    ((pix & 0xFF000000)
+                     | (lut[(pix >>> 16) & 0xFF] << 16)
+                     | (lut[(pix >>> 8) & 0xFF] << 8)
+                     | (lut[pix & 0xFF]));
                 sp++;
             }
         }
@@ -187,8 +187,8 @@ public class Any2sRGBRed extends AbstractRed {
 
 
         // Fast case, Linear SRGB source, INT Pack writable raster...
-        if (srcIsLsRGB &&
-            is_INT_PACK_COMP(wr.getSampleModel())) {
+        if (srcIsLsRGB
+            && is_INT_PACK_COMP(wr.getSampleModel())) {
             src.copyData(wr);
             if (srcCM.hasAlpha()) {
                 GraphicsUtil.coerceData(wr, srcCM, false);
@@ -236,8 +236,8 @@ public class Any2sRGBRed extends AbstractRed {
             return wr;
         }
 
-        if (srcCM.getColorSpace() ==
-            ColorSpace.getInstance(ColorSpace.CS_GRAY)) {
+        if (srcCM.getColorSpace()
+            == ColorSpace.getInstance(ColorSpace.CS_GRAY)) {
 
             // This is a little bit of a hack.  There is only
             // a linear grayscale ICC profile in the JDK so
