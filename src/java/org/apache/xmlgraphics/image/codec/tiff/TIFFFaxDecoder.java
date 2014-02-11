@@ -1363,8 +1363,8 @@ class TIFFFaxDecoder {
         int i3 = 0;
         if (bitsFromNext2NextByte != 0) {
             i2 <<= bitsFromNext2NextByte;
-            i3 = (next2next & table2[bitsFromNext2NextByte]) >>>
-                (8 - bitsFromNext2NextByte);
+            i3 = (next2next & table2[bitsFromNext2NextByte])
+                >>> (8 - bitsFromNext2NextByte);
             i2 |= i3;
             bytePointer++;
             bitPointer = bitsFromNext2NextByte;

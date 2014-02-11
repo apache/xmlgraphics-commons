@@ -519,11 +519,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         // Whether to test for contiguous data.
         boolean checkContiguous =
-            ((dataTypeSize == 1 &&
-              sampleModel instanceof MultiPixelPackedSampleModel &&
-              dataType == DataBuffer.TYPE_BYTE) ||
-             (dataTypeSize == 8 &&
-              sampleModel instanceof ComponentSampleModel));
+            ((dataTypeSize == 1
+              && sampleModel instanceof MultiPixelPackedSampleModel
+              && dataType == DataBuffer.TYPE_BYTE)
+             || (dataTypeSize == 8
+              && sampleModel instanceof ComponentSampleModel));
 
         // Also create a buffer to hold tileHeight lines of the
         // data to be written to the file, so we can use array writes.
@@ -533,8 +533,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                 bpixels = new byte[tileHeight * tileWidth * numBands];
             } else if (dataTypeIsShort) {
                 bpixels = new byte[2 * tileHeight * tileWidth * numBands];
-            } else if (dataType == DataBuffer.TYPE_INT ||
-                      dataType == DataBuffer.TYPE_FLOAT) {
+            } else if (dataType == DataBuffer.TYPE_INT
+                      || dataType == DataBuffer.TYPE_FLOAT) {
                 bpixels = new byte[4 * tileHeight * tileWidth * numBands];
             }
         }
@@ -544,8 +544,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int lastCol = minX + width;
         int tileNum = 0;
         for (int row = minY; row < lastRow; row += tileHeight) {
-            int rows = isTiled ?
-                tileHeight : Math.min(tileHeight, lastRow - row);
+            int rows = isTiled
+                ? tileHeight : Math.min(tileHeight, lastRow - row);
             int size = rows * tileWidth * numBands;
 
             for (int col = minX; col < lastCol; col += tileWidth) {
@@ -564,16 +564,16 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             int pixelStride = csm.getPixelStride();
                             int lineStride = csm.getScanlineStride();
 
-                            if (pixelStride != numBands ||
-                               lineStride != bytesPerRow) {
+                            if (pixelStride != numBands
+                               || lineStride != bytesPerRow) {
                                 useDataBuffer = false;
                             } else {
                                 useDataBuffer = true;
                                 for (int i = 0;
                                     useDataBuffer && i < numBands;
                                     i++) {
-                                    if (bankIndices[i] != 0 ||
-                                       bandOffsets[i] != i) {
+                                    if (bankIndices[i] != 0
+                                       || bandOffsets[i] != i) {
                                         useDataBuffer = false;
                                     }
                                 }
@@ -581,9 +581,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         } else { // 1-bit
                             MultiPixelPackedSampleModel mpp =
                                 (MultiPixelPackedSampleModel)src.getSampleModel();
-                            if (mpp.getNumBands() == 1 &&
-                               mpp.getDataBitOffset() == 0 &&
-                               mpp.getPixelBitStride() == 1) {
+                            if (mpp.getNumBands() == 1
+                               && mpp.getDataBitOffset() == 0
+                               && mpp.getPixelBitStride() == 1) {
                                 useDataBuffer = true;
                             }
                         }
@@ -615,10 +615,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             (MultiPixelPackedSampleModel)src.getSampleModel();
                         int lineStride = mpp.getScanlineStride();
                         int inOffset =
-                            mpp.getOffset(col -
-                                          src.getSampleModelTranslateX(),
-                                          row -
-                                          src.getSampleModelTranslateY());
+                            mpp.getOffset(col
+                                          - src.getSampleModelTranslateX(),
+                                          row
+                                          - src.getSampleModelTranslateY());
                         if (lineStride == bytesPerRow) {
                             System.arraycopy(btmp, inOffset,
                                              bpixels, 0,
@@ -643,14 +643,14 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             for (int j = 0; j < tileWidth / 8; j++) {
 
                                 pixel =
-                                    (pixels[index++] << 7) |
-                                    (pixels[index++] << 6) |
-                                    (pixels[index++] << 5) |
-                                    (pixels[index++] << 4) |
-                                    (pixels[index++] << 3) |
-                                    (pixels[index++] << 2) |
-                                    (pixels[index++] << 1) |
-                                    pixels[index++];
+                                    (pixels[index++] << 7)
+                                    | (pixels[index++] << 6)
+                                    | (pixels[index++] << 5)
+                                    | (pixels[index++] << 4)
+                                    | (pixels[index++] << 3)
+                                    | (pixels[index++] << 2)
+                                    | (pixels[index++] << 1)
+                                    | pixels[index++];
                                 bpixels[k++] = (byte)pixel;
                             }
 
@@ -730,10 +730,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                             ComponentSampleModel csm =
                                 (ComponentSampleModel)src.getSampleModel();
                             int inOffset =
-                                csm.getOffset(col -
-                                              src.getSampleModelTranslateX(),
-                                              row -
-                                              src.getSampleModelTranslateY());
+                                csm.getOffset(col
+                                              - src.getSampleModelTranslateX(),
+                                              row
+                                              - src.getSampleModelTranslateY());
                             int lineStride = csm.getScanlineStride();
                             if (lineStride == bytesPerRow) {
                                 System.arraycopy(btmp,
@@ -856,8 +856,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
             }
             totalBytes += (int)tileByteCounts[numTiles - 1];
 
-            nextIFDOffset = isLast ?
-                0 : ifdOffset + dirSize + totalBytes;
+            nextIFDOffset = isLast
+                ? 0 : ifdOffset + dirSize + totalBytes;
             if ((nextIFDOffset & 0x01) != 0) {   // make it even
                 nextIFDOffset++;
                 skipByte = true;
@@ -1323,8 +1323,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         while (inOffset <= inMax) {
             int run = 1;
             byte replicate = input[inOffset];
-            while (run < 127 && inOffset < inMax &&
-                  input[inOffset] == input[inOffset + 1]) {
+            while (run < 127 && inOffset < inMax
+                  && input[inOffset] == input[inOffset + 1]) {
                 run++;
                 inOffset++;
             }
@@ -1336,11 +1336,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
             run = 0;
             int saveOffset = outOffset;
-            while (run < 128 &&
-                  ((inOffset < inMax &&
-                    input[inOffset] != input[inOffset + 1]) ||
-                   (inOffset < inMaxMinus1 &&
-                    input[inOffset] != input[inOffset + 2]))) {
+            while (run < 128
+                  && ((inOffset < inMax
+                    && input[inOffset] != input[inOffset + 1])
+                   || (inOffset < inMaxMinus1
+                    && input[inOffset] != input[inOffset + 2]))) {
                 run++;
                 output[++outOffset] = input[inOffset++];
             }

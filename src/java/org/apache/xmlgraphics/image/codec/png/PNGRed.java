@@ -115,15 +115,15 @@ public class PNGRed extends AbstractRed {
         }
 
         public int getInt2(int offset) {
-            return ((data[offset] & 0xff) << 8) |
-                (data[offset + 1] & 0xff);
+            return ((data[offset] & 0xff) << 8)
+                | (data[offset + 1] & 0xff);
         }
 
         public int getInt4(int offset) {
-            return ((data[offset] & 0xff) << 24) |
-                ((data[offset + 1] & 0xff) << 16) |
-                ((data[offset + 2] & 0xff) << 8) |
-                (data[offset + 3] & 0xff);
+            return ((data[offset] & 0xff) << 24)
+                | ((data[offset + 1] & 0xff) << 16)
+                | ((data[offset + 2] & 0xff) << 8)
+                | (data[offset + 3] & 0xff);
         }
 
         public String getString4(int offset) {
@@ -542,11 +542,11 @@ public class PNGRed extends AbstractRed {
         maxOpacity = (1 << bitDepth) - 1;
 
         colorType = chunk.getInt1(9);
-        if ((colorType != PNG_COLOR_GRAY) &&
-            (colorType != PNG_COLOR_RGB) &&
-            (colorType != PNG_COLOR_PALETTE) &&
-            (colorType != PNG_COLOR_GRAY_ALPHA) &&
-            (colorType != PNG_COLOR_RGB_ALPHA)) {
+        if ((colorType != PNG_COLOR_GRAY)
+            && (colorType != PNG_COLOR_RGB)
+            && (colorType != PNG_COLOR_PALETTE)
+            && (colorType != PNG_COLOR_GRAY_ALPHA)
+            && (colorType != PNG_COLOR_RGB_ALPHA)) {
             System.out.println(PropertyUtil.getString("PNGImageDecoder4"));
         }
 
@@ -581,8 +581,8 @@ public class PNGRed extends AbstractRed {
         if (generateEncodeParam) {
             if (colorType == PNG_COLOR_PALETTE) {
                 encodeParam = new PNGEncodeParam.Palette();
-            } else if (colorType == PNG_COLOR_GRAY ||
-                       colorType == PNG_COLOR_GRAY_ALPHA) {
+            } else if (colorType == PNG_COLOR_GRAY
+                       || colorType == PNG_COLOR_GRAY_ALPHA) {
                 encodeParam = new PNGEncodeParam.Gray();
             } else {
                 encodeParam = new PNGEncodeParam.RGB();
@@ -765,8 +765,8 @@ public class PNGRed extends AbstractRed {
 
         // Create an empty WritableRaster
         int depth = bitDepth;
-        if ((colorType == PNG_COLOR_GRAY) &&
-            (bitDepth < 8) && output8BitGray) {
+        if ((colorType == PNG_COLOR_GRAY)
+            && (bitDepth < 8) && output8BitGray) {
             depth = 8;
         }
         if ((colorType == PNG_COLOR_PALETTE) && expandPalette) {
@@ -786,9 +786,9 @@ public class PNGRed extends AbstractRed {
         if (performGammaCorrection && (gammaLut == null)) {
             initGammaLut(bitDepth);
         }
-        if ((postProcess == POST_GRAY_LUT) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
+        if ((postProcess == POST_GRAY_LUT)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
             initGrayLut(bitDepth);
         }
 
@@ -818,8 +818,8 @@ public class PNGRed extends AbstractRed {
                                                  greenPalette,
                                                  bluePalette);
             }
-        } else if ((colorType == PNG_COLOR_GRAY) &&
-                   (bitDepth < 8) && !output8BitGray) {
+        } else if ((colorType == PNG_COLOR_GRAY)
+                   && (bitDepth < 8) && !output8BitGray) {
             byte[] palette = expandBits[bitDepth];
             cm = new IndexColorModel(bitDepth,
                                              palette.length,
@@ -1348,8 +1348,8 @@ public class PNGRed extends AbstractRed {
                         setTransparentRGB(rgbTrans);
                 }
             }
-        } else if (colorType == PNG_COLOR_GRAY_ALPHA ||
-                   colorType == PNG_COLOR_RGB_ALPHA) {
+        } else if (colorType == PNG_COLOR_GRAY_ALPHA
+                   || colorType == PNG_COLOR_RGB_ALPHA) {
             // Error -- GA or RGBA image can't have a tRNS chunk.
             String msg = PropertyUtil.getString("PNGImageDecoder15");
             throw new RuntimeException(msg);
@@ -1627,9 +1627,9 @@ public class PNGRed extends AbstractRed {
                     pd[1] = g;
                     pd[2] = b;
                 }
-                if ((r == redTransparentAlpha) &&
-                    (g == greenTransparentAlpha) &&
-                    (b == blueTransparentAlpha)) {
+                if ((r == redTransparentAlpha)
+                    && (g == greenTransparentAlpha)
+                    && (b == blueTransparentAlpha)) {
                     pd[3] = 0;
                 } else {
                     pd[3] = maxOpacity;

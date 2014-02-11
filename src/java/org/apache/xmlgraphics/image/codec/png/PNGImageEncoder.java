@@ -669,9 +669,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     }
 
     private void writeTRNS() throws IOException {
-        if (param.isTransparencySet() &&
-            (colorType != PNG_COLOR_GRAY_ALPHA) &&
-            (colorType != PNG_COLOR_RGB_ALPHA)) {
+        if (param.isTransparencySet()
+            && (colorType != PNG_COLOR_GRAY_ALPHA)
+            && (colorType != PNG_COLOR_RGB_ALPHA)) {
             ChunkStream cs = new ChunkStream("tRNS");
 
             if (param instanceof PNGEncodeParam.Palette) {
@@ -843,9 +843,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         int entries = 1 << bitDepth;
         for (int i = 0; i < entries; i++) {
             byte red = redPalette[i];
-            if ((red != i * grayFactor) ||
-                (red != greenPalette[i]) ||
-                (red != bluePalette[i])) {
+            if ((red != i * grayFactor)
+                || (red != greenPalette[i])
+                || (red != bluePalette[i])) {
                 return null;
             }
 

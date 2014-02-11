@@ -87,8 +87,8 @@ public class TIFFLZWDecoder {
         int code, oldCode = 0;
         byte[] string;
 
-        while ((code = getNextCode()) != 257 &&
-                dstIndex != uncompData.length) {
+        while ((code = getNextCode()) != 257
+                && dstIndex != uncompData.length) {
 
             if (code == 256) {
 
