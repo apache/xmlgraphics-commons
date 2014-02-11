@@ -120,10 +120,10 @@ public class FormatRed extends AbstractRed {
         getSource().copyData(srcWR);
 
         BufferedImage srcBI = new BufferedImage
-            (srcCM, srcWR.createWritableTranslatedChild(0,0),
+            (srcCM, srcWR.createWritableTranslatedChild(0, 0),
              srcCM.isAlphaPremultiplied(), null);
         BufferedImage dstBI = new BufferedImage
-            (cm, wr.createWritableTranslatedChild(0,0),
+            (cm, wr.createWritableTranslatedChild(0, 0),
              cm.isAlphaPremultiplied(), null);
 
         GraphicsUtil.copyData(srcBI, dstBI);

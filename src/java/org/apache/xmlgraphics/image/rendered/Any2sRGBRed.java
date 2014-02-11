@@ -60,7 +60,7 @@ public class Any2sRGBRed extends AbstractRed {
      * @param src The image to convert to a luminance image
      */
     public Any2sRGBRed(CachableRed src) {
-        super(src,src.getBounds(),
+        super(src, src.getBounds(),
               fixColorModel(src),
               fixSampleModel(src),
               src.getTileGridXOffset(),
@@ -276,7 +276,7 @@ public class Any2sRGBRed extends AbstractRed {
 
         BufferedImage srcBI, dstBI;
         srcBI = new BufferedImage(srcBICM,
-                                  srcWr.createWritableTranslatedChild(0,0),
+                                  srcWr.createWritableTranslatedChild(0, 0),
                                   false,
                                   null);
 
@@ -289,7 +289,7 @@ public class Any2sRGBRed extends AbstractRed {
 
         // System.out.println("After filter:");
 
-        WritableRaster wr00 = wr.createWritableTranslatedChild(0,0);
+        WritableRaster wr00 = wr.createWritableTranslatedChild(0, 0);
         for (int i = 0; i < dstCM.getColorSpace().getNumComponents(); i++)
             copyBand(dstBI.getRaster(), i, wr00,    i);
 
