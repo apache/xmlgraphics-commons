@@ -258,7 +258,9 @@ public class TIFFDirectory implements Serializable {
 
                     while (index < count) {
 
-                        while ((index < count) && (bvalues[index++] != 0));
+                        while ((index < count) && (bvalues[index++] != 0)) {
+                            // NOP
+                        }
 
                         // When we encountered zero, means one string has ended
                         v.add(new String(bvalues, prevIndex,

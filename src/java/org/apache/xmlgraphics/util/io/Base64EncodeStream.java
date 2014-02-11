@@ -80,8 +80,9 @@ public class Base64EncodeStream extends OutputStream {
         if (out != null) {
             encodeAtom();
             out.flush();
-            if (closeOutOnClose)
+            if (closeOutOnClose) {
                 out.close();
+            }
             out = null;
         }
     }
@@ -98,8 +99,9 @@ public class Base64EncodeStream extends OutputStream {
 
     public void write(int b) throws IOException {
         atom[atomLen++] = (byte)b;
-        if (atomLen == 3)
+        if (atomLen == 3) {
             encodeAtom();
+        }
     }
 
     public void write(byte []data) throws IOException {
@@ -163,8 +165,9 @@ public class Base64EncodeStream extends OutputStream {
     void encodeFromArray(byte[] data, int offset, int len)
         throws IOException {
         byte a, b, c;
-        if (len == 0)
+        if (len == 0) {
             return;
+        }
 
         // System.out.println("atomLen: " + atomLen +
         //                    " len: " + len +
@@ -174,7 +177,9 @@ public class Base64EncodeStream extends OutputStream {
             switch(atomLen) {
             case 1:
                 atom[1] = data[offset++]; len--; atomLen++;
-                if (len == 0) return;
+                if (len == 0) {
+                    return;
+                }
                 atom[2] = data[offset++]; len--; atomLen++;
                 break;
             case 2:

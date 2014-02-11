@@ -1436,26 +1436,30 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
               if (pb < 0) {
                 // both pa & pb neg so pc is always greater than or
                 // equal to pa or pb;
-                if (pa >= pb) // since pa & pb neg check sense is reversed.
+                if (pa >= pb) { // since pa & pb neg check sense is reversed.
                   diff = curr - left;
-                else
+                } else {
                   diff = curr - up;
+                }
               } else {
                 // pa neg pb pos so we must compute pc...
                 pc = pa + pb;
                 pa = -pa;
-                if (pa <= pb)     // pc is positive and less than pb
-                  if (pa <= pc)
+                if (pa <= pb) { // pc is positive and less than pb
+                  if (pa <= pc) {
                     diff = curr - left;
-                  else
+                  } else {
                     diff = curr - upleft;
-                else
+                  }
+                } else {
                   // pc is negative and less than or equal to pa,
                   // but since pa is greater than pb this isn't an issue...
-                  if (pb <= -pc)
+                  if (pb <= -pc) {
                     diff = curr - up;
-                  else
+                  } else {
                     diff = curr - upleft;
+                  }
+                }
               }
             } else {
               if (pb < 0) {
@@ -1463,28 +1467,31 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
                 if (pa <= pb) {
                   // pc would be negative and less than or equal to pb
                   pc = pb - pa;
-                  if (pa <= pc)
+                  if (pa <= pc) {
                     diff = curr - left;
-                  else if (pb == pc)
+                  } else if (pb == pc) {
                     // if pa is zero then pc==pb otherwise
                     // pc must be less than pb.
                     diff = curr - up;
-                  else
+                  } else {
                     diff = curr - upleft;
+                  }
                 } else {
                   // pc would be positive and less than pa.
                   pc = pa - pb;
-                  if (pb <= pc)
+                  if (pb <= pc) {
                     diff = curr - up;
-                  else
+                  } else {
                     diff = curr - upleft;
+                  }
                 }
               } else {
                 // both pos so pa+pb is always greater than pa/pb
-                if (pa <= pb)
+                if (pa <= pb) {
                   diff = curr - left;
-                else
+                } else {
                   diff = curr - up;
+                }
               }
             }
             scratchRows[4][i]  = (byte)diff;

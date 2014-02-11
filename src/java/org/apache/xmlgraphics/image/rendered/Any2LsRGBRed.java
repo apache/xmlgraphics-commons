@@ -66,10 +66,13 @@ public class Any2LsRGBRed extends AbstractRed {
               null);
 
         ColorModel srcCM = src.getColorModel();
-        if (srcCM == null) return;
+        if (srcCM == null) {
+            return;
+        }
         ColorSpace srcCS = srcCM.getColorSpace();
-        if (srcCS == ColorSpace.getInstance(ColorSpace.CS_sRGB))
+        if (srcCS == ColorSpace.getInstance(ColorSpace.CS_sRGB)) {
             srcIssRGB = true;
+        }
     }
 
     /**
@@ -80,8 +83,9 @@ public class Any2LsRGBRed extends AbstractRed {
 
 
     public static final double sRGBToLsRGB(double value) {
-        if (value <= 0.003928)
+        if (value <= 0.003928) {
             return value * LFACT;
+        }
         return Math.pow((value + 0.055) / 1.055, GAMMA);
     }
 
@@ -114,8 +118,9 @@ public class Any2LsRGBRed extends AbstractRed {
         if (srcIssRGB
             && Any2sRGBRed.is_INT_PACK_COMP(wr.getSampleModel())) {
             src.copyData(wr);
-            if (srcCM.hasAlpha())
+            if (srcCM.hasAlpha()) {
                 GraphicsUtil.coerceData(wr, srcCM, false);
+            }
             Any2sRGBRed.applyLut_INT(wr, sRGBToLsRGBLut);
             return wr;
         }
@@ -228,9 +233,10 @@ public class Any2LsRGBRed extends AbstractRed {
             ColorConvertOp op = new ColorConvertOp(null);
             op.filter(srcBI, dstBI);
 
-            if (dstCM.hasAlpha())
+            if (dstCM.hasAlpha()) {
                 copyBand(srcWr, srcSM.getNumBands() - 1,
                          wr,    getSampleModel().getNumBands() - 1);
+            }
         }
         return wr;
     }
@@ -243,8 +249,9 @@ public class Any2LsRGBRed extends AbstractRed {
     protected static ColorModel fixColorModel(CachableRed src) {
         ColorModel  cm = src.getColorModel();
         if (cm != null) {
-            if (cm.hasAlpha())
+            if (cm.hasAlpha()) {
                 return GraphicsUtil.Linear_sRGB_Unpre;
+            }
 
             return GraphicsUtil.Linear_sRGB;
         } else {
@@ -280,9 +287,9 @@ public class Any2LsRGBRed extends AbstractRed {
 
         boolean alpha = false;
 
-        if (cm != null)
+        if (cm != null) {
             alpha = cm.hasAlpha();
-        else {
+        } else {
             switch (sm.getNumBands()) {
             case 1: case 3:
                 alpha = false;
@@ -292,17 +299,18 @@ public class Any2LsRGBRed extends AbstractRed {
                 break;
             }
         }
-        if (alpha)
+        if (alpha) {
             return new SinglePixelPackedSampleModel(
                 DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF, 0xFF000000});
-        else
+        } else {
             return new SinglePixelPackedSampleModel(
                 DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF});
+        }
     }
 }

@@ -64,8 +64,9 @@ public class Base64DecodeStream extends InputStream {
 
     private static final byte[] PEM_ARRAY = new byte[256];
     static {
-        for (int i = 0; i < PEM_ARRAY.length; i++)
+        for (int i = 0; i < PEM_ARRAY.length; i++) {
             PEM_ARRAY[i] = -1;
+        }
 
         int idx = 0;
         for (char c = 'A'; c <= 'Z'; c++) {
@@ -120,8 +121,11 @@ public class Base64DecodeStream extends InputStream {
             if (out_offset == 3) {
                 if (EOF || getNextAtom()) {
                     EOF = true;
-                    if (idx == 0) return -1;
-                    else          return idx;
+                    if (idx == 0) {
+                        return -1;
+                    } else {
+                        return idx;
+                    }
                 }
             }
 
@@ -138,15 +142,17 @@ public class Base64DecodeStream extends InputStream {
         int off = 0;
         while (off != 4) {
             count = src.read(decode_buffer, off, 4 - off);
-            if (count == -1)
+            if (count == -1) {
                 return true;
+            }
 
             int in = off, out = off;
             while (in < off + count) {
                 if ((decode_buffer[in] != '\n') &&
                     (decode_buffer[in] != '\r') &&
-                    (decode_buffer[in] != ' '))
+                    (decode_buffer[in] != ' ')) {
                     decode_buffer[out++] = decode_buffer[in];
+                }
                 in++;
             }
 

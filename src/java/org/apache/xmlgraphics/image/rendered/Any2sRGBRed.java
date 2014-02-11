@@ -68,28 +68,45 @@ public class Any2sRGBRed extends AbstractRed {
               null);
 
         ColorModel srcCM = src.getColorModel();
-        if (srcCM == null) return;
+        if (srcCM == null) {
+            return;
+        }
         ColorSpace srcCS = srcCM.getColorSpace();
-        if (srcCS == ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB))
+        if (srcCS == ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB)) {
             srcIsLsRGB = true;
+        }
     }
 
     public static boolean is_INT_PACK_COMP(SampleModel sm) {
-        if (!(sm instanceof SinglePixelPackedSampleModel)) return false;
+        if (!(sm instanceof SinglePixelPackedSampleModel)) {
+            return false;
+        }
 
         // Check transfer types
-        if (sm.getDataType() != DataBuffer.TYPE_INT)       return false;
+        if (sm.getDataType() != DataBuffer.TYPE_INT) {
+            return false;
+        }
 
         SinglePixelPackedSampleModel sppsm;
         sppsm = (SinglePixelPackedSampleModel)sm;
 
         int [] masks = sppsm.getBitMasks();
-        if ((masks.length != 3) && (masks.length != 4)) return false;
-        if (masks[0] != 0x00ff0000) return false;
-        if (masks[1] != 0x0000ff00) return false;
-        if (masks[2] != 0x000000ff) return false;
+        if ((masks.length != 3) && (masks.length != 4)) {
+            return false;
+        }
+        if (masks[0] != 0x00ff0000) {
+            return false;
+        }
+        if (masks[1] != 0x0000ff00) {
+            return false;
+        }
+        if (masks[2] != 0x000000ff) {
+            return false;
+        }
         if ((masks.length == 4) &&
-            (masks[3] != 0xff000000)) return false;
+            (masks[3] != 0xff000000)) {
+            return false;
+        }
 
         return true;
    }
@@ -112,10 +129,11 @@ public class Any2sRGBRed extends AbstractRed {
         // System.out.print("L2S: ");
         for (int i = 0; i < 256; i++) {
             double value = i * scale;
-            if (value <= 0.0031308)
+            if (value <= 0.0031308) {
                 value *= 12.92;
-            else
+            } else {
                 value = 1.055 * Math.pow(value, exp) - 0.055;
+            }
 
             linearToSRGBLut[i] = (int)Math.round(value * 255.);
             // System.out.print(linearToSRGBLut[i] + ",");
@@ -172,8 +190,9 @@ public class Any2sRGBRed extends AbstractRed {
         if (srcIsLsRGB &&
             is_INT_PACK_COMP(wr.getSampleModel())) {
             src.copyData(wr);
-            if (srcCM.hasAlpha())
+            if (srcCM.hasAlpha()) {
                 GraphicsUtil.coerceData(wr, srcCM, false);
+            }
             applyLut_INT(wr, linearToSRGBLut);
             return wr;
         }
@@ -256,10 +275,11 @@ public class Any2sRGBRed extends AbstractRed {
             // No transform needed, just reformat data...
             // System.out.println("Bypassing");
 
-            if (is_INT_PACK_COMP(srcSM))
+            if (is_INT_PACK_COMP(srcSM)) {
                 src.copyData(wr);
-            else
+            } else {
                 GraphicsUtil.copyData(src.getData(wr.getBounds()), wr);
+            }
 
             return wr;
         }
@@ -271,8 +291,9 @@ public class Any2sRGBRed extends AbstractRed {
         // the color convert may not be a linear operation which may
         // lead to out of range values.
         ColorModel srcBICM = srcCM;
-        if (srcCM.hasAlpha())
+        if (srcCM.hasAlpha()) {
             srcBICM = GraphicsUtil.coerceData(srcWr, srcCM, false);
+        }
 
         BufferedImage srcBI, dstBI;
         srcBI = new BufferedImage(srcBICM,
@@ -290,12 +311,14 @@ public class Any2sRGBRed extends AbstractRed {
         // System.out.println("After filter:");
 
         WritableRaster wr00 = wr.createWritableTranslatedChild(0, 0);
-        for (int i = 0; i < dstCM.getColorSpace().getNumComponents(); i++)
+        for (int i = 0; i < dstCM.getColorSpace().getNumComponents(); i++) {
             copyBand(dstBI.getRaster(), i, wr00,    i);
+        }
 
-        if (dstCM.hasAlpha())
+        if (dstCM.hasAlpha()) {
             copyBand(srcWr, srcSM.getNumBands() - 1,
                      wr,    getSampleModel().getNumBands() - 1);
+        }
         return wr;
     }
 
@@ -307,8 +330,9 @@ public class Any2sRGBRed extends AbstractRed {
     protected static ColorModel fixColorModel(CachableRed src) {
         ColorModel  cm = src.getColorModel();
         if (cm != null) {
-            if (cm.hasAlpha())
+            if (cm.hasAlpha()) {
                 return GraphicsUtil.sRGB_Unpre;
+            }
 
             return GraphicsUtil.sRGB;
         } else {
@@ -344,9 +368,9 @@ public class Any2sRGBRed extends AbstractRed {
 
         boolean alpha = false;
 
-        if (cm != null)
+        if (cm != null) {
             alpha = cm.hasAlpha();
-        else {
+        } else {
             switch (sm.getNumBands()) {
             case 1: case 3:
                 alpha = false;
@@ -356,17 +380,18 @@ public class Any2sRGBRed extends AbstractRed {
                 break;
             }
         }
-        if (alpha)
+        if (alpha) {
             return new SinglePixelPackedSampleModel(
                 DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF, 0xFF000000});
-        else
+        } else {
             return new SinglePixelPackedSampleModel(
                 DataBuffer.TYPE_INT,
                  sm.getWidth(),
                  sm.getHeight(),
                  new int [] {0xFF0000, 0xFF00, 0xFF});
+        }
     }
 }
