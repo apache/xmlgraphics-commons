@@ -192,9 +192,15 @@ public abstract class AbstractRed implements CachableRed {
         this.srcs         = new Vector(1);
         if (src != null) {
             this.srcs.add(src);
-            if (bounds == null) bounds = src.getBounds();
-            if (cm     == null) cm     = src.getColorModel();
-            if (sm     == null) sm     = src.getSampleModel();
+            if (bounds == null) {
+                bounds = src.getBounds();
+            }
+            if (cm     == null) {
+                cm     = src.getColorModel();
+            }
+            if (sm     == null) {
+                sm     = src.getSampleModel();
+            }
         }
 
         this.bounds       = bounds;
@@ -206,16 +212,18 @@ public abstract class AbstractRed implements CachableRed {
             this.props.putAll(props);
         }
 
-        if (cm == null)
+        if (cm == null) {
             cm = new ComponentColorModel(
                 ColorSpace.getInstance(ColorSpace.CS_GRAY),
                  new int [] { 8 }, false, false, Transparency.OPAQUE,
                  DataBuffer.TYPE_BYTE);
+        }
 
         this.cm = cm;
 
-        if (sm == null)
+        if (sm == null) {
             sm = cm.createCompatibleSampleModel(bounds.width, bounds.height);
+        }
         this.sm = sm;
 
         // Recompute tileWidth/Height, minTileX/Y, numX/YTiles.
@@ -311,9 +319,15 @@ public abstract class AbstractRed implements CachableRed {
 
         if (srcs.size() != 0) {
             CachableRed src = (CachableRed)srcs.get(0);
-            if (bounds == null) bounds = src.getBounds();
-            if (cm     == null) cm     = src.getColorModel();
-            if (sm     == null) sm     = src.getSampleModel();
+            if (bounds == null) {
+                bounds = src.getBounds();
+            }
+            if (cm     == null) {
+                cm     = src.getColorModel();
+            }
+            if (sm     == null) {
+                sm     = src.getSampleModel();
+            }
         }
 
         this.bounds       = bounds;
@@ -324,16 +338,18 @@ public abstract class AbstractRed implements CachableRed {
             this.props.putAll(props);
         }
 
-        if (cm == null)
+        if (cm == null) {
             cm = new ComponentColorModel(
                 ColorSpace.getInstance(ColorSpace.CS_GRAY),
                  new int [] { 8 }, false, false, Transparency.OPAQUE,
                  DataBuffer.TYPE_BYTE);
+        }
 
         this.cm = cm;
 
-        if (sm == null)
+        if (sm == null) {
             sm = cm.createCompatibleSampleModel(bounds.width, bounds.height);
+        }
         this.sm = sm;
 
         // Recompute tileWidth/Height, minTileX/Y, numX/YTiles.
@@ -435,12 +451,16 @@ public abstract class AbstractRed implements CachableRed {
 
     public Object getProperty(String name) {
         Object ret = props.get(name);
-        if (ret != null) return ret;
+        if (ret != null) {
+            return ret;
+        }
         Iterator i = srcs.iterator();
         while (i.hasNext()) {
             RenderedImage ri = (RenderedImage)i.next();
             ret = ri.getProperty(name);
-            if (ret != null) return ret;
+            if (ret != null) {
+                return ret;
+            }
         }
         return null;
     }
@@ -466,13 +486,15 @@ public abstract class AbstractRed implements CachableRed {
     }
 
     public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn) {
-        if ((srcIndex < 0) || (srcIndex > srcs.size()))
+        if ((srcIndex < 0) || (srcIndex > srcs.size())) {
             throw new IndexOutOfBoundsException(
                 "Nonexistent source requested.");
+        }
 
         // Return empty rect if they don't intersect.
-        if (!outputRgn.intersects(bounds))
+        if (!outputRgn.intersects(bounds)) {
             return new Rectangle();
+        }
 
         // We only depend on our source for stuff that is inside
         // our bounds...
@@ -480,13 +502,15 @@ public abstract class AbstractRed implements CachableRed {
     }
 
     public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn) {
-        if (srcIndex != 0)
+        if (srcIndex != 0) {
             throw new IndexOutOfBoundsException(
                 "Nonexistent source requested.");
+        }
 
         // Return empty rect if they don't intersect.
-        if (!inputRgn.intersects(bounds))
+        if (!inputRgn.intersects(bounds)) {
             return new Rectangle();
+        }
 
         // Changes in the input region don't propogate outside our
         // bounds.
@@ -529,10 +553,11 @@ public abstract class AbstractRed implements CachableRed {
     public final int getXTile(int xloc) {
         int tgx = xloc - tileGridXOff;
         // We need to round to -infinity...
-        if (tgx >= 0)
+        if (tgx >= 0) {
             return tgx / tileWidth;
-        else
+        } else {
             return (tgx - tileWidth + 1) / tileWidth;
+        }
     }
 
     /**
@@ -543,10 +568,11 @@ public abstract class AbstractRed implements CachableRed {
     public final int getYTile(int yloc) {
         int tgy = yloc - tileGridYOff;
         // We need to round to -infinity...
-        if (tgy >= 0)
+        if (tgy >= 0) {
             return tgy / tileHeight;
-        else
+        } else {
             return (tgy - tileHeight + 1) / tileHeight;
+        }
     }
 
     /**
@@ -561,23 +587,33 @@ public abstract class AbstractRed implements CachableRed {
         int tx1 = getXTile(wr.getMinX() + wr.getWidth() - 1);
         int ty1 = getYTile(wr.getMinY() + wr.getHeight() - 1);
 
-        if (tx0 < minTileX) tx0 = minTileX;
-        if (ty0 < minTileY) ty0 = minTileY;
+        if (tx0 < minTileX) {
+            tx0 = minTileX;
+        }
+        if (ty0 < minTileY) {
+            ty0 = minTileY;
+        }
 
-        if (tx1 >= minTileX + numXTiles) tx1 = minTileX + numXTiles - 1;
-        if (ty1 >= minTileY + numYTiles) ty1 = minTileY + numYTiles - 1;
+        if (tx1 >= minTileX + numXTiles) {
+            tx1 = minTileX + numXTiles - 1;
+        }
+        if (ty1 >= minTileY + numYTiles) {
+            ty1 = minTileY + numYTiles - 1;
+        }
 
         final boolean isIntPack =
             GraphicsUtil.is_INT_PACK_Data(getSampleModel(), false);
 
-        for (int y = ty0; y <= ty1; y++)
+        for (int y = ty0; y <= ty1; y++) {
             for (int x = tx0; x <= tx1; x++) {
                 Raster r = getTile(x, y);
-                if (isIntPack)
+                if (isIntPack) {
                     GraphicsUtil.copyData_INT_PACK(r, wr);
-                else
+                } else {
                     GraphicsUtil.copyData_FALLBACK(r, wr);
+                }
             }
+        }
     }
 
 
@@ -595,10 +631,11 @@ public abstract class AbstractRed implements CachableRed {
      */
     public WritableRaster makeTile(int tileX, int tileY) {
         if ((tileX < minTileX) || (tileX >= minTileX + numXTiles)
-            || (tileY < minTileY) || (tileY >= minTileY + numYTiles))
+            || (tileY < minTileY) || (tileY >= minTileY + numYTiles)) {
             throw new IndexOutOfBoundsException(
                 "Requested Tile (" + tileX + ',' + tileY
                  + ") lies outside the bounds of image");
+        }
 
         Point pt = new Point(tileGridXOff + tileX * tileWidth,
                              tileGridYOff + tileY * tileHeight);
@@ -632,10 +669,18 @@ public abstract class AbstractRed implements CachableRed {
             || (y0 < bounds.y) || (y1 >= (bounds.y + bounds.height))) {
             // Part of this raster lies outside our bounds so subset
             // it so it only advertises the stuff inside our bounds.
-            if (x0 < bounds.x) x0 = bounds.x;
-            if (y0 < bounds.y) y0 = bounds.y;
-            if (x1 >= (bounds.x + bounds.width))  x1 = bounds.x + bounds.width - 1;
-            if (y1 >= (bounds.y + bounds.height)) y1 = bounds.y + bounds.height - 1;
+            if (x0 < bounds.x) {
+                x0 = bounds.x;
+            }
+            if (y0 < bounds.y) {
+                y0 = bounds.y;
+            }
+            if (x1 >= (bounds.x + bounds.width)) {
+                x1 = bounds.x + bounds.width - 1;
+            }
+            if (y1 >= (bounds.y + bounds.height)) {
+                y1 = bounds.y + bounds.height - 1;
+            }
 
             wr = wr.createWritableChild(x0, y0, x1 - x0 + 1, y1 - y0 + 1,
                                         x0, y0, null);

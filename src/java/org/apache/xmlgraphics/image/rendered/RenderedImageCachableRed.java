@@ -45,10 +45,12 @@ import java.util.Vector;
 public class RenderedImageCachableRed implements CachableRed {
 
     public static CachableRed wrap(RenderedImage ri) {
-        if (ri instanceof CachableRed)
+        if (ri instanceof CachableRed) {
             return (CachableRed) ri;
-        if (ri instanceof BufferedImage)
+        }
+        if (ri instanceof BufferedImage) {
             return new BufferedImageCachableRed((BufferedImage)ri);
+        }
         return new RenderedImageCachableRed(ri);
     }
 

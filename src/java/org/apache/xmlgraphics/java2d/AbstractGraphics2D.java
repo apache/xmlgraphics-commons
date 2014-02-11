@@ -546,8 +546,9 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
         if (nPoints > 0) {
             GeneralPath path = new GeneralPath();
             path.moveTo(xPoints[0], yPoints[0]);
-            for (int i = 1; i < nPoints; i++)
+            for (int i = 1; i < nPoints; i++) {
                 path.lineTo(xPoints[i], yPoints[i]);
+            }
 
             draw(path);
         }
