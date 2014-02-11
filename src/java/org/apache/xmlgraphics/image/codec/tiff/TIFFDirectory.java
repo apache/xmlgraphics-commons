@@ -209,7 +209,8 @@ public class TIFFDirectory implements Serializable {
 
     private void initialize(SeekableStream stream) throws IOException {
         long nextTagOffset;
-        int i, j;
+        int i;
+        int j;
 
         IFDOffset = stream.getFilePointer();
 
@@ -253,7 +254,8 @@ public class TIFFDirectory implements Serializable {
                 if (type == TIFFField.TIFF_ASCII) {
 
                     // Can be multiple strings
-                    int index = 0, prevIndex = 0;
+                    int index = 0;
+                    int prevIndex = 0;
                     List v = new ArrayList();
 
                     while (index < count) {

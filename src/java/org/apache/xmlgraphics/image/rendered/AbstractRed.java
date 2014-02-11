@@ -63,10 +63,14 @@ public abstract class AbstractRed implements CachableRed {
     protected Map         props;
     protected SampleModel sm;
     protected ColorModel  cm;
-    protected int         tileGridXOff, tileGridYOff;
-    protected int         tileWidth,    tileHeight;
-    protected int         minTileX,     minTileY;
-    protected int         numXTiles,    numYTiles;
+    protected int tileGridXOff;
+    protected int tileGridYOff;
+    protected int tileWidth;
+    protected int tileHeight;
+    protected int minTileX;
+    protected int minTileY;
+    protected int numXTiles;
+    protected int numYTiles;
 
     /**
      * void constructor. The subclass must call one of the
@@ -366,7 +370,10 @@ public abstract class AbstractRed implements CachableRed {
         this.tileWidth  = sm.getWidth();
         this.tileHeight = sm.getHeight();
 
-        int x1, y1, maxTileX, maxTileY;
+        int x1;
+        int y1;
+        int maxTileX;
+        int maxTileY;
 
         // This computes and caches important information about the
         // structure of the tile grid in general.

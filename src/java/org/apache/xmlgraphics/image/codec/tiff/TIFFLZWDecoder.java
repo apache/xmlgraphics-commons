@@ -35,11 +35,15 @@ public class TIFFLZWDecoder {
     byte[][] stringTable;
     byte[] data = null;
     byte[] uncompData;
-    int tableIndex, bitsToGet = 9;
-    int bytePointer, bitPointer;
+    int tableIndex;
+    int bitsToGet = 9;
+    int bytePointer;
+    int bitPointer;
     int dstIndex;
-    int w, h;
-    int predictor, samplesPerPixel;
+    int w;
+    int h;
+    int predictor;
+    int samplesPerPixel;
     int nextData = 0;
     int nextBits = 0;
 
@@ -84,7 +88,8 @@ public class TIFFLZWDecoder {
         nextData = 0;
         nextBits = 0;
 
-        int code, oldCode = 0;
+        int code;
+        int oldCode = 0;
         byte[] string;
 
         while ((code = getNextCode()) != 257

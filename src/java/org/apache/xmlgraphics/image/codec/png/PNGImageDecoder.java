@@ -930,7 +930,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             break;
         }
 
-        int r = 0, g = 0, b = 0;
+        int r = 0;
+        int g = 0;
+        int b = 0;
         if (bitDepth < 8) {
             r = expandBits[bitDepth][bkgdRed];
             g = expandBits[bitDepth][bkgdGreen];
@@ -1322,7 +1324,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private static void decodeAverageFilter(byte[] curr, byte[] prev,
                                             int count, int bpp) {
-        int raw, priorPixel, priorRow;
+        int raw;
+        int priorPixel;
+        int priorRow;
 
         for (int i = 0; i < bpp; i++) {
             raw = curr[i] & 0xff;
@@ -1342,7 +1346,10 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private static void decodePaethFilter(byte[] curr, byte[] prev,
                                           int count, int bpp) {
-        int raw, priorPixel, priorRow, priorRowPixel;
+        int raw;
+        int priorPixel;
+        int priorRow;
+        int priorRowPixel;
 
         for (int i = 0; i < bpp; i++) {
             raw = curr[i] & 0xff;
@@ -1366,7 +1373,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     private void processPixels(int process,
                                Raster src, WritableRaster dst,
                                int xOffset, int step, int y, int width) {
-        int srcX, dstX;
+        int srcX;
+        int dstX;
 
         // Create an array suitable for holding one pixel
         int[] ps = src.getPixel(0, 0, (int[])null);
@@ -1650,7 +1658,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         }
 
         // Decode the (sub)image row-by-row
-        int srcY, dstY;
+        int srcY;
+        int dstY;
         for (srcY = 0, dstY = yOffset;
              srcY < passHeight;
              srcY++, dstY += yStep) {

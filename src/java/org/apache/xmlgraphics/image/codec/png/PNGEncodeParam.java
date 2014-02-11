@@ -1386,8 +1386,14 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
                          int bytesPerPixel) {
 
         int [] badness = {0, 0, 0, 0, 0};
-        int curr, left, up, upleft, diff;
-        int pa, pb, pc;
+        int curr;
+        int left;
+        int up;
+        int upleft;
+        int diff;
+        int pa;
+        int pb;
+        int pc;
         for (int i = bytesPerPixel; i < bytesPerRow + bytesPerPixel; i++) {
             curr   = currRow[i] & 0xff;
             left   = currRow[i - bytesPerPixel] & 0xff;
