@@ -164,10 +164,9 @@ public class ImageEncodingHelper {
         ColorModel colorModel = image.getColorModel();
         int w = image.getWidth();
         int h = image.getHeight();
-
-        int numDataElements = raster.getNumDataElements();
-        if (numDataElements > 1 || !outputbw || nbands > 1) {
-            numDataElements = 3;
+        int numDataElements = 3;
+        if (colorModel.getPixelSize() == 1 && outputbw) {
+            numDataElements = 1;
         }
 
         byte[] buf = new byte[w * numDataElements];
