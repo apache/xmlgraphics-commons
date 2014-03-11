@@ -704,6 +704,6 @@ NOTE:
   <!-- Special target for Gump                                             -->
   <!-- =================================================================== -->
 
-  <target name="gump" depends="all, javadocs"/>
+  <target name="gump" depends="all, javadocs, checkstyle"/>
 
 </project>
