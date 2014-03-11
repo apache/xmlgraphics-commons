@@ -20,7 +20,10 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import java.io.IOException;
+import java.util.Iterator;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
@@ -54,25 +57,30 @@ public class PreloaderGIF extends AbstractImagePreloader {
 
         if (supported) {
             ImageInfo info = new ImageInfo(uri, MimeConstants.MIME_GIF);
-            info.setSize(determineSize(header, context));
+            info.setSize(determineSize(header, context, in));
             return info;
         } else {
             return null;
         }
     }
 
-    private ImageSize determineSize(byte[] header, ImageContext context) {
-        // little endian notation
-        int byte1 = header[6] & 0xff;
-        int byte2 = header[7] & 0xff;
-        int width = ((byte2 << 8) | byte1) & 0xffff;
-
-        byte1 = header[8] & 0xff;
-        byte2 = header[9] & 0xff;
-        int height = ((byte2 << 8) | byte1) & 0xffff;
-        ImageSize size = new ImageSize(width, height, context.getSourceResolution());
+    private ImageSize   determineSize(byte[] header, ImageContext context, ImageInputStream in) throws IOException {
+        int [] dim = extractImageMetadata(in);
+        ImageSize size = new ImageSize(dim[0], dim[1], context.getSourceResolution());
         size.calcSizeFromPixels();
         return size;
+    }
+
+    private int[] extractImageMetadata(ImageInputStream in) throws IOException {
+        long startPos = in.getStreamPosition();
+        Iterator readers = ImageIO.getImageReadersByFormatName("gif");
+        ImageReader reader = (ImageReader) readers.next();
+        reader.setInput(in, true);
+        int width =  reader.getWidth(0);
+        int height = reader.getHeight(0);
+        int[] dim  = {width, height};
+        in.seek(startPos);
+        return dim;
     }
 
 }
