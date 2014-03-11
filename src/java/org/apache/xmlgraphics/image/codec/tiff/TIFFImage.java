@@ -83,7 +83,8 @@ public class TIFFImage extends AbstractRed {
 
     SeekableStream stream;
     int tileSize;
-    int tilesX, tilesY;
+    int tilesX;
+    int tilesY;
     long[] tileOffsets;
     long[] tileByteCounts;
     char[] colormap;
@@ -129,20 +130,20 @@ public class TIFFImage extends AbstractRed {
         try {
             inflater.inflate(inflated);
         } catch (DataFormatException dfe) {
-            throw new RuntimeException(PropertyUtil.getString("TIFFImage17") + ": " +
-                                       dfe.getMessage());
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage17") + ": "
+                                       + dfe.getMessage());
         }
         inflater.reset();
     }
 
-    private static SampleModel createPixelInterleavedSampleModel
-        (int dataType, int tileWidth, int tileHeight, int bands) {
+    private static SampleModel createPixelInterleavedSampleModel(
+        int dataType, int tileWidth, int tileHeight, int bands) {
         int [] bandOffsets = new int[bands];
         for (int i = 0; i < bands; i++) {
             bandOffsets[i] = i;
         }
-        return new PixelInterleavedSampleModel
-            (dataType, tileWidth, tileHeight, bands,
+        return new PixelInterleavedSampleModel(
+            dataType, tileWidth, tileHeight, bands,
              tileWidth * bands, bandOffsets);
     }
 
@@ -190,9 +191,9 @@ public class TIFFImage extends AbstractRed {
         decodePaletteAsShorts = param.getDecodePaletteAsShorts();
 
         // Read the specified directory.
-        TIFFDirectory dir = param.getIFDOffset() == null ?
-            new TIFFDirectory(stream, directory) :
-            new TIFFDirectory(stream, param.getIFDOffset().longValue(),
+        TIFFDirectory dir = param.getIFDOffset() == null
+            ? new TIFFDirectory(stream, directory)
+            : new TIFFDirectory(stream, param.getIFDOffset().longValue(),
                               directory);
 
         // Get the number of samples per pixel
@@ -202,9 +203,9 @@ public class TIFFImage extends AbstractRed {
         // Read the TIFF_PLANAR_CONFIGURATION field
         TIFFField planarConfigurationField =
             dir.getField(TIFFImageDecoder.TIFF_PLANAR_CONFIGURATION);
-        char[] planarConfiguration = planarConfigurationField == null ?
-            new char[] {1} :
-            planarConfigurationField.getAsChars();
+        char[] planarConfiguration = planarConfigurationField == null
+            ? new char[] {1}
+            : planarConfigurationField.getAsChars();
 
             // Support planar format (band sequential) only for 1 sample/pixel.
             if (planarConfiguration[0] != 1 && samplesPerPixel != 1) {
@@ -263,8 +264,8 @@ public class TIFFImage extends AbstractRed {
                 break;
             case 16:
                 if (sampleFormat[0] != 3) {
-                    dataType = sampleFormat[0] == 2 ?
-                        DataBuffer.TYPE_SHORT : DataBuffer.TYPE_USHORT;
+                    dataType = sampleFormat[0] == 2
+                        ? DataBuffer.TYPE_SHORT : DataBuffer.TYPE_USHORT;
                     isValidDataFormat = true;
                 }
                 break;
@@ -307,9 +308,9 @@ public class TIFFImage extends AbstractRed {
                 } else if (sampleSize == 4 && samplesPerPixel == 1) {
                     imageType = TYPE_GRAY_4BIT;
                 } else if (sampleSize % 8 == 0) {
-                    if(samplesPerPixel == 1) {
+                    if (samplesPerPixel == 1) {
                         imageType = TYPE_GRAY;
-                    } else if(samplesPerPixel == 2) {
+                    } else if (samplesPerPixel == 2) {
                         imageType = TYPE_GRAY_ALPHA;
                     } else {
                         imageType = TYPE_GENERIC;
@@ -328,8 +329,8 @@ public class TIFFImage extends AbstractRed {
                 }
                 break;
             case 3: // RGB Palette
-                if (samplesPerPixel == 1 &&
-                   (sampleSize == 4 || sampleSize == 8 || sampleSize == 16)) {
+                if (samplesPerPixel == 1
+                   && (sampleSize == 4 || sampleSize == 8 || sampleSize == 16)) {
                     imageType = TYPE_PALETTE;
                 }
                 break;
@@ -351,8 +352,8 @@ public class TIFFImage extends AbstractRed {
             }
 
             // Set basic image layout
-            Rectangle bounds = new Rectangle
-                (0, 0,
+            Rectangle bounds = new Rectangle(
+                0, 0,
                  (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_WIDTH),
                  (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_LENGTH));
 
@@ -363,7 +364,8 @@ public class TIFFImage extends AbstractRed {
             TIFFField efield = dir.getField(TIFFImageDecoder.TIFF_EXTRA_SAMPLES);
             int extraSamples = efield == null ? 0 : (int)efield.getAsLong(0);
 
-            int tileWidth, tileHeight;
+            int tileWidth;
+            int tileHeight;
             if (dir.getField(TIFFImageDecoder.TIFF_TILE_OFFSETS) != null) {
                 tiled = true;
                 // Image is in tiled format
@@ -385,18 +387,18 @@ public class TIFFImage extends AbstractRed {
                 // instead of the tile offsets and byte counts. Therefore
                 // we default here to the tile dimensions if they are written.
                 tileWidth =
-                    dir.getField(TIFFImageDecoder.TIFF_TILE_WIDTH) != null ?
-                    (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_WIDTH) :
-                    bounds.width;
+                    dir.getField(TIFFImageDecoder.TIFF_TILE_WIDTH) != null
+                    ? (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_WIDTH)
+                    : bounds.width;
                 TIFFField field =
                     dir.getField(TIFFImageDecoder.TIFF_ROWS_PER_STRIP);
                 if (field == null) {
                     // Default is infinity (2^32 -1), basically the entire image
 
                     tileHeight =
-                        dir.getField(TIFFImageDecoder.TIFF_TILE_LENGTH) != null ?
-                        (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_LENGTH):
-                        bounds.height;
+                        dir.getField(TIFFImageDecoder.TIFF_TILE_LENGTH) != null
+                        ? (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_TILE_LENGTH)
+                        : bounds.height;
                 } else {
                     long l = field.getAsLong(0);
                     long infinity = 1;
@@ -557,18 +559,18 @@ public class TIFFImage extends AbstractRed {
                 for (int i = 0; i < numBands; i++) {
                     reverseOffsets[i] = numBands - 1 - i;
                 }
-                sampleModel = new PixelInterleavedSampleModel
-                    (dataType, tileWidth, tileHeight,
+                sampleModel = new PixelInterleavedSampleModel(
+                    dataType, tileWidth, tileHeight,
                      numBands, numBands * tileWidth, reverseOffsets);
 
                 if (imageType == TYPE_GRAY) {
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_GRAY),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_GRAY),
                      new int[] {sampleSize}, false, false,
                      Transparency.OPAQUE, dataType);
                 } else if (imageType == TYPE_RGB) {
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_sRGB),
                      new int[] {sampleSize, sampleSize, sampleSize},
                      false, false, Transparency.OPAQUE, dataType);
                 } else { // hasAlpha
@@ -602,8 +604,8 @@ public class TIFFImage extends AbstractRed {
                     bandOffsets[i] = i;
                 }
 
-                sampleModel = new PixelInterleavedSampleModel
-                    (dataType, tileWidth, tileHeight,
+                sampleModel = new PixelInterleavedSampleModel(
+                    dataType, tileWidth, tileHeight,
                      numBands, numBands * tileWidth, bandOffsets);
                 colorModel = null;
                 break;
@@ -634,11 +636,11 @@ public class TIFFImage extends AbstractRed {
                     // Data will have to be unpacked into a 3 band short image
                     // as we do not have a IndexColorModel that can deal with
                     // a colormodel whose entries are of short data type.
-                    sampleModel = createPixelInterleavedSampleModel
-                        (dataType, tileWidth, tileHeight, numBands);
+                    sampleModel = createPixelInterleavedSampleModel(
+                        dataType, tileWidth, tileHeight, numBands);
 
-                  colorModel = new ComponentColorModel
-                    (ColorSpace.getInstance(ColorSpace.CS_sRGB),
+                  colorModel = new ComponentColorModel(
+                    ColorSpace.getInstance(ColorSpace.CS_sRGB),
                      new int[] {16, 16, 16}, false, false,
                      Transparency.OPAQUE, dataType);
 
@@ -650,13 +652,13 @@ public class TIFFImage extends AbstractRed {
                         // Pixel data will not be unpacked, will use
                         // MPPSM to store packed data and
                         // IndexColorModel to do the unpacking.
-                        sampleModel = new MultiPixelPackedSampleModel
-                            (DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
+                        sampleModel = new MultiPixelPackedSampleModel(
+                            DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
                              sampleSize);
                     } else if (sampleSize == 8) {
 
-                        sampleModel = createPixelInterleavedSampleModel
-                            (DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
+                        sampleModel = createPixelInterleavedSampleModel(
+                            DataBuffer.TYPE_BYTE, tileWidth, tileHeight,
                              numBands);
                     } else if (sampleSize == 16) {
 
@@ -666,8 +668,8 @@ public class TIFFImage extends AbstractRed {
                         // actual palette entries are allowed to be
                         // negative.
                         dataType = DataBuffer.TYPE_USHORT;
-                        sampleModel = createPixelInterleavedSampleModel
-                            (DataBuffer.TYPE_USHORT, tileWidth, tileHeight,
+                        sampleModel = createPixelInterleavedSampleModel(
+                            DataBuffer.TYPE_USHORT, tileWidth, tileHeight,
                              numBands);
                     }
 
@@ -682,23 +684,23 @@ public class TIFFImage extends AbstractRed {
                     if (dataType == DataBuffer.TYPE_SHORT) {
 
                         for (int i = 0; i < bandLength; i++) {
-                            r[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[i]);
-                            g[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[gIndex + i]);
-                            b[i] = param.decodeSigned16BitsTo8Bits
-                                ((short)colormap[bIndex + i]);
+                            r[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[i]);
+                            g[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[gIndex + i]);
+                            b[i] = param.decodeSigned16BitsTo8Bits(
+                                (short)colormap[bIndex + i]);
                         }
 
                     } else {
 
                         for (int i = 0; i < bandLength; i++) {
-                            r[i] = param.decode16BitsTo8Bits
-                                (colormap[i] & 0xffff);
-                            g[i] = param.decode16BitsTo8Bits
-                                (colormap[gIndex + i] & 0xffff);
-                            b[i] = param.decode16BitsTo8Bits
-                                (colormap[bIndex + i] & 0xffff);
+                            r[i] = param.decode16BitsTo8Bits(
+                                colormap[i] & 0xffff);
+                            g[i] = param.decode16BitsTo8Bits(
+                                colormap[gIndex + i] & 0xffff);
+                            b[i] = param.decode16BitsTo8Bits(
+                                colormap[bIndex + i] & 0xffff);
                         }
 
                     }
@@ -743,8 +745,8 @@ public class TIFFImage extends AbstractRed {
      * Returns tile (tileX, tileY) as a Raster.
      */
     public synchronized Raster getTile(int tileX, int tileY) {
-        if ((tileX < 0) || (tileX >= tilesX) ||
-            (tileY < 0) || (tileY >= tilesY)) {
+        if ((tileX < 0) || (tileX >= tilesX)
+            || (tileY < 0) || (tileY >= tilesY)) {
             throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage12"));
         }
 
@@ -778,13 +780,13 @@ public class TIFFImage extends AbstractRed {
         int iswap;
 
         // Save original file pointer position and seek to tile data location.
-        long save_offset = 0;
+        long saveOffset = 0;
         try {
-            save_offset = stream.getFilePointer();
+            saveOffset = stream.getFilePointer();
             stream.seek(tileOffsets[tileY * tilesX + tileX]);
         } catch (IOException ioe) {
-            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
         }
 
         // Number of bytes in this tile (strip) after compression.
@@ -802,8 +804,8 @@ public class TIFFImage extends AbstractRed {
         int unitsInThisTile = newRect.width * newRect.height * numBands;
 
         // Allocate read buffer if needed.
-        byte[] data = compression != COMP_NONE || imageType == TYPE_PALETTE ?
-            new byte[byteCount] : null;
+        byte[] data = compression != COMP_NONE || imageType == TYPE_PALETTE
+            ? new byte[byteCount] : null;
 
         // Read the data, uncompressing as needed. There are four cases:
         // bilevel, palette-RGB, 4-bit grayscale, and everything else.
@@ -843,10 +845,10 @@ public class TIFFImage extends AbstractRed {
                     stream.readFully(bdata, 0, byteCount);
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
             } catch (IOException ioe) {
-                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
             }
         } else if (imageType == TYPE_PALETTE) { // palette-RGB
             if (sampleSize == 16) {
@@ -910,11 +912,11 @@ public class TIFFImage extends AbstractRed {
                             readShorts(byteCount / 2, tempData);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
 
                     if (dataType == DataBuffer.TYPE_USHORT) {
@@ -922,7 +924,9 @@ public class TIFFImage extends AbstractRed {
                         // Expand the palette image into an rgb image with ushort
                         // data type.
                         int cmapValue;
-                        int count = 0, lookup, len = colormap.length / 3;
+                        int count = 0;
+                        int lookup;
+                        int len = colormap.length / 3;
                         int len2 = len * 2;
                         for (int i = 0; i < unitsBeforeLookup; i++) {
                             // Get the index into the colormap
@@ -943,7 +947,9 @@ public class TIFFImage extends AbstractRed {
                         // Expand the palette image into an rgb image with
                         // short data type.
                         int cmapValue;
-                        int count = 0, lookup, len = colormap.length / 3;
+                        int count = 0;
+                        int lookup;
+                        int len = colormap.length / 3;
                         int len2 = len * 2;
                         for (int i = 0; i < unitsBeforeLookup; i++) {
                             // Get the index into the colormap
@@ -1010,11 +1016,11 @@ public class TIFFImage extends AbstractRed {
                             readShorts(byteCount / 2, sdata);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
                 }
 
@@ -1060,17 +1066,19 @@ public class TIFFImage extends AbstractRed {
                                                        + compression);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
 
                     // Expand the palette image into an rgb image with ushort
                     // data type.
                     int cmapValue;
-                    int count = 0, lookup, len = colormap.length / 3;
+                    int count = 0;
+                    int lookup;
+                    int len = colormap.length / 3;
                     int len2 = len * 2;
                     for (int i = 0; i < unitsBeforeLookup; i++) {
                         // Get the index into the colormap
@@ -1116,11 +1124,11 @@ public class TIFFImage extends AbstractRed {
                                                        + ": " + compression);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
                 }
 
@@ -1136,10 +1144,10 @@ public class TIFFImage extends AbstractRed {
 
                     try {
                         stream.readFully(data, 0, byteCount);
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
 
                     // If compressed, decode the data.
@@ -1168,7 +1176,8 @@ public class TIFFImage extends AbstractRed {
                     // Unpack the 2 pixels packed into each byte.
                     data = new byte[bytes];
 
-                    int srcCount = 0, dstCount = 0;
+                    int srcCount = 0;
+                    int dstCount = 0;
                     for (int j = 0; j < newRect.height; j++) {
                         for (int i = 0; i < newRect.width / 2; i++) {
                             data[dstCount++] =
@@ -1185,7 +1194,8 @@ public class TIFFImage extends AbstractRed {
 
                     int len = colormap.length / 3;
                     int len2 = len * 2;
-                    int cmapValue, lookup;
+                    int cmapValue;
+                    int lookup;
                     int count = 0;
                     for (int i = 0; i < bytes; i++) {
                         lookup = data[i] & 0xff;
@@ -1222,11 +1232,11 @@ public class TIFFImage extends AbstractRed {
                             stream.readFully(bdata, 0, byteCount);
                         }
 
-                        stream.seek(save_offset);
+                        stream.seek(saveOffset);
 
                     } catch (IOException ioe) {
-                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                        throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
                     }
                 }
             }
@@ -1242,8 +1252,8 @@ public class TIFFImage extends AbstractRed {
                     if ((newRect.width % 8) == 0) {
                         bytesInThisTile = (newRect.width / 2) * newRect.height;
                     } else {
-                        bytesInThisTile = (newRect.width / 2 + 1) *
-                            newRect.height;
+                        bytesInThisTile = (newRect.width / 2 + 1)
+                            * newRect.height;
                     }
 
                     decodePackbits(data, bytesInThisTile, bdata);
@@ -1263,10 +1273,10 @@ public class TIFFImage extends AbstractRed {
                     stream.readFully(bdata, 0, byteCount);
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
             } catch (IOException ioe) {
-                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
             }
         } else { // everything else
             try {
@@ -1340,8 +1350,8 @@ public class TIFFImage extends AbstractRed {
                                                unitsInThisTile);
 
                     }
-                } else if (sampleSize == 32 &&
-                           dataType == DataBuffer.TYPE_INT) { // redundant
+                } else if (sampleSize == 32
+                           && dataType == DataBuffer.TYPE_INT) { // redundant
                     if (compression == COMP_NONE) {
 
                         readInts(byteCount / 4, idata);
@@ -1386,11 +1396,11 @@ public class TIFFImage extends AbstractRed {
                     }
                 }
 
-                stream.seek(save_offset);
+                stream.seek(saveOffset);
 
             } catch (IOException ioe) {
-                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+                throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
             }
 
             // Modify the data for certain special cases.
@@ -1401,8 +1411,8 @@ public class TIFFImage extends AbstractRed {
                     // Since we are using a ComponentColorModel with this
                     // image, we need to change the WhiteIsZero data to
                     // BlackIsZero data so it will display properly.
-                    if (dataType == DataBuffer.TYPE_BYTE &&
-                        !(getColorModel() instanceof IndexColorModel)) {
+                    if (dataType == DataBuffer.TYPE_BYTE
+                        && !(getColorModel() instanceof IndexColorModel)) {
 
                         for (int l = 0; l < bdata.length; l += numBands) {
                             bdata[l] = (byte)(255 - bdata[l]);
@@ -1421,8 +1431,8 @@ public class TIFFImage extends AbstractRed {
                         }
                     } else if (dataType == DataBuffer.TYPE_INT) {
 
-                        long uintMax = ((long)Integer.MAX_VALUE -
-                                        (long)Integer.MIN_VALUE);
+                        long uintMax = ((long)Integer.MAX_VALUE
+                                        - (long)Integer.MIN_VALUE);
                         for (int l = 0; l < idata.length; l += numBands) {
                             idata[l] = (int)(uintMax - idata[l]);
                         }
@@ -1518,13 +1528,13 @@ public class TIFFImage extends AbstractRed {
                 for (int j = 0; j < numV; j++) {
                     int x = newRect.x;
                     for (int i = 0; i < numH; i++) {
-                        int Cb = tempData[bOffset + offsetCb];
-                        int Cr = tempData[bOffset + offsetCr];
+                        int cb = tempData[bOffset + offsetCb];
+                        int cr = tempData[bOffset + offsetCr];
                         int k = 0;
                         while (k < samplesPerDataUnit) {
                             pixels[k++] = tempData[bOffset++];
-                            pixels[k++] = Cb;
-                            pixels[k++] = Cr;
+                            pixels[k++] = cb;
+                            pixels[k++] = cr;
                         }
                         bOffset += 2;
                         tile.setPixels(x, y, chromaSubH, chromaSubV, pixels);
@@ -1550,8 +1560,8 @@ public class TIFFImage extends AbstractRed {
         try {
             stream.readFully(byteArray, 0, byteCount);
         } catch (IOException ioe) {
-            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
         }
 
         interpretBytesAsShorts(byteArray, shortArray, shortCount);
@@ -1567,8 +1577,8 @@ public class TIFFImage extends AbstractRed {
         try {
             stream.readFully(byteArray, 0, byteCount);
         } catch (IOException ioe) {
-            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": " +
-                                       ioe.getMessage());
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage13") + ": "
+                                       + ioe.getMessage());
         }
 
         interpretBytesAsInts(byteArray, intArray, intCount);
@@ -1581,7 +1591,8 @@ public class TIFFImage extends AbstractRed {
                                         int shortCount) {
 
         int j = 0;
-        int firstByte, secondByte;
+        int firstByte;
+        int secondByte;
 
         if (isBigEndian) {
 
@@ -1612,19 +1623,19 @@ public class TIFFImage extends AbstractRed {
         if (isBigEndian) {
 
             for (int i = 0; i < intCount; i++) {
-                intArray[i] = (((byteArray[j++] & 0xff) << 24) |
-                               ((byteArray[j++] & 0xff) << 16) |
-                               ((byteArray[j++] & 0xff) << 8) |
-                               ( byteArray[j++] & 0xff));
+                intArray[i] = (((byteArray[j++] & 0xff) << 24)
+                               | ((byteArray[j++] & 0xff) << 16)
+                               | ((byteArray[j++] & 0xff) << 8)
+                               | (byteArray[j++] & 0xff));
             }
 
         } else {
 
             for (int i = 0; i < intCount; i++) {
-                intArray[i] = ((byteArray[j++] & 0xff) |
-                              ((byteArray[j++] & 0xff) << 8) |
-                              ((byteArray[j++] & 0xff) << 16) |
-                              ((byteArray[j++] & 0xff) << 24));
+                intArray[i] = ((byteArray[j++] & 0xff)
+                              | ((byteArray[j++] & 0xff) << 8)
+                              | ((byteArray[j++] & 0xff) << 16)
+                              | ((byteArray[j++] & 0xff) << 24));
             }
         }
     }
@@ -1636,8 +1647,10 @@ public class TIFFImage extends AbstractRed {
             dst = new byte[arraySize];
         }
 
-        int srcCount = 0, dstCount = 0;
-        byte repeat, b;
+        int srcCount = 0;
+        int dstCount = 0;
+        byte repeat;
+        byte b;
 
         try {
 
@@ -1666,8 +1679,8 @@ public class TIFFImage extends AbstractRed {
                 }
             }
         } catch (java.lang.ArrayIndexOutOfBoundsException ae) {
-            throw new RuntimeException(PropertyUtil.getString("TIFFImage14") + ": " +
-                                       ae.getMessage());
+            throw new RuntimeException(PropertyUtil.getString("TIFFImage14") + ": "
+                                       + ae.getMessage());
         }
 
         return dst;
@@ -1675,12 +1688,12 @@ public class TIFFImage extends AbstractRed {
 
     // Need a createColorModel().
     // Create ComponentColorModel for TYPE_RGB images
-    private ComponentColorModel createAlphaComponentColorModel
-    (int dataType, int numBands,
+    private ComponentColorModel createAlphaComponentColorModel(
+    int dataType, int numBands,
      boolean isAlphaPremultiplied, int transparency) {
 
         ComponentColorModel ccm = null;
-        int[] RGBBits = null;
+        int[] rgbBits = null;
         ColorSpace cs = null;
         switch(numBands) {
             case 2: // gray+alpha
@@ -1690,8 +1703,8 @@ public class TIFFImage extends AbstractRed {
                 cs = ColorSpace.getInstance(ColorSpace.CS_sRGB);
                 break;
             default:
-                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage19") + ": " +
-                                                   numBands);
+                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage19") + ": "
+                                                   + numBands);
         }
 
         int componentSize = 0;
@@ -1707,17 +1720,17 @@ public class TIFFImage extends AbstractRed {
                 componentSize = 32;
                 break;
             default:
-                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage20") + ": " +
-                                                   dataType);
+                throw new IllegalArgumentException(PropertyUtil.getString("TIFFImage20") + ": "
+                                                   + dataType);
         }
 
-        RGBBits = new int[numBands];
+        rgbBits = new int[numBands];
         for (int i = 0; i < numBands; i++) {
-            RGBBits[i] = componentSize;
+            rgbBits[i] = componentSize;
         }
 
         ccm = new ComponentColorModel(cs,
-                                      RGBBits,
+                                      rgbBits,
                                       true,
                                       isAlphaPremultiplied,
                                       transparency,

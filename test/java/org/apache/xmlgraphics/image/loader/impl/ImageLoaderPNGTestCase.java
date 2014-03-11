@@ -23,6 +23,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageContext;
 import org.apache.xmlgraphics.image.loader.ImageException;
@@ -32,9 +35,6 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.MockImageContext;
 import org.apache.xmlgraphics.image.loader.MockImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ImageLoaderPNGTestCase {
 

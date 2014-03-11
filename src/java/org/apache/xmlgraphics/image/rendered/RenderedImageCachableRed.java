@@ -45,10 +45,12 @@ import java.util.Vector;
 public class RenderedImageCachableRed implements CachableRed {
 
     public static CachableRed wrap(RenderedImage ri) {
-        if (ri instanceof CachableRed)
+        if (ri instanceof CachableRed) {
             return (CachableRed) ri;
-        if (ri instanceof BufferedImage)
+        }
+        if (ri instanceof BufferedImage) {
             return new BufferedImageCachableRed((BufferedImage)ri);
+        }
         return new RenderedImageCachableRed(ri);
     }
 
@@ -56,7 +58,7 @@ public class RenderedImageCachableRed implements CachableRed {
     private Vector srcs = new Vector(0);
 
     public RenderedImageCachableRed(RenderedImage src) {
-        if(src == null){
+        if (src == null) {
             throw new NullPointerException();
         }
         this.src = src;
@@ -149,12 +151,12 @@ public class RenderedImageCachableRed implements CachableRed {
     }
 
     public Shape getDependencyRegion(int srcIndex, Rectangle outputRgn) {
-        throw new IndexOutOfBoundsException
-            ("Nonexistant source requested.");
+        throw new IndexOutOfBoundsException(
+            "Nonexistant source requested.");
     }
 
     public Shape getDirtyRegion(int srcIndex, Rectangle inputRgn) {
-        throw new IndexOutOfBoundsException
-            ("Nonexistant source requested.");
+        throw new IndexOutOfBoundsException(
+            "Nonexistant source requested.");
     }
 }

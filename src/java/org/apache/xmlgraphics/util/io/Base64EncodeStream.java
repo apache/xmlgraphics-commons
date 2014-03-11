@@ -46,16 +46,16 @@ import java.io.PrintStream;
 public class Base64EncodeStream extends OutputStream {
 
     /** This array maps the 6 bit values to their characters */
-    private static final byte[] pem_array = {
+    private static final byte[] PEM_ARRAY = {
     //   0   1   2   3   4   5   6   7
-        'A','B','C','D','E','F','G','H', // 0
-        'I','J','K','L','M','N','O','P', // 1
-        'Q','R','S','T','U','V','W','X', // 2
-        'Y','Z','a','b','c','d','e','f', // 3
-        'g','h','i','j','k','l','m','n', // 4
-        'o','p','q','r','s','t','u','v', // 5
-        'w','x','y','z','0','1','2','3', // 6
-        '4','5','6','7','8','9','+','/'  // 7
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', // 0
+        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 1
+        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 2
+        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', // 3
+        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 4
+        'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 5
+        'w', 'x', 'y', 'z', '0', '1', '2', '3', // 6
+        '4', '5', '6', '7', '8', '9', '+', '/'  // 7
     };
 
     byte [] atom = new byte[3];
@@ -76,13 +76,14 @@ public class Base64EncodeStream extends OutputStream {
         this.closeOutOnClose = closeOutOnClose;
     }
 
-    public void close () throws IOException {
+    public void close() throws IOException {
         if (out != null) {
             encodeAtom();
             out.flush();
-            if (closeOutOnClose)
+            if (closeOutOnClose) {
                 out.close();
-            out=null;
+            }
+            out = null;
         }
     }
 
@@ -98,8 +99,9 @@ public class Base64EncodeStream extends OutputStream {
 
     public void write(int b) throws IOException {
         atom[atomLen++] = (byte)b;
-        if (atomLen == 3)
+        if (atomLen == 3) {
             encodeAtom();
+        }
     }
 
     public void write(byte []data) throws IOException {
@@ -117,32 +119,34 @@ public class Base64EncodeStream extends OutputStream {
      * padding characters.
      */
     void encodeAtom() throws IOException {
-        byte a, b, c;
+        byte a;
+        byte b;
+        byte c;
 
         switch (atomLen) {
         case 0: return;
         case 1:
             a = atom[0];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[((a <<  4) & 0x30)];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[((a <<  4) & 0x30)];
             encodeBuf[2] = encodeBuf[3] = '=';
             break;
         case 2:
             a = atom[0];
             b = atom[1];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[((b  << 2) & 0x3C)];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[((b  << 2) & 0x3C)];
             encodeBuf[3] = '=';
             break;
         default:
             a = atom[0];
             b = atom[1];
             c = atom[2];
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
-            encodeBuf[3] = pem_array[c & 0x3F];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
+            encodeBuf[3] = PEM_ARRAY[c & 0x3F];
         }
         if (lineLen == 64) {
             out.println();
@@ -161,10 +165,13 @@ public class Base64EncodeStream extends OutputStream {
      * padding characters.
      */
     void encodeFromArray(byte[] data, int offset, int len)
-        throws IOException{
-        byte a, b, c;
-        if (len == 0)
+        throws IOException {
+        byte a;
+        byte b;
+        byte c;
+        if (len == 0) {
             return;
+        }
 
         // System.out.println("atomLen: " + atomLen +
         //                    " len: " + len +
@@ -173,27 +180,35 @@ public class Base64EncodeStream extends OutputStream {
         if (atomLen != 0) {
             switch(atomLen) {
             case 1:
-                atom[1] = data[offset++]; len--; atomLen++;
-                if (len == 0) return;
-                atom[2] = data[offset++]; len--; atomLen++;
+                atom[1] = data[offset++];
+                len--;
+                atomLen++;
+                if (len == 0) {
+                    return;
+                }
+                atom[2] = data[offset++];
+                len--;
+                atomLen++;
                 break;
             case 2:
-                atom[2] = data[offset++]; len--; atomLen++;
+                atom[2] = data[offset++];
+                len--;
+                atomLen++;
                 break;
             default:
             }
             encodeAtom();
         }
 
-        while (len >=3) {
+        while (len >= 3) {
             a = data[offset++];
             b = data[offset++];
             c = data[offset++];
 
-            encodeBuf[0] = pem_array[((a >>> 2) & 0x3F)];
-            encodeBuf[1] = pem_array[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
-            encodeBuf[2] = pem_array[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
-            encodeBuf[3] = pem_array[c & 0x3F];
+            encodeBuf[0] = PEM_ARRAY[((a >>> 2) & 0x3F)];
+            encodeBuf[1] = PEM_ARRAY[(((a << 4) & 0x30) | ((b >>> 4) & 0x0F))];
+            encodeBuf[2] = PEM_ARRAY[(((b << 2) & 0x3C) | ((c >>> 6) & 0x03))];
+            encodeBuf[3] = PEM_ARRAY[c & 0x3F];
             out.write(encodeBuf);
 
             lineLen += 4;
@@ -202,7 +217,7 @@ public class Base64EncodeStream extends OutputStream {
                 lineLen = 0;
             }
 
-            len -=3;
+            len -= 3;
         }
 
         switch (len) {
@@ -211,7 +226,7 @@ public class Base64EncodeStream extends OutputStream {
             break;
         case 2:
             atom[0] = data[offset];
-            atom[1] = data[offset+1];
+            atom[1] = data[offset + 1];
             break;
         default:
         }

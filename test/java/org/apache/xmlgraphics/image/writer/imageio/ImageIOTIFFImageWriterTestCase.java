@@ -120,11 +120,10 @@ public class ImageIOTIFFImageWriterTestCase {
     }
 
     private interface ImageWriterHelper {
-        public void createImageWriter(ImageWriter imageWriter) throws IOException;
-        public void writeImage(BufferedImage image, ImageWriterParams params)
-                throws IOException;
-        public void writeImageNoParams(BufferedImage image) throws IOException;
-        public ByteArrayOutputStream getByteArrayOutput();
+        void createImageWriter(ImageWriter imageWriter) throws IOException;
+        void writeImage(BufferedImage image, ImageWriterParams params) throws IOException;
+        void writeImageNoParams(BufferedImage image) throws IOException;
+        ByteArrayOutputStream getByteArrayOutput();
     }
 
     private class TestImageWriter implements ImageWriterHelper {

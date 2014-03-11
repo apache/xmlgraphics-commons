@@ -54,21 +54,25 @@ public class FormatRed extends AbstractRed {
     public static CachableRed construct(CachableRed src, ColorModel cm) {
         ColorModel srcCM = src.getColorModel();
         if ((cm.hasAlpha() != srcCM.hasAlpha())
-            || (cm.isAlphaPremultiplied() != srcCM.isAlphaPremultiplied()))
+            || (cm.isAlphaPremultiplied() != srcCM.isAlphaPremultiplied())) {
             return new FormatRed(src, cm);
+        }
 
-        if (cm.getNumComponents() != srcCM.getNumComponents())
-            throw new IllegalArgumentException
-                ("Incompatible ColorModel given");
+        if (cm.getNumComponents() != srcCM.getNumComponents()) {
+            throw new IllegalArgumentException(
+                "Incompatible ColorModel given");
+        }
 
 
         if ((srcCM instanceof ComponentColorModel)
-            && (cm    instanceof ComponentColorModel))
+            && (cm    instanceof ComponentColorModel)) {
             return src;
+        }
 
         if ((srcCM instanceof DirectColorModel)
-            && (cm    instanceof DirectColorModel))
+            && (cm    instanceof DirectColorModel)) {
             return src;
+        }
 
         return new FormatRed(src, cm);
     }
@@ -119,11 +123,11 @@ public class FormatRed extends AbstractRed {
                                                              wr.getMinY()));
         getSource().copyData(srcWR);
 
-        BufferedImage srcBI = new BufferedImage
-            (srcCM, srcWR.createWritableTranslatedChild(0,0),
+        BufferedImage srcBI = new BufferedImage(
+            srcCM, srcWR.createWritableTranslatedChild(0, 0),
              srcCM.isAlphaPremultiplied(), null);
-        BufferedImage dstBI = new BufferedImage
-            (cm, wr.createWritableTranslatedChild(0,0),
+        BufferedImage dstBI = new BufferedImage(
+            cm, wr.createWritableTranslatedChild(0, 0),
              cm.isAlphaPremultiplied(), null);
 
         GraphicsUtil.copyData(srcBI, dstBI);
@@ -146,63 +150,68 @@ public class FormatRed extends AbstractRed {
         int bits;
         int dt = sm.getDataType();
         switch (dt) {
-        case DataBuffer.TYPE_BYTE:   bits=8;  break;
-        case DataBuffer.TYPE_SHORT:  bits=16; break;
-        case DataBuffer.TYPE_USHORT: bits=16; break;
-        case DataBuffer.TYPE_INT:    bits=32; break;
+        case DataBuffer.TYPE_BYTE:   bits = 8;  break;
+        case DataBuffer.TYPE_SHORT:  bits = 16; break;
+        case DataBuffer.TYPE_USHORT: bits = 16; break;
+        case DataBuffer.TYPE_INT:    bits = 32; break;
         default:
-            throw new IllegalArgumentException
-                ("Unsupported DataBuffer type: " + dt);
+            throw new IllegalArgumentException(
+                "Unsupported DataBuffer type: " + dt);
         }
 
         boolean hasAlpha = srcCM.hasAlpha();
-        if (hasAlpha){
+        if (hasAlpha) {
             // if Src has Alpha then our out bands must
             // either be one less than the source (no out alpha)
             // or equal (still has alpha)
-            if (bands == srcCM.getNumComponents()-1)
+            if (bands == srcCM.getNumComponents() - 1) {
                 hasAlpha = false;
-            else if (bands != srcCM.getNumComponents())
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands in and out");
+            } else if (bands != srcCM.getNumComponents()) {
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands in and out");
+            }
         } else {
-            if (bands == srcCM.getNumComponents()+1)
+            if (bands == srcCM.getNumComponents() + 1) {
                 hasAlpha = true;
-            else if (bands != srcCM.getNumComponents())
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands in and out");
+            } else if (bands != srcCM.getNumComponents()) {
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands in and out");
+            }
         }
 
         boolean preMult  = srcCM.isAlphaPremultiplied();
-        if (!hasAlpha)
+        if (!hasAlpha) {
             preMult = false;
+        }
 
         if (sm instanceof ComponentSampleModel) {
             int [] bitsPer = new int[bands];
-            for (int i=0; i<bands; i++)
+            for (int i = 0; i < bands; i++) {
                 bitsPer[i] = bits;
+            }
 
-            return new ComponentColorModel
-                (cs, bitsPer, hasAlpha, preMult,
+            return new ComponentColorModel(
+                cs, bitsPer, hasAlpha, preMult,
                  hasAlpha ? Transparency.TRANSLUCENT : Transparency.OPAQUE,
                  dt);
         } else if (sm instanceof SinglePixelPackedSampleModel) {
             SinglePixelPackedSampleModel sppsm;
             sppsm = (SinglePixelPackedSampleModel)sm;
             int[] masks  = sppsm.getBitMasks();
-            if (bands == 4)
-                return new DirectColorModel
-                    (cs, bits, masks[0], masks[1], masks[2], masks[3],
+            if (bands == 4) {
+                return new DirectColorModel(
+                    cs, bits, masks[0], masks[1], masks[2], masks[3],
                      preMult, dt);
-            else if (bands == 3)
-                return new DirectColorModel
-                    (cs, bits, masks[0], masks[1], masks[2], 0x0,
+            } else if (bands == 3) {
+                return new DirectColorModel(
+                    cs, bits, masks[0], masks[1], masks[2], 0x0,
                      preMult, dt);
-            else
-                throw new IllegalArgumentException
-                    ("Incompatible number of bands out for ColorModel");
+            } else {
+                throw new IllegalArgumentException(
+                    "Incompatible number of bands out for ColorModel");
+            }
         }
-        throw new IllegalArgumentException
-            ("Unsupported SampleModel Type");
+        throw new IllegalArgumentException(
+            "Unsupported SampleModel Type");
     }
 }

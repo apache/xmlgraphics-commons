@@ -53,14 +53,14 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
     /**
      * Default constructor
      */
-    public DefaultGraphics2D(boolean textAsShapes){
+    public DefaultGraphics2D(boolean textAsShapes) {
         super(textAsShapes);
     }
 
     /**
      * This constructor supports the create method
      */
-    public DefaultGraphics2D(DefaultGraphics2D g){
+    public DefaultGraphics2D(DefaultGraphics2D g) {
         super(g);
     }
 
@@ -70,7 +70,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @return     a new graphics context that is a copy of
      *             this graphics context.
      */
-    public Graphics create(){
+    public Graphics create() {
         return new DefaultGraphics2D(this);
     }
 
@@ -98,7 +98,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see      java.awt.image.ImageObserver
      * @see      java.awt.image.ImageObserver#imageUpdate(java.awt.Image, int, int, int, int, int)
      */
-    public boolean drawImage(Image img, int x, int y, ImageObserver observer){
+    public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
         System.err.println("drawImage");
         return true;
     }
@@ -170,7 +170,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see         java.awt.Component#getGraphics
      * @see         java.awt.Graphics#create()
      */
-    public void dispose(){
+    public void dispose() {
         System.out.println("dispose");
     }
 
@@ -188,7 +188,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see #setClip(Shape)
      * @see #setComposite(java.awt.Composite)
      */
-    public void draw(Shape s){
+    public void draw(Shape s) {
         System.out.println("draw(Shape)");
     }
 
@@ -245,7 +245,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see #drawRenderedImage
      */
      public void drawRenderableImage(RenderableImage img,
-                                     AffineTransform xform){
+                                     AffineTransform xform) {
          System.out.println("drawRenderableImage");
      }
 
@@ -273,7 +273,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see #setComposite(java.awt.Composite)
      * @see #setClip(Shape)
      */
-    public void drawString(String s, float x, float y){
+    public void drawString(String s, float x, float y) {
         System.out.println("drawString(String)");
     }
 
@@ -319,7 +319,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see #setComposite(java.awt.Composite)
      * @see #setClip(Shape)
      */
-    public void fill(Shape s){
+    public void fill(Shape s) {
         System.err.println("fill");
     }
 
@@ -327,7 +327,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * Returns the device configuration associated with this
      * <code>Graphics2D</code>.
      */
-    public GraphicsConfiguration getDeviceConfiguration(){
+    public GraphicsConfiguration getDeviceConfiguration() {
         System.out.println("getDeviceConviguration");
         return null;
     }
@@ -352,7 +352,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @see       java.awt.FontMetrics
      * @see       java.awt.Graphics#getFontMetrics()
      */
-    public FontMetrics getFontMetrics(Font f){
+    public FontMetrics getFontMetrics(Font f) {
         return fmg.getFontMetrics(f);
     }
 
@@ -371,7 +371,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * drawn twice, then all pixels are restored to their original values.
      * @param     c1 the XOR alternation color
      */
-    public void setXORMode(Color c1){
+    public void setXORMode(Color c1) {
         System.out.println("setXORMode");
     }
 
@@ -396,7 +396,7 @@ public class DefaultGraphics2D extends AbstractGraphics2D {
      * @param       dy the vertical distance to copy the pixels.
      */
     public void copyArea(int x, int y, int width, int height,
-                         int dx, int dy){
+                         int dx, int dy) {
         System.out.println("copyArea");
     }
 

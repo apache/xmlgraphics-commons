@@ -159,7 +159,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private boolean emitProperties = true;
 
-    private float fileGamma = 45455/100000.0F;
+    private float fileGamma = 45455 / 100000.0F;
 
     private float userExponent = 1.0F;
 
@@ -244,15 +244,15 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     private int[] gammaLut = null;
 
     private void initGammaLut(int bits) {
-        double exp = (double)userExponent/(fileGamma*displayExponent);
+        double exp = (double)userExponent / (fileGamma * displayExponent);
         int numSamples = 1 << bits;
         int maxOutSample = (bits == 16) ? 65535 : 255;
 
         gammaLut = new int[numSamples];
         for (int i = 0; i < numSamples; i++) {
-            double gbright = (double)i/(numSamples - 1);
+            double gbright = (double)i / (numSamples - 1);
             double gamma = Math.pow(gbright, exp);
-            int igamma = (int)(gamma*maxOutSample + 0.5);
+            int igamma = (int)(gamma * maxOutSample + 0.5);
             if (igamma > maxOutSample) {
                 igamma = maxOutSample;
             }
@@ -423,8 +423,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         bitDepth = chunk.getInt1(8);
 
-        if ((bitDepth != 1) && (bitDepth != 2) && (bitDepth != 4) &&
-            (bitDepth != 8) && (bitDepth != 16)) {
+        if ((bitDepth != 1) && (bitDepth != 2) && (bitDepth != 4)
+            && (bitDepth != 8) && (bitDepth != 16)) {
             // Error -- bad bit depth
             String msg = PropertyUtil.getString("PNGImageDecoder3");
             throw new RuntimeException(msg);
@@ -432,11 +432,11 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         maxOpacity = (1 << bitDepth) - 1;
 
         colorType = chunk.getInt1(9);
-        if ((colorType != PNG_COLOR_GRAY) &&
-            (colorType != PNG_COLOR_RGB) &&
-            (colorType != PNG_COLOR_PALETTE) &&
-            (colorType != PNG_COLOR_GRAY_ALPHA) &&
-            (colorType != PNG_COLOR_RGB_ALPHA)) {
+        if ((colorType != PNG_COLOR_GRAY)
+            && (colorType != PNG_COLOR_RGB)
+            && (colorType != PNG_COLOR_PALETTE)
+            && (colorType != PNG_COLOR_GRAY_ALPHA)
+            && (colorType != PNG_COLOR_RGB_ALPHA)) {
             System.out.println(PropertyUtil.getString("PNGImageDecoder4"));
         }
 
@@ -471,8 +471,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         if (generateEncodeParam) {
             if (colorType == PNG_COLOR_PALETTE) {
                 encodeParam = new PNGEncodeParam.Palette();
-            } else if (colorType == PNG_COLOR_GRAY ||
-                       colorType == PNG_COLOR_GRAY_ALPHA) {
+            } else if (colorType == PNG_COLOR_GRAY
+                       || colorType == PNG_COLOR_GRAY_ALPHA) {
                 encodeParam = new PNGEncodeParam.Gray();
             } else {
                 encodeParam = new PNGEncodeParam.RGB();
@@ -489,7 +489,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         if (performGammaCorrection) {
             // Assume file gamma is 1/2.2 unless we get a gAMA chunk
-            float gamma = (1.0F/2.2F)*(displayExponent/userExponent);
+            float gamma = (1.0F / 2.2F) * (displayExponent / userExponent);
             if (encodeParam != null) {
                 encodeParam.setGamma(gamma);
             }
@@ -614,12 +614,12 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     private void parse_IEND_chunk(PNGChunk chunk) throws Exception {
         // Store text strings
         int textLen = textKeys.size();
-        String[] textArray = new String[2*textLen];
+        String[] textArray = new String[2 * textLen];
         for (int i = 0; i < textLen; i++) {
             String key = (String)textKeys.get(i);
             String val = (String)textStrings.get(i);
-            textArray[2*i] = key;
-            textArray[2*i + 1] = val;
+            textArray[2 * i] = key;
+            textArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "text_" + i + ':' + key;
                 properties.put(uniqueKey.toLowerCase(), val);
@@ -631,12 +631,12 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         // Store compressed text strings
         int ztextLen = ztextKeys.size();
-        String[] ztextArray = new String[2*ztextLen];
+        String[] ztextArray = new String[2 * ztextLen];
         for (int i = 0; i < ztextLen; i++) {
             String key = (String)ztextKeys.get(i);
             String val = (String)ztextStrings.get(i);
-            ztextArray[2*i] = key;
-            ztextArray[2*i + 1] = val;
+            ztextArray[2 * i] = key;
+            ztextArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "ztext_" + i + ':' + key;
                 properties.put(uniqueKey.toLowerCase(), val);
@@ -655,16 +655,16 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         // Create an empty WritableRaster
         int depth = bitDepth;
-        if ((colorType == PNG_COLOR_GRAY) &&
-            (bitDepth < 8) && output8BitGray) {
+        if ((colorType == PNG_COLOR_GRAY)
+            && (bitDepth < 8) && output8BitGray) {
             depth = 8;
         }
         if ((colorType == PNG_COLOR_PALETTE) && expandPalette) {
             depth = 8;
         }
-        int bytesPerRow = (outputBands*width*depth + 7)/8;
+        int bytesPerRow = (outputBands * width * depth + 7) / 8;
         int scanlineStride =
-            (depth == 16) ? (bytesPerRow/2) : bytesPerRow;
+            (depth == 16) ? (bytesPerRow / 2) : bytesPerRow;
 
         theTile = createRaster(width, height, outputBands,
                                scanlineStride,
@@ -673,9 +673,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         if (performGammaCorrection && (gammaLut == null)) {
             initGammaLut(bitDepth);
         }
-        if ((postProcess == POST_GRAY_LUT) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS) ||
-            (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
+        if ((postProcess == POST_GRAY_LUT)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS)
+            || (postProcess == POST_GRAY_LUT_ADD_TRANS_EXP)) {
             initGrayLut(bitDepth);
         }
 
@@ -697,8 +697,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                                                  greenPalette,
                                                  bluePalette);
             }
-        } else if ((colorType == PNG_COLOR_GRAY) &&
-                   (bitDepth < 8) && !output8BitGray) {
+        } else if ((colorType == PNG_COLOR_GRAY)
+                   && (bitDepth < 8) && !output8BitGray) {
             byte[] palette = expandBits[bitDepth];
             colorModel = new IndexColorModel(bitDepth,
                                              palette.length,
@@ -860,7 +860,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     }
 
     private void parse_PLTE_chunk(PNGChunk chunk) {
-        paletteEntries = chunk.getLength()/3;
+        paletteEntries = chunk.getLength() / 3;
         redPalette = new byte[paletteEntries];
         greenPalette = new byte[paletteEntries];
         bluePalette = new byte[paletteEntries];
@@ -901,8 +901,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdBlue = bluePalette[bkgdIndex] & 0xff;
 
             if (encodeParam != null) {
-                ((PNGEncodeParam.Palette)encodeParam).
-                    setBackgroundPaletteIndex(bkgdIndex);
+                ((PNGEncodeParam.Palette)encodeParam).setBackgroundPaletteIndex(bkgdIndex);
             }
             break;
         case PNG_COLOR_GRAY: case PNG_COLOR_GRAY_ALPHA:
@@ -910,8 +909,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdRed = bkgdGreen = bkgdBlue = bkgdGray;
 
             if (encodeParam != null) {
-                ((PNGEncodeParam.Gray)encodeParam).
-                    setBackgroundGray(bkgdGray);
+                ((PNGEncodeParam.Gray)encodeParam).setBackgroundGray(bkgdGray);
             }
             break;
         case PNG_COLOR_RGB: case PNG_COLOR_RGB_ALPHA:
@@ -924,13 +922,14 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             bkgdRGB[1] = bkgdGreen;
             bkgdRGB[2] = bkgdBlue;
             if (encodeParam != null) {
-                ((PNGEncodeParam.RGB)encodeParam).
-                    setBackgroundRGB(bkgdRGB);
+                ((PNGEncodeParam.RGB)encodeParam).setBackgroundRGB(bkgdRGB);
             }
             break;
         }
 
-        int r = 0, g = 0, b = 0;
+        int r = 0;
+        int g = 0;
+        int b = 0;
         if (bitDepth < 8) {
             r = expandBits[bitDepth][bkgdRed];
             g = expandBits[bitDepth][bkgdGreen];
@@ -956,14 +955,14 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         }
 
         chromaticity = new float[8];
-        chromaticity[0] = chunk.getInt4(0)/100000.0F;
-        chromaticity[1] = chunk.getInt4(4)/100000.0F;
-        chromaticity[2] = chunk.getInt4(8)/100000.0F;
-        chromaticity[3] = chunk.getInt4(12)/100000.0F;
-        chromaticity[4] = chunk.getInt4(16)/100000.0F;
-        chromaticity[5] = chunk.getInt4(20)/100000.0F;
-        chromaticity[6] = chunk.getInt4(24)/100000.0F;
-        chromaticity[7] = chunk.getInt4(28)/100000.0F;
+        chromaticity[0] = chunk.getInt4(0) / 100000.0F;
+        chromaticity[1] = chunk.getInt4(4) / 100000.0F;
+        chromaticity[2] = chunk.getInt4(8) / 100000.0F;
+        chromaticity[3] = chunk.getInt4(12) / 100000.0F;
+        chromaticity[4] = chunk.getInt4(16) / 100000.0F;
+        chromaticity[5] = chunk.getInt4(20) / 100000.0F;
+        chromaticity[6] = chunk.getInt4(24) / 100000.0F;
+        chromaticity[7] = chunk.getInt4(28) / 100000.0F;
 
         if (encodeParam != null) {
             encodeParam.setChromaticity(chromaticity);
@@ -986,15 +985,15 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             return;
         }
 
-        fileGamma = chunk.getInt4(0)/100000.0F;
+        fileGamma = chunk.getInt4(0) / 100000.0F;
 
         float exp =
-            performGammaCorrection ? displayExponent/userExponent : 1.0F;
+            performGammaCorrection ? displayExponent / userExponent : 1.0F;
         if (encodeParam != null) {
-            encodeParam.setGamma(fileGamma*exp);
+            encodeParam.setGamma(fileGamma * exp);
         }
         if (emitProperties) {
-            properties.put("gamma", new Float(fileGamma*exp));
+            properties.put("gamma", new Float(fileGamma * exp));
         }
     }
 
@@ -1007,7 +1006,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         int length = redPalette.length;
         int[] hist = new int[length];
         for (int i = 0; i < length; i++) {
-            hist[i] = chunk.getInt2(2*i);
+            hist[i] = chunk.getInt2(2 * i);
         }
 
         if (encodeParam != null) {
@@ -1039,7 +1038,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             properties.put("x_pixels_per_unit", new Integer(xPixelsPerUnit));
             properties.put("y_pixels_per_unit", new Integer(yPixelsPerUnit));
             properties.put("pixel_aspect_ratio",
-                           new Float((float)xPixelsPerUnit/yPixelsPerUnit));
+                           new Float((float)xPixelsPerUnit / yPixelsPerUnit));
             if (unitSpecifier == 1) {
                 properties.put("pixel_units", "Meters");
             } else if (unitSpecifier != 0) {
@@ -1081,21 +1080,21 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
         // The presence of an sRGB chunk implies particular
         // settings for gamma and chroma.
-        fileGamma = 45455/100000.0F;
+        fileGamma = 45455 / 100000.0F;
 
         chromaticity = new float[8];
-        chromaticity[0] = 31270/10000.0F;
-        chromaticity[1] = 32900/10000.0F;
-        chromaticity[2] = 64000/10000.0F;
-        chromaticity[3] = 33000/10000.0F;
-        chromaticity[4] = 30000/10000.0F;
-        chromaticity[5] = 60000/10000.0F;
-        chromaticity[6] = 15000/10000.0F;
-        chromaticity[7] =  6000/10000.0F;
+        chromaticity[0] = 31270 / 10000.0F;
+        chromaticity[1] = 32900 / 10000.0F;
+        chromaticity[2] = 64000 / 10000.0F;
+        chromaticity[3] = 33000 / 10000.0F;
+        chromaticity[4] = 30000 / 10000.0F;
+        chromaticity[5] = 60000 / 10000.0F;
+        chromaticity[6] = 15000 / 10000.0F;
+        chromaticity[7] =  6000 / 10000.0F;
 
         if (performGammaCorrection) {
             // File gamma is 1/2.2
-            float gamma = fileGamma*(displayExponent/userExponent);
+            float gamma = fileGamma * (displayExponent / userExponent);
             if (encodeParam != null) {
                 encodeParam.setGamma(gamma);
                 encodeParam.setChromaticity(chromaticity);
@@ -1120,7 +1119,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         StringBuffer key = new StringBuffer();
         int textIndex = 0;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
 
         StringBuilder value = new StringBuilder();
@@ -1203,8 +1202,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                 }
 
                 if (encodeParam != null) {
-                    ((PNGEncodeParam.Gray)encodeParam).
-                        setTransparentGray(grayTransparentAlpha);
+                    ((PNGEncodeParam.Gray)encodeParam).setTransparentGray(grayTransparentAlpha);
                 }
             }
         } else if (colorType == PNG_COLOR_RGB) {
@@ -1221,12 +1219,11 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     rgbTrans[0] = redTransparentAlpha;
                     rgbTrans[1] = greenTransparentAlpha;
                     rgbTrans[2] = blueTransparentAlpha;
-                    ((PNGEncodeParam.RGB)encodeParam).
-                        setTransparentRGB(rgbTrans);
+                    ((PNGEncodeParam.RGB)encodeParam).setTransparentRGB(rgbTrans);
                 }
             }
-        } else if (colorType == PNG_COLOR_GRAY_ALPHA ||
-                   colorType == PNG_COLOR_RGB_ALPHA) {
+        } else if (colorType == PNG_COLOR_GRAY_ALPHA
+                   || colorType == PNG_COLOR_RGB_ALPHA) {
             // Error -- GA or RGBA image can't have a tRNS chunk.
             String msg = PropertyUtil.getString("PNGImageDecoder15");
             throw new RuntimeException(msg);
@@ -1239,7 +1236,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         StringBuffer key = new StringBuffer();
         byte b;
         while ((b = chunk.getByte(textIndex++)) != 0) {
-            key.append( (char)b );
+            key.append((char)b);
         }
         /* int method = */ chunk.getByte(textIndex++);
 
@@ -1271,13 +1268,13 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         WritableRaster ras = null;
         Point origin = new Point(0, 0);
         if ((bitDepth < 8) && (bands == 1)) {
-            dataBuffer = new DataBufferByte(height*scanlineStride);
+            dataBuffer = new DataBufferByte(height * scanlineStride);
             ras = Raster.createPackedRaster(dataBuffer,
                                             width, height,
                                             bitDepth,
                                             origin);
         } else if (bitDepth <= 8) {
-            dataBuffer = new DataBufferByte(height*scanlineStride);
+            dataBuffer = new DataBufferByte(height * scanlineStride);
            ras = Raster.createInterleavedRaster(dataBuffer,
                                                  width, height,
                                                  scanlineStride,
@@ -1285,7 +1282,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                                                  bandOffsets[bands],
                                                  origin);
         } else {
-            dataBuffer = new DataBufferUShort(height*scanlineStride);
+            dataBuffer = new DataBufferUShort(height * scanlineStride);
             ras = Raster.createInterleavedRaster(dataBuffer,
                                                  width, height,
                                                  scanlineStride,
@@ -1322,13 +1319,15 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private static void decodeAverageFilter(byte[] curr, byte[] prev,
                                             int count, int bpp) {
-        int raw, priorPixel, priorRow;
+        int raw;
+        int priorPixel;
+        int priorRow;
 
         for (int i = 0; i < bpp; i++) {
             raw = curr[i] & 0xff;
             priorRow = prev[i] & 0xff;
 
-            curr[i] = (byte)(raw + priorRow/2);
+            curr[i] = (byte)(raw + priorRow / 2);
         }
 
         for (int i = bpp; i < count; i++) {
@@ -1336,13 +1335,16 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             priorPixel = curr[i - bpp] & 0xff;
             priorRow = prev[i] & 0xff;
 
-            curr[i] = (byte)(raw + (priorPixel + priorRow)/2);
+            curr[i] = (byte)(raw + (priorPixel + priorRow) / 2);
         }
     }
 
     private static void decodePaethFilter(byte[] curr, byte[] prev,
                                           int count, int bpp) {
-        int raw, priorPixel, priorRow, priorRowPixel;
+        int raw;
+        int priorPixel;
+        int priorRow;
+        int priorRowPixel;
 
         for (int i = 0; i < bpp; i++) {
             raw = curr[i] & 0xff;
@@ -1366,7 +1368,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     private void processPixels(int process,
                                Raster src, WritableRaster dst,
                                int xOffset, int step, int y, int width) {
-        int srcX, dstX;
+        int srcX;
+        int dstX;
 
         // Create an array suitable for holding one pixel
         int[] ps = src.getPixel(0, 0, (int[])null);
@@ -1489,9 +1492,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     pd[1] = g;
                     pd[2] = b;
                 }
-                if ((r == redTransparentAlpha) &&
-                    (g == greenTransparentAlpha) &&
-                    (b == blueTransparentAlpha)) {
+                if ((r == redTransparentAlpha)
+                    && (g == greenTransparentAlpha)
+                    && (b == blueTransparentAlpha)) {
                     pd[3] = 0;
                 } else {
                     pd[3] = maxOpacity;
@@ -1629,8 +1632,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             return;
         }
 
-        int bytesPerRow = (inputBands*passWidth*bitDepth + 7)/8;
-        int eltsPerRow = (bitDepth == 16) ? bytesPerRow/2 : bytesPerRow;
+        int bytesPerRow = (inputBands * passWidth * bitDepth + 7) / 8;
+        int eltsPerRow = (bitDepth == 16) ? bytesPerRow / 2 : bytesPerRow;
         byte[] curr = new byte[bytesPerRow];
         byte[] prior = new byte[bytesPerRow];
 
@@ -1650,7 +1653,8 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         }
 
         // Decode the (sub)image row-by-row
-        int srcY, dstY;
+        int srcY;
+        int dstY;
         for (srcY = 0, dstY = yOffset;
              srcY < passHeight;
              srcY++, dstY += yStep) {
@@ -1710,13 +1714,13 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         if (!useInterlacing) {
             decodePass(theTile, 0, 0, 1, 1, width, height);
         } else {
-            decodePass(theTile, 0, 0, 8, 8, (width + 7)/8, (height + 7)/8);
-            decodePass(theTile, 4, 0, 8, 8, (width + 3)/8, (height + 7)/8);
-            decodePass(theTile, 0, 4, 4, 8, (width + 3)/4, (height + 3)/8);
-            decodePass(theTile, 2, 0, 4, 4, (width + 1)/4, (height + 3)/4);
-            decodePass(theTile, 0, 2, 2, 4, (width + 1)/2, (height + 1)/4);
-            decodePass(theTile, 1, 0, 2, 2, width/2, (height + 1)/2);
-            decodePass(theTile, 0, 1, 1, 2, width, height/2);
+            decodePass(theTile, 0, 0, 8, 8, (width + 7) / 8, (height + 7) / 8);
+            decodePass(theTile, 4, 0, 8, 8, (width + 3) / 8, (height + 7) / 8);
+            decodePass(theTile, 0, 4, 4, 8, (width + 3) / 4, (height + 3) / 8);
+            decodePass(theTile, 2, 0, 4, 4, (width + 1) / 4, (height + 3) / 4);
+            decodePass(theTile, 0, 2, 2, 4, (width + 1) / 2, (height + 1) / 4);
+            decodePass(theTile, 1, 0, 2, 2, width / 2, (height + 1) / 2);
+            decodePass(theTile, 0, 1, 1, 2, width, height / 2);
         }
     }
 

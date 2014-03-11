@@ -33,8 +33,8 @@ public final class PropertyUtil {
 
 
     protected static LocalizableSupport localizableSupport =
-        new LocalizableSupport
-        (RESOURCES, PropertyUtil.class.getClassLoader());
+        new LocalizableSupport(
+        RESOURCES, PropertyUtil.class.getClassLoader());
 
     public static String getString(String key) {
         try {

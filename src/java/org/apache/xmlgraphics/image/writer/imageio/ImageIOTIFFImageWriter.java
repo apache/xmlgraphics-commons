@@ -157,7 +157,8 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
             String value, String description) {
 
         IIOMetadataNode field = createMetadataField(number, name);
-        IIOMetadataNode arrayNode, valueNode;
+        IIOMetadataNode arrayNode;
+        IIOMetadataNode valueNode;
         arrayNode = new IIOMetadataNode("TIFFShorts");
         field.appendChild(arrayNode);
         valueNode = new IIOMetadataNode("TIFFShort");
@@ -183,7 +184,8 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
             String name, String value) {
 
         IIOMetadataNode field = createMetadataField(number, name);
-        IIOMetadataNode arrayNode, valueNode;
+        IIOMetadataNode arrayNode;
+        IIOMetadataNode valueNode;
         arrayNode = new IIOMetadataNode("TIFFRationals");
         field.appendChild(arrayNode);
         valueNode = new IIOMetadataNode("TIFFRational");

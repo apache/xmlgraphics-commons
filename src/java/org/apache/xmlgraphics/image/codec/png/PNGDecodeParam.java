@@ -81,7 +81,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
     /**
      * Constructs a default instance of <code>PNGDecodeParam</code>.
      */
-    public PNGDecodeParam() {}
+    public PNGDecodeParam() { }
 
     private boolean suppressAlpha = false;
 
