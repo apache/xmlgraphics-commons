@@ -27,7 +27,7 @@ package org.apache.xmlgraphics.java2d;
  * @version $Id$
  * Originally authored by Vincent Hardy.
  */
-public final class TransformType{
+public final class TransformType {
     /*
      * Transform type constants
      */
@@ -63,7 +63,7 @@ public final class TransformType{
      * the ones in the enumeration can be created.
      * @see #readResolve
      */
-    private TransformType(int val, String desc){
+    private TransformType(int val, String desc) {
         this.desc = desc;
         this.val = val;
     }
@@ -71,7 +71,7 @@ public final class TransformType{
     /**
      * @return description
      */
-    public String toString(){
+    public String toString() {
         return desc;
     }
 
@@ -85,7 +85,7 @@ public final class TransformType{
      *       case TransformType.TRANSFORM_ROTATE:
      * </pre>
      */
-    public int toInt(){
+    public int toInt() {
         return val;
     }
 
@@ -95,7 +95,7 @@ public final class TransformType{
      * is replaced by its static equivalent
      */
     public Object readResolve() {
-        switch(val){
+        switch(val) {
         case TRANSFORM_TRANSLATE:
             return TransformType.TRANSLATE;
         case TRANSFORM_ROTATE:

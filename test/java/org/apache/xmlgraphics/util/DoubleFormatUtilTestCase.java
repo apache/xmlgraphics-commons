@@ -328,7 +328,7 @@ public class DoubleFormatUtilTestCase {
     /**
      * The maximum power of ten to use when testing high values double
      */
-    private static final int maxPow = 12;
+    private static final int MAX_POW = 12;
 
     /**
      * Tests the formatPrecise method against the reference, with random values
@@ -339,11 +339,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -352,7 +355,7 @@ public class DoubleFormatUtilTestCase {
             actual = formatPrecise(value, decimals, precision);
             assertEquals(value, decimals, precision, expected, actual);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             expected = refFormat(highValue, decimals, precision);
             actual = formatPrecise(highValue, decimals, precision);
             assertEquals(highValue, decimals, precision, expected, actual);
@@ -373,11 +376,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -386,7 +392,7 @@ public class DoubleFormatUtilTestCase {
             actual = format(value, decimals, precision);
             assertEquals(value, decimals, precision, expected, actual);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             expected = refFormat(highValue, decimals, precision);
             actual = format(highValue, decimals, precision);
             assertEquals(highValue, decimals, precision, expected, actual);
@@ -409,11 +415,14 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         int nbTest = 10000;
         int maxDecimals = 12;
 
-        String actual, expected;
+        String actual;
+        String expected;
         for (int i = nbTest; i > 0; i--) {
             int decimals = r.nextInt(maxDecimals);
             int precision = decimals + 3;
@@ -422,7 +431,7 @@ public class DoubleFormatUtilTestCase {
             actual = formatFast(value, decimals, precision);
             assertEquals(value, decimals, precision, expected, actual);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             expected = refFormat(highValue, decimals, precision);
             actual = formatFast(highValue, decimals, precision);
             System.out.println(expected);
@@ -449,7 +458,9 @@ public class DoubleFormatUtilTestCase {
         Random r = new Random();
         r.setSeed(seed);
 
-        double value, highValue, lowValue;
+        double value;
+        double highValue;
+        double lowValue;
         long start = System.currentTimeMillis();
         int nbTest = 1000000;
         int maxDecimals = 16;
@@ -462,7 +473,7 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             format(value, decimals, precision);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             format(highValue, decimals, precision);
 
             lowValue = (value - 1) / 1000;
@@ -479,14 +490,15 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             formatPrecise(value, decimals, precision);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             formatPrecise(highValue, decimals, precision);
 
             lowValue = (value - 1) / 1000;
             formatPrecise(lowValue, decimals, precision);
         }
         long preciseFormatDuration = System.currentTimeMillis() - start;
-        System.out.println("Format Precise duration: " + preciseFormatDuration + "ms to format " + (3 * nbTest) + " doubles");
+        System.out.println("Format Precise duration: " + preciseFormatDuration
+                + "ms to format " + (3 * nbTest) + " doubles");
 
         r.setSeed(seed);
         start = System.currentTimeMillis();
@@ -496,7 +508,7 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             formatFast(value, decimals, precision);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             formatFast(highValue, decimals, precision);
 
             lowValue = (value - 1) / 1000;
@@ -513,7 +525,7 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             refFormat(value, decimals, precision);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             refFormat(highValue, decimals, precision);
 
             lowValue = (value - 1) / 1000;
@@ -530,7 +542,7 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             formatDf(value, decimals, precision);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             formatDf(highValue, decimals, precision);
 
             lowValue = (value - 1) / 1000;
@@ -548,7 +560,7 @@ public class DoubleFormatUtilTestCase {
             value = 1 + r.nextDouble(); // Use decimals and not precision
             Double.toString(value);
 
-            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(maxPow));
+            highValue = value * DoubleFormatUtil.tenPow(r.nextInt(MAX_POW));
             Double.toString(highValue);
 
             lowValue = (value - 1) / 1000;
@@ -563,8 +575,10 @@ public class DoubleFormatUtilTestCase {
         double[] values = {0, 1, 5, 4.9999, 5.0001, 9.9999, 1234567890, 0 /* The last one is random */};
         Random r = new Random();
         double value;
-        String expected, actual;
-        int minScale, maxScale;
+        String expected;
+        String actual;
+        int minScale;
+        int maxScale;
         for (int i = -330; i <= 315; i++) {
             values[values.length - 1] = r.nextDouble();
             double pow = Math.pow(10.0, i);

@@ -21,13 +21,13 @@ package org.apache.xmlgraphics.image.loader.impl;
 
 import org.junit.Test;
 
-import org.apache.xmlgraphics.image.loader.ImageFlavor;
-import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
-import org.apache.xmlgraphics.util.MimeConstants;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import org.apache.xmlgraphics.image.loader.ImageFlavor;
+import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
+import org.apache.xmlgraphics.util.MimeConstants;
 
 public class ImageLoaderFactoryPNGTestCase {
 

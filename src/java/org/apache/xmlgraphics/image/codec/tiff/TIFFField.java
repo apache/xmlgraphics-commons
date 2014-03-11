@@ -90,7 +90,7 @@ public class TIFFField implements Comparable, Serializable {
     Object data;
 
     /** The default constructor. */
-    TIFFField() {}
+    TIFFField() { }
 
     /**
      * Constructs a TIFFField with arbitrary data.  The data
@@ -353,10 +353,10 @@ public class TIFFField implements Comparable, Serializable {
             return (float)((double[])data)[index];
         case TIFF_SRATIONAL:
             int[] ivalue = getAsSRational(index);
-            return (float)((double)ivalue[0]/ivalue[1]);
+            return (float)((double)ivalue[0] / ivalue[1]);
         case TIFF_RATIONAL:
             long[] lvalue = getAsRational(index);
-            return (float)((double)lvalue[0]/lvalue[1]);
+            return (float)((double)lvalue[0] / lvalue[1]);
         default:
             throw new ClassCastException();
         }
@@ -391,10 +391,10 @@ public class TIFFField implements Comparable, Serializable {
             return ((double[])data)[index];
         case TIFF_SRATIONAL:
             int[] ivalue = getAsSRational(index);
-            return (double)ivalue[0]/ivalue[1];
+            return (double)ivalue[0] / ivalue[1];
         case TIFF_RATIONAL:
             long[] lvalue = getAsRational(index);
-            return (double)lvalue[0]/lvalue[1];
+            return (double)lvalue[0] / lvalue[1];
         default:
             throw new ClassCastException();
         }
@@ -444,15 +444,15 @@ public class TIFFField implements Comparable, Serializable {
      *         <code>TIFFField</code>.
      */
     public int compareTo(Object o) {
-        if(o == null) {
+        if (o == null) {
             throw new NullPointerException();
         }
 
         int oTag = ((TIFFField)o).getTag();
 
-        if(tag < oTag) {
+        if (tag < oTag) {
             return -1;
-        } else if(tag > oTag) {
+        } else if (tag > oTag) {
             return 1;
         } else {
             return 0;

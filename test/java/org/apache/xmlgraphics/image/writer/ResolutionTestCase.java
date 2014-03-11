@@ -39,13 +39,13 @@ import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.apache.commons.io.IOUtils;
-
-import org.apache.xmlgraphics.util.UnitConv;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.io.IOUtils;
+
+import org.apache.xmlgraphics.util.UnitConv;
 
 public class ResolutionTestCase {
 

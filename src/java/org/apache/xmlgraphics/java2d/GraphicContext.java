@@ -56,7 +56,7 @@ import java.util.Map;
  *
  * Originally authored by Vincent Hardy and Christophe Jolif.
  */
-public class GraphicContext implements Cloneable{
+public class GraphicContext implements Cloneable {
     /**
      * Default Transform to be used for creating FontRenderContext.
      */
@@ -204,7 +204,7 @@ public class GraphicContext implements Cloneable{
     /**
      * @return a deep copy of this context
      */
-    public Object clone(){
+    public Object clone() {
         return new GraphicContext(this);
     }
 
@@ -214,7 +214,7 @@ public class GraphicContext implements Cloneable{
      * @see       java.awt.Color
      * @see       java.awt.Graphics#setColor
      */
-    public Color getColor(){
+    public Color getColor() {
         return foreground;
     }
 
@@ -226,12 +226,12 @@ public class GraphicContext implements Cloneable{
      * @see       java.awt.Color
      * @see       java.awt.Graphics#getColor
      */
-    public void setColor(Color c){
-        if(c == null) {
+    public void setColor(Color c) {
+        if (c == null) {
             return;
         }
 
-        if(paint != c) {
+        if (paint != c) {
             setPaint(c);
         }
     }
@@ -242,7 +242,7 @@ public class GraphicContext implements Cloneable{
      * @see       java.awt.Font
      * @see       java.awt.Graphics#setFont
      */
-    public Font getFont(){
+    public Font getFont() {
         return font;
     }
 
@@ -253,8 +253,8 @@ public class GraphicContext implements Cloneable{
      * @param  font   the font.
      * @see     java.awt.Graphics#getFont
      */
-    public void setFont(Font font){
-        if(font != null) {
+    public void setFont(Font font) {
+        if (font != null) {
             this.font = font;
         }
     }
@@ -276,9 +276,9 @@ public class GraphicContext implements Cloneable{
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public Rectangle getClipBounds(){
+    public Rectangle getClipBounds() {
         Shape c = getClip();
-        if(c==null) {
+        if (c == null) {
             return null;
         } else {
             return c.getBounds();
@@ -305,7 +305,7 @@ public class GraphicContext implements Cloneable{
      * @see #setClip(int, int, int, int)
      * @see #setClip(Shape)
      */
-    public void clipRect(int x, int y, int width, int height){
+    public void clipRect(int x, int y, int width, int height) {
         clip(new Rectangle(x, y, width, height));
     }
 
@@ -324,7 +324,7 @@ public class GraphicContext implements Cloneable{
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public void setClip(int x, int y, int width, int height){
+    public void setClip(int x, int y, int width, int height) {
         setClip(new Rectangle(x, y, width, height));
     }
 
@@ -345,10 +345,10 @@ public class GraphicContext implements Cloneable{
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public Shape getClip(){
-        try{
+    public Shape getClip() {
+        try {
             return transform.createInverse().createTransformedShape(clip);
-        }catch(NoninvertibleTransformException e){
+        } catch (NoninvertibleTransformException e) {
             return null;
         }
     }
@@ -403,7 +403,7 @@ public class GraphicContext implements Cloneable{
      * @see java.awt.Graphics#setPaintMode
      * @see java.awt.AlphaComposite
      */
-    public void setComposite(Composite comp){
+    public void setComposite(Composite comp) {
         this.composite = comp;
     }
 
@@ -421,12 +421,12 @@ public class GraphicContext implements Cloneable{
      * @see java.awt.TexturePaint
      */
     public void setPaint(Paint paint) {
-        if(paint == null) {
+        if (paint == null) {
             return;
         }
 
         this.paint = paint;
-        if(paint instanceof Color) {
+        if (paint instanceof Color) {
             foreground = (Color)paint;
         } else {
             // use default; otherwise the previous Color will be used
@@ -441,7 +441,7 @@ public class GraphicContext implements Cloneable{
      * <code>Shape</code> during the rendering process
      * @see BasicStroke
      */
-    public void setStroke(Stroke s){
+    public void setStroke(Stroke s) {
         stroke = s;
     }
 
@@ -456,7 +456,7 @@ public class GraphicContext implements Cloneable{
      * hint category.
      * @see RenderingHints
      */
-    public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue){
+    public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) {
         hints.put(hintKey, hintValue);
     }
 
@@ -473,7 +473,7 @@ public class GraphicContext implements Cloneable{
      * <code>RenderingHints</code> class.
      * @see RenderingHints
      */
-    public Object getRenderingHint(RenderingHints.Key hintKey){
+    public Object getRenderingHint(RenderingHints.Key hintKey) {
         return hints.get(hintKey);
     }
 
@@ -491,7 +491,7 @@ public class GraphicContext implements Cloneable{
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void setRenderingHints(Map hints){
+    public void setRenderingHints(Map hints) {
         this.hints = new RenderingHints(hints);
     }
 
@@ -510,7 +510,7 @@ public class GraphicContext implements Cloneable{
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void addRenderingHints(Map hints){
+    public void addRenderingHints(Map hints) {
         this.hints.putAll(hints);
     }
 
@@ -527,7 +527,7 @@ public class GraphicContext implements Cloneable{
      * that contains the current preferences.
      * @see RenderingHints
      */
-    public RenderingHints getRenderingHints(){
+    public RenderingHints getRenderingHints() {
         return hints;
     }
 
@@ -542,8 +542,8 @@ public class GraphicContext implements Cloneable{
      * @param  x   the <i>x</i> coordinate.
      * @param  y   the <i>y</i> coordinate.
      */
-    public void translate(int x, int y){
-        if(x!=0 || y!=0){
+    public void translate(int x, int y) {
+        if (x != 0 || y != 0) {
             transform.translate(x, y);
             transformStack.add(TransformStackElement.createTranslateElement(x, y));
         }
@@ -566,7 +566,7 @@ public class GraphicContext implements Cloneable{
      * @param tx the distance to translate along the x-axis
      * @param ty the distance to translate along the y-axis
      */
-    public void translate(double tx, double ty){
+    public void translate(double tx, double ty) {
         transform.translate(tx, ty);
         transformStack.add(TransformStackElement.createTranslateElement(tx, ty));
     }
@@ -587,7 +587,7 @@ public class GraphicContext implements Cloneable{
      * x axis toward the positive y axis.
      * @param theta the angle of rotation in radians
      */
-    public void rotate(double theta){
+    public void rotate(double theta) {
         transform.rotate(theta);
         transformStack.add(TransformStackElement.createRotateElement(theta));
     }
@@ -611,7 +611,7 @@ public class GraphicContext implements Cloneable{
      * @param x x coordinate of the origin of the rotation
      * @param y y coordinate of the origin of the rotation
      */
-    public void rotate(double theta, double x, double y){
+    public void rotate(double theta, double x, double y) {
         transform.rotate(theta, x, y);
         transformStack.add(TransformStackElement.createTranslateElement(x, y));
         transformStack.add(TransformStackElement.createRotateElement(theta));
@@ -637,7 +637,7 @@ public class GraphicContext implements Cloneable{
      * rendering operations are multiplied relative to previous
      * rendering operations.
      */
-    public void scale(double sx, double sy){
+    public void scale(double sx, double sy) {
         transform.scale(sx, sy);
         transformStack.add(TransformStackElement.createScaleElement(sx, sy));
     }
@@ -660,7 +660,7 @@ public class GraphicContext implements Cloneable{
      * @param shy the multiplier by which coordinates are shifted in
      * the positive Y axis direction as a function of their X coordinate
      */
-    public void shear(double shx, double shy){
+    public void shear(double shx, double shy) {
         transform.shear(shx, shy);
         transformStack.add(TransformStackElement.createShearElement(shx, shy));
     }
@@ -677,29 +677,29 @@ public class GraphicContext implements Cloneable{
      * the result by the original <code>Transform</code> Cx.  In other
      * words, Cx'(p) = Cx(Tx(p)).  A copy of the Tx is made, if necessary,
      * so further modifications to Tx do not affect rendering.
-     * @param Tx the <code>AffineTransform</code> object to be composed with
+     * @param tx the <code>AffineTransform</code> object to be composed with
      * the current <code>Transform</code>
      * @see #setTransform
      * @see AffineTransform
      */
-    public void transform(AffineTransform Tx){
-        transform.concatenate(Tx);
-        transformStack.add(TransformStackElement.createGeneralTransformElement(Tx));
+    public void transform(AffineTransform tx) {
+        transform.concatenate(tx);
+        transformStack.add(TransformStackElement.createGeneralTransformElement(tx));
     }
 
     /**
      * Sets the <code>Transform</code> in the <code>Graphics2D</code>
      * context.
-     * @param Tx the <code>AffineTransform</code> object to be used in the
+     * @param tx the <code>AffineTransform</code> object to be used in the
      * rendering process
      * @see #transform
      * @see AffineTransform
      */
-    public void setTransform(AffineTransform Tx){
-        transform = new AffineTransform(Tx);
+    public void setTransform(AffineTransform tx) {
+        transform = new AffineTransform(tx);
         invalidateTransformStack();
-        if(!Tx.isIdentity()) {
-            transformStack.add(TransformStackElement.createGeneralTransformElement(Tx));
+        if (!tx.isIdentity()) {
+            transformStack.add(TransformStackElement.createGeneralTransformElement(tx));
         }
     }
 
@@ -709,7 +709,7 @@ public class GraphicContext implements Cloneable{
      * has not been reset. Only the setTransform method can
      * override this memento.
      */
-    public void validateTransformStack(){
+    public void validateTransformStack() {
         transformStackValid = true;
     }
 
@@ -717,7 +717,7 @@ public class GraphicContext implements Cloneable{
      * Checks the status of the transform stack.
      * @return true if the transform stack is valid
      */
-    public boolean isTransformStackValid(){
+    public boolean isTransformStackValid() {
         return transformStackValid;
     }
 
@@ -725,7 +725,7 @@ public class GraphicContext implements Cloneable{
      * @return array containing the successive transforms that
      *         were concatenated with the original one.
      */
-    public TransformStackElement[] getTransformStack(){
+    public TransformStackElement[] getTransformStack() {
         TransformStackElement[] stack = new TransformStackElement[transformStack.size()];
         transformStack.toArray(stack);
         return stack;
@@ -737,7 +737,7 @@ public class GraphicContext implements Cloneable{
      * since it was last read. Only validateTransformStack
      * can override this memento
      */
-    protected void invalidateTransformStack(){
+    protected void invalidateTransformStack() {
         transformStack.clear();
         transformStackValid = false;
     }
@@ -750,7 +750,7 @@ public class GraphicContext implements Cloneable{
      * @see #transform
      * @see #setTransform
      */
-    public AffineTransform getTransform(){
+    public AffineTransform getTransform() {
         return new AffineTransform(transform);
     }
 
@@ -762,7 +762,7 @@ public class GraphicContext implements Cloneable{
      * @see #setPaint
      * @see java.awt.Graphics#setColor
      */
-    public Paint getPaint(){
+    public Paint getPaint() {
         return paint;
     }
 
@@ -774,7 +774,7 @@ public class GraphicContext implements Cloneable{
      *              which defines a compositing style.
      * @see #setComposite
      */
-    public Composite getComposite(){
+    public Composite getComposite() {
         return composite;
     }
 
@@ -794,8 +794,8 @@ public class GraphicContext implements Cloneable{
      * @see #getBackground
      * @see java.awt.Graphics#clearRect
      */
-    public void setBackground(Color color){
-        if(color == null) {
+    public void setBackground(Color color) {
+        if (color == null) {
             return;
         }
 
@@ -809,7 +809,7 @@ public class GraphicContext implements Cloneable{
      * which defines the background color.
      * @see #setBackground
      */
-    public Color getBackground(){
+    public Color getBackground() {
         return background;
     }
 
@@ -820,7 +820,7 @@ public class GraphicContext implements Cloneable{
      *                 which defines the line style.
      * @see #setStroke
      */
-    public Stroke getStroke(){
+    public Stroke getStroke() {
         return stroke;
     }
 
@@ -844,7 +844,7 @@ public class GraphicContext implements Cloneable{
      *          <code>Clip</code>.  If <code>s</code> is <code>null</code>,
      *          this method clears the current <code>Clip</code>.
      */
-    public void clip(Shape s){
+    public void clip(Shape s) {
         if (s != null) {
             s = transform.createTransformedShape(s);
         }
@@ -879,26 +879,26 @@ public class GraphicContext implements Cloneable{
      * @see java.awt.font.TextLayout
      * @since     JDK1.2
      */
-    public FontRenderContext getFontRenderContext(){
+    public FontRenderContext getFontRenderContext() {
         //
         // Find if antialiasing should be used.
         //
         Object antialiasingHint = hints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
         boolean isAntialiased = true;
-        if(antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON &&
-           antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT){
+        if (antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+           && antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
 
             // If antialias was not turned off, then use the general rendering
             // hint.
-            if(antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF){
+            if (antialiasingHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF) {
                 antialiasingHint = hints.get(RenderingHints.KEY_ANTIALIASING);
 
                 // Test general hint
-                if(antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON &&
-                   antialiasingHint != RenderingHints.VALUE_ANTIALIAS_DEFAULT){
+                if (antialiasingHint != RenderingHints.VALUE_ANTIALIAS_ON
+                   && antialiasingHint != RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
                     // Antialiasing was not requested. However, if it was not turned
                     // off explicitly, use it.
-                    if(antialiasingHint == RenderingHints.VALUE_ANTIALIAS_OFF) {
+                    if (antialiasingHint == RenderingHints.VALUE_ANTIALIAS_OFF) {
                         isAntialiased = false;
                     }
                 }
@@ -912,7 +912,7 @@ public class GraphicContext implements Cloneable{
         // Find out whether fractional metrics should be used.
         //
         boolean useFractionalMetrics = true;
-        if(hints.get(RenderingHints.KEY_FRACTIONALMETRICS)
+        if (hints.get(RenderingHints.KEY_FRACTIONALMETRICS)
            == RenderingHints.VALUE_FRACTIONALMETRICS_OFF) {
             useFractionalMetrics = false;
         }

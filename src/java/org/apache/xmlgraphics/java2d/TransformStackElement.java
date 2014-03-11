@@ -35,7 +35,7 @@ import java.awt.geom.AffineTransform;
  *
  * Originally authored by Vincent Hardy and Paul Evenblij.
  */
-public abstract class TransformStackElement implements Cloneable{
+public abstract class TransformStackElement implements Cloneable {
 
     /**
      * Transform type
@@ -52,7 +52,7 @@ public abstract class TransformStackElement implements Cloneable{
      * @param transformParameters parameters for transform
      */
     protected TransformStackElement(TransformType type,
-                                    double[] transformParameters){
+                                    double[] transformParameters) {
         this.type = type;
         this.transformParameters = transformParameters;
     }
@@ -66,7 +66,9 @@ public abstract class TransformStackElement implements Cloneable{
         // start with a shallow copy to get our implementations right
         try {
             newElement = (TransformStackElement) super.clone();
-        } catch(java.lang.CloneNotSupportedException ex) {}
+        } catch (java.lang.CloneNotSupportedException ex) {
+            throw new AssertionError();
+        }
 
         // now deep copy the parameter array
         double[] transformParameters = new double[this.transformParameters.length];
@@ -80,7 +82,7 @@ public abstract class TransformStackElement implements Cloneable{
      */
 
     public static TransformStackElement createTranslateElement(double tx,
-                                                               double ty){
+                                                               double ty) {
         return new TransformStackElement(TransformType.TRANSLATE,
                                          new double[]{ tx, ty }) {
                 boolean isIdentity(double[] parameters) {
@@ -89,7 +91,7 @@ public abstract class TransformStackElement implements Cloneable{
             };
     }
 
-    public static TransformStackElement createRotateElement(double theta){
+    public static TransformStackElement createRotateElement(double theta) {
         return new TransformStackElement(TransformType.ROTATE,
                                          new double[]{ theta }) {
                 boolean isIdentity(double[] parameters) {
@@ -99,7 +101,7 @@ public abstract class TransformStackElement implements Cloneable{
     }
 
     public static TransformStackElement createScaleElement(double scaleX,
-                                                           double scaleY){
+                                                           double scaleY) {
         return new TransformStackElement(TransformType.SCALE,
                                          new double[]{ scaleX, scaleY }) {
                 boolean isIdentity(double[] parameters) {
@@ -109,7 +111,7 @@ public abstract class TransformStackElement implements Cloneable{
     }
 
     public static TransformStackElement createShearElement(double shearX,
-                                                           double shearY){
+                                                           double shearY) {
         return new TransformStackElement(TransformType.SHEAR,
                                          new double[]{ shearX, shearY }) {
                 boolean isIdentity(double[] parameters) {
@@ -118,14 +120,14 @@ public abstract class TransformStackElement implements Cloneable{
             };
     }
 
-    public static TransformStackElement createGeneralTransformElement
-        (AffineTransform txf){
+    public static TransformStackElement createGeneralTransformElement(
+        AffineTransform txf) {
         double[] matrix = new double[6];
         txf.getMatrix(matrix);
         return new TransformStackElement(TransformType.GENERAL, matrix) {
                 boolean isIdentity(double[] m) {
-                    return (m[0] == 1 && m[2] == 0 && m[4] == 0 &&
-                            m[1] == 0 && m[3] == 1 && m[5] == 0);
+                    return (m[0] == 1 && m[2] == 0 && m[4] == 0
+                            && m[1] == 0 && m[3] == 1 && m[5] == 0);
                 }
             };
     }
@@ -146,14 +148,14 @@ public abstract class TransformStackElement implements Cloneable{
     /**
      * @return array of values containing this transform element's parameters
      */
-    public double[] getTransformParameters(){
+    public double[] getTransformParameters() {
         return transformParameters;
     }
 
     /**
      * @return this transform type
      */
-    public TransformType getType(){
+    public TransformType getType() {
         return type;
     }
 
@@ -168,12 +170,12 @@ public abstract class TransformStackElement implements Cloneable{
      * @return true if the input stackElement was concatenated with
      *         this one. False otherwise.
      */
-    public boolean concatenate(TransformStackElement stackElement){
+    public boolean concatenate(TransformStackElement stackElement) {
         boolean canConcatenate = false;
 
-        if(type.toInt() == stackElement.type.toInt()){
+        if (type.toInt() == stackElement.type.toInt()) {
             canConcatenate = true;
-            switch(type.toInt()){
+            switch(type.toInt()) {
             case TransformType.TRANSFORM_TRANSLATE:
                 transformParameters[0] += stackElement.transformParameters[0];
                 transformParameters[1] += stackElement.transformParameters[1];

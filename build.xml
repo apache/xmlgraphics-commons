@@ -452,7 +452,6 @@ NOTE:
   <!-- Checkstyle                                                          -->
   <!-- =================================================================== -->
   <property name="checkstyle.location" value="${optional.lib.dir}/checkstyle-5.5-all.jar" />
-  <property name="checkstyle.noframes.xslt" value="${basedir}/checkstyle-noframes.xsl" />
   <property name="checkstyle.config" value="${basedir}/checkstyle-5.5.xml" />
   <path id="checkstyle-classpath">
     <path refid="libs-build-classpath"/>
@@ -463,20 +462,18 @@ NOTE:
       <available classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
         <classpath refid="checkstyle-classpath"/>
       </available>
-      <available file="${checkstyle.noframes.xslt}"/>
       <available file="${checkstyle.config}"/>
     </and>
   </condition>
   <target name="checkstyle-avail" unless="checkstyle.avail">
     <echo message="Checkstyle support NOT present. Please download it from http://checkstyle.sf.net/ and"/>
     <echo message="... please provide ${checkstyle.location}"/>
-    <echo message="... please provide ${checkstyle.noframes.xslt}"/>
     <echo message="... please provide ${checkstyle.config}"/>
   </target>
   <target name="checkstyle" depends="package, checkstyle-avail" if="checkstyle.avail" description="Runs Checkstyle for a code quality report">
     <taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle-classpath"/>
     <mkdir dir="${build.dir}"/>
-    <checkstyle config="${checkstyle.config}" failonviolation="false">
+    <checkstyle config="${checkstyle.config}" failonviolation="true" maxWarnings="0">
       <classpath>
         <path refid="checkstyle-classpath"/>
         <pathelement location="${build.classes.dir}"/>
@@ -484,9 +481,10 @@ NOTE:
         <pathelement location="${build.codegen-classes.dir}"/>
       </classpath>
       <fileset dir="${src.dir}" includes="**/*.java"/>
+      <fileset dir="${basedir}/test" includes="**/*.java"/>
       <formatter type="xml" toFile="${build.dir}/report_checkstyle.xml"/>
+      <formatter type="plain"/>
     </checkstyle>
-    <xslt in="${build.dir}/report_checkstyle.xml" out="${build.dir}/report_checkstyle.html" style="${checkstyle.noframes.xslt}"/>
   </target>
 
   <!-- =================================================================== -->

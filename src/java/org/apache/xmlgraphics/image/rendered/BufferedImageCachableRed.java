@@ -89,7 +89,7 @@ public class BufferedImageCachableRed extends AbstractRed {
     }
 
     public Raster getTile(int tileX, int tileY) {
-        return bi.getTile(tileX,tileY);
+        return bi.getTile(tileX, tileY);
     }
 
     public Raster getData() {
@@ -100,20 +100,21 @@ public class BufferedImageCachableRed extends AbstractRed {
     public Raster getData(Rectangle rect) {
         Rectangle r = (Rectangle)rect.clone();
 
-        if (!r.intersects(getBounds()))
+        if (!r.intersects(getBounds())) {
             return null;
+        }
         r = r.intersection(getBounds());
-        r.translate(-getMinX(), - getMinY());
+        r.translate(-getMinX(), -getMinY());
 
         Raster ret = bi.getData(r);
-        return ret.createTranslatedChild(ret.getMinX()+getMinX(),
-                                         ret.getMinY()+getMinY());
+        return ret.createTranslatedChild(ret.getMinX() + getMinX(),
+                                         ret.getMinY() + getMinY());
     }
 
     public WritableRaster copyData(WritableRaster wr) {
-        WritableRaster wr2 = wr.createWritableTranslatedChild
-            (wr.getMinX()-getMinX(),
-             wr.getMinY()-getMinY());
+        WritableRaster wr2 = wr.createWritableTranslatedChild(
+            wr.getMinX() - getMinX(),
+             wr.getMinY() - getMinY());
 
         GraphicsUtil.copyData(bi.getRaster(), wr2);
 

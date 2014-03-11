@@ -64,10 +64,10 @@ public class PreloaderEMF extends AbstractImagePreloader {
         ImageInputStream in = ImageUtil.needImageInputStream(src);
         byte[] header = getHeader(in, EMF_SIG_LENGTH);
         boolean supported
-            = ( (header[SIGNATURE_OFFSET + 0] == (byte) 0x20)
+            = ((header[SIGNATURE_OFFSET + 0] == (byte) 0x20)
             && (header[SIGNATURE_OFFSET + 1] == (byte) 0x45)
             && (header[SIGNATURE_OFFSET + 2] == (byte) 0x4D)
-            && (header[SIGNATURE_OFFSET + 3] == (byte) 0x46) );
+            && (header[SIGNATURE_OFFSET + 3] == (byte) 0x46));
 
         if (supported) {
             ImageInfo info = new ImageInfo(uri, "image/emf");

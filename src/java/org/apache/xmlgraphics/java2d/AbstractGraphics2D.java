@@ -119,7 +119,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param  x   the <i>x</i> coordinate.
      * @param  y   the <i>y</i> coordinate.
      */
-    public void translate(int x, int y){
+    public void translate(int x, int y) {
         gc.translate(x, y);
     }
 
@@ -129,7 +129,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see       java.awt.Color
      * @see       java.awt.Graphics#setColor
      */
-    public Color getColor(){
+    public Color getColor() {
         return gc.getColor();
     }
 
@@ -141,7 +141,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see       java.awt.Color
      * @see       java.awt.Graphics#getColor
      */
-    public void setColor(Color c){
+    public void setColor(Color c) {
         gc.setColor(c);
     }
 
@@ -152,7 +152,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * overwrite mode.  All subsequent rendering operations will
      * overwrite the destination with the current color.
      */
-    public void setPaintMode(){
+    public void setPaintMode() {
         gc.setComposite(AlphaComposite.SrcOver);
     }
 
@@ -162,7 +162,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see       java.awt.Font
      * @see       java.awt.Graphics#setFont
      */
-    public Font getFont(){
+    public Font getFont() {
         return gc.getFont();
     }
 
@@ -173,7 +173,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param  font   the font.
      * @see     java.awt.Graphics#getFont
      */
-    public void setFont(Font font){
+    public void setFont(Font font) {
         gc.setFont(font);
     }
 
@@ -194,7 +194,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public Rectangle getClipBounds(){
+    public Rectangle getClipBounds() {
         return gc.getClipBounds();
     }
 
@@ -218,7 +218,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see #setClip(int, int, int, int)
      * @see #setClip(Shape)
      */
-    public void clipRect(int x, int y, int width, int height){
+    public void clipRect(int x, int y, int width, int height) {
         gc.clipRect(x, y, width, height);
     }
 
@@ -237,7 +237,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public void setClip(int x, int y, int width, int height){
+    public void setClip(int x, int y, int width, int height) {
         gc.setClip(x, y, width, height);
     }
 
@@ -258,7 +258,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#setClip(Shape)
      * @since       JDK1.1
      */
-    public Shape getClip(){
+    public Shape getClip() {
         return gc.getClip();
     }
 
@@ -279,7 +279,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#setClip(int, int, int, int)
      * @since       JDK1.1
      */
-    public void setClip(Shape clip){
+    public void setClip(Shape clip) {
         gc.setClip(clip);
     }
 
@@ -293,7 +293,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param   x2  the second point's <i>x</i> coordinate.
      * @param   y2  the second point's <i>y</i> coordinate.
      */
-    public void drawLine(int x1, int y1, int x2, int y2){
+    public void drawLine(int x1, int y1, int x2, int y2) {
         Line2D line = new Line2D.Float(x1, y1, x2, y2);
         draw(line);
     }
@@ -318,12 +318,12 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see           java.awt.Graphics#clearRect
      * @see           java.awt.Graphics#drawRect
      */
-    public void fillRect(int x, int y, int width, int height){
+    public void fillRect(int x, int y, int width, int height) {
         Rectangle rect = new Rectangle(x, y, width, height);
         fill(rect);
     }
 
-    public void drawRect(int x, int y, int width, int height){
+    public void drawRect(int x, int y, int width, int height) {
         Rectangle rect = new Rectangle(x, y, width, height);
         draw(rect);
     }
@@ -349,7 +349,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#setPaintMode
      * @see         java.awt.Graphics#setXORMode(java.awt.Color)
      */
-    public void clearRect(int x, int y, int width, int height){
+    public void clearRect(int x, int y, int width, int height) {
         Paint paint = gc.getPaint();
         gc.setColor(gc.getBackground());
         fillRect(x, y, width, height);
@@ -373,7 +373,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see        java.awt.Graphics#fillRoundRect
      */
     public void drawRoundRect(int x, int y, int width, int height,
-                              int arcWidth, int arcHeight){
+                              int arcWidth, int arcHeight) {
         RoundRectangle2D rect = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
         draw(rect);
     }
@@ -396,7 +396,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#drawRoundRect
      */
     public void fillRoundRect(int x, int y, int width, int height,
-                              int arcWidth, int arcHeight){
+                              int arcWidth, int arcHeight) {
         RoundRectangle2D rect = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
         fill(rect);
     }
@@ -419,7 +419,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param       height the height of the oval to be drawn.
      * @see         java.awt.Graphics#fillOval
      */
-    public void drawOval(int x, int y, int width, int height){
+    public void drawOval(int x, int y, int width, int height) {
         Ellipse2D oval = new Ellipse2D.Float(x, y, width, height);
         draw(oval);
     }
@@ -436,7 +436,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param       height the height of the oval to be filled.
      * @see         java.awt.Graphics#drawOval
      */
-    public void fillOval(int x, int y, int width, int height){
+    public void fillOval(int x, int y, int width, int height) {
         Ellipse2D oval = new Ellipse2D.Float(x, y, width, height);
         fill(oval);
     }
@@ -480,7 +480,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#fillArc
      */
     public void drawArc(int x, int y, int width, int height,
-                        int startAngle, int arcAngle){
+                        int startAngle, int arcAngle) {
         Arc2D arc = new Arc2D.Float(x, y, width, height, startAngle, arcAngle, Arc2D.OPEN);
         draw(arc);
     }
@@ -523,7 +523,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#drawArc
      */
     public void fillArc(int x, int y, int width, int height,
-                        int startAngle, int arcAngle){
+                        int startAngle, int arcAngle) {
         Arc2D arc = new Arc2D.Float(x, y, width, height, startAngle, arcAngle, Arc2D.PIE);
         fill(arc);
     }
@@ -542,12 +542,13 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @since       JDK1.1
      */
     public void drawPolyline(int[] xPoints, int[] yPoints,
-                             int nPoints){
-        if(nPoints > 0){
+                             int nPoints) {
+        if (nPoints > 0) {
             GeneralPath path = new GeneralPath();
             path.moveTo(xPoints[0], yPoints[0]);
-            for(int i=1; i<nPoints; i++)
+            for (int i = 1; i < nPoints; i++) {
                 path.lineTo(xPoints[i], yPoints[i]);
+            }
 
             draw(path);
         }
@@ -573,7 +574,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see          java.awt.Graphics#drawPolyline
      */
     public void drawPolygon(int[] xPoints, int[] yPoints,
-                            int nPoints){
+                            int nPoints) {
         Polygon polygon = new Polygon(xPoints, yPoints, nPoints);
         draw(polygon);
     }
@@ -600,7 +601,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see          java.awt.Graphics#drawPolygon(int[], int[], int)
      */
     public void fillPolygon(int[] xPoints, int[] yPoints,
-                            int nPoints){
+                            int nPoints) {
         Polygon polygon = new Polygon(xPoints, yPoints, nPoints);
         fill(polygon);
     }
@@ -616,7 +617,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#drawBytes
      * @see         java.awt.Graphics#drawChars
      */
-    public void drawString(String str, int x, int y){
+    public void drawString(String str, int x, int y) {
         drawString(str, (float)x, (float)y);
     }
 
@@ -653,7 +654,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see         java.awt.Graphics#drawChars
      */
     public void drawString(AttributedCharacterIterator iterator,
-                           int x, int y){
+                           int x, int y) {
         drawString(iterator, (float)x, (float)y);
     }
 
@@ -689,7 +690,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      */
     public boolean drawImage(Image img, int x, int y,
                              Color bgcolor,
-                             ImageObserver observer){
+                             ImageObserver observer) {
         return drawImage(img, x, y, img.getWidth(null), img.getHeight(null),
                          bgcolor, observer);
     }
@@ -736,7 +737,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
     public boolean drawImage(Image img, int x, int y,
                              int width, int height,
                              Color bgcolor,
-                             ImageObserver observer){
+                             ImageObserver observer) {
         Paint paint = gc.getPaint();
         gc.setPaint(bgcolor);
         fillRect(x, y, width, height);
@@ -796,15 +797,15 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
     public boolean drawImage(Image img,
                              int dx1, int dy1, int dx2, int dy2,
                              int sx1, int sy1, int sx2, int sy2,
-                             ImageObserver observer){
+                             ImageObserver observer) {
         BufferedImage src = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = src.createGraphics();
         g.drawImage(img, 0, 0, null);
         g.dispose();
 
-        src = src.getSubimage(sx1, sy1, sx2-sx1, sy2-sy1);
+        src = src.getSubimage(sx1, sy1, sx2 - sx1, sy2 - sy1);
 
-        return drawImage(src, dx1, dy1, dx2-dx1, dy2-dy1, observer);
+        return drawImage(src, dx1, dy1, dx2 - dx1, dy2 - dy1, observer);
     }
 
 
@@ -865,10 +866,10 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
                              int dx1, int dy1, int dx2, int dy2,
                              int sx1, int sy1, int sx2, int sy2,
                              Color bgcolor,
-                             ImageObserver observer){
+                             ImageObserver observer) {
         Paint paint = gc.getPaint();
         gc.setPaint(bgcolor);
-        fillRect(dx1, dy1, dx2-dx1, dy2-dy1);
+        fillRect(dx1, dy1, dx2 - dx1, dy2 - dy1);
         gc.setPaint(paint);
         return drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer);
     }
@@ -901,14 +902,14 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      */
     public boolean drawImage(Image img,
                              AffineTransform xform,
-                             ImageObserver obs){
+                             ImageObserver obs) {
         boolean retVal = true;
 
-        if(xform.getDeterminant() != 0){
+        if (xform.getDeterminant() != 0) {
             AffineTransform inverseTransform = null;
-            try{
+            try {
                 inverseTransform = xform.createInverse();
-            }   catch(NoninvertibleTransformException e){
+            }   catch (NoninvertibleTransformException e) {
                                 // Should never happen since we checked the
                                 // matrix determinant
                 throw new RuntimeException(e);
@@ -953,7 +954,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
     public void drawImage(BufferedImage img,
                           BufferedImageOp op,
                           int x,
-                          int y){
+                          int y) {
         img = op.filter(img, null);
         drawImage(img, x, y, null);
     }
@@ -986,7 +987,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see #setComposite
      * @see #setClip(Shape)
      */
-    public void drawGlyphVector(GlyphVector g, float x, float y){
+    public void drawGlyphVector(GlyphVector g, float x, float y) {
         Shape glyphOutline = g.getOutline(x, y);
         fill(glyphOutline);
     }
@@ -1022,7 +1023,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      */
     public boolean hit(Rectangle rect,
                        Shape s,
-                       boolean onStroke){
+                       boolean onStroke) {
         if (onStroke) {
             s = gc.getStroke().createStrokedShape(s);
         }
@@ -1056,7 +1057,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see java.awt.Graphics#setPaintMode
      * @see java.awt.AlphaComposite
      */
-    public void setComposite(Composite comp){
+    public void setComposite(Composite comp) {
         gc.setComposite(comp);
     }
 
@@ -1081,7 +1082,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param s the <code>Stroke</code> object to be used to stroke a
      * <code>Shape</code> during the rendering process
      */
-    public void setStroke(Stroke s){
+    public void setStroke(Stroke s) {
         gc.setStroke(s);
     }
 
@@ -1097,7 +1098,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * hint category.
      * @see RenderingHints
      */
-    public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue){
+    public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) {
         gc.setRenderingHint(hintKey, hintValue);
     }
 
@@ -1114,7 +1115,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * <code>RenderingHints</code> class.
      * @see RenderingHints
      */
-    public Object getRenderingHint(RenderingHints.Key hintKey){
+    public Object getRenderingHint(RenderingHints.Key hintKey) {
         return gc.getRenderingHint(hintKey);
     }
 
@@ -1132,7 +1133,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void setRenderingHints(Map hints){
+    public void setRenderingHints(Map hints) {
         gc.setRenderingHints(hints);
     }
 
@@ -1151,7 +1152,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void addRenderingHints(Map hints){
+    public void addRenderingHints(Map hints) {
         gc.addRenderingHints(hints);
     }
 
@@ -1168,7 +1169,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * that contains the current preferences.
      * @see RenderingHints
      */
-    public RenderingHints getRenderingHints(){
+    public RenderingHints getRenderingHints() {
         return gc.getRenderingHints();
     }
 
@@ -1188,7 +1189,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param tx the distance to translate along the x-axis
      * @param ty the distance to translate along the y-axis
      */
-    public void translate(double tx, double ty){
+    public void translate(double tx, double ty) {
         gc.translate(tx, ty);
     }
 
@@ -1209,7 +1210,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * x axis toward the positive y axis.
      * @param theta the angle of rotation in radians
      */
-    public void rotate(double theta){
+    public void rotate(double theta) {
         gc.rotate(theta);
     }
 
@@ -1233,7 +1234,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param x the x coordinate of the origin of the rotation
      * @param y the y coordinate of the origin of the rotation
      */
-    public void rotate(double theta, double x, double y){
+    public void rotate(double theta, double x, double y) {
         gc.rotate(theta, x, y);
     }
 
@@ -1257,7 +1258,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * rendering operations are multiplied relative to previous
      * rendering operations.
      */
-    public void scale(double sx, double sy){
+    public void scale(double sx, double sy) {
         gc.scale(sx, sy);
     }
 
@@ -1279,7 +1280,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @param shy the multiplier by which coordinates are shifted in
      * the positive Y axis direction as a function of their X coordinate
      */
-    public void shear(double shx, double shy){
+    public void shear(double shx, double shy) {
         gc.shear(shx, shy);
     }
 
@@ -1295,25 +1296,25 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * the result by the original <code>Transform</code> Cx.  In other
      * words, Cx'(p) = Cx(Tx(p)).  A copy of the Tx is made, if necessary,
      * so further modifications to Tx do not affect rendering.
-     * @param Tx the <code>AffineTransform</code> object to be composed with
+     * @param tx the <code>AffineTransform</code> object to be composed with
      * the current <code>Transform</code>
      * @see #setTransform
      * @see AffineTransform
      */
-    public void transform(AffineTransform Tx){
-        gc.transform(Tx);
+    public void transform(AffineTransform tx) {
+        gc.transform(tx);
     }
 
     /**
      * Sets the <code>Transform</code> in the <code>Graphics2D</code>
      * context.
-     * @param Tx the <code>AffineTransform</code> object to be used in the
+     * @param tx the <code>AffineTransform</code> object to be used in the
      * rendering process
      * @see #transform
      * @see AffineTransform
      */
-    public void setTransform(AffineTransform Tx){
-        gc.setTransform(Tx);
+    public void setTransform(AffineTransform tx) {
+        gc.setTransform(tx);
     }
 
 
@@ -1325,7 +1326,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see #transform
      * @see #setTransform
      */
-    public AffineTransform getTransform(){
+    public AffineTransform getTransform() {
         return gc.getTransform();
     }
 
@@ -1338,7 +1339,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see #setPaint
      * @see java.awt.Graphics#setColor
      */
-    public Paint getPaint(){
+    public Paint getPaint() {
         return gc.getPaint();
     }
 
@@ -1350,7 +1351,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      *              which defines a compositing style.
      * @see #setComposite
      */
-    public Composite getComposite(){
+    public Composite getComposite() {
         return gc.getComposite();
     }
 
@@ -1371,7 +1372,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see #getBackground
      * @see java.awt.Graphics#clearRect
      */
-    public void setBackground(Color color){
+    public void setBackground(Color color) {
         gc.setBackground(color);
     }
 
@@ -1382,7 +1383,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * which defines the background color.
      * @see #setBackground
      */
-    public Color getBackground(){
+    public Color getBackground() {
         return gc.getBackground();
     }
 
@@ -1394,7 +1395,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      *                 which defines the line style.
      * @see #setStroke
      */
-    public Stroke getStroke(){
+    public Stroke getStroke() {
         return gc.getStroke();
     }
 
@@ -1418,7 +1419,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      *          <code>Clip</code>.  If <code>s</code> is <code>null</code>,
      *          this method clears the current <code>Clip</code>.
      */
-    public void clip(Shape s){
+    public void clip(Shape s) {
         gc.clip(s);
     }
 
@@ -1444,7 +1445,7 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
      * @see java.awt.font.TextLayout
      * @since     JDK1.2
      */
-    public FontRenderContext getFontRenderContext(){
+    public FontRenderContext getFontRenderContext() {
         return gc.getFontRenderContext();
     }
 

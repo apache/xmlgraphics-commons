@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
+  <suppress checks="AvoidNestedBlocks" files="org/apache/xmlgraphics/image/GraphicsUtil.java"/>
+  <suppress checks="ConstantName" files="org/apache/xmlgraphics/image/codec/png/PNGRed.java"/>
+  <suppress checks="ConstantName" files="org/apache/xmlgraphics/image/rendered/Any2LsRGBRed.java"/>
+  <suppress checks="(Constant|Method)Name" files="org/apache/xmlgraphics/image/GraphicsUtil.java"/>
+  <suppress checks="(Constant|Method)Name" files="org/apache/xmlgraphics/image/codec/png/PNGImageDecoder.java"/>
+  <suppress checks="(Constant|Method)Name" files="org/apache/xmlgraphics/image/rendered/Any2sRGBRed.java"/>
+  <suppress checks="MethodName" files="org/apache/xmlgraphics/image/codec/png/PNGRed.java"/>
+  <suppress checks="MethodName" files="org/apache/xmlgraphics/image/loader/impl/PNGFile.java"/>
+  <suppress checks="MethodName" files="org/apache/xmlgraphics/java2d/color/profile/ColorProfileUtil.java"/>
+  <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSFontUtils.java"/>
+  <suppress checks="HideUtilityClassConstructor" files="org/apache/xmlgraphics/ps/PSImageUtils.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGImageDecoder.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGImageEncoder.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/png/PNGRed.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/tiff/TIFFImage.java"/>
+  <suppress checks="MissingSwitchDefault" files="org/apache/xmlgraphics/image/codec/tiff/TIFFImageEncoder.java"/>
 </suppressions>

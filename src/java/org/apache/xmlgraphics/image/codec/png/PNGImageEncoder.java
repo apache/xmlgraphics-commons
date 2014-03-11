@@ -182,7 +182,7 @@ class ChunkStream extends OutputStream implements DataOutput {
     @Override
     public void close() throws IOException {
 
-        if ( baos != null ) {
+        if (baos != null) {
             baos.close();
             baos = null;
         }
@@ -196,7 +196,7 @@ class ChunkStream extends OutputStream implements DataOutput {
 
 class IDATOutputStream extends FilterOutputStream {
 
-    private static final byte[] typeSignature
+    private static final byte[] TYPE_SIGNATURE
          = {(byte)'I', (byte)'D', (byte)'A', (byte)'T'};
 
     private int bytesWritten = 0;
@@ -231,12 +231,12 @@ class IDATOutputStream extends FilterOutputStream {
         // Length
         writeInt(bytesWritten);
         // 'IDAT' signature
-        out.write(typeSignature);
+        out.write(TYPE_SIGNATURE);
         // Data
         out.write(buffer, 0, bytesWritten);
 
         int crc = 0xffffffff;
-        crc = CRC.updateCRC(crc, typeSignature, 0, 4);
+        crc = CRC.updateCRC(crc, TYPE_SIGNATURE, 0, 4);
         crc = CRC.updateCRC(crc, buffer, 0, bytesWritten);
 
         // CRC
@@ -288,7 +288,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     private static final int PNG_COLOR_GRAY_ALPHA = 4;
     private static final int PNG_COLOR_RGB_ALPHA = 6;
 
-    private static final byte[] magic = {
+    private static final byte[] MAGIC = {
         (byte)137, (byte) 80, (byte) 78, (byte) 71,
         (byte) 13, (byte) 10, (byte) 26, (byte) 10
     };
@@ -328,7 +328,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     }
 
     private void writeMagic() throws IOException {
-        dataOutput.write(magic);
+        dataOutput.write(MAGIC);
     }
 
     private void writeIHDR() throws IOException {
@@ -366,15 +366,15 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         xOffset *= numBands;
         xSkip   *= numBands;
 
-        int samplesPerByte = 8/bitDepth;
+        int samplesPerByte = 8 / bitDepth;
 
-        int numSamples = width*numBands;
+        int numSamples = width * numBands;
         int[] samples = new int[numSamples];
 
-        int pixels = (numSamples - xOffset + xSkip - 1)/xSkip;
-        int bytesPerRow = pixels*numBands;
+        int pixels = (numSamples - xOffset + xSkip - 1) / xSkip;
+        int bytesPerRow = pixels * numBands;
         if (bitDepth < 8) {
-            bytesPerRow = (bytesPerRow + samplesPerByte - 1)/samplesPerByte;
+            bytesPerRow = (bytesPerRow + samplesPerByte - 1) / samplesPerByte;
         } else if (bitDepth == 16) {
             bytesPerRow *= 2;
         }
@@ -422,7 +422,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
 
                 // Left shift the last byte
                 if (pos != 0) {
-                    tmp <<= (samplesPerByte - pos)*bitDepth;
+                    tmp <<= (samplesPerByte - pos) * bitDepth;
                     currRow[count++] = (byte)tmp;
                 }
                 break;
@@ -532,7 +532,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         cs.close();
     }
 
-    private static final float[] srgbChroma = {
+    private static final float[] SRGB_CHROMA = {
         0.31270F, 0.329F, 0.64F, 0.33F, 0.3F, 0.6F, 0.15F, 0.06F
     };
 
@@ -544,11 +544,11 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             if (!param.isSRGBIntentSet()) {
                 chroma = param.getChromaticity();
             } else {
-                chroma = srgbChroma; // SRGB chromaticities
+                chroma = SRGB_CHROMA; // SRGB chromaticities
             }
 
             for (int i = 0; i < 8; i++) {
-                cs.writeInt((int)(chroma[i]*100000));
+                cs.writeInt((int)(chroma[i] * 100000));
             }
             cs.writeToStream(dataOutput);
             cs.close();
@@ -563,11 +563,11 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             if (!param.isSRGBIntentSet()) {
                 gamma = param.getGamma();
             } else {
-                gamma = 1.0F/2.2F; // SRGB gamma
+                gamma = 1.0F / 2.2F; // SRGB gamma
             }
             // TD should include the .5 but causes regard to say
             // everything is different.
-            cs.writeInt((int)(gamma*100000/*+0.5*/));
+            cs.writeInt((int)(gamma * 100000/*+0.5*/));
             cs.writeToStream(dataOutput);
             cs.close();
         }
@@ -576,8 +576,8 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     private void writeICCP() throws IOException {
         if (param.isICCProfileDataSet()) {
             ChunkStream cs = new ChunkStream("iCCP");
-            byte[] ICCProfileData = param.getICCProfileData();
-            cs.write(ICCProfileData);
+            byte[] iccProfileData = param.getICCProfileData();
+            cs.write(iccProfileData);
             cs.writeToStream(dataOutput);
             cs.close();
         }
@@ -669,9 +669,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
     }
 
     private void writeTRNS() throws IOException {
-        if (param.isTransparencySet() &&
-            (colorType != PNG_COLOR_GRAY_ALPHA) &&
-            (colorType != PNG_COLOR_RGB_ALPHA)) {
+        if (param.isTransparencySet()
+            && (colorType != PNG_COLOR_GRAY_ALPHA)
+            && (colorType != PNG_COLOR_RGB_ALPHA)) {
             ChunkStream cs = new ChunkStream("tRNS");
 
             if (param instanceof PNGEncodeParam.Palette) {
@@ -770,9 +770,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         if (param.isTextSet()) {
             String[] text = param.getText();
 
-            for (int i = 0; i < text.length/2; i++) {
-                byte[] keyword = text[2*i].getBytes();
-                byte[] value = text[2*i + 1].getBytes();
+            for (int i = 0; i < text.length / 2; i++) {
+                byte[] keyword = text[2 * i].getBytes();
+                byte[] value = text[2 * i + 1].getBytes();
 
                 ChunkStream cs = new ChunkStream("tEXt");
 
@@ -790,9 +790,9 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         if (param.isCompressedTextSet()) {
             String[] text = param.getCompressedText();
 
-            for (int i = 0; i < text.length/2; i++) {
-                byte[] keyword = text[2*i].getBytes();
-                byte[] value = text[2*i + 1].getBytes();
+            for (int i = 0; i < text.length / 2; i++) {
+                byte[] keyword = text[2 * i].getBytes();
+                byte[] value = text[2 * i + 1].getBytes();
 
                 ChunkStream cs = new ChunkStream("zTXt");
 
@@ -839,13 +839,13 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         PNGEncodeParam.Gray param = new PNGEncodeParam.Gray();
         int numTransparent = 0;
 
-        int grayFactor = 255/((1 << bitDepth) - 1);
+        int grayFactor = 255 / ((1 << bitDepth) - 1);
         int entries = 1 << bitDepth;
         for (int i = 0; i < entries; i++) {
             byte red = redPalette[i];
-            if ((red != i*grayFactor) ||
-                (red != greenPalette[i]) ||
-                (red != bluePalette[i])) {
+            if ((red != i * grayFactor)
+                || (red != greenPalette[i])
+                || (red != bluePalette[i])) {
                 return null;
             }
 
@@ -923,7 +923,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         }
 
         this.numBands = sampleModel.getNumBands();
-        this.bpp = numBands*((bitDepth == 16) ? 2 : 1);
+        this.bpp = numBands * ((bitDepth == 16) ? 2 : 1);
 
         ColorModel colorModel = image.getColorModel();
         if (colorModel instanceof IndexColorModel) {
@@ -966,7 +966,7 @@ public class PNGImageEncoder extends ImageEncoderImpl {
                 PNGEncodeParam.Palette parami = (PNGEncodeParam.Palette)param;
                 if (parami.isPaletteSet()) {
                     int[] palette = parami.getPalette();
-                    size = palette.length/3;
+                    size = palette.length / 3;
 
                     int index = 0;
                     for (int i = 0; i < size; i++) {

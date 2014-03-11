@@ -229,7 +229,7 @@ public class XMPHandler extends DefaultHandler {
                     } else {
                         String res = atts.getValue(XMPConstants.RDF_NAMESPACE,
                                 "resource");
-                        if ( res != null ) {
+                        if (res != null) {
                             try {
                                 URI resource = new URI(res);
                                 getCurrentArray(true).add(resource);

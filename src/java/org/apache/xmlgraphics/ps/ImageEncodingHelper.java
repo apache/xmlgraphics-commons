@@ -135,8 +135,8 @@ public class ImageEncodingHelper {
      * @param out the OutputStream to write the pixels to
      * @throws IOException if an I/O error occurs
      */
-    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out, boolean outputbw, boolean bwinvert)
-                throws IOException {
+    public static void encodeRenderedImageAsRGB(RenderedImage image, OutputStream out,
+            boolean outputbw, boolean bwinvert) throws IOException {
         Raster raster = getRaster(image);
         Object data;
         int nbands = raster.getNumBands();
