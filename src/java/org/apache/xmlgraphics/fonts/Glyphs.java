@@ -34,7 +34,7 @@ import org.apache.commons.io.IOUtils;
 /**
  * This class provides a number of constants for glyph management.
  */
-public final class Glyphs {
+public final class Glyphs { 
 
     private Glyphs() {
     }
