@@ -89,17 +89,19 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                     int densityUnits = in.read();
                     int xdensity = in.readUnsignedShort();
                     int ydensity = in.readUnsignedShort();
-                    if (densityUnits == 2) {
-                        //dots per centimeter
-                        size.setResolution(
-                                xdensity * UnitConv.IN2CM,
-                                ydensity * UnitConv.IN2CM);
-                    } else if (densityUnits == 1) {
-                        //dots per inch
-                        size.setResolution(xdensity, ydensity);
-                    } else {
-                        //resolution not specified
-                        size.setResolution(context.getSourceResolution());
+                    if (size.getDpiHorizontal() == 0) {
+                        if (densityUnits == 2) {
+                            //dots per centimeter
+                            size.setResolution(
+                                    xdensity * UnitConv.IN2CM,
+                                    ydensity * UnitConv.IN2CM);
+                        } else if (densityUnits == 1) {
+                            //dots per inch
+                            size.setResolution(xdensity, ydensity);
+                        } else {
+                            //resolution not specified
+                            size.setResolution(context.getSourceResolution());
+                        }
                     }
                     if (size.getWidthPx() != 0) {
                         size.calcSizeFromPixels();
