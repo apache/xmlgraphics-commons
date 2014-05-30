@@ -82,7 +82,6 @@ public class ImageImplRegistry {
 
     /**
      * Main constructor.
-     * @see #getDefaultInstance()
      */
     public ImageImplRegistry() {
         this(true);
@@ -223,7 +222,7 @@ public class ImageImplRegistry {
 
     /**
      * Returns the Collection of registered ImageConverter instances.
-     * @return a Collection<ImageConverter>
+     * @return a Collection&lt;ImageConverter&gt;
      */
     public Collection getImageConverters() {
         return Collections.unmodifiableList(this.converters);

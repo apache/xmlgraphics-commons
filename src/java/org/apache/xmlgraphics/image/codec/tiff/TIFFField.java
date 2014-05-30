@@ -99,7 +99,7 @@ public class TIFFField implements Comparable, Serializable {
      * unsigned datatype, long is used. The mapping between types is
      * as follows:
      *
-     * <table border=1>
+     * <table border=1 summary="TIFF">
      * <tr>
      * <th> TIFF type </th> <th> Java type </th>
      * <tr>

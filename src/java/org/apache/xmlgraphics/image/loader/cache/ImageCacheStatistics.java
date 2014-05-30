@@ -137,16 +137,16 @@ public class ImageCacheStatistics implements ImageCacheListener {
     }
 
     /**
-     * Returns a Map<ImageKey, Integer> with the number of cache hits.
-     * @return a Map<ImageKey, Integer> with the number of cache hits
+     * Returns a Map&lt;ImageKey, Integer&gt; with the number of cache hits.
+     * @return a Map&lt;ImageKey, Integer&gt; with the number of cache hits
      */
     public Map getImageCacheHitMap() {
         return Collections.unmodifiableMap(imageCacheHitMap);
     }
 
     /**
-     * Returns a Map<ImageKey, Integer> with the number of cache misses.
-     * @return a Map<ImageKey, Integer> with the number of cache misses
+     * Returns a Map&lt;ImageKey, Integer&gt; with the number of cache misses.
+     * @return a Map&lt;ImageKey, Integer&gt; with the number of cache misses
      */
     public Map getImageCacheMissMap() {
         return Collections.unmodifiableMap(imageCacheMissMap);

@@ -36,7 +36,7 @@ import org.apache.commons.io.IOUtils;
  * This class handles looking up service providers on the class path.
  * It implements the system described in:
  *
- * <a href='http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Service Provider'>JAR
+ * <a href='http://docs.oracle.com/javase/6/docs/technotes/guides/jar/jar.html#Service%20Provider'>JAR
  * File Specification Under Service Provider</a>. Note that this
  * interface is very similar to the one they describe which seems to
  * be missing in the JDK.
@@ -131,7 +131,7 @@ public final class Service {
      *
      * @param cls The class/interface to search for providers of.
      * @param returnInstances true if the iterator should return instances rather than class names.
-     * @deprecated use the type-safe methods providers(Class<?>) or providerNames(Class<?>) instead.
+     * @deprecated use the type-safe methods providers(Class) or providerNames(Class) instead.
      */
     public static Iterator<?> providers(Class<?> cls, boolean returnInstances) {
         return (returnInstances ? providers(cls) : providerNames(cls));
