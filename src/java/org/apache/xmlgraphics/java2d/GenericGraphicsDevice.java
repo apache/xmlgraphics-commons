@@ -37,7 +37,7 @@ public class GenericGraphicsDevice extends GraphicsDevice {
     /**
      * Create a new graphics2D device.
      *
-     * @param The gc we should reference
+     * @param gc we should reference
      */
     public GenericGraphicsDevice(GraphicsConfiguration gc) {
         this.gc = gc;

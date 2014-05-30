@@ -26,7 +26,7 @@ import java.net.URI;
 /**
  * Implementations of this resource resolver allow XGC users to control the URI resolution
  * mechanism. All resource and output stream acquisition goes through this when its implementation
- * is given to the {@link org.apache.fop.apps.EnvironmentProfile}.
+ * is given to the org.apache.fop.apps.EnvironmentProfile.
  */
 public interface ResourceResolver {
 

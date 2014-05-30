@@ -64,7 +64,7 @@ public class PSResource implements Comparable {
         return this.name;
     }
 
-    /** @return the <resource> specification as defined in DSC v3.0 spec. */
+    /** @return the &lt;resource&gt; specification as defined in DSC v3.0 spec. */
     public String getResourceSpecification() {
         StringBuffer sb = new StringBuffer();
         sb.append(getType()).append(" ").append(PSGenerator.convertStringToDSC(getName()));
