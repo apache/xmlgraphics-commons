@@ -79,7 +79,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
     protected PSGenerator gen;
 
     /** Disable or enable clipping */
-    protected boolean clippingDisabled = false;
+    protected boolean clippingDisabled;
 
     /** Fallback text handler */
 

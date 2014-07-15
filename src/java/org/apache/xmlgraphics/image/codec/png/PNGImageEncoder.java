@@ -199,7 +199,7 @@ class IDATOutputStream extends FilterOutputStream {
     private static final byte[] TYPE_SIGNATURE
          = {(byte)'I', (byte)'D', (byte)'A', (byte)'T'};
 
-    private int bytesWritten = 0;
+    private int bytesWritten;
     private int segmentLength;
     private byte[] buffer;
 
@@ -305,15 +305,15 @@ public class PNGImageEncoder extends ImageEncoderImpl {
 
     private int bpp; // bytes per pixel, rounded up
 
-    private boolean skipAlpha = false;
-    private boolean compressGray = false;
+    private boolean skipAlpha;
+    private boolean compressGray;
 
     private boolean interlace;
 
-    private byte[] redPalette = null;
-    private byte[] greenPalette = null;
-    private byte[] bluePalette = null;
-    private byte[] alphaPalette = null;
+    private byte[] redPalette;
+    private byte[] greenPalette;
+    private byte[] bluePalette;
+    private byte[] alphaPalette;
 
     private DataOutputStream dataOutput;
 
@@ -345,10 +345,10 @@ public class PNGImageEncoder extends ImageEncoderImpl {
         cs.close();
     }
 
-    private byte[] prevRow = null;
-    private byte[] currRow = null;
+    private byte[] prevRow;
+    private byte[] currRow;
 
-    private byte[][] filteredRows = null;
+    private byte[][] filteredRows;
 
     private static int clamp(int val, int maxValue) {
         return (val > maxValue) ? maxValue : val;

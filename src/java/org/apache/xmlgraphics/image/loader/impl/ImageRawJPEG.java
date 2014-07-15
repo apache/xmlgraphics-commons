@@ -34,7 +34,7 @@ public class ImageRawJPEG extends ImageRawStream {
     private int sofType;
     private ColorSpace colorSpace;
     private ICC_Profile iccProfile;
-    private boolean invertImage = false;
+    private boolean invertImage;
 
     /**
      * Main constructor.

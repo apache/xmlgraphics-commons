@@ -83,7 +83,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
      */
     public PNGDecodeParam() { }
 
-    private boolean suppressAlpha = false;
+    private boolean suppressAlpha;
 
     /**
      * Returns <code>true</code> if alpha (transparency) will
@@ -104,7 +104,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
         this.suppressAlpha = suppressAlpha;
     }
 
-    private boolean expandPalette = false;
+    private boolean expandPalette;
 
     /**
      * Returns true if palette-color images will be expanded to
@@ -128,7 +128,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
         this.expandPalette = expandPalette;
     }
 
-    private boolean output8BitGray = false;
+    private boolean output8BitGray;
 
     /**
      * Returns the current value of the 8-bit gray output parameter.
@@ -285,7 +285,7 @@ public class PNGDecodeParam implements ImageDecodeParam {
         this.displayExponent = displayExponent;
     }
 
-    private boolean expandGrayAlpha = false;
+    private boolean expandGrayAlpha;
 
     /**
      * Returns the current setting of the gray/alpha expansion.
@@ -309,9 +309,9 @@ public class PNGDecodeParam implements ImageDecodeParam {
         this.expandGrayAlpha = expandGrayAlpha;
     }
 
-    private boolean generateEncodeParam = false;
+    private boolean generateEncodeParam;
 
-    private PNGEncodeParam encodeParam = null;
+    private PNGEncodeParam encodeParam;
 
     /**
      * Returns <code>true</code> if an instance of

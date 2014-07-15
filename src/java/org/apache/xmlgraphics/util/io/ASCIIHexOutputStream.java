@@ -38,7 +38,7 @@ public class ASCIIHexOutputStream extends FilterOutputStream
     private static final int A     = 0x41; //"A"
     private static final int ADIFF = A - NINE - 1;
 
-    private int posinline = 0;
+    private int posinline;
 
 
     /** @see java.io.FilterOutputStream **/

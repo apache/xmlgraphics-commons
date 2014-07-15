@@ -68,16 +68,16 @@ public abstract class SimpleRenderedImage implements RenderedImage {
     protected int tileHeight;
 
     /** The X coordinate of the upper-left pixel of tile (0, 0). */
-    protected int tileGridXOffset = 0;
+    protected int tileGridXOffset;
 
     /** The Y coordinate of the upper-left pixel of tile (0, 0). */
-    protected int tileGridYOffset = 0;
+    protected int tileGridYOffset;
 
     /** The image's SampleModel. */
-    protected SampleModel sampleModel = null;
+    protected SampleModel sampleModel;
 
     /** The image's ColorModel. */
-    protected ColorModel colorModel = null;
+    protected ColorModel colorModel;
 
     /** The image's sources, stored in a Vector. */
     protected List sources = new ArrayList();

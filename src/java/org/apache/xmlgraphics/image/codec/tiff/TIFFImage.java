@@ -105,21 +105,21 @@ public class TIFFImage extends AbstractRed {
     int predictor;
 
     // DEFLATE variables
-    Inflater inflater = null;
+    Inflater inflater;
 
     // Endian-ness indicator
     boolean isBigEndian;
 
     int imageType;
-    boolean isWhiteZero = false;
+    boolean isWhiteZero;
     int dataType;
 
     boolean decodePaletteAsShorts;
     boolean tiled;
 
     // Decoders
-    private TIFFFaxDecoder decoder = null;
-    private TIFFLZWDecoder lzwDecoder = null;
+    private TIFFFaxDecoder decoder;
+    private TIFFLZWDecoder lzwDecoder;
 
     /**
      * Inflates <code>deflated</code> into <code>inflated</code> using the

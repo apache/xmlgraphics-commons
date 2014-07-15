@@ -104,7 +104,7 @@ public class GraphicContext implements Cloneable {
     /**
      * Current clip
      */
-    protected Shape clip = null;
+    protected Shape clip;
 
     /**
      * Current set of RenderingHints

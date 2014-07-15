@@ -56,13 +56,13 @@ public final class FileCacheSeekableStream extends SeekableStream {
     private byte[] buf = new byte[bufLen];
 
     /** Number of bytes in the cache. */
-    private long length = 0;
+    private long length;
 
     /** Next byte to be read. */
-    private long pointer = 0;
+    private long pointer;
 
     /** True if we've encountered the end of the source stream. */
-    private boolean foundEOF = false;
+    private boolean foundEOF;
 
     /**
      * Constructs a <code>MemoryCacheSeekableStream</code> that takes

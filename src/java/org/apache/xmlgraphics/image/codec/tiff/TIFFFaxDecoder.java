@@ -37,18 +37,18 @@ class TIFFFaxDecoder {
 
     // Data structures needed to store changing elements for the previous
     // and the current scanline
-    private int changingElemSize = 0;
+    private int changingElemSize;
     private int[] prevChangingElems;
     private int[] currChangingElems;
 
     // Element at which to start search in getNextChangingElement
-    private int lastChangingElement = 0;
+    private int lastChangingElement;
 
     private int compression = 2;
 
     // Variables set by T4Options
-    private int uncompressedMode = 0;
-    private int fillBits = 0;
+    private int uncompressedMode;
+    private int fillBits;
     private int oneD;
 
     static int[] table1 = {

@@ -126,36 +126,36 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private int maxOpacity;
 
-    private int[] significantBits = null;
+    private int[] significantBits;
 
     // Parameter information
 
     // If true, the user wants destination alpha where applicable.
-    private boolean suppressAlpha = false;
+    private boolean suppressAlpha;
 
     // If true, perform palette lookup internally
-    private boolean expandPalette = false;
+    private boolean expandPalette;
 
     // If true, output < 8 bit gray images in 8 bit components format
-    private boolean output8BitGray = false;
+    private boolean output8BitGray;
 
     // Create an alpha channel in the destination color model.
-    private boolean outputHasAlphaPalette = false;
+    private boolean outputHasAlphaPalette;
 
     // Perform gamma correction on the image
-    private boolean performGammaCorrection = false;
+    private boolean performGammaCorrection;
 
     // Expand GA to GGGA for compatbility with Java2D
-    private boolean expandGrayAlpha = false;
+    private boolean expandGrayAlpha;
 
     // Produce an instance of PNGEncodeParam
-    private boolean generateEncodeParam = false;
+    private boolean generateEncodeParam;
 
     // PNGDecodeParam controlling decode process
-    private PNGDecodeParam decodeParam = null;
+    private PNGDecodeParam decodeParam;
 
     // PNGEncodeParam to store file details in
-    private PNGEncodeParam encodeParam = null;
+    private PNGEncodeParam encodeParam;
 
     private boolean emitProperties = true;
 
@@ -165,7 +165,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private float displayExponent = 2.2F;
 
-    private float[] chromaticity = null;
+    private float[] chromaticity;
 
     private int sRGBRenderingIntent = -1;
 
@@ -231,7 +231,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     private int outputBands;
 
     // Number of private chunks
-    private int chunkIndex = 0;
+    private int chunkIndex;
 
     private List textKeys = new ArrayList();
     private List textStrings = new ArrayList();
@@ -241,7 +241,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     private WritableRaster theTile;
 
-    private int[] gammaLut = null;
+    private int[] gammaLut;
 
     private void initGammaLut(int bits) {
         double exp = (double)userExponent / (fileGamma * displayExponent);
@@ -271,7 +271,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
           (byte)0xcc, (byte)0xdd, (byte)0xee, (byte)0xff }
     };
 
-    private int[] grayLut = null;
+    private int[] grayLut;
 
     private void initGrayLut(int bits) {
         int len = 1 << bits;

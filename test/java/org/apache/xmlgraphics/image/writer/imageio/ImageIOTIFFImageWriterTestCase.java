@@ -127,8 +127,8 @@ public class ImageIOTIFFImageWriterTestCase {
     }
 
     private class TestImageWriter implements ImageWriterHelper {
-        private ImageWriter writer = null;
-        private ByteArrayOutputStream baout = null;
+        private ImageWriter writer;
+        private ByteArrayOutputStream baout;
 
         public void createImageWriter(ImageWriter imageWriter) throws IOException {
             baout = new ByteArrayOutputStream();
@@ -150,8 +150,8 @@ public class ImageIOTIFFImageWriterTestCase {
     }
 
     private class TestMultiImageWriter implements ImageWriterHelper {
-        private MultiImageWriter writer = null;
-        private ByteArrayOutputStream baout = null;
+        private MultiImageWriter writer;
+        private ByteArrayOutputStream baout;
 
         public void createImageWriter(ImageWriter imageWriter)
                 throws IOException {

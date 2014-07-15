@@ -48,38 +48,38 @@ public class PSTilingPattern {
     /**
      * The name of the pattern (for example: "Pattern1" )
      */
-    protected String patternName = null;
+    protected String patternName;
 
     /**
      * The XUID is an extended unique ID -- an array of integers that provides for
      * distributed, hierarchical management of the space of unique ID numbers
      * (optional)
      */
-    protected List xUID = null;
+    protected List xUID;
 
     /**
      * A PostScript procedure for painting the pattern cell
      */
-    protected StringBuffer paintProc = null;
+    protected StringBuffer paintProc;
 
     /**
      * An array of four numbers in the pattern coordinate system, giving
      * the coordinates of the left, bottom, right, and top edges, respectively, of the
      * pattern cell's bounding box
      */
-    protected Rectangle2D bBox = null;
+    protected Rectangle2D bBox;
 
     /**
      * The desired horizontal spacing between pattern cells, measured in
      * the pattern coordinate system
      */
-    protected double xStep = 0;
+    protected double xStep;
 
     /**
      * The desired vertical spacing between pattern cells, measured in
      * the pattern coordinate system
      */
-    protected double yStep = 0;
+    protected double yStep;
 
     /**
      * A code that determines how the color of the pattern cell is to be
@@ -99,7 +99,7 @@ public class PSTilingPattern {
     /**
      *  A texture is used for filling shapes
      */
-    protected TexturePaint texture = null;
+    protected TexturePaint texture;
 
     /**
      * Constructor for the creation of pattern with defined PaintProc

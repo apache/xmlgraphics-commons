@@ -82,12 +82,12 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
     /**
      * Text handling strategy.
      */
-    protected boolean textAsShapes = false;
+    protected boolean textAsShapes;
 
     /**
      * Protection agains infinite recursion
      */
-    protected boolean inPossibleRecursion = false;
+    protected boolean inPossibleRecursion;
 
     /**
      * @param textAsShapes if true, all text is turned into shapes in the

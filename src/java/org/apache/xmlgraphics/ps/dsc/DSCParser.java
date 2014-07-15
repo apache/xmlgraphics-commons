@@ -51,14 +51,14 @@ public class DSCParser implements DSCParserConstants {
 
     private InputStream in;
     private BufferedReader reader;
-    private boolean eofFound = false;
+    private boolean eofFound;
     private boolean checkEOF = true;
     private DSCEvent currentEvent;
     private DSCEvent nextEvent;
     private DSCListener nestedDocumentHandler;
     private DSCListener filterListener;
     private List listeners;
-    private boolean listenersDisabled = false;
+    private boolean listenersDisabled;
 
     /**
      * Creates a new DSC parser.

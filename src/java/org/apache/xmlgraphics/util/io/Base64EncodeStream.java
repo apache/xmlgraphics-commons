@@ -59,9 +59,9 @@ public class Base64EncodeStream extends OutputStream {
     };
 
     byte [] atom = new byte[3];
-    int     atomLen = 0;
+    int     atomLen;
     byte [] encodeBuf = new byte[4];
-    int     lineLen = 0;
+    int     lineLen;
 
     PrintStream  out;
     boolean closeOutOnClose;

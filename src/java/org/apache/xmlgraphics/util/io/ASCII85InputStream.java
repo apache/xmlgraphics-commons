@@ -38,10 +38,10 @@ public class ASCII85InputStream extends InputStream
             implements ASCII85Constants {
 
     private InputStream in;
-    private boolean eodReached = false;
+    private boolean eodReached;
     private int[] b = new int[4]; //decoded
-    private int bSize = 0;
-    private int bIndex = 0;
+    private int bSize;
+    private int bIndex;
 
     /** @see java.io.FilterInputStream **/
     public ASCII85InputStream(InputStream in) {
