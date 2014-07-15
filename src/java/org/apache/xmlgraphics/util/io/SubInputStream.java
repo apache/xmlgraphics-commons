@@ -40,7 +40,7 @@ public class SubInputStream extends FilterInputStream {
      * Indicates whether the underlying stream should be closed when the {@link #close()} method
      * is called.
      */
-    private boolean closeUnderlying = false;
+    private boolean closeUnderlying;
 
     /**
      * Creates a new SubInputStream.

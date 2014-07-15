@@ -50,7 +50,7 @@ import org.apache.xmlgraphics.image.GraphicsUtil;
  */
 public class Any2LsRGBRed extends AbstractRed {
 
-    boolean srcIssRGB = false;
+    boolean srcIssRGB;
 
     /**
      * Construct a luminace image from src.

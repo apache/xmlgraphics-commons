@@ -99,7 +99,7 @@ public class Base64DecodeStream extends InputStream {
     byte[] decodeBuffer = new byte[4];
     byte[] outBuffer = new byte[3];
     int  outOffset = 3;
-    boolean eof = false;
+    boolean eof;
 
     public int read() throws IOException {
 

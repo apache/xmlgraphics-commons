@@ -33,7 +33,7 @@ public class PSPageDeviceDictionary extends PSDictionary {
     /**
      * Whether or not the contents of the dictionary are flushed on retrieval
      */
-    private boolean flushOnRetrieval = false;
+    private boolean flushOnRetrieval;
 
     /**
      * Dictionary content that has not been output/written yet

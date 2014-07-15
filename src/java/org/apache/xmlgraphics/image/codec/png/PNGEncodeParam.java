@@ -115,7 +115,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
         // bKGD chunk
 
-        private boolean backgroundSet = false;
+        private boolean backgroundSet;
 
         /**
          * Suppresses the 'bKGD' chunk from being output.
@@ -147,8 +147,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
         // PLTE chunk
 
-        private int[] palette = null;
-        private boolean paletteSet = false;
+        private int[] palette;
+        private boolean paletteSet;
 
         /**
          * Sets the RGB palette of the image to be encoded.
@@ -285,7 +285,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
         // bKGD chunk
 
-        private boolean backgroundSet = false;
+        private boolean backgroundSet;
 
         /**
          * Suppresses the 'bKGD' chunk from being output.
@@ -388,7 +388,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         }
 
         private int bitShift;
-        private boolean bitShiftSet = false;
+        private boolean bitShiftSet;
 
         /**
          * Sets the desired bit shift for a grayscale image.
@@ -449,7 +449,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
         // bKGD chunk
 
-        private boolean backgroundSet = false;
+        private boolean backgroundSet;
 
         /**
          * Suppresses the 'bKGD' chunk from being output.
@@ -545,7 +545,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     }
 
     protected int bitDepth;
-    protected boolean bitDepthSet = false;
+    protected boolean bitDepthSet;
 
     /**
      * Sets the desired bit depth of an image.
@@ -577,7 +577,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         bitDepthSet = false;
     }
 
-    private boolean useInterlacing = false;
+    private boolean useInterlacing;
 
     /**
      * Turns Adam7 interlacing on or off.
@@ -628,8 +628,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // cHRM chunk
 
-    private float[] chromaticity = null;
-    private boolean chromaticitySet = false;
+    private float[] chromaticity;
+    private boolean chromaticitySet;
 
     /**
      * Sets the white point and primary chromaticities in CIE (x, y)
@@ -706,7 +706,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     // gAMA chunk
 
     private float gamma;
-    private boolean gammaSet = false;
+    private boolean gammaSet;
 
     /**
      * Sets the file gamma value for the image.
@@ -749,8 +749,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // hIST chunk
 
-    private int[] paletteHistogram = null;
-    private boolean paletteHistogramSet = false;
+    private int[] paletteHistogram;
+    private boolean paletteHistogramSet;
 
     /**
      * Sets the palette histogram to be stored with this image.
@@ -796,8 +796,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // iCCP chunk
 
-    private byte[] iccProfileData = null;
-    private boolean iccProfileDataSet = false;
+    private byte[] iccProfileData;
+    private boolean iccProfileDataSet;
 
     /**
      * Sets the ICC profile data to be stored with this image.
@@ -842,8 +842,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // pHYS chunk
 
-    private int[] physicalDimension = null;
-    private boolean physicalDimensionSet = false;
+    private int[] physicalDimension;
+    private boolean physicalDimensionSet;
 
     /**
      * Sets the physical dimension information to be stored with this
@@ -908,8 +908,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // sPLT chunk
 
-    private PNGSuggestedPaletteEntry[] suggestedPalette = null;
-    private boolean suggestedPaletteSet = false;
+    private PNGSuggestedPaletteEntry[] suggestedPalette;
+    private boolean suggestedPaletteSet;
 
     /**
      * Sets the suggested palette information to be stored with this
@@ -958,8 +958,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // sBIT chunk
 
-    private int[] significantBits = null;
-    private boolean significantBitsSet = false;
+    private int[] significantBits;
+    private boolean significantBitsSet;
 
     /**
      * Sets the number of significant bits for each band of the image.
@@ -1011,7 +1011,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     // sRGB chunk
 
     private int srgbIntent;
-    private boolean srgbIntentSet = false;
+    private boolean srgbIntentSet;
 
     /**
      * Sets the sRGB rendering intent to be stored with this image.
@@ -1057,8 +1057,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // tEXt chunk
 
-    private String[] text = null;
-    private boolean textSet = false;
+    private String[] text;
+    private boolean textSet;
 
     /**
      * Sets the textual data to be stored in uncompressed form with this
@@ -1106,7 +1106,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     // tIME chunk
 
     private Date modificationTime;
-    private boolean modificationTimeSet = false;
+    private boolean modificationTimeSet;
 
     /**
      * Sets the modification time, as a <code>Date</code>, to be
@@ -1153,7 +1153,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // tRNS chunk
 
-    boolean transparencySet = false;
+    boolean transparencySet;
 
     /**
      * Suppresses the 'tRNS' chunk from being output.
@@ -1171,8 +1171,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     // zTXT chunk
 
-    private String[] zText = null;
-    private boolean zTextSet = false;
+    private String[] zText;
+    private boolean zTextSet;
 
     /**
      * Sets the text strings to be stored in compressed form with this

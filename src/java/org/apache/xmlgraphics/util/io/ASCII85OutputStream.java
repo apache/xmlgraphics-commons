@@ -33,10 +33,10 @@ public class ASCII85OutputStream extends FilterOutputStream
 
     private static final boolean DEBUG = false;
 
-    private int pos = 0;
-    private long buffer = 0;
-    private int posinline = 0;
-    private int bw = 0;
+    private int pos;
+    private long buffer;
+    private int posinline;
+    private int bw;
 
     /** @see java.io.FilterOutputStream **/
     public ASCII85OutputStream(OutputStream out) {

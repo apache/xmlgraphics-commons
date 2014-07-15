@@ -34,7 +34,7 @@ public class ForwardSeekableStream extends SeekableStream {
     private InputStream src;
 
     /** The current position. */
-    long pointer = 0L;
+    long pointer;
 
     /**
      * Constructs a <code>InputStreamForwardSeekableStream</code> from a

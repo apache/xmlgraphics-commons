@@ -80,7 +80,7 @@ public class TIFFDirectory implements Serializable {
     long ifdOffset = 8;
 
     /** The offset of the next IFD. */
-    long nextIFDOffset = 0;
+    long nextIFDOffset;
 
     /** The default constructor. */
     TIFFDirectory() { }

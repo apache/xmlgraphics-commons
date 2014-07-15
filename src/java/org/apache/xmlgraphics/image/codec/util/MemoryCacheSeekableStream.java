@@ -43,7 +43,7 @@ public final class MemoryCacheSeekableStream extends SeekableStream {
     private InputStream src;
 
     /** Position of first unread byte. */
-    private long pointer = 0;
+    private long pointer;
 
     /** Log_2 of the sector size. */
     private static final int SECTOR_SHIFT = 9;
@@ -58,13 +58,13 @@ public final class MemoryCacheSeekableStream extends SeekableStream {
     private List data = new ArrayList();
 
     /** Number of sectors stored. */
-    int sectors = 0;
+    int sectors;
 
     /** Number of bytes read. */
-    int length = 0;
+    int length;
 
     /** True if we've previously reached the end of the source stream */
-    boolean foundEOS = false;
+    boolean foundEOS;
 
     /**
      * Constructs a <code>MemoryCacheSeekableStream</code> that takes

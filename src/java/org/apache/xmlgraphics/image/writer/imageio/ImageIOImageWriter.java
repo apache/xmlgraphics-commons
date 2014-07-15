@@ -290,7 +290,7 @@ public class ImageIOImageWriter implements ImageWriter, IIOWriteWarningListener 
 
         private javax.imageio.ImageWriter iiowriter;
         private ImageOutputStream imageStream;
-        private boolean prepared = false;
+        private boolean prepared;
 
         public IIOMultiImageWriter(OutputStream out) throws IOException {
             this.iiowriter = getIIOImageWriter();

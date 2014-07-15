@@ -43,7 +43,7 @@ public class RunLengthEncodeOutputStream extends FilterOutputStream
     private static final int IN_SEQUENCE           = 2;
     private static final int NOT_IN_SEQUENCE       = 3;
 
-    private int runCount = 0;
+    private int runCount;
     private int isSequence = NOT_IDENTIFY_SEQUENCE;
     private byte[] runBuffer = new byte[MAX_SEQUENCE_COUNT + 1];
 

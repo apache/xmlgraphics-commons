@@ -178,12 +178,12 @@ public class PreloaderEPS extends AbstractImagePreloader {
      */
     public static class EPSBinaryFileHeader {
 
-        private long psStart = 0;
-        private long psLength = 0;
-        private long wmfStart = 0;
-        private long wmfLength = 0;
-        private long tiffStart = 0;
-        private long tiffLength = 0;
+        private long psStart;
+        private long psLength;
+        private long wmfStart;
+        private long wmfLength;
+        private long tiffStart;
+        private long tiffLength;
 
         /**
          * Returns the start offset of the PostScript section.

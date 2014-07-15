@@ -33,7 +33,7 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 public class TIFFLZWDecoder {
 
     byte[][] stringTable;
-    byte[] data = null;
+    byte[] data;
     byte[] uncompData;
     int tableIndex;
     int bitsToGet = 9;
@@ -44,8 +44,8 @@ public class TIFFLZWDecoder {
     int h;
     int predictor;
     int samplesPerPixel;
-    int nextData = 0;
-    int nextBits = 0;
+    int nextData;
+    int nextBits;
 
     int[] andTable = {
         511,

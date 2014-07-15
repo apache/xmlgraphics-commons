@@ -33,8 +33,8 @@ public class ImageWriterParams {
     /** Used for generating exactly one strip for each row */
     public static final int ONE_ROW_PER_STRIP = 1;
 
-    private Integer xResolution = null;
-    private Integer yResolution = null;
+    private Integer xResolution;
+    private Integer yResolution;
     private Float jpegQuality;
     private Boolean jpegForceBaseline;
     private String compressionMethod;

@@ -31,7 +31,7 @@ import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema;
  */
 public final class XMPSchemaRegistry {
 
-    private static XMPSchemaRegistry instance = null;
+    private static XMPSchemaRegistry instance;
 
     private Map schemas = new java.util.HashMap();
 

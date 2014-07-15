@@ -42,9 +42,9 @@ public class PSState implements Serializable {
     private AffineTransform transform = new AffineTransform();
     private List transformConcatList = new java.util.ArrayList();
 
-    private int linecap = 0;
-    private int linejoin = 0;
-    private float miterLimit = 0;
+    private int linecap;
+    private int linejoin;
+    private float miterLimit;
     private double linewidth = 1.0f;
     private String dashpattern = DEFAULT_DASH;
     private Color color = DEFAULT_RGB_COLOR;

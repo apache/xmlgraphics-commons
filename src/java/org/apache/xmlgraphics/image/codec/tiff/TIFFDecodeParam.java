@@ -72,8 +72,8 @@ import  org.apache.xmlgraphics.image.codec.util.ImageDecodeParam;
  */
 public class TIFFDecodeParam implements ImageDecodeParam {
 
-    private boolean decodePaletteAsShorts = false;
-    private Long ifdOffset = null;
+    private boolean decodePaletteAsShorts;
+    private Long ifdOffset;
     private boolean convertJPEGYCbCrToRGB = true;
 
     /** Constructs a default instance of <code>TIFFDecodeParam</code>. */

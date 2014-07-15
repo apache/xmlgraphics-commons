@@ -67,7 +67,7 @@ class PNGFile implements PNGConstants {
     private byte[] bluePalette;
     private byte[] alphaPalette;
     private boolean hasPalette;
-    private boolean hasAlphaPalette = false;
+    private boolean hasAlphaPalette;
 
     public PNGFile(InputStream stream) throws IOException, ImageException {
         if (!stream.markSupported()) {
