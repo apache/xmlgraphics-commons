@@ -206,8 +206,10 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                         // dots per inch
                         size.setResolution(resolution, resolution);
                     } else {
-                        // resolution not specified
-                        size.setResolution(context.getSourceResolution());
+                        // resolution not specified; set default if not set yet
+                        if (size.getDpiHorizontal() == 0) {
+                            size.setResolution(context.getSourceResolution());
+                        }
                     }
                     if (size.getWidthPx() != 0) {
                         size.calcSizeFromPixels();
