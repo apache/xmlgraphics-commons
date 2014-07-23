@@ -209,4 +209,11 @@ public class ColorWithAlternatives extends Color {
         return null;
     }
 
+    public int hashCode() {
+        int hash = super.hashCode();
+        if (alternativeColors != null) {
+            hash = 37 * hash + alternativeColors.hashCode();
+        }
+        return hash;
+    }
 }
