@@ -205,9 +205,6 @@ public class DSCParser implements DSCParserConstants {
                 handler.line(getLine());
                 break;
             case EOF:
-                if (isCheckEOF()) {
-                    this.eofFound = true;
-                }
                 handler.endDocument();
                 break;
             default:
@@ -295,12 +292,12 @@ public class DSCParser implements DSCParserConstants {
     protected void parseNext() throws IOException, DSCException {
         String line = readLine();
         if (line != null) {
-            if (eofFound && (line.length() > 0)) {
+            if (isCheckEOF() && eofFound && (line.length() > 0)) {
                 throw new DSCException("Content found after EOF");
             }
             if (line.startsWith("%%")) {
                 DSCComment comment = parseDSCLine(line);
-                if (comment.getEventType() == EOF && isCheckEOF()) {
+                if (comment.getEventType() == EOF) {
                     this.eofFound = true;
                 }
                 this.nextEvent = comment;
