@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 import java.awt.color.ColorSpace;
+import java.util.Arrays;
 
 /**
  * Extended {@link Color} class allowing to specify a prioritized list of alternative colors.
@@ -212,7 +213,7 @@ public class ColorWithAlternatives extends Color {
     public int hashCode() {
         int hash = super.hashCode();
         if (alternativeColors != null) {
-            hash = 37 * hash + alternativeColors.hashCode();
+            hash = 37 * hash + Arrays.hashCode(alternativeColors);
         }
         return hash;
     }
