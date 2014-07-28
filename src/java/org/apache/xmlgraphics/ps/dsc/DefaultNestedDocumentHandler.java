@@ -56,6 +56,7 @@ public class DefaultNestedDocumentHandler implements DSCParserConstants,
                 if (gen != null) {
                     comment.generate(gen);
                 }
+                boolean checkEOF = parser.isCheckEOF();
                 parser.setCheckEOF(false);
                 parser.setListenersDisabled(true);
                 comment = parser.nextDSCComment(DSCConstants.END_DOCUMENT, gen);
@@ -66,13 +67,14 @@ public class DefaultNestedDocumentHandler implements DSCParserConstants,
                 if (gen != null) {
                     comment.generate(gen);
                 }
-                parser.setCheckEOF(true);
+                parser.setCheckEOF(checkEOF);
                 parser.setListenersDisabled(false);
                 parser.next();
             } else if (DSCConstants.BEGIN_DATA.equals(comment.getName())) {
                 if (gen != null) {
                     comment.generate(gen);
                 }
+                boolean checkEOF = parser.isCheckEOF();
                 parser.setCheckEOF(false);
                 parser.setListenersDisabled(true);
                 comment = parser.nextDSCComment(DSCConstants.END_DATA, gen);
@@ -83,7 +85,7 @@ public class DefaultNestedDocumentHandler implements DSCParserConstants,
                 if (gen != null) {
                     comment.generate(gen);
                 }
-                parser.setCheckEOF(true);
+                parser.setCheckEOF(checkEOF);
                 parser.setListenersDisabled(false);
                 parser.next();
             }
