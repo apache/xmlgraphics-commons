@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
@@ -78,16 +79,21 @@ public final class XMPPacketParser {
         if (!skipAfter(in, PACKET_HEADER_END)) {
             throw new IOException("Invalid XMP packet header!");
         }
-        //TODO think about not buffering this but for example, parse in another thread
-        //ex. using PipedInput/OutputStream
-        ByteArrayOutputStream baout = new ByteArrayOutputStream();
-        //TODO Do with TeeInputStream when Commons IO 1.4 is available
-        if (!skipAfter(in, PACKET_TRAILER, baout)) {
-            throw new IOException("XMP packet not properly terminated!");
-        }
-
-        Metadata metadata = XMPParser.parseXMP(
+        ByteArrayOutputStream baout = null;
+        Metadata metadata = new Metadata();
+        try {
+            //TODO think about not buffering this but for example, parse in another thread
+            //ex. using PipedInput/OutputStream
+            baout = new ByteArrayOutputStream();
+            //TODO Do with TeeInputStream when Commons IO 1.4 is available
+            if (!skipAfter(in, PACKET_TRAILER, baout)) {
+                throw new IOException("XMP packet not properly terminated!");
+            }
+            metadata = XMPParser.parseXMP(
                 new StreamSource(new ByteArrayInputStream(baout.toByteArray())));
+        } finally {
+            IOUtils.closeQuietly(baout);
+        }
         return metadata;
     }
 
