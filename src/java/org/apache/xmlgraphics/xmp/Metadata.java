@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.xmp;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,15 +82,17 @@ public class Metadata implements XMLizable, PropertyAccess {
      * by each schema is used for the merge.
      * @param target the target metadata to merge the local metadata into
      */
-    public void mergeInto(Metadata target) {
+    public void mergeInto(Metadata target, List<Class> exclude) {
         XMPSchemaRegistry registry = XMPSchemaRegistry.getInstance();
         Iterator iter = properties.values().iterator();
         while (iter.hasNext()) {
             XMPProperty prop = (XMPProperty)iter.next();
             XMPSchema schema = registry.getSchema(prop.getNamespace());
-            MergeRuleSet rules = schema.getDefaultMergeRuleSet();
-            PropertyMerger merger = rules.getPropertyMergerFor(prop);
-            merger.merge(prop, target);
+            if (!exclude.contains(schema.getClass())) {
+                MergeRuleSet rules = schema.getDefaultMergeRuleSet();
+                PropertyMerger merger = rules.getPropertyMergerFor(prop);
+                merger.merge(prop, target);
+            }
         }
     }
 
