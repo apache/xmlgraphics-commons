@@ -21,9 +21,13 @@ package org.apache.xmlgraphics.java2d.ps;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.junit.Before;
@@ -75,5 +79,67 @@ public class PSGraphics2DTestCase {
         assertTrue(gfx2d.shouldBeClipped(clipArea, line));
         Shape rect = new Rectangle2D.Float(30, 30, 40, 40);
         assertFalse(gfx2d.shouldBeClipped(clipArea, rect));
+    }
+
+    @Test
+    public void testFill() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator gen = new PSGenerator(out);
+        PSGraphics2D p = new PSGraphics2D(false, gen);
+        p.setGraphicContext(new GraphicContext());
+        p.fill(new RoundRectangle2D.Float());
+        out.reset();
+
+        p.fill(new RoundRectangle2D.Float());
+        assertEquals(out.toString(),
+                "GS\nN\n/f1943450110{0 0 M\n0 0 L\n0 0 0 0 0 0 C\n0 0 L\n0 0 0 0 0 0 C\n"
+                        + "0 0 L\n0 0 0 0 0 0 C\n0 0 L\n0 0 0 0 0 0 C\ncp}def\nf1943450110\nf\nGR\n");
+        out.reset();
+
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        p.drawImage(img, 0, 0, null);
+
+        String res = "[1 0 0 1 0 0] CT\n"
+                + "GS\n"
+                + "0 0 translate\n"
+                + "%AXGBeginBitmap: java.awt.image.BufferedImage\n"
+                + "{{\n"
+                + "/RawData currentfile /ASCII85Decode filter def\n"
+                + "/Data RawData /FlateDecode filter def\n"
+                + "/DeviceRGB setcolorspace\n";
+
+        assertTrue(out.toString(), out.toString().startsWith("GS\n" + res));
+        out.reset();
+
+        p.drawRenderedImage(img, new AffineTransform());
+        assertTrue(out.toString(), out.toString().startsWith("GS\n[1 0 0 1 0 0] CT\n" + res));
+
+        out.reset();
+
+        p.writeClip(new RoundRectangle2D.Float());
+        assertEquals(out.toString(), "N\n"
+                + "0 0 M\n"
+                + "0 0 L\n"
+                + "0 0 0 0 0 0 C\n"
+                + "0 0 L\n"
+                + "0 0 0 0 0 0 C\n"
+                + "0 0 L\n"
+                + "0 0 0 0 0 0 C\n"
+                + "0 0 L\n"
+                + "0 0 0 0 0 0 C\n"
+                + "cp\n"
+                + "clip\n");
+        out.reset();
+
+        p.drawString("hi", 0f, 0f);
+        assertTrue(out.toString(), out.toString().startsWith("GS\nN\n/f"));
+        out.reset();
+
+        TexturePaint tp = new TexturePaint(img, new Rectangle());
+        p.setPaint(tp);
+        p.fill(new Rectangle());
+        assertTrue(out.toString().startsWith("GS\n<<\n/PatternType 1\n"));
+
+        p.dispose();
     }
 }
