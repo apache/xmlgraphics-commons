@@ -106,6 +106,7 @@
       <include name="lib/build/hamcrest.core*"/>
       <include name="lib/build/mockito-core*"/>
       <include name="lib/build/objenesis*"/>
+      <include name="lib/build/resolver*"/>
     </patternset>
   </fileset>
 
