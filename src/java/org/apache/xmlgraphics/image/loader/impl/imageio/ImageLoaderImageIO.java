@@ -393,6 +393,10 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         PROVIDERS_IGNORING_ICC
                 .add("Standard PNG image reader/Sun Microsystems, Inc./1.0");
         PROVIDERS_IGNORING_ICC
+                .add("Standard PNG image reader/Oracle Corporation/1.0");
+        PROVIDERS_IGNORING_ICC
                 .add("Standard JPEG Image Reader/Sun Microsystems, Inc./0.5");
+        PROVIDERS_IGNORING_ICC
+                .add("Standard JPEG Image Reader/Oracle Corporation/0.5");
     }
 }
