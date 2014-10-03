@@ -33,7 +33,8 @@ Please subscribe to the general@xmlgraphics.apache.org mailing list by sending
 an empty mail to general-subscribe@xmlgraphics.apache.org. All you questions
 about XML Graphics Commons will be answered there.    
 
-Please report bugs to bugzilla at http://issues.apache.org/bugzilla/
+Please report bugs to JIRA at http://issues.apache.org/jira/ (project
+XMLGraphicsCommons).
 
 
 How do I build Apache XML Graphics Commons?
@@ -80,6 +81,15 @@ License labeling (according to http://www.apache.org/legal/3party.html):
 
 For more detailed info about the changes, please see:
 http://xmlgraphics.apache.org/commons/changes.html
+
+Version 2.0
+--------------
+
+The main new feature is the introduction of a URI resolution framework that
+makes it easier to control resource access in a cloud environment. Because of
+changes to the API, the version number has been bumped to 2.0.
+
+This release also contains a number of bug fixes.
 
 Version 1.5
 --------------

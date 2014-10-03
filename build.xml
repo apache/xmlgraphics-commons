@@ -25,7 +25,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="year" value="1999-2012"/>
+  <property name="year" value="1999-2014"/>
 
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
@@ -106,6 +106,7 @@
       <include name="lib/build/hamcrest.core*"/>
       <include name="lib/build/mockito-core*"/>
       <include name="lib/build/objenesis*"/>
+      <include name="lib/build/resolver*"/>
     </patternset>
   </fileset>
 
@@ -122,7 +123,6 @@
     <include name="status.xml"/>
     <include name="*.pom"/>
     <include name="build.*"/>
-    <include name="forrest.*"/>
     <include name="checkstyle*"/>
     <exclude name="checkstyle-noframes.xsl"/>
   </fileset>
@@ -488,41 +488,18 @@ NOTE:
   </target>
 
   <!-- =================================================================== -->
-  <!-- Creates the documentation                                           -->
-  <!-- =================================================================== -->
-  <target name="docs" description="Generates documentation">
-    <echo message="Building documentation with Forrest..."/>
-    <!--
-    <echo message="Make sure that you have installed Apache Forrest and"/>
-    <echo message="the FORREST_HOME environment variable is set (see http://forrest.apache.org/)"/>
-    <echo message="FORREST_HOME = ${forrest.home}"/>
-    -->
-    <echo message="Make sure you have a proper Forrest installation (see http://forrest.apache.org/)"/>
-
-    <!--<antcall target="site"/>-->
-    
-    <condition property="forrest.call" value="forrest.bat" else="forrest">
-      <os family="windows"/>
-    </condition>
-    <exec executable="${forrest.call}"/>
-  </target>
-  
-  <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
   <target name="dist" depends="distclean,dist-src,dist-bin,maven-artifacts" description="Generates the distribution package"/>
 
   <!-- IMPORTANT: .NET binaries must not be included in the distribution. License policy! -->
 
-  <target name="dist-bin" depends="all,javadocs,docs">
+  <target name="dist-bin" depends="all,javadocs">
     <echo message="Building the binary distribution files (zip,tar)"/>
     <mkdir dir="${dist.bin.result.dir}"/>
     <copy todir="${dist.bin.result.dir}">
       <fileset refid="dist.bin"/>
       <fileset refid="dist.bin.lib"/>
-    </copy>
-    <copy todir="${dist.bin.result.dir}/docs">
-      <fileset dir="${build.dir}/site"/>
     </copy>
     <copy todir="${dist.bin.result.dir}/javadocs">
       <fileset dir="${build.javadocs.dir}"/>
