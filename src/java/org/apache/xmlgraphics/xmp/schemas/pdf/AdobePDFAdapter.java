@@ -31,6 +31,7 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
     private static final String KEYWORDS = "Keywords";
     private static final String PDFVERSION = "PDFVersion";
     private static final String PRODUCER = "Producer";
+    private static final String TRAPPED = "Trapped";
 
     /**
      * Constructs a new adapter for Adobe PDF around the given metadata object.
@@ -77,6 +78,14 @@ public class AdobePDFAdapter extends XMPSchemaAdapter {
      */
     public void setProducer(String value) {
         setValue(PRODUCER, value);
+    }
+
+    /**
+     * Sets if the pdf has trapping information True or False
+     * @param v the value
+     */
+    public void setTrapped(String v) {
+        setValue(TRAPPED, v);
     }
 
 }

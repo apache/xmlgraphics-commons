@@ -25,6 +25,9 @@ import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
 import org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema;
+import org.apache.xmlgraphics.xmp.schemas.pdf.PDFVTXMPSchema;
+import org.apache.xmlgraphics.xmp.schemas.pdf.PDFXXMPSchema;
+import org.apache.xmlgraphics.xmp.schemas.pdf.XAPMMXMPSchema;
 
 /**
  * This class is a registry of XMP schemas. It's implemented as a singleton.
@@ -52,6 +55,9 @@ public final class XMPSchemaRegistry {
         addSchema(new PDFAXMPSchema());
         addSchema(new XMPBasicSchema());
         addSchema(new AdobePDFSchema());
+        addSchema(new PDFXXMPSchema());
+        addSchema(new PDFVTXMPSchema());
+        addSchema(new XAPMMXMPSchema());
     }
 
     /**

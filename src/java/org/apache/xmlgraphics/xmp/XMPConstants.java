@@ -47,6 +47,15 @@ public interface XMPConstants {
     /** Namespace URI for the Adobe PDF Schema */
     String ADOBE_PDF_NAMESPACE = "http://ns.adobe.com/pdf/1.3/";
 
+    /** Namespace URI for PDF X */
+    String PDF_X_IDENTIFICATION = "http://www.npes.org/pdfx/ns/id/";
+
+    /** Namespace URI for PDF VT */
+    String PDF_VT_IDENTIFICATION = "http://www.npes.org/pdfvt/ns/id/";
+
+    /** Namespace URI for XMP Media Management */
+    String XAP_MM_NAMESPACE  = "http://ns.adobe.com/xap/1.0/mm/";
+
     /**
      * Namespace URI for the PDF/A Identification Schema
      * (from the technical corrigendum 1 of ISO 19005-1:2005, note that the trailing slash
