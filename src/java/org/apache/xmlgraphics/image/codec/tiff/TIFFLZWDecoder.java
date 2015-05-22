@@ -74,9 +74,9 @@ public class TIFFLZWDecoder {
 
         initializeStringTable();
 
-        this.data = data.clone();
+        this.data = data;
 //        this.h = h;
-        this.uncompData = uncompData.clone();
+        this.uncompData = uncompData;
 
         // Initialize pointers
         bytePointer = 0;

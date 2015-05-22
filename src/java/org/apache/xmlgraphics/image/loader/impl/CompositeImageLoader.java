@@ -57,7 +57,7 @@ public class CompositeImageLoader extends AbstractImageLoader {
                         "All ImageLoaders must produce the same target flavor");
             }
         }
-        this.loaders = loaders.clone();
+        this.loaders = loaders;
     }
 
     /** {@inheritDoc} */

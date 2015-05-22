@@ -41,7 +41,7 @@ public class ImageLoaderFactoryImageIO extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
-        return FLAVORS.clone();
+        return FLAVORS;
     }
 
     /** {@inheritDoc} */

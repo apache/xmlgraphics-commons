@@ -405,7 +405,7 @@ public class TIFFDirectory implements Serializable {
      * in this directory.
      */
     public TIFFField[] getFields() {
-        return fields.clone();
+        return fields;
     }
 
     /**

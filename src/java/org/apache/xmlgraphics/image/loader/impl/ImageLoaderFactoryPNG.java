@@ -35,13 +35,13 @@ public class ImageLoaderFactoryPNG extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES.clone();
+        return MIMES;
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         if (MimeConstants.MIME_PNG.equals(mime)) {
-            return FLAVORS.clone();
+            return FLAVORS;
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
     }

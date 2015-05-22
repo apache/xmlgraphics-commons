@@ -64,7 +64,7 @@ public class PNGChunk {
     public PNGChunk(int length, int type, byte[] data, int crc) {
         this.length = length;
         this.type = type;
-        this.data = data.clone();
+        this.data = data;
         this.crc = crc;
         this.typeString = typeIntToString(this.type);
     }
@@ -82,7 +82,7 @@ public class PNGChunk {
     }
 
     public byte[] getData() {
-        return data.clone();
+        return data;
     }
 
     public byte getByte(int offset) {

@@ -63,14 +63,14 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES.clone();
+        return MIMES;
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         for (int i = 0, c = MIMES.length; i < c; i++) {
             if (MIMES[i].equals(mime)) {
-                return FLAVORS[i].clone();
+                return FLAVORS[i];
             }
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
