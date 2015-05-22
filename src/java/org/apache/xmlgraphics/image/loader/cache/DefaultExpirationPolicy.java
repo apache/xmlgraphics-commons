@@ -54,7 +54,7 @@ public class DefaultExpirationPolicy implements ExpirationPolicy {
             return false;
         } else {
             long now = provider.getTimeStamp();
-            return now >= (timestamp + (this.expirationAfter * 1000));
+            return now >= (timestamp + (this.expirationAfter * 1000L));
         }
     }
 

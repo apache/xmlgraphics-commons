@@ -25,6 +25,8 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -113,14 +115,17 @@ public final class ImageIOUtil {
      * @param node a W3C DOM node
      */
     private static void dumpNodeToSystemOut(Node node) {
+        Transformer trans = null;
         try {
-            Transformer trans = TransformerFactory.newInstance().newTransformer();
+            trans = TransformerFactory.newInstance().newTransformer();
             trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             trans.setOutputProperty(OutputKeys.INDENT, "yes");
             Source src = new DOMSource(node);
             Result res = new StreamResult(System.out);
             trans.transform(src, res);
-        } catch (Exception e) {
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
             e.printStackTrace();
         }
     }

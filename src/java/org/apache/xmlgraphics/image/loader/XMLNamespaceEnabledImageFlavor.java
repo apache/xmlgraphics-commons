@@ -45,4 +45,23 @@ public class XMLNamespaceEnabledImageFlavor extends RefinedImageFlavor {
         return this.namespace;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        if (!super.equals(o)) { return false; }
+
+        XMLNamespaceEnabledImageFlavor that = (XMLNamespaceEnabledImageFlavor) o;
+
+        if (namespace != null ? !namespace.equals(that.namespace) : that.namespace != null) { return false; }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (namespace != null ? namespace.hashCode() : 0);
+        return result;
+    }
 }

@@ -37,13 +37,13 @@ public class ImageLoaderFactoryEPS extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES;
+        return MIMES.clone();
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         if (MimeConstants.MIME_EPS.equals(mime)) {
-            return FLAVORS;
+            return FLAVORS.clone();
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
     }

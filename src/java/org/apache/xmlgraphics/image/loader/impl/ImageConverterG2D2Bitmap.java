@@ -49,6 +49,7 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
     /** {@inheritDoc} */
     public Image convert(Image src, Map hints) {
         checkSourceFlavor(src);
+        assert src instanceof ImageGraphics2D;
         ImageGraphics2D g2dImage = (ImageGraphics2D)src;
 
         Object formatIntent = hints.get(ImageProcessingHints.BITMAP_TYPE_INTENT);

@@ -52,6 +52,7 @@ public final class DSCTools implements DSCParserConstants {
             DSCComment comment = event.asDSCComment();
             return (comment.getName().equals(DSCConstants.END_COMMENTS));
         case COMMENT:
+            assert event instanceof PostScriptComment;
             String s = ((PostScriptComment)event).getComment();
             if (s == null || s.length() == 0) {
                 return true;

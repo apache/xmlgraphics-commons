@@ -76,6 +76,7 @@ public class TIFFField implements Comparable, Serializable {
 
     /** Flag for 64 bit IEEE doubles. */
     public static final int TIFF_DOUBLE    = 12;
+    private static final long serialVersionUID = 207783128222415437L;
 
     /** The tag number. */
     int tag;

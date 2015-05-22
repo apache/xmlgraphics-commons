@@ -32,7 +32,6 @@ class TIFFFaxDecoder {
     private int bytePointer;
     private byte[] data;
     private int w;
-    private int h;
     private int fillOrder;
 
     // Data structures needed to store changing elements for the previous
@@ -47,7 +46,7 @@ class TIFFFaxDecoder {
     private int compression = 2;
 
     // Variables set by T4Options
-    private int uncompressedMode;
+//    private int uncompressedMode = 0;
     private int fillBits;
     private int oneD;
 
@@ -565,7 +564,7 @@ class TIFFFaxDecoder {
     public TIFFFaxDecoder(int fillOrder, int w, int h) {
         this.fillOrder = fillOrder;
         this.w = w;
-        this.h = h;
+//        this.h = h;
 
         this.bitPointer = 0;
         this.bytePointer = 0;
@@ -766,7 +765,7 @@ class TIFFFaxDecoder {
 
 
         oneD = (int)(tiffT4Options & 0x01);
-        uncompressedMode = (int)((tiffT4Options & 0x02) >> 1);
+//        uncompressedMode = (int)((tiffT4Options & 0x02) >> 1);
         fillBits = (int)((tiffT4Options & 0x04) >> 2);
 
         // The data must start with an EOL code
@@ -920,7 +919,7 @@ class TIFFFaxDecoder {
         // uncompressedMode - have written some code for this, but this
         // has not been tested due to lack of test images using this optional
 
-        uncompressedMode = (int)((tiffT6Options & 0x02) >> 1);
+//        uncompressedMode = (int)((tiffT6Options & 0x02) >> 1);
 
         // Local cached reference
         int[] cce = currChangingElems;
@@ -1204,7 +1203,7 @@ class TIFFFaxDecoder {
             entry = initBlack[current];
 
             // Get the 3 fields from the entry
-            isT = entry & 0x0001;
+//            isT = entry & 0x0001;
             bits = (entry >>> 1) & 0x000f;
             code = (entry >>> 5) & 0x07ff;
 

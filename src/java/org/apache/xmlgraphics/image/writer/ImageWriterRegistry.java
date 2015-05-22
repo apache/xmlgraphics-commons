@@ -32,7 +32,7 @@ import org.apache.xmlgraphics.util.Service;
 /**
  * Registry for {@link ImageWriter} implementations.
  */
-public class ImageWriterRegistry {
+public final class ImageWriterRegistry {
 
     private static volatile ImageWriterRegistry instance;
 
@@ -112,7 +112,7 @@ public class ImageWriterRegistry {
             key = key.substring(0, pos);
             value = preferredOrder.get(key);
         }
-        return (value != null) ? value.intValue() : 0;
+        return (value != null) ? value : 0;
     }
 
     /**

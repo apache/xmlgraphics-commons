@@ -109,8 +109,8 @@ public class PipelineFactoryTestCase {
 
         //Input is some TIFF file with CCITT Group 4 compression
         ImageInfo imageInfo = new ImageInfo("test:tiff", "image/tiff");
-        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(1));
-        imageInfo.getCustomObjects().put("TIFF_COMPRESSION", new Integer(TIFFImage.COMP_FAX_G4_2D));
+        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", 1);
+        imageInfo.getCustomObjects().put("TIFF_COMPRESSION", TIFFImage.COMP_FAX_G4_2D);
 
         //We want either a G2D image or a raw CCITT image
         ImageFlavor[] targetFlavors = new ImageFlavor[] {
@@ -131,7 +131,7 @@ public class PipelineFactoryTestCase {
         }
 
         //Now, we set this to a multi-strip TIFF which should disable the raw loader
-        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(7));
+        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", 7);
 
         candidates = pFactory.determineCandidatePipelines(
                 imageInfo, targetFlavors);
@@ -168,8 +168,8 @@ public class PipelineFactoryTestCase {
 
         //Input is some TIFF file with CCITT Group 4 compression
         ImageInfo imageInfo = new ImageInfo("test:tiff", "image/tiff");
-        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(1));
-        imageInfo.getCustomObjects().put("TIFF_COMPRESSION", new Integer(TIFFImage.COMP_FAX_G4_2D));
+        imageInfo.getCustomObjects().put("TIFF_STRIP_COUNT", 1);
+        imageInfo.getCustomObjects().put("TIFF_COMPRESSION", TIFFImage.COMP_FAX_G4_2D);
 
         //We want either a G2D image or a raw CCITT image
         ImageFlavor[] targetFlavors = new ImageFlavor[] {

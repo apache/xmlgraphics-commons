@@ -659,10 +659,14 @@ public final class Glyphs {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
             String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.startsWith("#")) {
-                    lines.add(line);
+            try {
+                while ((line = reader.readLine()) != null) {
+                    if (!line.startsWith("#")) {
+                        lines.add(line);
+                    }
                 }
+            } finally {
+                reader.close();
             }
         } catch (UnsupportedEncodingException uee) {
             throw new RuntimeException("Incompatible JVM! US-ASCII encoding is not supported."

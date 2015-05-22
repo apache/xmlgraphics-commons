@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -162,7 +163,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         c.ifdOffset = encode(c.nextImage, encodeParam, c.ifdOffset, true);
     }
 
-    private class Context {
+    private static class Context {
         //TODO This approach causes always two images to be present at the same time.
         //The encoder has to be changed a little to avoid that.
         private RenderedImage nextImage;
@@ -380,22 +381,20 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         // Add extra fields specified via the encoding parameters.
         TIFFField[] extraFields = encodeParam.getExtraFields();
-        if (extraFields != null) {
-            List extantTags = new ArrayList(fields.size());
-            Iterator fieldIter = fields.iterator();
-            while (fieldIter.hasNext()) {
-                TIFFField fld = (TIFFField)fieldIter.next();
-                extantTags.add(new Integer(fld.getTag()));
-            }
+        List extantTags = new ArrayList(fields.size());
+        Iterator fieldIter = fields.iterator();
+        while (fieldIter.hasNext()) {
+            TIFFField fld = (TIFFField)fieldIter.next();
+            extantTags.add(fld.getTag());
+        }
 
-            int numExtraFields = extraFields.length;
-            for (int i = 0; i < numExtraFields; i++) {
-                TIFFField fld = extraFields[i];
-                Integer tagValue = new Integer(fld.getTag());
-                if (!extantTags.contains(tagValue)) {
-                    fields.add(fld);
-                    extantTags.add(tagValue);
-                }
+        int numExtraFields = extraFields.length;
+        for (int i = 0; i < numExtraFields; i++) {
+            TIFFField fld = extraFields[i];
+            Integer tagValue = fld.getTag();
+            if (!extantTags.contains(tagValue)) {
+                fields.add(fld);
+                extantTags.add(tagValue);
             }
         }
 
@@ -488,7 +487,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                     output = new SeekableOutputStream(raFile);
 
                     // this method is exited!
-                } catch (Exception e) {
+                } catch (IOException e) {
                     // Allocate memory for the entire image data (!).
                     output = new ByteArrayOutputStream((int)totalBytesOfData);
                 }
@@ -836,7 +835,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                         output.write(compressBuf, 0, numCompressedBytes);
                     }
                     break;
-
+                default:
+                    break;
                 }
             }
         }
@@ -888,31 +888,33 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
                 // Open a FileInputStream from which to copy the data.
                 FileInputStream fileStream = new FileInputStream(tempFile);
+                try {
+                    // Close the original SeekableOutputStream.
+                    output.close();
 
-                // Close the original SeekableOutputStream.
-                output.close();
+                    // Reset variable to the original OutputStream.
+                    output = outCache;
 
-                // Reset variable to the original OutputStream.
-                output = outCache;
+                    // Write the IFD.
+                    writeDirectory(ifdOffset, fields, nextIFDOffset);
 
-                // Write the IFD.
-                writeDirectory(ifdOffset, fields, nextIFDOffset);
-
-                // Write the image data.
-                byte[] copyBuffer = new byte[8192];
-                int bytesCopied = 0;
-                while (bytesCopied < totalBytes) {
-                    int bytesRead = fileStream.read(copyBuffer);
-                    if (bytesRead == -1) {
-                        break;
+                    // Write the image data.
+                    byte[] copyBuffer = new byte[8192];
+                    int bytesCopied = 0;
+                    while (bytesCopied < totalBytes) {
+                        int bytesRead = fileStream.read(copyBuffer);
+                        if (bytesRead == -1) {
+                            break;
+                        }
+                        output.write(copyBuffer, 0, bytesRead);
+                        bytesCopied += bytesRead;
                     }
-                    output.write(copyBuffer, 0, bytesRead);
-                    bytesCopied += bytesRead;
+                } finally {
+                    // Delete the temporary file.
+                    fileStream.close();
                 }
-
-                // Delete the temporary file.
-                fileStream.close();
-                tempFile.delete();
+                boolean isDeleted = tempFile.delete();
+                assert isDeleted;
 
                 // Write an extra byte for IFD word alignment if needed.
                 if (skipByte) {
@@ -1093,13 +1095,13 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
     /**
      * Determine the number of bytes in the value portion of the field.
      */
-    private static int getValueSize(TIFFField field) {
+    private static int getValueSize(TIFFField field) throws UnsupportedEncodingException {
         int type = field.getType();
         int count = field.getCount();
         int valueSize = 0;
         if (type == TIFFField.TIFF_ASCII) {
             for (int i = 0; i < count; i++) {
-                byte[] stringBytes = field.getAsString(i).getBytes();   // note: default encoding @work here!
+                byte[] stringBytes = field.getAsString(i).getBytes("UTF-8");   // note: default encoding @work here!
                 valueSize += stringBytes.length;
                 if (stringBytes[stringBytes.length - 1] != 0) {
                     valueSize++;
@@ -1244,7 +1246,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         case TIFFField.TIFF_ASCII:
             for (int i = 0; i < count; i++) {
-                byte[] stringBytes = field.getAsString(i).getBytes();
+                byte[] stringBytes = field.getAsString(i).getBytes("UTF-8");
                 output.write(stringBytes);
                 if (stringBytes[stringBytes.length - 1] != (byte)0) {
                     output.write((byte)0);
@@ -1278,20 +1280,20 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         output.write((int) (l & 0x000000ff));
     }
 
-    /**
-     * Returns the current offset in the supplied OutputStream.
-     * This method should only be used if compressing data.
-     */
-    private long getOffset(OutputStream out) throws IOException {
-        if (out instanceof ByteArrayOutputStream) {
-            return ((ByteArrayOutputStream)out).size();
-        } else if (out instanceof SeekableOutputStream) {
-            return ((SeekableOutputStream)out).getFilePointer();
-        } else {
-            // Shouldn't happen.
-            throw new IllegalStateException(PropertyUtil.getString("TIFFImageEncoder13"));
-        }
-    }
+//    /**
+//     * Returns the current offset in the supplied OutputStream.
+//     * This method should only be used if compressing data.
+//     */
+//    private long getOffset(OutputStream out) throws IOException {
+//        if (out instanceof ByteArrayOutputStream) {
+//            return ((ByteArrayOutputStream)out).size();
+//        } else if (out instanceof SeekableOutputStream) {
+//            return ((SeekableOutputStream)out).getFilePointer();
+//        } else {
+//            // Shouldn't happen.
+//            throw new IllegalStateException(PropertyUtil.getString("TIFFImageEncoder13"));
+//        }
+//    }
 
     /**
      * Performs PackBits compression on a tile of data.

@@ -34,7 +34,7 @@ import org.apache.xmlgraphics.xmp.schemas.pdf.XAPMMXMPSchema;
  */
 public final class XMPSchemaRegistry {
 
-    private static XMPSchemaRegistry instance;
+    private static XMPSchemaRegistry instance = new XMPSchemaRegistry();
 
     private Map schemas = new java.util.HashMap();
 
@@ -44,9 +44,6 @@ public final class XMPSchemaRegistry {
 
     /** @return the singleton instance of the XMP schema registry. */
     public static XMPSchemaRegistry getInstance() {
-        if (instance == null) {
-            instance = new XMPSchemaRegistry();
-        }
         return instance;
     }
 

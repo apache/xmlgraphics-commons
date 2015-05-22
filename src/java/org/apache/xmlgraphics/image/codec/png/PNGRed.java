@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.zip.Inflater;
@@ -73,7 +74,6 @@ public class PNGRed extends AbstractRed {
         int length;
         int type;
         byte[] data;
-        int crc;
 
         String typeString;
 
@@ -81,7 +81,6 @@ public class PNGRed extends AbstractRed {
             this.length = length;
             this.type = type;
             this.data = data;
-            this.crc = crc;
 
             typeString = "";
             typeString += (char)(type >> 24);
@@ -127,7 +126,7 @@ public class PNGRed extends AbstractRed {
         }
 
         public String getString4(int offset) {
-            String s = new String();
+            String s = "";
             s += (char)data[offset];
             s += (char)data[offset + 1];
             s += (char)data[offset + 2];
@@ -388,90 +387,83 @@ public class PNGRed extends AbstractRed {
             properties.put("file_type", "PNG v. 1.0");
         }
 
-        try {
-            long magic = distream.readLong();
-            if (magic != 0x89504e470d0a1a0aL) {
-                String msg = PropertyUtil.getString("PNGImageDecoder0");
-                throw new RuntimeException(msg);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            String msg = PropertyUtil.getString("PNGImageDecoder1");
+        long magic = distream.readLong();
+        if (magic != 0x89504e470d0a1a0aL) {
+            String msg = PropertyUtil.getString("PNGImageDecoder0");
             throw new RuntimeException(msg);
         }
 
         do {
-            try {
-                PNGChunk chunk;
+            PNGChunk chunk;
 
-                String chunkType = getChunkType(distream);
-                if (chunkType.equals("IHDR")) {
-                    chunk = readChunk(distream);
-                    parse_IHDR_chunk(chunk);
-                } else if (chunkType.equals("PLTE")) {
-                    chunk = readChunk(distream);
-                    parse_PLTE_chunk(chunk);
-                } else if (chunkType.equals("IDAT")) {
-                    chunk = readChunk(distream);
-                    streamVec.add(new ByteArrayInputStream(chunk.getData()));
-                } else if (chunkType.equals("IEND")) {
-                    chunk = readChunk(distream);
+            String chunkType = getChunkType(distream);
+            if (chunkType.equals("IHDR")) {
+                chunk = readChunk(distream);
+                parse_IHDR_chunk(chunk);
+            } else if (chunkType.equals("PLTE")) {
+                chunk = readChunk(distream);
+                parse_PLTE_chunk(chunk);
+            } else if (chunkType.equals("IDAT")) {
+                chunk = readChunk(distream);
+                streamVec.add(new ByteArrayInputStream(chunk.getData()));
+            } else if (chunkType.equals("IEND")) {
+                chunk = readChunk(distream);
+                try {
                     parse_IEND_chunk(chunk);
-                    break; // fall through to the bottom
-                } else if (chunkType.equals("bKGD")) {
-                    chunk = readChunk(distream);
-                    parse_bKGD_chunk(chunk);
-                } else if (chunkType.equals("cHRM")) {
-                    chunk = readChunk(distream);
-                    parse_cHRM_chunk(chunk);
-                } else if (chunkType.equals("gAMA")) {
-                    chunk = readChunk(distream);
-                    parse_gAMA_chunk(chunk);
-                } else if (chunkType.equals("hIST")) {
-                    chunk = readChunk(distream);
-                    parse_hIST_chunk(chunk);
-                } else if (chunkType.equals("iCCP")) {
-                    chunk = readChunk(distream);
-                    parse_iCCP_chunk(chunk);
-                } else if (chunkType.equals("pHYs")) {
-                    chunk = readChunk(distream);
-                    parse_pHYs_chunk(chunk);
-                } else if (chunkType.equals("sBIT")) {
-                    chunk = readChunk(distream);
-                    parse_sBIT_chunk(chunk);
-                } else if (chunkType.equals("sRGB")) {
-                    chunk = readChunk(distream);
-                    parse_sRGB_chunk(chunk);
-                } else if (chunkType.equals("tEXt")) {
-                    chunk = readChunk(distream);
-                    parse_tEXt_chunk(chunk);
-                } else if (chunkType.equals("tIME")) {
-                    chunk = readChunk(distream);
-                    parse_tIME_chunk(chunk);
-                } else if (chunkType.equals("tRNS")) {
-                    chunk = readChunk(distream);
-                    parse_tRNS_chunk(chunk);
-                } else if (chunkType.equals("zTXt")) {
-                    chunk = readChunk(distream);
-                    parse_zTXt_chunk(chunk);
-                } else {
-                    chunk = readChunk(distream);
-                    // Output the chunk data in raw form
-
-                    String type = chunk.getTypeString();
-                    byte[] data = chunk.getData();
-                    if (encodeParam != null) {
-                        encodeParam.addPrivateChunk(type, data);
-                    }
-                    if (emitProperties) {
-                        String key = "chunk_" + chunkIndex++ + ':' + type;
-                        properties.put(key.toLowerCase(), data);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    String msg = PropertyUtil.getString("PNGImageDecoder2");
+                    throw new RuntimeException(msg);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                String msg = PropertyUtil.getString("PNGImageDecoder2");
-                throw new RuntimeException(msg);
+                break; // fall through to the bottom
+            } else if (chunkType.equals("bKGD")) {
+                chunk = readChunk(distream);
+                parse_bKGD_chunk(chunk);
+            } else if (chunkType.equals("cHRM")) {
+                chunk = readChunk(distream);
+                parse_cHRM_chunk(chunk);
+            } else if (chunkType.equals("gAMA")) {
+                chunk = readChunk(distream);
+                parse_gAMA_chunk(chunk);
+            } else if (chunkType.equals("hIST")) {
+                chunk = readChunk(distream);
+                parse_hIST_chunk(chunk);
+            } else if (chunkType.equals("iCCP")) {
+                chunk = readChunk(distream);
+            } else if (chunkType.equals("pHYs")) {
+                chunk = readChunk(distream);
+                parse_pHYs_chunk(chunk);
+            } else if (chunkType.equals("sBIT")) {
+                chunk = readChunk(distream);
+                parse_sBIT_chunk(chunk);
+            } else if (chunkType.equals("sRGB")) {
+                chunk = readChunk(distream);
+                parse_sRGB_chunk(chunk);
+            } else if (chunkType.equals("tEXt")) {
+                chunk = readChunk(distream);
+                parse_tEXt_chunk(chunk);
+            } else if (chunkType.equals("tIME")) {
+                chunk = readChunk(distream);
+                parse_tIME_chunk(chunk);
+            } else if (chunkType.equals("tRNS")) {
+                chunk = readChunk(distream);
+                parse_tRNS_chunk(chunk);
+            } else if (chunkType.equals("zTXt")) {
+                chunk = readChunk(distream);
+                parse_zTXt_chunk(chunk);
+            } else {
+                chunk = readChunk(distream);
+                // Output the chunk data in raw form
+
+                String type = chunk.getTypeString();
+                byte[] data = chunk.getData();
+                if (encodeParam != null) {
+                    encodeParam.addPrivateChunk(type, data);
+                }
+                if (emitProperties) {
+                    String key = "chunk_" + chunkIndex++ + ':' + type;
+                    properties.put(key.toLowerCase(Locale.getDefault()), data);
+                }
             }
         } while (true);
 
@@ -594,7 +586,7 @@ public class PNGRed extends AbstractRed {
             encodeParam.setBitDepth(bitDepth);
         }
         if (emitProperties) {
-            properties.put("bit_depth", new Integer(bitDepth));
+            properties.put("bit_depth", bitDepth);
         }
 
         if (performGammaCorrection) {
@@ -604,7 +596,7 @@ public class PNGRed extends AbstractRed {
                 encodeParam.setGamma(gamma);
             }
             if (emitProperties) {
-                properties.put("gamma", new Float(gamma));
+                properties.put("gamma", gamma);
             }
         }
 
@@ -732,7 +724,7 @@ public class PNGRed extends AbstractRed {
             textArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "text_" + i + ':' + key;
-                properties.put(uniqueKey.toLowerCase(), val);
+                properties.put(uniqueKey.toLowerCase(Locale.getDefault()), val);
             }
         }
         if (encodeParam != null) {
@@ -749,7 +741,7 @@ public class PNGRed extends AbstractRed {
             ztextArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "ztext_" + i + ':' + key;
-                properties.put(uniqueKey.toLowerCase(), val);
+                properties.put(uniqueKey.toLowerCase(Locale.getDefault()), val);
             }
         }
         if (encodeParam != null) {
@@ -1091,14 +1083,14 @@ public class PNGRed extends AbstractRed {
             encodeParam.setChromaticity(chromaticity);
         }
         if (emitProperties) {
-            properties.put("white_point_x", new Float(chromaticity[0]));
-            properties.put("white_point_y", new Float(chromaticity[1]));
-            properties.put("red_x", new Float(chromaticity[2]));
-            properties.put("red_y", new Float(chromaticity[3]));
-            properties.put("green_x", new Float(chromaticity[4]));
-            properties.put("green_y", new Float(chromaticity[5]));
-            properties.put("blue_x", new Float(chromaticity[6]));
-            properties.put("blue_y", new Float(chromaticity[7]));
+            properties.put("white_point_x", chromaticity[0]);
+            properties.put("white_point_y", chromaticity[1]);
+            properties.put("red_x", chromaticity[2]);
+            properties.put("red_y", chromaticity[3]);
+            properties.put("green_x", chromaticity[4]);
+            properties.put("green_y", chromaticity[5]);
+            properties.put("blue_x", chromaticity[6]);
+            properties.put("blue_y", chromaticity[7]);
         }
     }
 
@@ -1116,7 +1108,7 @@ public class PNGRed extends AbstractRed {
             encodeParam.setGamma(fileGamma * exp);
         }
         if (emitProperties) {
-            properties.put("gamma", new Float(fileGamma * exp));
+            properties.put("gamma", fileGamma * exp);
         }
     }
 
@@ -1137,16 +1129,6 @@ public class PNGRed extends AbstractRed {
         }
     }
 
-    private void parse_iCCP_chunk(PNGChunk chunk) {
-        String name = "";
-        byte b;
-
-        int textIndex = 0;
-        while ((b = chunk.getByte(textIndex++)) != 0) {
-            name += (char)b;
-        }
-    }
-
     private void parse_pHYs_chunk(PNGChunk chunk) {
         int xPixelsPerUnit = chunk.getInt4(0);
         int yPixelsPerUnit = chunk.getInt4(4);
@@ -1158,10 +1140,10 @@ public class PNGRed extends AbstractRed {
                                              unitSpecifier);
         }
         if (emitProperties) {
-            properties.put("x_pixels_per_unit", new Integer(xPixelsPerUnit));
-            properties.put("y_pixels_per_unit", new Integer(yPixelsPerUnit));
+            properties.put("x_pixels_per_unit", xPixelsPerUnit);
+            properties.put("y_pixels_per_unit", yPixelsPerUnit);
             properties.put("pixel_aspect_ratio",
-                           new Float((float)xPixelsPerUnit / yPixelsPerUnit));
+                    (float) xPixelsPerUnit / yPixelsPerUnit);
             if (unitSpecifier == 1) {
                 properties.put("pixel_units", "Meters");
             } else if (unitSpecifier != 0) {
@@ -1223,15 +1205,15 @@ public class PNGRed extends AbstractRed {
                 encodeParam.setChromaticity(chromaticity);
             }
             if (emitProperties) {
-                properties.put("gamma", new Float(gamma));
-                properties.put("white_point_x", new Float(chromaticity[0]));
-                properties.put("white_point_y", new Float(chromaticity[1]));
-                properties.put("red_x", new Float(chromaticity[2]));
-                properties.put("red_y", new Float(chromaticity[3]));
-                properties.put("green_x", new Float(chromaticity[4]));
-                properties.put("green_y", new Float(chromaticity[5]));
-                properties.put("blue_x", new Float(chromaticity[6]));
-                properties.put("blue_y", new Float(chromaticity[7]));
+                properties.put("gamma", gamma);
+                properties.put("white_point_x", chromaticity[0]);
+                properties.put("white_point_y", chromaticity[1]);
+                properties.put("red_x", chromaticity[2]);
+                properties.put("red_y", chromaticity[3]);
+                properties.put("green_x", chromaticity[4]);
+                properties.put("green_y", chromaticity[5]);
+                properties.put("blue_x", chromaticity[6]);
+                properties.put("blue_y", chromaticity[7]);
             }
         }
     }

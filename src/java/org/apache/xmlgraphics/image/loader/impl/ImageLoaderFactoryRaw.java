@@ -64,14 +64,14 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES;
+        return MIMES.clone();
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         for (int i = 0, c = MIMES.length; i < c; i++) {
             if (MIMES[i].equals(mime)) {
-                return FLAVORS[i];
+                return FLAVORS[i].clone();
             }
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);

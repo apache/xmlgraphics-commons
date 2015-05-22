@@ -43,7 +43,7 @@ public class NamedColorProfile {
             RenderingIntent intent) {
         this.profileName = profileName;
         this.copyright = copyright;
-        this.namedColors = namedColors;
+        this.namedColors = namedColors.clone();
         this.renderingIntent = intent;
     }
 

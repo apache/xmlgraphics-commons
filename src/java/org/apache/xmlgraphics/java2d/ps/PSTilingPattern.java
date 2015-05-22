@@ -437,8 +437,8 @@ public class PSTilingPattern {
             ^ ((xUID != null) ? xUID.hashCode() : 0)
             ^ ((paintProc != null) ? paintProc.hashCode() : 0)
             ^ ((bBox != null) ? bBox.hashCode() : 0)
-            ^ new Double(xStep).hashCode()
-            ^ new Double(yStep).hashCode()
+            ^ Double.valueOf(xStep).hashCode()
+            ^ Double.valueOf(yStep).hashCode()
             ^ paintType
             ^ tilingType
             ^ ((texture != null) ? texture.hashCode() : 0);

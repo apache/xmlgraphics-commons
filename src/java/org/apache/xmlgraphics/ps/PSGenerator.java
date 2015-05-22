@@ -440,7 +440,7 @@ public class PSGenerator implements PSCommandMap {
                 } else if (params[i] == DSCConstants.ATEND) {
                     tempBuffer.append(DSCConstants.ATEND);
                 } else if (params[i] instanceof Double) {
-                    tempBuffer.append(formatDouble(((Double)params[i]).doubleValue()));
+                    tempBuffer.append(formatDouble((Double) params[i]));
                 } else if (params[i] instanceof Number) {
                     tempBuffer.append(params[i].toString());
                 } else if (params[i] instanceof Date) {

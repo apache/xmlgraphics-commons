@@ -70,7 +70,7 @@ public class WriterOutputStream extends OutputStream {
         if (encoding != null) {
             writer.write(new String(buf, offset, length, encoding));
         } else {
-            writer.write(new String(buf, offset, length));
+            writer.write(new String(buf, offset, length, "UTF-8"));
         }
     }
 

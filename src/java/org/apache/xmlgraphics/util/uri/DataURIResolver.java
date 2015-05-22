@@ -68,7 +68,12 @@ public class DataURIResolver implements URIResolver {
         String header = href.substring(0, commaPos);
         String data = href.substring(commaPos + 1);
         if (header.endsWith(";base64")) {
-            byte[] bytes = data.getBytes();
+            byte[] bytes = new byte[0];
+            try {
+                bytes = data.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             ByteArrayInputStream encodedStream = new ByteArrayInputStream(bytes);
             Base64DecodeStream decodedStream = new Base64DecodeStream(
                     encodedStream);

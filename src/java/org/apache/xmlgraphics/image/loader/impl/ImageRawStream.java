@@ -193,7 +193,7 @@ public class ImageRawStream extends AbstractImage {
          * @param data the byte array
          */
         public ByteArrayStreamFactory(byte[] data) {
-            this.data = data;
+            this.data = data.clone();
         }
 
         /** {@inheritDoc} */

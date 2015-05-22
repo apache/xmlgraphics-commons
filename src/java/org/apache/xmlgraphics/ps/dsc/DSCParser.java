@@ -132,7 +132,7 @@ public class DSCParser implements DSCParserConstants {
     private DSCComment parseDSCLine(String line) throws IOException, DSCException {
         int colon = line.indexOf(':');
         String name;
-        String value = "";
+        StringBuilder value = new StringBuilder();
         if (colon > 0) {
             name = line.substring(2, colon);
             int startOfValue = colon + 1;
@@ -140,8 +140,8 @@ public class DSCParser implements DSCParserConstants {
                 if (isWhitespace(line.charAt(startOfValue))) {
                     startOfValue++;
                 }
-                value = line.substring(startOfValue).trim();
-                if (value.equals(DSCConstants.ATEND.toString())) {
+                value = new StringBuilder(line.substring(startOfValue).trim());
+                if (value.toString().equals(DSCConstants.ATEND.toString())) {
                     return new DSCAtend(name);
                 }
             }
@@ -154,14 +154,14 @@ public class DSCParser implements DSCParserConstants {
                 } else if (!nextLine.startsWith("%%+")) {
                     break;
                 }
-                value = value + nextLine.substring(3);
+                value.append(nextLine.substring(3));
             }
             this.reader.reset();
         } else {
             name = line.substring(2);
-            value = null;
+            return parseDSCComment(name, null);
         }
-        return parseDSCComment(name, value);
+        return parseDSCComment(name, value.toString());
     }
 
     private DSCComment parseDSCComment(String name, String value) {
@@ -458,12 +458,17 @@ public class DSCParser implements DSCParserConstants {
         if (handler == null) {
             removeListener(this.nestedDocumentHandler);
         } else {
-            addListener(new DSCListener() {
-                public void processEvent(DSCEvent event, DSCParser parser) throws IOException,
-                        DSCException {
-                    handler.handle(event, parser);
-                }
-            });
+            MyDSCListener l = new MyDSCListener();
+            l.handler = handler;
+            addListener(l);
+        }
+    }
+
+    static class MyDSCListener implements DSCListener {
+        private NestedDocumentHandler handler;
+        public void processEvent(DSCEvent event, DSCParser parser) throws IOException,
+                DSCException {
+            handler.handle(event, parser);
         }
     }
 

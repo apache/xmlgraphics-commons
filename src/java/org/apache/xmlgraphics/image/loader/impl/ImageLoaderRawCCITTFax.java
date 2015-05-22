@@ -57,7 +57,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
     private static final int COMPRESSION_FAX_GROUP4 = 4;
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageLoaderRawCCITTFax.class);
+    protected static final Log log = LogFactory.getLog(ImageLoaderRawCCITTFax.class);
 
     /**
      * Main constructor.

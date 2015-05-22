@@ -50,7 +50,7 @@ import org.apache.xmlgraphics.image.loader.util.Penalty;
 public class ImageProviderPipeline {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageProviderPipeline.class);
+    protected static final Log log = LogFactory.getLog(ImageProviderPipeline.class);
 
     private ImageCache cache;
     private ImageLoader loader;

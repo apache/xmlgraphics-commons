@@ -37,13 +37,13 @@ public class ImageLoaderFactoryInternalTIFF extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES;
+        return MIMES.clone();
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         if (MimeConstants.MIME_TIFF.equals(mime)) {
-            return FLAVORS;
+            return FLAVORS.clone();
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
     }
