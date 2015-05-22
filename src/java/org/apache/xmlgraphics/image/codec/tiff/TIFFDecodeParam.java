@@ -72,6 +72,7 @@ import  org.apache.xmlgraphics.image.codec.util.ImageDecodeParam;
  */
 public class TIFFDecodeParam implements ImageDecodeParam {
 
+    private static final long serialVersionUID = -2371665950056848358L;
     private boolean decodePaletteAsShorts;
     private Long ifdOffset;
     private boolean convertJPEGYCbCrToRGB = true;
@@ -130,7 +131,7 @@ public class TIFFDecodeParam implements ImageDecodeParam {
      * the directory at that offset.
      */
     public void setIFDOffset(long offset) {
-        ifdOffset = new Long(offset);
+        ifdOffset = offset;
     }
 
     /**

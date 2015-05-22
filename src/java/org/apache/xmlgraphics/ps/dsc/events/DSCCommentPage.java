@@ -123,7 +123,7 @@ public class DSCCommentPage extends AbstractDSCComment {
      */
     public void generate(PSGenerator gen) throws IOException {
         gen.writeDSCComment(getName(),
-                new Object[] {getPageName(), new Integer(getPagePosition())});
+                new Object[] {getPageName(), getPagePosition()});
     }
 
 }

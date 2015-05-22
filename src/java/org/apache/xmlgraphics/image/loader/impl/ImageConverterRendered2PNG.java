@@ -40,6 +40,7 @@ public class ImageConverterRendered2PNG extends AbstractImageConverter {
     /** {@inheritDoc} */
     public Image convert(Image src, Map hints) throws ImageException, IOException {
         checkSourceFlavor(src);
+        assert src instanceof ImageRendered;
         ImageRendered rendered = (ImageRendered)src;
         ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(MimeConstants.MIME_PNG);
         if (writer == null) {

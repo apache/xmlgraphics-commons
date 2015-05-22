@@ -115,7 +115,7 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                     int bytesToEnd = reclen - 2;
                     // read Exif Header: 0x.45.78.69.66.00.00
                     int exif = in.readInt(); // 0x.45.78.69.66
-                    int tail = in.readUnsignedShort(); // 0x.00.00
+                    in.readUnsignedShort(); // 0x.00.00
                     // in.skipBytes(6);
                     bytesToEnd -= 6;
                     if (exif != EXIF) {
@@ -184,7 +184,7 @@ public class PreloaderJPEG extends AbstractImagePreloader implements JPEGConstan
                         bytesToEnd -= 12;
                         currentTIFFOffset += 12;
                     }
-                    int nextIFDOffset = in.readInt(); // not needed, but has thumbnail info
+                    in.readInt(); // not needed, but has thumbnail info
                     bytesToEnd -= 4;
                     currentTIFFOffset += 4;
                     if (resolutionOffset != 0) {

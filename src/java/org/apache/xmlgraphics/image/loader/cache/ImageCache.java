@@ -56,7 +56,7 @@ import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
 public class ImageCache {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageCache.class);
+    protected static final Log log = LogFactory.getLog(ImageCache.class);
 
     //Handling of invalid URIs
     private Map invalidURIs = Collections.synchronizedMap(new java.util.HashMap());
@@ -161,7 +161,7 @@ public class ImageCache {
         Long timestamp = (Long) invalidURIs.get(uri);
         boolean expired = (timestamp == null)
                 || this.invalidURIExpirationPolicy.isExpired(
-                        this.timeStampProvider, timestamp.longValue());
+                        this.timeStampProvider, timestamp);
         if (expired) {
             this.invalidURIs.remove(uri);
         }
@@ -203,7 +203,7 @@ public class ImageCache {
      * @param uri the URI of the invalid image
      */
     void registerInvalidURI(String uri) {
-        invalidURIs.put(uri, new Long(timeStampProvider.getTimeStamp()));
+        invalidURIs.put(uri, timeStampProvider.getTimeStamp());
 
         considerHouseKeeping();
     }

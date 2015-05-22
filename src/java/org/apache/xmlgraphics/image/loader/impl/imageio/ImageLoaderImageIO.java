@@ -74,7 +74,7 @@ import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 public class ImageLoaderImageIO extends AbstractImageLoader {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageLoaderImageIO.class);
+    protected static final Log log = LogFactory.getLog(ImageLoaderImageIO.class);
 
     private ImageFlavor targetFlavor;
 
@@ -124,15 +124,15 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                     reader.setInput(imgStream, false, ignoreMetadata);
                     final int pageIndex = ImageUtil.needPageIndexFromURI(info.getOriginalURI());
                     try {
-                        if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
+//                        if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
                             imageData = reader.read(pageIndex, param);
-                        } else {
-                            imageData = reader.read(pageIndex, param);
+//                        } else {
+//                            imageData = reader.read(pageIndex, param);
                             //imageData = reader.readAsRenderedImage(pageIndex, param);
                             //TODO Reenable the above when proper listeners are implemented
                             //to react to late pixel population (so the stream can be closed
                             //properly).
-                        }
+//                        }
                         if (iiometa == null) {
                             iiometa = reader.getImageMetadata(pageIndex);
                         }
@@ -228,7 +228,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                     child = ImageIOUtil.getChild(dim, "TransparentColor");
                     if (child != null) {
                         String value = child.getAttribute("value");
-                        if (value == null || value.length() == 0) {
+                        if (value.length() == 0) {
                             //ignore
                         } else if (cm.getNumColorComponents() == 1) {
                             int gray = Integer.parseInt(value);

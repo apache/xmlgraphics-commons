@@ -68,8 +68,8 @@ public class TIFFImageWriter extends AbstractImageWriter {
                 int denom;
 
                 if (ResolutionUnit.INCH == params.getResolutionUnit()) {
-                    numPixX = params.getXResolution().intValue();
-                    numPixY = params.getYResolution().intValue();
+                    numPixX = params.getXResolution();
+                    numPixY = params.getYResolution();
                     denom = 1;
                 } else {
                     // Set target resolution

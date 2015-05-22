@@ -114,7 +114,7 @@ public class XMPArray extends XMPComplexValue {
                 }
             }
         }
-        if (lang != null & v == null && valueForParentLanguage != null) {
+        if (lang != null && v == null && valueForParentLanguage != null) {
             //Use value found for parent language
             v = valueForParentLanguage;
         }

@@ -38,34 +38,37 @@ public class ImageConverterBitmap2G2D extends AbstractImageConverter {
     /** {@inheritDoc} */
     public Image convert(Image src, Map hints) {
         checkSourceFlavor(src);
+        assert src instanceof ImageRendered;
         final ImageRendered rendImage = (ImageRendered)src;
 
-        Graphics2DImagePainter painter = new Graphics2DImagePainter() {
-
-            public Dimension getImageSize() {
-                return rendImage.getSize().getDimensionMpt();
-            }
-
-            public void paint(Graphics2D g2d, Rectangle2D area) {
-                RenderedImage ri = rendImage.getRenderedImage();
-                double w = area.getWidth();
-                double h = area.getHeight();
-
-                AffineTransform at = new AffineTransform();
-                at.translate(area.getX(), area.getY());
-                //Scale image to fit
-                double sx = w / ri.getWidth();
-                double sy = h / ri.getHeight();
-                if (sx != 1.0 || sy != 1.0) {
-                    at.scale(sx, sy);
-                }
-                g2d.drawRenderedImage(ri, at);
-            }
-
-        };
-
+        Graphics2DImagePainterImpl painter = new Graphics2DImagePainterImpl(rendImage);
         ImageGraphics2D g2dImage = new ImageGraphics2D(src.getInfo(), painter);
         return g2dImage;
+    }
+
+    static class Graphics2DImagePainterImpl implements Graphics2DImagePainter {
+        ImageRendered rendImage;
+        public Graphics2DImagePainterImpl(ImageRendered rendImage) {
+            this.rendImage = rendImage;
+        }
+        public Dimension getImageSize() {
+            return rendImage.getSize().getDimensionMpt();
+        }
+        public void paint(Graphics2D g2d, Rectangle2D area) {
+            RenderedImage ri = rendImage.getRenderedImage();
+            double w = area.getWidth();
+            double h = area.getHeight();
+
+            AffineTransform at = new AffineTransform();
+            at.translate(area.getX(), area.getY());
+            //Scale image to fit
+            double sx = w / ri.getWidth();
+            double sy = h / ri.getHeight();
+            if (sx != 1.0 || sy != 1.0) {
+                at.scale(sx, sy);
+            }
+            g2d.drawRenderedImage(ri, at);
+        }
     }
 
     /** {@inheritDoc} */

@@ -54,10 +54,10 @@ public class DSCCommentHiResBoundingBox extends DSCCommentBoundingBox {
     public void generate(PSGenerator gen) throws IOException {
         if (getBoundingBox() != null) {
             gen.writeDSCComment(getName(), new Object[] {
-                new Double(getBoundingBox().getX()),
-                new Double(getBoundingBox().getY()),
-                new Double(getBoundingBox().getX() + getBoundingBox().getWidth()),
-                new Double(getBoundingBox().getY() + getBoundingBox().getHeight())});
+                    getBoundingBox().getX(),
+                    getBoundingBox().getY(),
+                    getBoundingBox().getX() + getBoundingBox().getWidth(),
+                    getBoundingBox().getY() + getBoundingBox().getHeight()});
         } else {
             gen.writeDSCComment(getName(), DSCConstants.ATEND);
         }

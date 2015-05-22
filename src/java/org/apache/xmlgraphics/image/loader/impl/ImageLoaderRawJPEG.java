@@ -51,7 +51,7 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConstants {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageLoaderRawJPEG.class);
+    protected static final Log log = LogFactory.getLog(ImageLoaderRawJPEG.class);
 
     /**
      * Main constructor.

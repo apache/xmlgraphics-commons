@@ -82,14 +82,14 @@ public class XMPHandler extends DefaultHandler {
         }
     }
 
-    private XMPComplexValue getCurrentComplexValue() {
-        Object obj = this.contextStack.peek();
-        if (obj instanceof XMPComplexValue) {
-            return (XMPComplexValue)obj;
-        } else {
-            return null;
-        }
-    }
+//    private XMPComplexValue getCurrentComplexValue() {
+//        Object obj = this.contextStack.peek();
+//        if (obj instanceof XMPComplexValue) {
+//            return (XMPComplexValue)obj;
+//        } else {
+//            return null;
+//        }
+//    }
 
     private XMPStructure getCurrentStructure() {
         Object obj = this.contextStack.peek();

@@ -185,7 +185,7 @@ public class DijkstraAlgorithm {
         priorityQueue.remove(vertex);
 
         //Update the lowest penalty.
-        lowestPenalties.put(vertex, new Integer(distance));
+        lowestPenalties.put(vertex, distance);
 
         //Insert the vertex again at the new position based on the lowest penalty
         priorityQueue.add(vertex);
@@ -199,7 +199,7 @@ public class DijkstraAlgorithm {
      */
     public int getLowestPenalty(Vertex vertex) {
         Integer d = ((Integer)lowestPenalties.get(vertex));
-        return (d == null) ? INFINITE : d.intValue();
+        return (d == null) ? INFINITE : d;
     }
 
     /**

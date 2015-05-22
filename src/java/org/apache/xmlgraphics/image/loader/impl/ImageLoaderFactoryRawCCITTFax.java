@@ -63,14 +63,14 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
 
     /** {@inheritDoc} */
     public String[] getSupportedMIMETypes() {
-        return MIMES;
+        return MIMES.clone();
     }
 
     /** {@inheritDoc} */
     public ImageFlavor[] getSupportedFlavors(String mime) {
         for (int i = 0, c = MIMES.length; i < c; i++) {
             if (MIMES[i].equals(mime)) {
-                return FLAVORS[i];
+                return FLAVORS[i].clone();
             }
         }
         throw new IllegalArgumentException("Unsupported MIME type: " + mime);
@@ -102,12 +102,12 @@ public class ImageLoaderFactoryRawCCITTFax extends AbstractImageLoaderFactory {
         if (compression == null) {
             return false;
         }
-        switch (compression.intValue()) {
+        switch (compression) {
         case TIFFImage.COMP_FAX_G3_1D:
         case TIFFImage.COMP_FAX_G3_2D:
         case TIFFImage.COMP_FAX_G4_2D:
             Integer stripCount = (Integer)imageInfo.getCustomObjects().get("TIFF_STRIP_COUNT");
-            boolean supported = (stripCount != null && stripCount.intValue() == 1);
+            boolean supported = (stripCount != null && stripCount == 1);
             if (!supported) {
                 log.trace("Raw CCITT loading not supported for multi-strip TIFF image");
             }

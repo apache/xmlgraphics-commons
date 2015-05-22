@@ -38,6 +38,7 @@ public class PSState implements Serializable {
     public static final String DEFAULT_DASH = "[] 0";
     /** Default color in PostScript */
     public static final Color DEFAULT_RGB_COLOR = Color.black;
+    private static final long serialVersionUID = -3862731539801753248L;
 
     private AffineTransform transform = new AffineTransform();
     private List transformConcatList = new java.util.ArrayList();

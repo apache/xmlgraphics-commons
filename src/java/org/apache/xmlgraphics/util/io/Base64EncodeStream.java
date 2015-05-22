@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.util.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 // CSOFF: ConstantName
 // CSOFF: InnerAssignment
@@ -67,12 +68,20 @@ public class Base64EncodeStream extends OutputStream {
     boolean closeOutOnClose;
 
     public Base64EncodeStream(OutputStream out) {
-        this.out = new PrintStream(out);
+        try {
+            this.out = new PrintStream(out, false, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         closeOutOnClose = true;
     }
 
     public Base64EncodeStream(OutputStream out, boolean closeOutOnClose) {
-        this.out = new PrintStream(out);
+        try {
+            this.out = new PrintStream(out, false, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         this.closeOutOnClose = closeOutOnClose;
     }
 

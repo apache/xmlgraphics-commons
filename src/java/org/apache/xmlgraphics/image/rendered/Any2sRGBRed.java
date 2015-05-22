@@ -286,6 +286,7 @@ public class Any2sRGBRed extends AbstractRed {
         }
 
         Raster srcRas = src.getData(wr.getBounds());
+        assert srcRas instanceof WritableRaster;
         WritableRaster srcWr  = (WritableRaster)srcRas;
 
         // Divide out alpha if we have it.  We need to do this since

@@ -36,7 +36,7 @@ public class PostScriptComment extends AbstractEvent {
      */
     public PostScriptComment(String comment) {
         if (comment != null && comment.startsWith("%")) {
-            this.comment = this.comment.substring(1);
+            this.comment = comment.substring(1);
         } else {
             this.comment = comment;
         }

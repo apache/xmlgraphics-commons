@@ -45,6 +45,7 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
  * be removed or changed in future releases of JAI.</b>
  */
 public abstract class PNGEncodeParam implements ImageEncodeParam {
+    private static final long serialVersionUID = -7851509538552141263L;
 
     /** Constant for use with the sRGB chunk. */
     public static final int INTENT_PERCEPTUAL = 0;
@@ -109,6 +110,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     }
 
     public static class Palette extends PNGEncodeParam {
+
+        private static final long serialVersionUID = -5181545170427733891L;
 
         /** Constructs an instance of <code>PNGEncodeParam.Palette</code>. */
         public Palette() { }
@@ -280,6 +283,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     public static class Gray extends PNGEncodeParam {
 
+        private static final long serialVersionUID = -2055439792025795274L;
+
         /** Constructs an instance of <code>PNGEncodeParam.Gray</code>. */
         public Gray() { }
 
@@ -444,6 +449,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     public static class RGB extends PNGEncodeParam {
 
+        private static final long serialVersionUID = -8918762026006670891L;
+
         /** Constructs an instance of <code>PNGEncodeParam.RGB</code>. */
         public RGB() { }
 
@@ -491,7 +498,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             if (rgb.length != 3) {
                 throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam27"));
             }
-            backgroundRGB = rgb;
+            backgroundRGB = rgb.clone();
             backgroundSet = true;
         }
 
@@ -507,7 +514,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             if (!backgroundSet) {
                 throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam9"));
             }
-            return backgroundRGB;
+            return backgroundRGB.clone();
         }
 
         // tRNS chunk
@@ -776,7 +783,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!paletteHistogramSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam14"));
         }
-        return paletteHistogram;
+        return paletteHistogram.clone();
     }
 
     /**
@@ -1068,7 +1075,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'tEXt' chunk will encode this information.
      */
     public void setText(String[] text) {
-        this.text = text;
+        this.text = text.clone();
         textSet = true;
     }
 
@@ -1085,7 +1092,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!textSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam20"));
         }
-        return text;
+        return text.clone();
     }
 
     /**
@@ -1117,7 +1124,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'tIME' chunk will encode this information.
      */
     public void setModificationTime(Date modificationTime) {
-        this.modificationTime = modificationTime;
+        this.modificationTime = (Date) modificationTime.clone();
         modificationTimeSet = true;
     }
 
@@ -1133,7 +1140,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!modificationTimeSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam21"));
         }
-        return modificationTime;
+        return (Date) modificationTime.clone();
     }
 
     /**
@@ -1182,7 +1189,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'zTXt' chunk will encode this information.
      */
     public void setCompressedText(String[] text) {
-        this.zText = text;
+        this.zText = text.clone();
         zTextSet = true;
     }
 
@@ -1201,7 +1208,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!zTextSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam22"));
         }
-        return zText;
+        return zText.clone();
     }
 
     /**
