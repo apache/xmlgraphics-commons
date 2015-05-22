@@ -240,7 +240,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * copied by reference.
      */
     public void setExtraFields(TIFFField[] extraFields) {
-        this.extraFields = extraFields.clone();
+        this.extraFields = extraFields;
     }
 
     /**
@@ -250,6 +250,6 @@ public class TIFFEncodeParam implements ImageEncodeParam {
         if (extraFields == null) {
             return new TIFFField[0];
         }
-        return extraFields.clone();
+        return extraFields;
     }
 }

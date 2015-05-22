@@ -149,7 +149,7 @@ public abstract class TransformStackElement implements Cloneable {
      * @return array of values containing this transform element's parameters
      */
     public double[] getTransformParameters() {
-        return transformParameters.clone();
+        return transformParameters;
     }
 
     /**

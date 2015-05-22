@@ -498,7 +498,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             if (rgb.length != 3) {
                 throw new IllegalArgumentException(PropertyUtil.getString("PNGEncodeParam27"));
             }
-            backgroundRGB = rgb.clone();
+            backgroundRGB = rgb;
             backgroundSet = true;
         }
 
@@ -514,7 +514,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
             if (!backgroundSet) {
                 throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam9"));
             }
-            return backgroundRGB.clone();
+            return backgroundRGB;
         }
 
         // tRNS chunk
@@ -783,7 +783,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!paletteHistogramSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam14"));
         }
-        return paletteHistogram.clone();
+        return paletteHistogram;
     }
 
     /**
@@ -1075,7 +1075,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'tEXt' chunk will encode this information.
      */
     public void setText(String[] text) {
-        this.text = text.clone();
+        this.text = text;
         textSet = true;
     }
 
@@ -1092,7 +1092,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!textSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam20"));
         }
-        return text.clone();
+        return text;
     }
 
     /**
@@ -1124,7 +1124,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'tIME' chunk will encode this information.
      */
     public void setModificationTime(Date modificationTime) {
-        this.modificationTime = (Date) modificationTime.clone();
+        this.modificationTime = modificationTime;
         modificationTimeSet = true;
     }
 
@@ -1140,7 +1140,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!modificationTimeSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam21"));
         }
-        return (Date) modificationTime.clone();
+        return modificationTime;
     }
 
     /**
@@ -1189,7 +1189,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
      * <p> The 'zTXt' chunk will encode this information.
      */
     public void setCompressedText(String[] text) {
-        this.zText = text.clone();
+        this.zText = text;
         zTextSet = true;
     }
 
@@ -1208,7 +1208,7 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
         if (!zTextSet) {
             throw new IllegalStateException(PropertyUtil.getString("PNGEncodeParam22"));
         }
-        return zText.clone();
+        return zText;
     }
 
     /**
