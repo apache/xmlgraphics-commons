@@ -56,7 +56,7 @@ public abstract class AbstractImageLoader implements ImageLoader {
             return false;
         }
         Boolean b = (Boolean)hints.get(ImageProcessingHints.IGNORE_COLOR_PROFILE);
-        return (b != null) && b.booleanValue();
+        return (b != null) && b;
     }
 
 }

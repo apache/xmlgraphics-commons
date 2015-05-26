@@ -43,7 +43,7 @@ import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 public class ImageLoaderInternalTIFF extends AbstractImageLoader {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageLoaderInternalTIFF.class);
+    protected static final Log log = LogFactory.getLog(ImageLoaderInternalTIFF.class);
 
     /**
      * Main constructor.

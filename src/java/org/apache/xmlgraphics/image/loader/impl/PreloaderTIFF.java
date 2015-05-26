@@ -104,7 +104,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                 dir = new TIFFDirectory(seekable, pageIndex);
             } catch (IllegalArgumentException iae) {
                 String errorMessage = MessageFormat.format(
-                        "Subimage {0} does not exist.", new Object[] {new Integer(pageIndex)});
+                        "Subimage {0} does not exist.", new Object[] {pageIndex});
                 throw new SubImageNotFoundException(errorMessage);
             }
             int width = (int)dir.getFieldAsLong(TIFFImageDecoder.TIFF_IMAGE_WIDTH);
@@ -157,7 +157,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
                 if (log.isTraceEnabled()) {
                     log.trace("TIFF compression: " + compression);
                 }
-                info.getCustomObjects().put("TIFF_COMPRESSION", new Integer(compression));
+                info.getCustomObjects().put("TIFF_COMPRESSION", compression);
             }
 
             fld = dir.getField(TIFFImageDecoder.TIFF_TILE_WIDTH);
@@ -178,7 +178,7 @@ public class PreloaderTIFF extends AbstractImagePreloader {
             if (log.isTraceEnabled()) {
                 log.trace("TIFF has " + stripCount + " strips.");
             }
-            info.getCustomObjects().put("TIFF_STRIP_COUNT", new Integer(stripCount));
+            info.getCustomObjects().put("TIFF_STRIP_COUNT", stripCount);
 
             try {
                 //Check if there is a next page

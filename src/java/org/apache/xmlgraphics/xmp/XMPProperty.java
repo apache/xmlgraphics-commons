@@ -40,7 +40,6 @@ public class XMPProperty implements XMLizable {
     private Object value;
     private String xmllang;
     private Map qualifiers;
-    private boolean uri;
 
     /**
      * Creates a new XMP property.
@@ -50,7 +49,6 @@ public class XMPProperty implements XMLizable {
     public XMPProperty(QName name, Object value) {
         this.name = name;
         this.value = value;
-        this.uri = false;
     }
 
     /** @return the qualified name of the property (namespace URI + local name) */

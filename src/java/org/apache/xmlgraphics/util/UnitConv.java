@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.util;
 
 import java.awt.geom.AffineTransform;
+import java.util.Locale;
 
 /**
  * Utility class for unit conversions.
@@ -189,24 +190,24 @@ public final class UnitConv {
     public static int convert(String value) {
         double retValue = 0;
         if (value != null) {
-            if (value.toLowerCase().indexOf(PX) > 0) {
+            if (value.toLowerCase(Locale.getDefault()).indexOf(PX) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 1000;
-            } else if (value.toLowerCase().indexOf(INCH) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(INCH) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 72000;
-            } else if (value.toLowerCase().indexOf(CM) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(CM) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 28346.4567;
-            } else if (value.toLowerCase().indexOf(MM) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(MM) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 2834.64567;
-            } else if (value.toLowerCase().indexOf(MPT) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(MPT) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 3));
-            } else if (value.toLowerCase().indexOf(POINT) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(POINT) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 1000;
-            } else if (value.toLowerCase().indexOf(PICA) > 0) {
+            } else if (value.toLowerCase(Locale.getDefault()).indexOf(PICA) >= 0) {
                 retValue = Double.parseDouble(value.substring(0, value.length() - 2));
                 retValue *= 12000;
             }

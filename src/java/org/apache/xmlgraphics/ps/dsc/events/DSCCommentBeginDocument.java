@@ -107,7 +107,7 @@ public class DSCCommentBeginDocument extends AbstractDSCComment {
         String name = (String)iter.next();
         this.resource = new PSResource(PSResource.TYPE_FILE, name);
         if (iter.hasNext()) {
-            this.version = new Float(iter.next().toString());
+            this.version = Float.valueOf(iter.next().toString());
             this.type = null;
             if (iter.hasNext()) {
                 this.type = (String)iter.next();

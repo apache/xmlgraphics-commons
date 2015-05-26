@@ -45,6 +45,7 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
  */
 public class TIFFEncodeParam implements ImageEncodeParam {
 
+    private static final long serialVersionUID = 2471949735040024055L;
     private CompressionValue compression = CompressionValue.NONE;
 
     private boolean writeTiled;
@@ -246,6 +247,9 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * Returns the value set by <code>setExtraFields()</code>.
      */
     public TIFFField[] getExtraFields() {
+        if (extraFields == null) {
+            return new TIFFField[0];
+        }
         return extraFields;
     }
 }

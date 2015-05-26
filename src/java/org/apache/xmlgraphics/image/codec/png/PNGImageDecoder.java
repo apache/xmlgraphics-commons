@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -329,7 +330,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         }
 
         do {
-            try {
+//            try {
                 PNGChunk chunk;
 
                 String chunkType = PNGChunk.getChunkType(distream);
@@ -344,7 +345,13 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     streamVec.add(new ByteArrayInputStream(chunk.getData()));
                 } else if (chunkType.equals(PNGChunk.ChunkType.IEND.name())) {
                     chunk = PNGChunk.readChunk(distream);
-                    parse_IEND_chunk(chunk);
+                    try {
+                        parse_IEND_chunk(chunk);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        String msg = PropertyUtil.getString("PNGImageDecoder2");
+                        throw new RuntimeException(msg);
+                    }
                     break; // fall through to the bottom
                 } else if (chunkType.equals(PNGChunk.ChunkType.bKGD.name())) {
                     chunk = PNGChunk.readChunk(distream);
@@ -393,14 +400,14 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                     }
                     if (emitProperties) {
                         String key = "chunk_" + chunkIndex++ + ':' + type;
-                        properties.put(key.toLowerCase(), data);
+                        properties.put(key.toLowerCase(Locale.getDefault()), data);
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                String msg = PropertyUtil.getString("PNGImageDecoder2");
-                throw new RuntimeException(msg);
-            }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                String msg = PropertyUtil.getString("PNGImageDecoder2");
+//                throw new RuntimeException(msg);
+//            }
         } while (true);
 
         // Final post-processing
@@ -484,7 +491,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             encodeParam.setBitDepth(bitDepth);
         }
         if (emitProperties) {
-            properties.put("bit_depth", new Integer(bitDepth));
+            properties.put("bit_depth", bitDepth);
         }
 
         if (performGammaCorrection) {
@@ -494,7 +501,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                 encodeParam.setGamma(gamma);
             }
             if (emitProperties) {
-                properties.put("gamma", new Float(gamma));
+                properties.put("gamma", gamma);
             }
         }
 
@@ -622,7 +629,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             textArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "text_" + i + ':' + key;
-                properties.put(uniqueKey.toLowerCase(), val);
+                properties.put(uniqueKey.toLowerCase(Locale.getDefault()), val);
             }
         }
         if (encodeParam != null) {
@@ -639,7 +646,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             ztextArray[2 * i + 1] = val;
             if (emitProperties) {
                 String uniqueKey = "ztext_" + i + ':' + key;
-                properties.put(uniqueKey.toLowerCase(), val);
+                properties.put(uniqueKey.toLowerCase(Locale.getDefault()), val);
             }
         }
         if (encodeParam != null) {
@@ -968,14 +975,14 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             encodeParam.setChromaticity(chromaticity);
         }
         if (emitProperties) {
-            properties.put("white_point_x", new Float(chromaticity[0]));
-            properties.put("white_point_y", new Float(chromaticity[1]));
-            properties.put("red_x", new Float(chromaticity[2]));
-            properties.put("red_y", new Float(chromaticity[3]));
-            properties.put("green_x", new Float(chromaticity[4]));
-            properties.put("green_y", new Float(chromaticity[5]));
-            properties.put("blue_x", new Float(chromaticity[6]));
-            properties.put("blue_y", new Float(chromaticity[7]));
+            properties.put("white_point_x", chromaticity[0]);
+            properties.put("white_point_y", chromaticity[1]);
+            properties.put("red_x", chromaticity[2]);
+            properties.put("red_y", chromaticity[3]);
+            properties.put("green_x", chromaticity[4]);
+            properties.put("green_y", chromaticity[5]);
+            properties.put("blue_x", chromaticity[6]);
+            properties.put("blue_y", chromaticity[7]);
         }
     }
 
@@ -993,7 +1000,7 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
             encodeParam.setGamma(fileGamma * exp);
         }
         if (emitProperties) {
-            properties.put("gamma", new Float(fileGamma * exp));
+            properties.put("gamma", fileGamma * exp);
         }
     }
 
@@ -1015,13 +1022,13 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     }
 
     private void parse_iCCP_chunk(PNGChunk chunk) {
-        String name = "";  // todo simplify this
-        byte b;
+//        String name = "";  // todo simplify this
+//        byte b;
 
-        int textIndex = 0;
-        while ((b = chunk.getByte(textIndex++)) != 0) {
-            name += (char)b;
-        }
+//        int textIndex = 0;
+//        while ((b = chunk.getByte(textIndex++)) != 0) {
+//            name += (char)b;
+//        }
     }
 
     private void parse_pHYs_chunk(PNGChunk chunk) {
@@ -1035,10 +1042,10 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                                              unitSpecifier);
         }
         if (emitProperties) {
-            properties.put("x_pixels_per_unit", new Integer(xPixelsPerUnit));
-            properties.put("y_pixels_per_unit", new Integer(yPixelsPerUnit));
+            properties.put("x_pixels_per_unit", xPixelsPerUnit);
+            properties.put("y_pixels_per_unit", yPixelsPerUnit);
             properties.put("pixel_aspect_ratio",
-                           new Float((float)xPixelsPerUnit / yPixelsPerUnit));
+                    (float) xPixelsPerUnit / yPixelsPerUnit);
             if (unitSpecifier == 1) {
                 properties.put("pixel_units", "Meters");
             } else if (unitSpecifier != 0) {
@@ -1100,15 +1107,15 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
                 encodeParam.setChromaticity(chromaticity);
             }
             if (emitProperties) {
-                properties.put("gamma", new Float(gamma));
-                properties.put("white_point_x", new Float(chromaticity[0]));
-                properties.put("white_point_y", new Float(chromaticity[1]));
-                properties.put("red_x", new Float(chromaticity[2]));
-                properties.put("red_y", new Float(chromaticity[3]));
-                properties.put("green_x", new Float(chromaticity[4]));
-                properties.put("green_y", new Float(chromaticity[5]));
-                properties.put("blue_x", new Float(chromaticity[6]));
-                properties.put("blue_y", new Float(chromaticity[7]));
+                properties.put("gamma", gamma);
+                properties.put("white_point_x", chromaticity[0]);
+                properties.put("white_point_y", chromaticity[1]);
+                properties.put("red_x", chromaticity[2]);
+                properties.put("red_y", chromaticity[3]);
+                properties.put("green_x", chromaticity[4]);
+                properties.put("green_y", chromaticity[5]);
+                properties.put("blue_x", chromaticity[6]);
+                properties.put("blue_y", chromaticity[7]);
             }
         }
     }

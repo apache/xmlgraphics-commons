@@ -78,6 +78,8 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
  */
 public class PNGDecodeParam implements ImageDecodeParam {
 
+    private static final long serialVersionUID = 3957265194926624623L;
+
     /**
      * Constructs a default instance of <code>PNGDecodeParam</code>.
      */

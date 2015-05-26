@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 public class JPEGFile implements JPEGConstants {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(JPEGFile.class);
+    protected static final Log log = LogFactory.getLog(JPEGFile.class);
 
     private DataInput in;
 

@@ -392,9 +392,9 @@ public class PSTilingPattern {
             }
 
             // define color image: width height bits/comp matrix
-            //                        datasrc0 � datasrcncomp-1 multi ncomp colorimage
+            //                        datasrc0 datasrcncomp-1 multi ncomp colorimage
             sb.append(width + " " + height + " 8 " + "matrix\n");   // width height bits/comp matrix
-            int [] argb = new int[width * height];                  // datasrc0 � datasrcncomp-1
+            int [] argb = new int[width * height];                  // datasrc0 datasrcncomp-1
             sb.append("{<");
             texture.getImage().getRGB(0, 0, width, height, argb, 0, width);
             int count = 0;
@@ -437,8 +437,8 @@ public class PSTilingPattern {
             ^ ((xUID != null) ? xUID.hashCode() : 0)
             ^ ((paintProc != null) ? paintProc.hashCode() : 0)
             ^ ((bBox != null) ? bBox.hashCode() : 0)
-            ^ new Double(xStep).hashCode()
-            ^ new Double(yStep).hashCode()
+            ^ Double.valueOf(xStep).hashCode()
+            ^ Double.valueOf(yStep).hashCode()
             ^ paintType
             ^ tilingType
             ^ ((texture != null) ? texture.hashCode() : 0);

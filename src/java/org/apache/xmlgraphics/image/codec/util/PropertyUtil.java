@@ -28,17 +28,17 @@ public final class PropertyUtil {
     private PropertyUtil() {
     }
 
-    protected static final String RESOURCES =
+    private static final String RESOURCES =
         "org.apache.xmlgraphics.image.codec.Messages";
 
 
-    protected static LocalizableSupport localizableSupport =
+    private static final LocalizableSupport LOCALIZABLESUPPORT =
         new LocalizableSupport(
         RESOURCES, PropertyUtil.class.getClassLoader());
 
     public static String getString(String key) {
         try {
-            return localizableSupport.formatMessage(key, null);
+            return LOCALIZABLESUPPORT.formatMessage(key, null);
         } catch (MissingResourceException e) {
             return key;
         }

@@ -80,7 +80,7 @@ public final class XMPPacketParser {
             throw new IOException("Invalid XMP packet header!");
         }
         ByteArrayOutputStream baout = null;
-        Metadata metadata = new Metadata();
+        Metadata metadata;
         try {
             //TODO think about not buffering this but for example, parse in another thread
             //ex. using PipedInput/OutputStream

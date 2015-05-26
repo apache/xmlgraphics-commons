@@ -81,7 +81,7 @@ public class DSCCommentLanguageLevel extends AbstractDSCComment {
         if (level <= 0) {
             throw new IllegalStateException("Language Level was not properly set");
         }
-        gen.writeDSCComment(getName(), new Integer(getLanguageLevel()));
+        gen.writeDSCComment(getName(), getLanguageLevel());
     }
 
 }

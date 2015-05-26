@@ -45,6 +45,7 @@ import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
  * be removed or changed in future releases of JAI.</b>
  */
 public abstract class PNGEncodeParam implements ImageEncodeParam {
+    private static final long serialVersionUID = -7851509538552141263L;
 
     /** Constant for use with the sRGB chunk. */
     public static final int INTENT_PERCEPTUAL = 0;
@@ -109,6 +110,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     }
 
     public static class Palette extends PNGEncodeParam {
+
+        private static final long serialVersionUID = -5181545170427733891L;
 
         /** Constructs an instance of <code>PNGEncodeParam.Palette</code>. */
         public Palette() { }
@@ -280,6 +283,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
 
     public static class Gray extends PNGEncodeParam {
 
+        private static final long serialVersionUID = -2055439792025795274L;
+
         /** Constructs an instance of <code>PNGEncodeParam.Gray</code>. */
         public Gray() { }
 
@@ -443,6 +448,8 @@ public abstract class PNGEncodeParam implements ImageEncodeParam {
     }
 
     public static class RGB extends PNGEncodeParam {
+
+        private static final long serialVersionUID = -8918762026006670891L;
 
         /** Constructs an instance of <code>PNGEncodeParam.RGB</code>. */
         public RGB() { }
