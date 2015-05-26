@@ -100,7 +100,7 @@ public class ImageWriterParams {
      * @param forceBaseline force baseline quantization table
      */
     public void setJPEGQuality(float quality, boolean forceBaseline) {
-        this.jpegQuality = new Float(quality);
+        this.jpegQuality = quality;
         this.jpegForceBaseline = forceBaseline ? Boolean.TRUE : Boolean.FALSE;
     }
 
@@ -177,7 +177,7 @@ public class ImageWriterParams {
      * @param resolution the resolution value
      */
     public void setXResolution(int resolution) {
-        xResolution = Integer.valueOf(resolution);
+        xResolution = resolution;
     }
 
     /**
@@ -192,7 +192,7 @@ public class ImageWriterParams {
      * @param resolution the resolution value
      */
     public void setYResolution(int resolution) {
-        yResolution = Integer.valueOf(resolution);
+        yResolution = resolution;
     }
 
     /**

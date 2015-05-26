@@ -33,6 +33,7 @@ public class ImageConverterBuffered2Rendered extends AbstractImageConverter {
     /** {@inheritDoc} */
     public Image convert(Image src, Map hints) {
         checkSourceFlavor(src);
+        assert src instanceof ImageBuffered;
         ImageBuffered buffered = (ImageBuffered)src;
         return new ImageRendered(buffered.getInfo(), buffered
                 .getRenderedImage(), buffered.getTransparentColor());

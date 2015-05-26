@@ -78,8 +78,8 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
     /** {@inheritDoc} */
     protected void writeFileHeader() throws IOException {
-        final Long pagewidth = new Long(this.width);
-        final Long pageheight = new Long(this.height);
+        final Long pagewidth = (long) this.width;
+        final Long pageheight = (long) this.height;
 
         //PostScript Header
         gen.writeln(DSCConstants.PS_ADOBE_30);
@@ -91,7 +91,7 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
         gen.writeDSCComment(DSCConstants.PAGES, DSCConstants.ATEND);
         gen.writeDSCComment(DSCConstants.BBOX, new Object[]
                 {ZERO, ZERO, pagewidth, pageheight});
-        gen.writeDSCComment(DSCConstants.LANGUAGE_LEVEL, new Integer(gen.getPSLevel()));
+        gen.writeDSCComment(DSCConstants.LANGUAGE_LEVEL, gen.getPSLevel());
         gen.writeDSCComment(DSCConstants.END_COMMENTS);
 
         //Defaults
@@ -113,11 +113,11 @@ public class PSDocumentGraphics2D extends AbstractPSDocumentGraphics2D {
 
     /** {@inheritDoc} */
     protected void writePageHeader() throws IOException {
-        Integer pageNumber = new Integer(this.pagecount);
+        Integer pageNumber = this.pagecount;
         gen.writeDSCComment(DSCConstants.PAGE, new Object[]
                 {pageNumber.toString(), pageNumber});
         gen.writeDSCComment(DSCConstants.PAGE_BBOX, new Object[]
-                {ZERO, ZERO, new Integer(width), new Integer(height)});
+                {ZERO, ZERO, width, height});
         gen.writeDSCComment(DSCConstants.BEGIN_PAGE_SETUP);
         gen.writeln("<<");
         gen.writeln("/PageSize [" + width + " " + height + "]");

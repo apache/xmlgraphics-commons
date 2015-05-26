@@ -38,10 +38,9 @@ public class TIFFLZWDecoder {
     int tableIndex;
     int bitsToGet = 9;
     int bytePointer;
-    int bitPointer;
+//    int bitPointer;
     int dstIndex;
     int w;
-    int h;
     int predictor;
     int samplesPerPixel;
     int nextData;
@@ -76,12 +75,12 @@ public class TIFFLZWDecoder {
         initializeStringTable();
 
         this.data = data;
-        this.h = h;
+//        this.h = h;
         this.uncompData = uncompData;
 
         // Initialize pointers
         bytePointer = 0;
-        bitPointer = 0;
+//        bitPointer = 0;
         dstIndex = 0;
 
 

@@ -30,6 +30,7 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -80,7 +81,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
     protected ColorModel colorModel;
 
     /** The image's sources, stored in a Vector. */
-    protected List sources = new ArrayList();
+//    protected List sources = new ArrayList();
 
     /** A Hashtable containing the image properties. */
     protected Map properties = new HashMap();
@@ -233,7 +234,7 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      * <code>Object</code>, or the value <code>null</code>
      */
     public Object getProperty(String name) {
-        name = name.toLowerCase();
+        name = name.toLowerCase(Locale.getDefault());
         return properties.get(name);
     }
 
@@ -265,11 +266,11 @@ public abstract class SimpleRenderedImage implements RenderedImage {
      */
     public String[] getPropertyNames(String prefix) {
         String[] propertyNames = getPropertyNames();
-        if (propertyNames == null) {
-            return null;
-        }
+//        if (propertyNames == null) {
+//            return null;
+//        }
 
-        prefix = prefix.toLowerCase();
+        prefix = prefix.toLowerCase(Locale.getDefault());
 
         List names = new ArrayList();
         for (int i = 0; i < propertyNames.length; i++) {

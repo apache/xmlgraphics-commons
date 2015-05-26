@@ -52,7 +52,8 @@ public class ImageRepresentation implements Vertex {
 
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        return toString().equals(((ImageRepresentation)obj).toString());
+        assert obj != null;
+        return toString().equals(obj.toString());
     }
 
     /** {@inheritDoc} */

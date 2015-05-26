@@ -87,7 +87,7 @@ public class DSCCommentPages extends AbstractDSCComment {
      */
     public void generate(PSGenerator gen) throws IOException {
         if (getPageCount() > 0) {
-            gen.writeDSCComment(getName(), new Integer(getPageCount()));
+            gen.writeDSCComment(getName(), getPageCount());
         } else {
             gen.writeDSCComment(getName(), DSCConstants.ATEND);
         }

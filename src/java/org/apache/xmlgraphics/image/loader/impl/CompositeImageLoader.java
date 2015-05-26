@@ -39,7 +39,7 @@ import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
 public class CompositeImageLoader extends AbstractImageLoader {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(CompositeImageLoader.class);
+    protected static final Log log = LogFactory.getLog(CompositeImageLoader.class);
 
     private ImageLoader[] loaders;
 

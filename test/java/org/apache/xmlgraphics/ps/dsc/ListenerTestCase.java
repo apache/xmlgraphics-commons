@@ -110,7 +110,7 @@ public class ListenerTestCase {
                         throws IOException, DSCException {
                     if (event instanceof DSCCommentLanguageLevel) {
                         DSCCommentLanguageLevel level = (DSCCommentLanguageLevel) event;
-                        results.put("level", new Integer(level.getLanguageLevel()));
+                        results.put("level", level.getLanguageLevel());
                     }
                 }
             });
@@ -121,7 +121,7 @@ public class ListenerTestCase {
                 count++;
             }
             assertEquals(12, count);
-            assertEquals(new Integer(1), results.get("level"));
+            assertEquals(1, results.get("level"));
         } finally {
             IOUtils.closeQuietly(in);
         }

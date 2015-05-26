@@ -56,8 +56,8 @@ public class DSCCommentBeginResource extends AbstractResourceDSCComment {
      */
     public DSCCommentBeginResource(PSResource resource, int min, int max) {
         super(resource);
-        this.min = new Integer(min);
-        this.max = new Integer(max);
+        this.min = min;
+        this.max = max;
     }
 
     /**

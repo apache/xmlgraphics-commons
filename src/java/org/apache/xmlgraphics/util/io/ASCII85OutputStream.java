@@ -156,7 +156,7 @@ public class ASCII85OutputStream extends FilterOutputStream
                 for (int i = 0; i < ret.length; i++) {
                     if (ret[i] < 33 || ret[i] > 117) {
                         System.out.println("Illegal char value "
-                                        + new Integer(ret[i]));
+                                        + Integer.valueOf(ret[i]));
                     }
                 }
             }

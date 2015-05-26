@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.image.loader.pipeline;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -49,7 +50,7 @@ import org.apache.xmlgraphics.util.dijkstra.Vertex;
 public class PipelineFactory {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(PipelineFactory.class);
+    protected static final Log log = LogFactory.getLog(PipelineFactory.class);
 
     private ImageManager manager;
 
@@ -195,7 +196,9 @@ public class PipelineFactory {
     }
 
     /** Compares two pipelines based on their conversion penalty. */
-    private static class PipelineComparator implements Comparator {
+    private static class PipelineComparator implements Comparator, Serializable {
+
+        private static final long serialVersionUID = 1161513617996198090L;
 
         public int compare(Object o1, Object o2) {
             ImageProviderPipeline p1 = (ImageProviderPipeline)o1;

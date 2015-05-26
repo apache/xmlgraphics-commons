@@ -58,7 +58,7 @@ public final class MemoryCacheSeekableStream extends SeekableStream {
     private List data = new ArrayList();
 
     /** Number of sectors stored. */
-    int sectors;
+//    int sectors = 0;
 
     /** Number of bytes read. */
     int length;

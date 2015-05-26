@@ -41,7 +41,7 @@ import org.apache.xmlgraphics.ps.PSProcSets;
  */
 public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
 
-    protected static final Integer ZERO = new Integer(0);
+    protected static final Integer ZERO = 0;
 
     protected int width;
     protected int height;
@@ -274,7 +274,7 @@ public abstract class AbstractPSDocumentGraphics2D extends PSGraphics2D {
 
         //Finish document
         gen.writeDSCComment(DSCConstants.TRAILER);
-        gen.writeDSCComment(DSCConstants.PAGES, new Integer(this.pagecount));
+        gen.writeDSCComment(DSCConstants.PAGES, this.pagecount);
         gen.writeDSCComment(DSCConstants.EOF);
         gen.flush();
     }

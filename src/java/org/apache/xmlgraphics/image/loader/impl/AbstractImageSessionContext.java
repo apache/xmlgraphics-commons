@@ -53,7 +53,7 @@ import org.apache.xmlgraphics.io.XmlSourceUtil;
 public abstract class AbstractImageSessionContext implements ImageSessionContext {
 
     /** logger */
-    private static Log log = LogFactory.getLog(AbstractImageSessionContext.class);
+    private static final Log log = LogFactory.getLog(AbstractImageSessionContext.class);
 
     private static boolean noSourceReuse;
 
@@ -302,19 +302,17 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                         return null;
                     }
                 }
-                if (in != null) {
-                    in = ImageUtil.decorateMarkSupported(in);
-                    try {
-                        if (ImageUtil.isGZIPCompressed(in)) {
-                            //GZIPped stream are not seekable, so buffer/cache like other URLs
-                            directFileAccess = false;
-                        }
-                    } catch (IOException ioe) {
-                        log.error("Error while checking the InputStream for GZIP compression."
-                                + " Could not load image from system identifier '"
-                                + source.getSystemId() + "' (" + ioe.getMessage() + ")");
-                        return null;
+                in = ImageUtil.decorateMarkSupported(in);
+                try {
+                    if (ImageUtil.isGZIPCompressed(in)) {
+                        //GZIPped stream are not seekable, so buffer/cache like other URLs
+                        directFileAccess = false;
                     }
+                } catch (IOException ioe) {
+                    log.error("Error while checking the InputStream for GZIP compression."
+                            + " Could not load image from system identifier '"
+                            + source.getSystemId() + "' (" + ioe.getMessage() + ")");
+                    return null;
                 }
 
                 if (directFileAccess) {

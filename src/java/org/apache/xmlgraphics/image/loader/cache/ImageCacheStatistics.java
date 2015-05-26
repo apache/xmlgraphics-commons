@@ -73,9 +73,9 @@ public class ImageCacheStatistics implements ImageCacheListener {
     private void increaseEntry(Map map, Object key) {
         Integer v = (Integer)map.get(key);
         if (v == null) {
-            v = new Integer(1);
+            v = 1;
         } else {
-            v = new Integer(v.intValue() + 1);
+            v++;
         }
         map.put(key, v);
     }

@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.ps;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 // CSOFF: InnerAssignment
@@ -40,7 +41,7 @@ public class PSDictionary extends java.util.HashMap {
         /**
          * Simple token holding class
          */
-        private class Token {
+        private static class Token {
             /**
              * start index in string
              */
@@ -259,12 +260,13 @@ public class PSDictionary extends java.util.HashMap {
         if (dictionaryObj.size() != size()) {
             return false;
         }
-        for (Iterator it = keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Object e : entrySet()) {
+            Map.Entry entry = (Map.Entry) e;
+            String key = (String) entry.getKey();
             if (!dictionaryObj.containsKey(key)) {
                 return false;
             }
-            if (!dictionaryObj.get(key).equals(get(key))) {
+            if (!dictionaryObj.get(key).equals(entry.getValue())) {
                 return false;
             }
         }
@@ -293,14 +295,14 @@ public class PSDictionary extends java.util.HashMap {
             Object obj = super.get(key);
             if (obj instanceof java.util.ArrayList) {
                 List array = (List)obj;
-                String str = "[";
+                StringBuilder str = new StringBuilder("[");
                 for (int i = 0; i < array.size(); i++) {
                     Object element = array.get(i);
-                    str += element + " ";
+                    str.append(element + " ");
                 }
-                str = str.trim();
-                str += "]";
-                sb.append(str + "\n");
+                String str2 = str.toString().trim();
+                str2 += "]";
+                sb.append(str2 + "\n");
             } else {
                 sb.append(obj.toString() + "\n");
             }

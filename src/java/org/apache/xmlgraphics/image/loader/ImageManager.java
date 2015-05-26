@@ -43,7 +43,7 @@ import org.apache.xmlgraphics.io.XmlSourceUtil;
 public class ImageManager {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageManager.class);
+    protected static final Log log = LogFactory.getLog(ImageManager.class);
 
     /** Holds all registered interface implementations for the image package */
     private ImageImplRegistry registry;

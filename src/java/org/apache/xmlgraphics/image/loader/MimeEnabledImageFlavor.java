@@ -41,4 +41,23 @@ public class MimeEnabledImageFlavor extends RefinedImageFlavor {
         return this.mime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        if (!super.equals(o)) { return false; }
+
+        MimeEnabledImageFlavor that = (MimeEnabledImageFlavor) o;
+
+        if (mime != null ? !mime.equals(that.mime) : that.mime != null) { return false; }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (mime != null ? mime.hashCode() : 0);
+        return result;
+    }
 }

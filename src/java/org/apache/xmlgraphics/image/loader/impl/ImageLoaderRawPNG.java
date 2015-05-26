@@ -44,7 +44,7 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class ImageLoaderRawPNG extends AbstractImageLoader {
 
     /** logger */
-    protected static Log log = LogFactory.getLog(ImageLoaderRawPNG.class);
+    protected static final Log log = LogFactory.getLog(ImageLoaderRawPNG.class);
 
     /**
      * Main constructor.

@@ -142,7 +142,7 @@ public class NamedColorProfileParser {
 
     private int[] readUInt16Array(DataInput din, int count) throws IOException {
         if (count == 0) {
-            return null;
+            return new int[0];
         }
         int[] result = new int[count];
         for (int i = 0; i < count; i++) {

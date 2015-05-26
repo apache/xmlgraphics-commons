@@ -319,18 +319,17 @@ public abstract class AbstractRed implements CachableRed {
         this.srcs = new Vector();
         if (srcs != null) {
             this.srcs.addAll(srcs);
-        }
-
-        if (srcs.size() != 0) {
-            CachableRed src = (CachableRed)srcs.get(0);
-            if (bounds == null) {
-                bounds = src.getBounds();
-            }
-            if (cm     == null) {
-                cm     = src.getColorModel();
-            }
-            if (sm     == null) {
-                sm     = src.getSampleModel();
+            if (srcs.size() != 0) {
+                CachableRed src = (CachableRed)srcs.get(0);
+                if (bounds == null) {
+                    bounds = src.getBounds();
+                }
+                if (cm     == null) {
+                    cm     = src.getColorModel();
+                }
+                if (sm     == null) {
+                    sm     = src.getSampleModel();
+                }
             }
         }
 

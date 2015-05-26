@@ -33,7 +33,7 @@ public class PNGChunk {
     String typeString;
 
     /** logger */
-    protected static Log log = LogFactory.getLog(PNGChunk.class);
+    protected static final Log log = LogFactory.getLog(PNGChunk.class);
 
     /**
      * See http://en.wikipedia.org/wiki/Portable_Network_Graphics for a light explanation;
@@ -167,10 +167,10 @@ public class PNGChunk {
     public static boolean skipChunk(DataInputStream distream) {
         try {
             int length = distream.readInt();
-            int type = distream.readInt();
+            distream.readInt();
             // is this really faster than reading?
             int skipped = distream.skipBytes(length);
-            int crc = distream.readInt();
+            distream.readInt();
             if (skipped != length) {
                 log.warn("Incorrect number of bytes skipped.");
                 return false;

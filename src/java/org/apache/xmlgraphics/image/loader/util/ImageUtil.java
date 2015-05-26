@@ -240,9 +240,9 @@ public final class ImageUtil {
     public static Map getDefaultHints(ImageSessionContext session) {
         java.util.Map hints = new java.util.HashMap();
         hints.put(ImageProcessingHints.SOURCE_RESOLUTION,
-                new Float(session.getParentContext().getSourceResolution()));
+                session.getParentContext().getSourceResolution());
         hints.put(ImageProcessingHints.TARGET_RESOLUTION,
-                new Float(session.getTargetResolution()));
+                session.getTargetResolution());
         hints.put(ImageProcessingHints.IMAGE_SESSION_CONTEXT, session);
         return hints;
     }
@@ -287,7 +287,7 @@ public final class ImageUtil {
                     if (sb.length() > 0) {
                         int pageIndex = Integer.parseInt(sb.toString()) - 1;
                         pageIndex = Math.max(0, pageIndex);
-                        return new Integer(pageIndex);
+                        return pageIndex;
                     }
                 }
             }
@@ -314,7 +314,7 @@ public final class ImageUtil {
     public static int needPageIndexFromURI(String uri) {
         Integer res = getPageIndexFromURI(uri);
         if (res != null) {
-            return res.intValue();
+            return res;
         } else {
             return 0;
         }
