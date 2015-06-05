@@ -27,7 +27,7 @@ import javax.imageio.stream.ImageInputStream;
  * A subclass of <code>SeekableStream</code> that may be used to wrap
  * a regular <code>ImageInputStream</code>.
  */
-public final class ImageInputStreamSeekableStreamAdapter extends SeekableStream {
+public class ImageInputStreamSeekableStreamAdapter extends SeekableStream {
 
     /** The source stream. */
     private ImageInputStream stream;

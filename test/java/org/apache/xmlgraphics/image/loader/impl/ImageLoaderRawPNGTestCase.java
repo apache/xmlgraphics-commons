@@ -19,7 +19,11 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 import org.junit.Test;
 
@@ -33,6 +37,7 @@ import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
+import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.MockImageContext;
 import org.apache.xmlgraphics.image.loader.MockImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
@@ -73,4 +78,12 @@ public class ImageLoaderRawPNGTestCase {
         assertTrue(im instanceof ImageRawPNG);
     }
 
+    @Test
+    public void testPreloaderRawPNG() throws IOException, ImageException {
+        ImageInputStream iis = ImageIO.createImageInputStream(new FileInputStream("test/images/tbbn3p08.png"));
+        ImageContext context = MockImageContext.newSafeInstance();
+        ImageInfo imageInfo = new PreloaderRawPNG().preloadImage(null, new ImageSource(iis, null, true), context);
+        assertEquals(imageInfo.getMimeType(), "image/png");
+        assertEquals(imageInfo.getSize().getWidthPx(), 32);
+    }
 }
