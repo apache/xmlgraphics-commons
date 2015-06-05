@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.codec.png.PNGChunk;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
 import org.apache.xmlgraphics.image.loader.ImageException;
@@ -113,14 +111,14 @@ class PNGFile implements PNGConstants {
                     PNGChunk.skipChunk(distream);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 String msg = PropertyUtil.getString("PNGImageDecoder2");
-                throw new RuntimeException(msg);
+                throw new RuntimeException(msg, e);
             }
         } while (true);
     }
 
     public ImageRawPNG getImageRawPNG(ImageInfo info) throws ImageException {
+        InputStream seqStream = new SequenceInputStream(Collections.enumeration(streamVec));
         ColorSpace rgbCS = null;
         switch (colorType) {
         case PNG_COLOR_GRAY:
@@ -171,26 +169,21 @@ class PNGFile implements PNGConstants {
             throw new ImageException("Unsupported color type: " + colorType);
         }
         // the iccProfile is still null for now
-        InputStream seqStream = null;
-        ImageRawPNG rawImage = null;
-        try {
-            seqStream = new SequenceInputStream(Collections.enumeration(streamVec));
-            rawImage = new ImageRawPNG(info, seqStream, colorModel, bitDepth, iccProfile);
-            if (isTransparent) {
-                if (colorType == PNG_COLOR_GRAY) {
-                    rawImage.setGrayTransparentAlpha(grayTransparentAlpha);
-                } else if (colorType == PNG_COLOR_RGB) {
-                    rawImage.setRGBTransparentAlpha(redTransparentAlpha, greenTransparentAlpha,
-                            blueTransparentAlpha);
-                } else if (colorType == PNG_COLOR_PALETTE) {
-                    rawImage.setTransparent();
-                }
+        ImageRawPNG rawImage = new ImageRawPNG(info, seqStream, colorModel, bitDepth, iccProfile);
+        if (isTransparent) {
+            if (colorType == PNG_COLOR_GRAY) {
+                rawImage.setGrayTransparentAlpha(grayTransparentAlpha);
+            } else if (colorType == PNG_COLOR_RGB) {
+                rawImage.setRGBTransparentAlpha(redTransparentAlpha, greenTransparentAlpha,
+                        blueTransparentAlpha);
+            } else if (colorType == PNG_COLOR_PALETTE) {
+                rawImage.setTransparent();
+            } else {
+                //
             }
-            if (sRGBRenderingIntent != -1) {
-              rawImage.setRenderingIntent(sRGBRenderingIntent);
-            }
-        } finally {
-            IOUtils.closeQuietly(seqStream);
+        }
+        if (sRGBRenderingIntent != -1) {
+          rawImage.setRenderingIntent(sRGBRenderingIntent);
         }
         return rawImage;
     }

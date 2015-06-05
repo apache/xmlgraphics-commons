@@ -49,9 +49,14 @@ import java.util.TimeZone;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import javax.imageio.stream.ImageInputStream;
+
 import org.apache.xmlgraphics.image.codec.util.ImageDecoderImpl;
+import org.apache.xmlgraphics.image.codec.util.ImageInputStreamSeekableStreamAdapter;
 import org.apache.xmlgraphics.image.codec.util.PropertyUtil;
+import org.apache.xmlgraphics.image.codec.util.SeekableStream;
 import org.apache.xmlgraphics.image.codec.util.SimpleRenderedImage;
+import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.apache.xmlgraphics.image.loader.impl.PNGConstants;
 
 // CSOFF: ConstantName
@@ -79,6 +84,27 @@ public class PNGImageDecoder extends ImageDecoderImpl {
             throw new IOException(PropertyUtil.getString("PNGImageDecoder19"));
         }
         return new PNGImage(input, (PNGDecodeParam)param);
+    }
+
+    public static void readPNGHeader(ImageInputStream inputStream, ImageSize size) throws IOException {
+        SeekableStream seekStream = new ImageInputStreamSeekableStreamAdapter(inputStream) {
+            public void close() throws IOException {
+            }
+        };
+        PNGImage pngImage = new PNGImage(seekStream);
+        size.setSizeInPixels(pngImage.getWidth(), pngImage.getHeight());
+        double dpiHorz = size.getDpiHorizontal();
+        double dpiVert = size.getDpiVertical();
+        if (pngImage.unitSpecifier == 1) {
+            if (pngImage.xPixelsPerUnit != 0) {
+                dpiHorz = pngImage.xPixelsPerUnit * 0.0254;
+            }
+            if (pngImage.yPixelsPerUnit != 0) {
+                dpiVert = pngImage.yPixelsPerUnit * 0.0254;
+            }
+        }
+        size.setResolution(dpiHorz, dpiVert);
+        size.calcSizeFromPixels();
     }
 }
 
@@ -172,6 +198,10 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
 
     // Post-processing step implied by above parameters
     private int postProcess = POST_NONE;
+
+    protected int xPixelsPerUnit;
+    protected int yPixelsPerUnit;
+    protected int unitSpecifier;
 
     // Possible post-processing steps
 
@@ -283,6 +313,29 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         } else {
             for (int i = 0; i < len; i++) {
                 grayLut[i] = expandBits[bits][i];
+            }
+        }
+    }
+
+    public PNGImage(InputStream stream) throws IOException {
+        DataInputStream distream = new DataInputStream(stream);
+        long magic = distream.readLong();
+        if (magic != PNG_SIGNATURE) {
+            throw new IOException("Not a png file");
+        }
+        while (true) {
+            String chunkType = PNGChunk.getChunkType(distream);
+            if (chunkType.equals(PNGChunk.ChunkType.IHDR.name())) {
+                PNGChunk chunk = PNGChunk.readChunk(distream);
+                parse_IHDR_chunk(chunk);
+            } else if (chunkType.equals(PNGChunk.ChunkType.pHYs.name())) {
+                PNGChunk chunk = PNGChunk.readChunk(distream);
+                parse_pHYs_chunk(chunk);
+                return;
+            } else if (chunkType.equals(PNGChunk.ChunkType.IEND.name())) {
+                return;
+            } else {
+                PNGChunk.readChunk(distream);
             }
         }
     }
@@ -1032,9 +1085,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
     }
 
     private void parse_pHYs_chunk(PNGChunk chunk) {
-        int xPixelsPerUnit = chunk.getInt4(0);
-        int yPixelsPerUnit = chunk.getInt4(4);
-        int unitSpecifier = chunk.getInt1(8);
+        xPixelsPerUnit = chunk.getInt4(0);
+        yPixelsPerUnit = chunk.getInt4(4);
+        unitSpecifier = chunk.getInt1(8);
 
         if (encodeParam != null) {
             encodeParam.setPhysicalDimension(xPixelsPerUnit,
