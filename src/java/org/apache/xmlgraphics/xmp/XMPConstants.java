@@ -53,6 +53,8 @@ public interface XMPConstants {
     /** Namespace URI for PDF VT */
     String PDF_VT_IDENTIFICATION = "http://www.npes.org/pdfvt/ns/id/";
 
+    String PDF_UA_IDENTIFICATION = "http://www.aiim.org/pdfua/ns/id/";
+
     /** Namespace URI for XMP Media Management */
     String XAP_MM_NAMESPACE  = "http://ns.adobe.com/xap/1.0/mm/";
 

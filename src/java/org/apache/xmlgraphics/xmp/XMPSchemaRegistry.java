@@ -25,6 +25,7 @@ import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
 import org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema;
+import org.apache.xmlgraphics.xmp.schemas.pdf.PDFUAXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFVTXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFXXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.XAPMMXMPSchema;
@@ -55,6 +56,7 @@ public final class XMPSchemaRegistry {
         addSchema(new PDFXXMPSchema());
         addSchema(new PDFVTXMPSchema());
         addSchema(new XAPMMXMPSchema());
+        addSchema(new PDFUAXMPSchema());
     }
 
     /**
