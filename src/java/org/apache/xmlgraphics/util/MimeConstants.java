@@ -55,6 +55,8 @@ public interface MimeConstants {
     /** IBM's AFP GOCA subset for graphical objects */
     String MIME_AFP_GOCA        = "image/x-afp+goca";
 
+    String MIME_AFP_TRUETYPE    = "image/x-afp+truetype";
+
     /** Plain text */
     String MIME_PLAIN_TEXT      = "text/plain";
 
