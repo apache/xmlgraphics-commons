@@ -33,6 +33,7 @@ public class XMPSchemaAdapter {
     /** the Metadata object this schema instance operates on */
     protected Metadata meta;
     private XMPSchema schema;
+    private boolean compact = true;
 
     /**
      * Main constructor.
@@ -92,6 +93,9 @@ public class XMPSchemaAdapter {
         if (prop == null) {
             prop = new XMPProperty(name, value);
             meta.setProperty(prop);
+            if (!compact) {
+                prop.convertSimpleValueToArray(arrayType);
+            }
         } else {
             prop.convertSimpleValueToArray(arrayType);
             prop.getArrayValue().add(value);
@@ -439,5 +443,7 @@ public class XMPSchemaAdapter {
         return res;
     }
 
-
+    public void setCompact(boolean c) {
+        compact = c;
+    }
 }
