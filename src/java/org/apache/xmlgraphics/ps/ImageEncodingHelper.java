@@ -323,11 +323,13 @@ public class ImageEncodingHelper {
                 byte[] bytes = ((DataBufferByte) buffer).getData();
                 // see determineEncodingColorModel() to see why we permute B and R here
                 if (isBGR) {
+                    byte[] bytesPermutated = new byte[bytes.length];
                     for (int i = 0; i < bytes.length; i += 3) {
-                        out.write(bytes[i + 2]);
-                        out.write(bytes[i + 1]);
-                        out.write(bytes[i]);
+                        bytesPermutated[i] = bytes[i+2];
+                        bytesPermutated[i+1] = bytes[i+1];
+                        bytesPermutated[i+2] = bytes[i];
                     }
+                    out.write(bytesPermutated);
                 } else {
                     out.write(bytes);
                 }
