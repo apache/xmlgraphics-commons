@@ -325,9 +325,9 @@ public class ImageEncodingHelper {
                 if (isBGR) {
                     byte[] bytesPermutated = new byte[bytes.length];
                     for (int i = 0; i < bytes.length; i += 3) {
-                        bytesPermutated[i] = bytes[i+2];
-                        bytesPermutated[i+1] = bytes[i+1];
-                        bytesPermutated[i+2] = bytes[i];
+                        bytesPermutated[i] = bytes[i + 2];
+                        bytesPermutated[i + 1] = bytes[i + 1];
+                        bytesPermutated[i + 2] = bytes[i];
                     }
                     out.write(bytesPermutated);
                 } else {
