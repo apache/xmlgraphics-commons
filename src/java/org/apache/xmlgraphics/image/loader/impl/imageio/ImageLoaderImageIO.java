@@ -44,6 +44,7 @@ import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataFormatImpl;
 import javax.imageio.metadata.IIOMetadataNode;
@@ -120,8 +121,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
                 ImageReader reader = (ImageReader)iter.next();
                 try {
                     imgStream.mark();
-                    ImageReadParam param = reader.getDefaultReadParam();
                     reader.setInput(imgStream, false, ignoreMetadata);
+                    ImageReadParam param = getParam(reader, hints);
                     final int pageIndex = ImageUtil.needPageIndexFromURI(info.getOriginalURI());
                     try {
 //                        if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
@@ -250,6 +251,21 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         } else {
             return new ImageRendered(info, imageData, transparentColor);
         }
+    }
+
+    private ImageReadParam getParam(ImageReader reader, Map hints) throws IOException {
+        if (hints != null && Boolean.TRUE.equals(hints.get("CMYK"))) {
+            Iterator<ImageTypeSpecifier> types = reader.getImageTypes(0);
+            while (types.hasNext()) {
+                ImageTypeSpecifier type = types.next();
+                if (type.getNumComponents() == 4) {
+                    ImageReadParam param = new ImageReadParam();
+                    param.setDestinationType(type);
+                    return param;
+                }
+            }
+        }
+        return reader.getDefaultReadParam();
     }
 
     /**
