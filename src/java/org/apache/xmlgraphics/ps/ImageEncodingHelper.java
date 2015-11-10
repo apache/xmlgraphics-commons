@@ -51,6 +51,7 @@ public class ImageEncodingHelper {
     private boolean firstTileDump;
     private boolean enableCMYK;
     private boolean isBGR;
+    private boolean isKMYC;
     private boolean outputbw;
     private boolean bwinvert;
 
@@ -330,6 +331,15 @@ public class ImageEncodingHelper {
                         bytesPermutated[i + 2] = bytes[i];
                     }
                     out.write(bytesPermutated);
+                } else if (isKMYC) {
+                    byte[] bytesPermutated = new byte[bytes.length];
+                    for (int i = 0; i < bytes.length; i += 4) {
+                        bytesPermutated[i] = bytes[i + 3];
+                        bytesPermutated[i + 1] = bytes[i + 2];
+                        bytesPermutated[i + 2] = bytes[i + 1];
+                        bytesPermutated[i + 3] = bytes[i];
+                    }
+                    out.write(bytesPermutated);
                 } else {
                     out.write(bytes);
                 }
@@ -401,7 +411,7 @@ public class ImageEncodingHelper {
                     // make sure we did not get here due to a KMYC image
                     if (offsets.length == 4 && offsets[0] == 3 && offsets[1] == 2 && offsets[2] == 1
                             && offsets[3] == 0) {
-                        return;
+                        isKMYC = true;
                     }
                 }
                 if (cm.getTransferType() == DataBuffer.TYPE_BYTE
