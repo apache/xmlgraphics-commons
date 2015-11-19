@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.ps;
 
+import java.util.Map;
+
 /**
  * Postscript page device dictionary object
  *
@@ -54,6 +56,13 @@ public class PSPageDeviceDictionary extends PSDictionary {
             }
         }
         return previousValue;
+    }
+
+    public void putAll(Map m) {
+        for (Object x : m.entrySet()) {
+            Map.Entry e = (Map.Entry) x;
+            put(e.getKey(), e.getValue());
+        }
     }
 
     /**
