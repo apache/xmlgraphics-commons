@@ -61,7 +61,7 @@ public class ImageEncodingHelper {
      */
     public ImageEncodingHelper(RenderedImage image) {
         this(image, true);
-        outputbw = true;
+        outputbw = image instanceof BufferedImage;
     }
 
     /**
