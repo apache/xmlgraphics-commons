@@ -75,7 +75,11 @@ public interface ObservableStream {
         /** {@inheritDoc} */
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getDeclaringClass().equals(ObservableStream.class)) {
-                return method.invoke(this, args);
+                try {
+                    return method.invoke(this, args);
+                } catch (InvocationTargetException ite) {
+                    throw ite.getCause();
+                }
             } else if ("close".equals(method.getName())) {
                 if (!closed) {
                     log.debug("Stream is being closed: " + getSystemID());
@@ -90,7 +94,11 @@ public interface ObservableStream {
                     throw new IllegalStateException("Stream is already closed!");
                 }
             } else {
-                return method.invoke(iin, args);
+                try {
+                    return method.invoke(iin, args);
+                } catch (InvocationTargetException ite) {
+                    throw ite.getCause();
+                }
             }
         }
 
