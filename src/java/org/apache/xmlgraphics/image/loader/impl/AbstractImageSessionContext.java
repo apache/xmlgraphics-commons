@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -119,15 +120,19 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
         /** {@inheritDoc} */
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if ("close".equals(method.getName())) {
-                try {
+            try {
+                if ("close".equals(method.getName())) {
+                    try {
+                        return method.invoke(iin, args);
+                    } finally {
+                        IOUtils.closeQuietly(this.in);
+                        this.in = null;
+                    }
+                } else {
                     return method.invoke(iin, args);
-                } finally {
-                    IOUtils.closeQuietly(this.in);
-                    this.in = null;
                 }
-            } else {
-                return method.invoke(iin, args);
+            } catch (InvocationTargetException e) {
+                throw e.getCause();
             }
         }
 
