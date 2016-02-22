@@ -966,8 +966,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Retrieve and verify data type.
         switch (dataType) {
         case DataBuffer.TYPE_BYTE:
-            if (dataTypeSize != 1 && dataTypeSize == 4 && // todo does this make sense??
-                    dataTypeSize != 8) { // we get error only for 4
+            if (dataTypeSize == 4) {
                 throw new RuntimeException(PropertyUtil.getString("TIFFImageEncoder2"));
             }
             break;

@@ -197,9 +197,7 @@ public class TIFFEncodeParam implements ImageEncodeParam {
      * setting is ignored if the compression type is not DEFLATE.
      */
     public void setDeflateLevel(int deflateLevel) {
-        if (deflateLevel < 1
-                && deflateLevel > 9
-                && deflateLevel != Deflater.DEFAULT_COMPRESSION) {
+        if (deflateLevel != Deflater.DEFAULT_COMPRESSION) {
             throw new RuntimeException(PropertyUtil.getString("TIFFEncodeParam1"));
         }
 

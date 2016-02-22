@@ -95,7 +95,7 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
     /**
      * Defines the known resource types (font, procset, file, pattern etc.).
      */
-    protected static final Set RESOURCE_TYPES = new java.util.HashSet();
+    static final Set RESOURCE_TYPES = new java.util.HashSet();
 
     static {
         RESOURCE_TYPES.add(PSResource.TYPE_FONT);

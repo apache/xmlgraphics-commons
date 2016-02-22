@@ -75,7 +75,7 @@ public class Base64TestCase {
     }
 
     private void innerBase64Test(String action, String in, String ref) throws Exception {
-        final String baseURL = "file:test/resources/org/apache/xmlgraphics/util/io/";
+        final String baseURL = "file:src/test/resources/org/apache/xmlgraphics/util/io/";
         innerBase64Test(action, new URL(baseURL + in), new URL(baseURL + ref));
     }
 

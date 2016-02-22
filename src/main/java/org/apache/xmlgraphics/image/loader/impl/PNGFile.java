@@ -189,8 +189,6 @@ class PNGFile implements PNGConstants {
     }
 
     private void parse_IHDR_chunk(PNGChunk chunk) {
-        chunk.getInt4(0);
-        chunk.getInt4(4);
         bitDepth = chunk.getInt1(8);
         if (bitDepth != 8) {
             // this is a limitation of the current implementation
@@ -265,7 +263,7 @@ class PNGFile implements PNGConstants {
         while (chunk.getByte(textIndex++) != 0) {
             //NOP
         }
-        chunk.getByte(textIndex++);
+        textIndex++;
         byte[] profile = new byte[length - textIndex];
         System.arraycopy(chunk.getData(), textIndex, profile, 0, length - textIndex);
         ByteArrayInputStream bais = new ByteArrayInputStream(profile);

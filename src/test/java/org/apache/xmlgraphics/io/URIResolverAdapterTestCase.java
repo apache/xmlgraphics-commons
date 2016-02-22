@@ -40,7 +40,7 @@ public class URIResolverAdapterTestCase {
 
     private final URI textFileURI = URI.create("test:catalog:resolver:testResource.txt");
     private final URI httpURL = URI.create("test:http:protocol:test.html");
-    private final String pathOfTestFile = "test/resources/org/apache/xmlgraphics/io/test-catalog.xml";
+    private final String pathOfTestFile = "src/test/resources/org/apache/xmlgraphics/io/test-catalog.xml";
 
     @Before
     public void setUp() {
