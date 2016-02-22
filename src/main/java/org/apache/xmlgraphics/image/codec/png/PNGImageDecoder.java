@@ -1298,7 +1298,9 @@ class PNGImage extends SimpleRenderedImage implements PNGConstants {
         while ((b = chunk.getByte(textIndex++)) != 0) {
             key.append((char)b);
         }
-        /* int method = */ chunk.getByte(textIndex++);
+
+        // skip method
+        textIndex++;
 
         StringBuffer value = new StringBuffer();
         try {

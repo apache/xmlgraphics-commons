@@ -43,16 +43,23 @@
   
   <property name="internal-codecs.disabled" value="false"/>
   
-  <property name="src.dir" value="${basedir}/src"/>
+  <property name="src.dir" value="${basedir}/src/main"/>
   <property name="src.java.dir" value="${src.dir}/java"/>
   <property name="src.res.dir" value="${src.dir}/resources"/>
   <property name="lib.dir" value="${basedir}/lib"/>
   <property name="optional.lib.dir" value="${lib.dir}/build" />
 
+  <property name="test.dir" value="${basedir}/src/test"/>
+  <property name="test.java.dir" value="${test.dir}/java"/>
+  <property name="test.res.dir" value="${test.dir}/resources"/>
+
+  <property name="tools.dir" value="${basedir}/src/tools"/>
+  <property name="tools.checkstyle.dir" value="${tools.dir}/resources/checkstyle"/>
+  <property name="tools.findbugs.dir" value="${tools.dir}/resources/findbugs"/>
+
   <property name="build.dir" value="${basedir}/build"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
-  <property name="build.unit.tests.dir" value="${basedir}/test/java"/>
   
   <property name="dist.bin.dir" value="${basedir}/dist-bin"/>
   <property name="dist.src.dir" value="${basedir}/dist-src"/>
@@ -114,7 +121,6 @@
     <include name="src/**"/>
     <patternset refid="dist.lib"/>
     <patternset refid="dist.lib.build"/>
-    <include name="test/**"/>
     <include name="examples/**"/>
     <include name="LICENSE"/>
     <include name="NOTICE"/>
@@ -305,7 +311,7 @@
            debug="${javac.debug}" deprecation="${javac.deprecation}"
            optimize="${javac.optimize}" source="${javac.source}"
            target="${javac.target}" includeAntRuntime="true">
-      <src path="${build.unit.tests.dir}"/>
+      <src path="${test.java.dir}"/>
       <patternset refid="compile-pattern"/>
       <classpath>
         <path refid="libs-build-classpath"/>
@@ -315,8 +321,8 @@
       </classpath>
     </javac>
     <copy todir="${build.dir}/test-classes" includeEmptyDirs="false">
-      <fileset dir="${basedir}/test/resources"/>
-      <fileset dir="${build.unit.tests.dir}">
+      <fileset dir="${test.res.dir}"/>
+      <fileset dir="${test.java.dir}">
         <exclude name="**/*.java"/>
         <exclude name="**/*.html"/>
       </fileset>
@@ -339,7 +345,7 @@
         </fileset>
       </classpath>
       <batchtest fork="${junit.fork}" todir="${build.dir}/test-reports">
-        <fileset dir="${build.unit.tests.dir}">
+        <fileset dir="${test.java.dir}">
           <include name="**/*Test*.java"/>
           <exclude name="**/*TestSuite.java"/>
           <exclude name="**/image/writer/internal/TIFFImageWriter*.java" if="internal-codecs.eff.disabled"/>
@@ -452,7 +458,8 @@ NOTE:
   <!-- Checkstyle                                                          -->
   <!-- =================================================================== -->
   <property name="checkstyle.location" value="${optional.lib.dir}/checkstyle-5.5-all.jar" />
-  <property name="checkstyle.config" value="${basedir}/checkstyle-5.5.xml" />
+  <property name="checkstyle.config" value="${tools.checkstyle.dir}/checkstyle.xml" />
+  <property name="checkstyle.suppressions.file" value="${tools.checkstyle.dir}/suppressions.xml" />
   <path id="checkstyle-classpath">
     <path refid="libs-build-classpath"/>
     <pathelement location="${checkstyle.location}"/>
@@ -481,7 +488,7 @@ NOTE:
         <pathelement location="${build.codegen-classes.dir}"/>
       </classpath>
       <fileset dir="${src.dir}" includes="**/*.java"/>
-      <fileset dir="${basedir}/test" includes="**/*.java"/>
+      <fileset dir="${basedir}/src/test" includes="**/*.java"/>
       <formatter type="xml" toFile="${build.dir}/report_checkstyle.xml"/>
       <formatter type="plain"/>
     </checkstyle>
@@ -697,7 +704,7 @@ NOTE:
   </target>
   <target name="findbugs" depends="init, findbugs-avail, compile-java" if="findbugs.home.dir">
     <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="libs-findbugs"/>
-    <findbugs home="${findbugs.home.dir}" output="text" reportLevel="low" effort="max" excludeFilter="findbugs-exclude.xml" jvmargs="-Xmx1024m" warningsProperty="findbugs.warnings">
+    <findbugs home="${findbugs.home.dir}" output="text" reportLevel="low" effort="max" excludeFilter="${tools.findbugs.dir}/exclusions.xml" jvmargs="-Xmx1024m" warningsProperty="findbugs.warnings">
       <sourcePath path="${src.java.dir}"/>
       <class location="${build.classes.dir}"/>
       <auxClasspath>

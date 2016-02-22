@@ -1344,7 +1344,9 @@ public class PNGRed extends AbstractRed {
         while ((b = chunk.getByte(textIndex++)) != 0) {
             key.append((char)b);
         }
-        /* int method = */ chunk.getByte(textIndex++);
+
+        // skip method
+        textIndex++;
 
         try {
             int length = chunk.getLength() - textIndex;

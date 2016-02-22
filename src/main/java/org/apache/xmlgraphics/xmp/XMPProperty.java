@@ -169,6 +169,7 @@ public class XMPProperty implements XMLizable {
                         prop.setPropertyQualifier(name, props.getProperty(name));
                     }
                 }
+                props.setProperty(prop);
             }
         }
     }
