@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.xmlgraphics</groupId>
-  <artifactId>commons</artifactId>
+  <artifactId>commons-xmlgraphics</artifactId>
   <version>2.2.0-SNAPSHOT</version>
   <name>${project.groupId}:${project.artifactId}</name>
   <description>XML Graphics Commons</description>
@@ -100,6 +100,7 @@
           <linkXRef>false</linkXRef>
           <logViolationsToConsole>true</logViolationsToConsole>
           <suppressionsLocation>${project.baseUri}src/tools/resources/checkstyle/suppressions.xml</suppressionsLocation>
+          <violationSeverity>warning</violationSeverity>
         </configuration>
       </plugin>
       <plugin>
@@ -169,6 +170,7 @@
           <includeResources>false</includeResources>
           <includeTestResources>false</includeTestResources>
           <linkXRef>false</linkXRef>
+          <suppressionsLocation>${project.baseUri}src/tools/resources/checkstyle/suppressions.xml</suppressionsLocation>
         </configuration>
       </plugin>
       <plugin>
@@ -178,7 +180,10 @@
         <configuration>
           <excludeFilterFile>src/tools/resources/findbugs/exclusions.xml</excludeFilterFile>
           <effort>Max</effort>
+          <findBugsXmlOutput>true</findBugsXmlOutput>
+          <findBugsXmlWithMessages>true</findBugsXmlWithMessages>
           <threshold>Low</threshold>
+          <xmlOutput>true</xmlOutput>
         </configuration>
       </plugin>
     </plugins>
