@@ -84,7 +84,9 @@ public class Base64DecodeStream extends InputStream {
         PEM_ARRAY['/'] = (byte)idx++;
     }
 
-    public boolean markSupported() { return false; }
+    public boolean markSupported() {
+        return false;
+    }
 
     public void close()
         throws IOException {
