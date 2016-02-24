@@ -2,7 +2,7 @@
 Information on Apache XML Graphics Commons dependencies
 ==========================================================
 
-$Id$
+$Id: README.txt 606580 2007-12-23 17:45:02Z jeremias $
 
 The Apache Licenses can also be found here:
 http://www.apache.org/licenses/
