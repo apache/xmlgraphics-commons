@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: GraphicContext.java 1345683 2012-06-03 14:50:33Z gadams $ */
+/* $Id$ */
 
 package org.apache.xmlgraphics.java2d;
 

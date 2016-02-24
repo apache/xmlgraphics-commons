@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: ImageWriterExample2.java 750418 2009-03-05 11:03:54Z vhennebert $ */
 
 package image.writer;
 

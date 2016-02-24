@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: TilingPatternExample.java 752824 2009-03-12 10:05:32Z jeremias $ */
 
 package java2d.ps;
 
