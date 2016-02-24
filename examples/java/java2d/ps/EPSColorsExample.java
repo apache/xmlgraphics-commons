@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: EPSColorsExample.java 1051421 2010-12-21 08:54:25Z jeremias $ */
 
 package java2d.ps;
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: MetadataFromScratch.java 889803 2009-12-11 20:36:36Z jeremias $ */
 
 package xmp;
 

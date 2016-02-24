@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id$ */
+/* $Id: ExtractMetadataPacket.java 606567 2007-12-23 15:52:49Z jeremias $ */
 
 package xmp;
 
