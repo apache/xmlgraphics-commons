@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* $Id: ViewerFrame.java 750418 2009-03-05 11:03:54Z vhennebert $ */
+/* $Id$ */
 
 package image.loader;
 

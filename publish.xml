@@ -20,7 +20,7 @@ This is the publishing file for ForrestBot.
 
 Running "ant -f publish.xml" will build the XML Graphics Commons site and upload it to SVN. It has then to be checked out on people.apache.org to be deployed.
 
-$Id: publish.xml 472531 2006-11-08 16:05:56Z jeremias $
+$Id$
 -->
 <project name="forrest-docs" default="main">
 
