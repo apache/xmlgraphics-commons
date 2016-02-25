@@ -20,21 +20,30 @@
     <surefire.version>2.18.1</surefire.version>
   </properties>
 
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/</connection>
     <url>scm:svn:https://svn.apache.org/repos/asf/xmlgraphics/commons/trunk/</url>
     <developerConnection></developerConnection>
   </scm>
 
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://www.apache.org/</url>
+  </organization>
+
   <distributionManagement>
     <site>
       <id>${project.artifactId}-site</id>
       <url>${project.baseUri}</url>
     </site>
-    <snapshotRepository>
-      <id>apache.snapshots.https</id>
-      <url>https://repository.apache.org/content/repositories/snapshots</url>
-    </snapshotRepository>
   </distributionManagement>
 
   <dependencies>
