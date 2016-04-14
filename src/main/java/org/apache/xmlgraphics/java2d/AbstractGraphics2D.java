@@ -904,7 +904,9 @@ public abstract class AbstractGraphics2D extends Graphics2D implements Cloneable
                              AffineTransform xform,
                              ImageObserver obs) {
         boolean retVal = true;
-
+        if (xform == null) {
+            xform = new AffineTransform();
+        }
         if (xform.getDeterminant() != 0) {
             AffineTransform inverseTransform = null;
             try {
