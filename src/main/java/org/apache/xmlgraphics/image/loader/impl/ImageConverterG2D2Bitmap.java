@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
+import java.awt.image.PixelInterleavedSampleModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageProcessingHints;
 import org.apache.xmlgraphics.image.loader.ImageSize;
+import org.apache.xmlgraphics.java2d.color.DeviceCMYKColorSpace;
 import org.apache.xmlgraphics.util.UnitConv;
 
 /**
@@ -71,8 +73,9 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
         if (res != null) {
             resolution = res.intValue();
         }
+        boolean cmyk = Boolean.TRUE.equals(hints.get("CMYK"));
 
-        BufferedImage bi = paintToBufferedImage(g2dImage, bitsPerPixel, withAlpha, resolution);
+        BufferedImage bi = paintToBufferedImage(g2dImage, bitsPerPixel, withAlpha, resolution, cmyk);
 
         ImageBuffered bufImage = new ImageBuffered(src.getInfo(), bi, null);
         return bufImage;
@@ -87,7 +90,7 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
      * @return the newly created BufferedImage
      */
     protected BufferedImage paintToBufferedImage(ImageGraphics2D g2dImage,
-            int bitsPerPixel, boolean withAlpha, int resolution) {
+            int bitsPerPixel, boolean withAlpha, int resolution, boolean cmyk) {
         ImageSize size = g2dImage.getSize();
 
         RenderingHints additionalHints = null;
@@ -115,7 +118,17 @@ public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
             if (withAlpha) {
                 bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_INT_ARGB);
             } else {
-                bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_INT_RGB);
+                if (cmyk) {
+                    ComponentColorModel ccm = new ComponentColorModel(
+                            new DeviceCMYKColorSpace(), false, false, 1, DataBuffer.TYPE_BYTE);
+                    int[] bands = {0, 1, 2, 3};
+                    PixelInterleavedSampleModel sm = new PixelInterleavedSampleModel(
+                            DataBuffer.TYPE_BYTE, bmw, bmh, 4, bmw * 4, bands);
+                    WritableRaster raster = WritableRaster.createWritableRaster(sm, new Point(0, 0));
+                    bi = new BufferedImage(ccm, raster, false, null);
+                } else {
+                    bi = new BufferedImage(bmw, bmh, BufferedImage.TYPE_INT_RGB);
+                }
             }
         }
 
