@@ -119,6 +119,7 @@
 
   <fileset dir="${basedir}" id="dist.src">
     <include name="src/**"/>
+    <include name="test/**"/>
     <patternset refid="dist.lib"/>
     <patternset refid="dist.lib.build"/>
     <include name="examples/**"/>
