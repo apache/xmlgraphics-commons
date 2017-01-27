@@ -82,7 +82,7 @@ public final class Service {
             for (String name : names) {
                 try {
                     // Try and load the class
-                    Object obj = cl.loadClass(name).newInstance();
+                    Object obj = cl.loadClass(name).getDeclaredConstructor().newInstance();
                     // stick it into our vector...
                     l.add(obj);
                 } catch (Exception ex) {

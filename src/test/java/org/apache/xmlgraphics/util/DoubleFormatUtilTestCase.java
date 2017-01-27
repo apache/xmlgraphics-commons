@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -297,7 +298,7 @@ public class DoubleFormatUtilTestCase {
         buf.setLength(0);
         BigDecimal bg = new BigDecimal(Double.toString(value));
         int scale = Math.abs(value) < 1.0 ? precision : decimals;
-        bg = bg.setScale(scale, BigDecimal.ROUND_HALF_UP);
+        bg = bg.setScale(scale, RoundingMode.HALF_UP);
         //buf.append(bg.toString()); // Java 1.4
         buf.append(bg.toPlainString()); // Java 1.5 and more !
         if (buf.indexOf(".") >= 0) {
