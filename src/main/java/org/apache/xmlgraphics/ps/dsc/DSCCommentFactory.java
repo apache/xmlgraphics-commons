@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.ps.dsc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.apache.xmlgraphics.ps.DSCConstants;
@@ -98,13 +99,17 @@ public final class DSCCommentFactory {
             return null;
         }
         try {
-            return (DSCComment)clazz.newInstance();
+            return (DSCComment)clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException("Error instantiating instance for '" + name + "': "
                     + e.getMessage());
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Illegal Access error while instantiating instance for '"
                     + name + "': " + e.getMessage());
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
