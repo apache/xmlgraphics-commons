@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
@@ -47,7 +48,11 @@ public class ImageGraphics2D extends AbstractImage {
 
     /** {@inheritDoc} */
     public boolean isCacheable() {
-        return true;
+        Image img = getInfo().getOriginalImage();
+        if (img == null) {
+            return true;
+        }
+        return img.isCacheable();
     }
 
     /**
