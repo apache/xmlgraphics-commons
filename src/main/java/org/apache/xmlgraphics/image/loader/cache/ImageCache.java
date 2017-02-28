@@ -134,7 +134,9 @@ public class ImageCache {
                     registerInvalidURI(uri);
                     throw e;
                 }
-                putImageInfo(info);
+                if (info.getOriginalImage() == null || info.getOriginalImage().isCacheable()) {
+                    putImageInfo(info);
+                }
             }
             return info;
         }
