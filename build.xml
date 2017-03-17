@@ -129,6 +129,7 @@
     <include name="KEYS"/>
     <include name="status.xml"/>
     <include name="*.pom"/>
+    <include name="pom.xml"/>
     <include name="build.*"/>
     <include name="checkstyle*"/>
     <exclude name="checkstyle-noframes.xsl"/>
