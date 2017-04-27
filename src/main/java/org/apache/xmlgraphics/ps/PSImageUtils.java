@@ -463,7 +463,7 @@ public class PSImageUtils {
      * @throws IOException In case of an I/O problem while rendering the image
      */
     public static void renderBitmapImage(RenderedImage img,
-                float x, float y, float w, float h, PSGenerator gen)
+                float x, float y, float w, float h, PSGenerator gen, Color mask)
                     throws IOException {
         Rectangle2D targetRect = new Rectangle2D.Double(x, y, w, h);
         ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img);
@@ -472,7 +472,11 @@ public class PSImageUtils {
         ImageEncodingHelper helper = new ImageEncodingHelper(img);
         ColorModel cm = helper.getEncodedColorModel();
 
-        writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img);
+        if (mask == null) {
+            writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img);
+        } else {
+            writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img, mask);
+        }
     }
 
     /**

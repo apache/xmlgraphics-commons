@@ -248,8 +248,11 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @see      java.awt.image.ImageObserver
      * @see      java.awt.image.ImageObserver#imageUpdate(java.awt.Image, int, int, int, int, int)
      */
-    public boolean drawImage(Image img, int x, int y,
-                             ImageObserver observer) {
+    public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
+        return drawImage(img, x, y, observer, null);
+    }
+
+    public boolean drawImage(Image img, int x, int y, ImageObserver observer, Color mask) {
         preparePainting();
         if (DEBUG) {
             System.out.println("drawImage: " + x + ", " + y + " " + img.getClass().getName());
@@ -281,8 +284,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             gen.concatMatrix(at);
             Shape imclip = getClip();
             writeClip(imclip);
-            PSImageUtils.renderBitmapImage(buf,
-                x, y, width, height, gen);
+            PSImageUtils.renderBitmapImage(buf, x, y, width, height, gen, mask);
             gen.restoreGraphicsState();
         } catch (IOException ioe) {
             handleIOException(ioe);
@@ -682,7 +684,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
             Shape imclip = getClip();
             writeClip(imclip);
             PSImageUtils.renderBitmapImage(img,
-                0, 0, img.getWidth(), img.getHeight(), gen);
+                0, 0, img.getWidth(), img.getHeight(), gen, null);
             gen.restoreGraphicsState();
         } catch (IOException ioe) {
             handleIOException(ioe);
