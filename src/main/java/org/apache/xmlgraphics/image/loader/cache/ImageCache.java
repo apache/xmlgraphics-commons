@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -293,9 +292,8 @@ public class ImageCache {
 
     private void doInvalidURIHouseKeeping() {
         final Set currentEntries = new HashSet(this.invalidURIs.keySet());
-        final Iterator iter = currentEntries.iterator();
-        while (iter.hasNext()) {
-            final String key = (String) iter.next();
+        for (Object currentEntry : currentEntries) {
+            final String key = (String) currentEntry;
             removeInvalidURIIfExpired(key);
         }
     }

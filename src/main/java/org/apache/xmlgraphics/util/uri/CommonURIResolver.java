@@ -70,9 +70,8 @@ public class CommonURIResolver implements URIResolver {
     /** {@inheritDoc} */
     public Source resolve(String href, String base) {
         synchronized (uriResolvers) {
-            Iterator it = uriResolvers.iterator();
-            while (it.hasNext()) {
-                final URIResolver currentResolver = (URIResolver) it.next();
+            for (Object uriResolver : uriResolvers) {
+                final URIResolver currentResolver = (URIResolver) uriResolver;
                 try {
                     final Source result = currentResolver.resolve(href, base);
                     if (result != null) {

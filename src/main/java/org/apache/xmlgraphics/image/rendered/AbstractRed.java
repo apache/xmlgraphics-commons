@@ -32,7 +32,6 @@ import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
 import java.awt.image.WritableRaster;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -460,9 +459,8 @@ public abstract class AbstractRed implements CachableRed {
         if (ret != null) {
             return ret;
         }
-        Iterator i = srcs.iterator();
-        while (i.hasNext()) {
-            RenderedImage ri = (RenderedImage)i.next();
+        for (Object src : srcs) {
+            RenderedImage ri = (RenderedImage) src;
             ret = ri.getProperty(name);
             if (ret != null) {
                 return ret;
@@ -476,9 +474,8 @@ public abstract class AbstractRed implements CachableRed {
         String[] ret  = new String[keys.size()];
         keys.toArray(ret);
 
-        Iterator iter = srcs.iterator();
-        while (iter.hasNext()) {
-            RenderedImage ri = (RenderedImage)iter.next();
+        for (Object src : srcs) {
+            RenderedImage ri = (RenderedImage) src;
             String[] srcProps = ri.getPropertyNames();
             if (srcProps.length != 0) {
                 String[] tmp = new String[ret.length + srcProps.length];

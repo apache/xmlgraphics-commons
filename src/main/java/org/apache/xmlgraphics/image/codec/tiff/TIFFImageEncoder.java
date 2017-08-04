@@ -382,15 +382,11 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Add extra fields specified via the encoding parameters.
         TIFFField[] extraFields = encodeParam.getExtraFields();
         List extantTags = new ArrayList(fields.size());
-        Iterator fieldIter = fields.iterator();
-        while (fieldIter.hasNext()) {
-            TIFFField fld = (TIFFField)fieldIter.next();
+        for (TIFFField fld : fields) {
             extantTags.add(fld.getTag());
         }
 
-        int numExtraFields = extraFields.length;
-        for (int i = 0; i < numExtraFields; i++) {
-            TIFFField fld = extraFields[i];
+        for (TIFFField fld : extraFields) {
             Integer tagValue = fld.getTag();
             if (!extantTags.contains(tagValue)) {
                 fields.add(fld);
@@ -1003,10 +999,9 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int dirSize = 2 + numEntries * 12 + 4;
 
         // Loop over fields adding the size of all values > 4 bytes.
-        Iterator iter = fields.iterator();
-        while (iter.hasNext()) {
+        for (Object field1 : fields) {
             // Get the field.
-            TIFFField field = (TIFFField)iter.next();
+            TIFFField field = (TIFFField) field1;
 
             // Determine the size of the field value.
             int valueSize = field.getCount() * SIZE_OF_TYPE[field.getType()];
@@ -1048,11 +1043,10 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         // Write number of fields in the IFD
         writeUnsignedShort(numEntries);
 
-        Iterator iter = fields.iterator();
-        while (iter.hasNext()) {
+        for (Object field1 : fields) {
 
             // 12 byte field entry TIFFField
-            TIFFField field = (TIFFField)iter.next();
+            TIFFField field = (TIFFField) field1;
 
             // byte 0-1 Tag that identifies a field
             int tag = field.getTag();
@@ -1086,8 +1080,8 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         writeLong(nextIFDOffset);
 
         // Write the tag values that did not fit into 4 bytes
-        for (int i = 0; i < tooBig.size(); i++) {
-            writeValues((TIFFField)tooBig.get(i));
+        for (Object aTooBig : tooBig) {
+            writeValues((TIFFField) aTooBig);
         }
     }
 

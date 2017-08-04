@@ -104,9 +104,9 @@ public final class ImageIOUtil {
      */
     public static void dumpMetadataToSystemOut(IIOMetadata iiometa) {
         String[] metanames = iiometa.getMetadataFormatNames();
-        for (int j = 0; j < metanames.length; j++) {
-            System.out.println("--->" + metanames[j]);
-            dumpNodeToSystemOut(iiometa.getAsTree(metanames[j]));
+        for (String metaname : metanames) {
+            System.out.println("--->" + metaname);
+            dumpNodeToSystemOut(iiometa.getAsTree(metaname));
         }
     }
 

@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,9 +112,8 @@ public final class ClasspathResource {
         Enumeration e;
         try {
 
-            Iterator it = getClassLoadersForResources().iterator();
-            while (it.hasNext()) {
-                ClassLoader classLoader = (ClassLoader) it.next();
+            for (Object o1 : getClassLoadersForResources()) {
+                ClassLoader classLoader = (ClassLoader) o1;
 
                 e = classLoader.getResources(MANIFEST_PATH);
 
@@ -124,11 +122,8 @@ public final class ClasspathResource {
                     try {
                         final Manifest manifest = new Manifest(u.openStream());
                         final Map entries = manifest.getEntries();
-                        final Iterator entrysetiterator = entries.entrySet()
-                                .iterator();
-                        while (entrysetiterator.hasNext()) {
-                            final Map.Entry entry = (Map.Entry) entrysetiterator
-                                    .next();
+                        for (Object o : entries.entrySet()) {
+                            final Map.Entry entry = (Map.Entry) o;
                             final String name = (String) entry.getKey();
                             final Attributes attributes = (Attributes) entry
                                     .getValue();

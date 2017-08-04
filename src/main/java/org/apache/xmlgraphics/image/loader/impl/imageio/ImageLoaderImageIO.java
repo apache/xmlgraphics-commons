@@ -300,8 +300,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     private ICC_Profile tryToExctractICCProfile(IIOMetadata iiometa) {
         ICC_Profile iccProf = null;
         String[] supportedFormats = iiometa.getMetadataFormatNames();
-        for (int i = 0; i < supportedFormats.length; i++) {
-            String format = supportedFormats[i];
+        for (String format : supportedFormats) {
             Element root = (Element) iiometa.getAsTree(format);
             if (PNG_METADATA_NODE.equals(format)) {
                 iccProf = this

@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -292,9 +291,8 @@ public class ImageProviderPipeline {
                         registry.getAdditionalPenalty(loader.getClass().getName()));
             }
         }
-        Iterator iter = converters.iterator();
-        while (iter.hasNext()) {
-            ImageConverter converter = (ImageConverter)iter.next();
+        for (Object converter1 : converters) {
+            ImageConverter converter = (ImageConverter) converter1;
             penalty = penalty.add(converter.getConversionPenalty());
             if (registry != null) {
                 penalty = penalty.add(

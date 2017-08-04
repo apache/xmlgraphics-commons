@@ -680,8 +680,8 @@ public final class Glyphs {
         String[] arr = new String[lines.size() * 2];
         int pos = 0;
         StringBuffer buf = new StringBuffer();
-        for (int i = 0, c = lines.size(); i < c; i++) {
-            String line = (String)lines.get(i);
+        for (Object line1 : lines) {
+            String line = (String) line1;
             int semicolon = line.indexOf(';');
             if (semicolon <= 0) {
                 continue;

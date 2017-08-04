@@ -273,9 +273,9 @@ public abstract class SimpleRenderedImage implements RenderedImage {
         prefix = prefix.toLowerCase(Locale.getDefault());
 
         List names = new ArrayList();
-        for (int i = 0; i < propertyNames.length; i++) {
-            if (propertyNames[i].startsWith(prefix)) {
-                names.add(propertyNames[i]);
+        for (String propertyName : propertyNames) {
+            if (propertyName.startsWith(prefix)) {
+                names.add(propertyName);
             }
         }
 

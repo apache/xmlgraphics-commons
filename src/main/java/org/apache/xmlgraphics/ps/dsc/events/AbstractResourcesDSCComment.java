@@ -149,14 +149,13 @@ public abstract class AbstractResourcesDSCComment extends AbstractDSCComment {
         StringBuffer sb = new StringBuffer();
         sb.append("%%").append(getName()).append(": ");
         boolean first = true;
-        Iterator i = resources.iterator();
-        while (i.hasNext()) {
+        for (Object resource : resources) {
             if (!first) {
                 gen.writeln(sb.toString());
                 sb.setLength(0);
                 sb.append("%%+ ");
             }
-            PSResource res = (PSResource)i.next();
+            PSResource res = (PSResource) resource;
             sb.append(res.getResourceSpecification());
             first = false;
         }

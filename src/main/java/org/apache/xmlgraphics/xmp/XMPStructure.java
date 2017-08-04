@@ -88,11 +88,10 @@ public class XMPStructure extends XMPComplexValue implements PropertyAccess {
         atts.clear();
         handler.startElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description", atts);
 
-        Iterator props = properties.values().iterator();
-        while (props.hasNext()) {
-            XMPProperty prop = (XMPProperty)props.next();
+        for (Object o : properties.values()) {
+            XMPProperty prop = (XMPProperty) o;
             //if (prop.getName().getNamespaceURI().equals(ns)) {
-                prop.toSAX(handler);
+            prop.toSAX(handler);
             //}
         }
         handler.endElement(XMPConstants.RDF_NAMESPACE, "RDF", "rdf:Description");

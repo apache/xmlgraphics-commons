@@ -680,8 +680,7 @@ public class PSGenerator implements PSCommandMap {
             ColorWithAlternatives colExt = (ColorWithAlternatives)color;
             //Alternative colors have priority
             Color[] alt = colExt.getAlternativeColors();
-            for (int i = 0, c = alt.length; i < c; i++) {
-                Color col = alt[i];
+            for (Color col : alt) {
                 established = establishColorFromColor(codeBuffer, col);
                 if (established) {
                     break;

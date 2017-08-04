@@ -20,7 +20,6 @@
 package org.apache.xmlgraphics.ps.dsc;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.xmlgraphics.ps.dsc.events.DSCComment;
@@ -38,15 +37,13 @@ public class EventRecorder implements DSCHandler {
      * @throws IOException In case of an I/O error
      */
     public void replay(DSCHandler handler) throws IOException {
-        Iterator iter = events.iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
+        for (Object obj : events) {
             if (obj instanceof PSLine) {
-                handler.line(((PSLine)obj).getLine());
+                handler.line(((PSLine) obj).getLine());
             } else if (obj instanceof PSComment) {
-                handler.comment(((PSComment)obj).getComment());
+                handler.comment(((PSComment) obj).getComment());
             } else if (obj instanceof DSCComment) {
-                handler.handleDSCComment((DSCComment)obj);
+                handler.handleDSCComment((DSCComment) obj);
             } else {
                 throw new IllegalStateException("Unsupported class type");
             }

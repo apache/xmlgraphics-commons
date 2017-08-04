@@ -153,10 +153,10 @@ public class ASCII85OutputStream extends FilterOutputStream
             };
 
             if (DEBUG) {
-                for (int i = 0; i < ret.length; i++) {
-                    if (ret[i] < 33 || ret[i] > 117) {
+                for (byte aRet : ret) {
+                    if (aRet < 33 || aRet > 117) {
                         System.out.println("Illegal char value "
-                                        + Integer.valueOf(ret[i]));
+                                + (int) aRet);
                     }
                 }
             }

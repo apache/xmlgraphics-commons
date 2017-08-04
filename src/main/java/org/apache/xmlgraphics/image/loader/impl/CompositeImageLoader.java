@@ -78,8 +78,7 @@ public class CompositeImageLoader extends AbstractImageLoader {
     public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
             throws ImageException, IOException {
         ImageException firstException = null;
-        for (int i = 0, c = this.loaders.length; i < c; i++) {
-            ImageLoader loader = this.loaders[i];
+        for (ImageLoader loader : this.loaders) {
             try {
                 Image img = loader.loadImage(info, hints, session);
                 if (img != null && firstException != null) {

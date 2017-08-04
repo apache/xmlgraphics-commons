@@ -166,9 +166,7 @@ public final class ImageWriterRegistry {
         if (entries == null) {
             return null;
         }
-        Iterator<ImageWriter> iter = entries.iterator();
-        while (iter.hasNext()) {
-            ImageWriter writer = iter.next();
+        for (ImageWriter writer : entries) {
             if (writer.isFunctional()) {
                 return writer;
             }

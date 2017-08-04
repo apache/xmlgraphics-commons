@@ -348,9 +348,8 @@ public class ImageManager {
         ImageInfo info = image.getInfo();
 
         Image img = null;
-        int count = flavors.length;
-        for (int i = 0; i < count; i++) {
-            if (image.getFlavor().equals(flavors[i])) {
+        for (ImageFlavor flavor : flavors) {
+            if (image.getFlavor().equals(flavor)) {
                 //Shortcut (the image is already in one of the requested formats)
                 return image;
             }

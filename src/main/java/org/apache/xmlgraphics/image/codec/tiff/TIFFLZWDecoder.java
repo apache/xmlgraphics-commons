@@ -170,8 +170,8 @@ public class TIFFLZWDecoder {
      */
     public void writeString(byte[] string) {
 
-        for (int i = 0; i < string.length; i++) {
-            uncompData[dstIndex++] = string[i];
+        for (byte aString : string) {
+            uncompData[dstIndex++] = aString;
         }
     }
 

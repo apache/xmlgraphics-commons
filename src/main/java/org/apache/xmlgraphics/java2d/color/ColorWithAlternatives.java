@@ -201,9 +201,9 @@ public class ColorWithAlternatives extends Color {
      */
     public Color getFirstAlternativeOfType(int colorSpaceType) {
         if (hasAlternativeColors()) {
-            for (int i = 0, c = this.alternativeColors.length; i < c; i++) {
-                if (this.alternativeColors[i].getColorSpace().getType() == colorSpaceType) {
-                    return this.alternativeColors[i];
+            for (Color alternativeColor : this.alternativeColors) {
+                if (alternativeColor.getColorSpace().getType() == colorSpaceType) {
+                    return alternativeColor;
                 }
             }
         }

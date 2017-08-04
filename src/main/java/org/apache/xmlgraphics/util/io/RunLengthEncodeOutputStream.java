@@ -140,8 +140,8 @@ public class RunLengthEncodeOutputStream extends FilterOutputStream
     public void write(byte[] b)
         throws IOException {
 
-        for (int i = 0; i < b.length; i++) {
-            this.write(b[i]);
+        for (byte aB : b) {
+            this.write(aB);
         }
     }
 

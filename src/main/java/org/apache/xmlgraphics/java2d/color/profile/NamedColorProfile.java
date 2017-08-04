@@ -73,9 +73,9 @@ public class NamedColorProfile {
      */
     public NamedColorSpace getNamedColor(String name) {
         if (this.namedColors != null) {
-            for (int i = 0, c = this.namedColors.length; i < c; i++) {
-                if (this.namedColors[i].getColorName().equals(name)) {
-                    return this.namedColors[i];
+            for (NamedColorSpace namedColor : this.namedColors) {
+                if (namedColor.getColorName().equals(name)) {
+                    return namedColor;
                 }
             }
         }

@@ -150,9 +150,9 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
         Date[] dates = getDates();
         if (dates != null) {
             Date latest = null;
-            for (int i = 0, c = dates.length; i < c; i++) {
-                if (latest == null || dates[i].getTime() > latest.getTime()) {
-                    latest = dates[i];
+            for (Date date : dates) {
+                if (latest == null || date.getTime() > latest.getTime()) {
+                    latest = date;
                 }
             }
             return latest;

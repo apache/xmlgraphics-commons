@@ -21,7 +21,6 @@ package org.apache.xmlgraphics.ps;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -99,9 +98,8 @@ public final class PSProcSets {
 
             gen.writeln("/bd{bind def}bind def");
             gen.writeln("/ld{load def}bd");
-            Iterator iter = STANDARD_MACROS.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry)iter.next();
+            for (Object o : STANDARD_MACROS.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
                 gen.writeln("/" + entry.getValue() + "/" + entry.getKey() + " ld");
             }
 

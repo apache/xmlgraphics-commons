@@ -22,7 +22,6 @@ package org.apache.xmlgraphics.ps.dsc;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -145,9 +144,8 @@ public class ResourceTracker {
      */
     public void notifyResourceUsageOnPage(Collection resources) {
         preparePageResources();
-        Iterator iter = resources.iterator();
-        while (iter.hasNext()) {
-            PSResource res = (PSResource)iter.next();
+        for (Object resource : resources) {
+            PSResource res = (PSResource) resource;
             notifyResourceUsageOnPage(res);
         }
     }
@@ -198,9 +196,8 @@ public class ResourceTracker {
      */
     public void writeDocumentResources(PSGenerator gen) throws IOException {
         if (usedResources != null) {
-            Iterator iter = usedResources.iterator();
-            while (iter.hasNext()) {
-                PSResource res = (PSResource)iter.next();
+            for (Object usedResource : usedResources) {
+                PSResource res = (PSResource) usedResource;
                 if (documentSuppliedResources == null
                         || !documentSuppliedResources.contains(res)) {
                     registerNeededResource(res);

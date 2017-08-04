@@ -221,8 +221,8 @@ public class PSState implements Serializable {
      * @exception IOException In case of an I/O problem
      */
     public void reestablish(PSGenerator gen) throws IOException {
-        for (int i = 0, len = transformConcatList.size(); i < len; i++) {
-            gen.concatMatrix((AffineTransform)transformConcatList.get(i));
+        for (Object aTransformConcatList : transformConcatList) {
+            gen.concatMatrix((AffineTransform) aTransformConcatList);
         }
         gen.useLineCap(linecap);
         gen.useLineWidth(linewidth);

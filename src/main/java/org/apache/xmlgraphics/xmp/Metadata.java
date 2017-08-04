@@ -84,9 +84,8 @@ public class Metadata implements XMLizable, PropertyAccess {
      */
     public void mergeInto(Metadata target, List<Class> exclude) {
         XMPSchemaRegistry registry = XMPSchemaRegistry.getInstance();
-        Iterator iter = properties.values().iterator();
-        while (iter.hasNext()) {
-            XMPProperty prop = (XMPProperty)iter.next();
+        for (Object o : properties.values()) {
+            XMPProperty prop = (XMPProperty) o;
             XMPSchema schema = registry.getSchema(prop.getNamespace());
             if (!exclude.contains(schema.getClass())) {
                 MergeRuleSet rules = schema.getDefaultMergeRuleSet();
@@ -120,9 +119,8 @@ public class Metadata implements XMLizable, PropertyAccess {
             boolean first = true;
             boolean empty = true;
 
-            Iterator props = properties.values().iterator();
-            while (props.hasNext()) {
-                XMPProperty prop = (XMPProperty)props.next();
+            for (Object o : properties.values()) {
+                XMPProperty prop = (XMPProperty) o;
                 if (prop.getName().getNamespaceURI().equals(ns)) {
                     if (first) {
                         if (prefix == null) {

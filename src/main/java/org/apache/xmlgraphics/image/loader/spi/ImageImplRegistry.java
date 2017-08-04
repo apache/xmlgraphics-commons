@@ -19,9 +19,11 @@
 
 package org.apache.xmlgraphics.image.loader.spi;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -187,23 +189,19 @@ public class ImageImplRegistry {
             return;
         }
         String[] mimes = loaderFactory.getSupportedMIMETypes();
-        for (int i = 0, ci = mimes.length; i < ci; i++) {
-            String mime = mimes[i];
-
+        for (String mime : mimes) {
             synchronized (loaders) {
-                Map flavorMap = (Map)loaders.get(mime);
+                Map flavorMap = (Map) loaders.get(mime);
                 if (flavorMap == null) {
-                    flavorMap = new java.util.HashMap();
+                    flavorMap = new HashMap();
                     loaders.put(mime, flavorMap);
                 }
 
                 ImageFlavor[] flavors = loaderFactory.getSupportedFlavors(mime);
-                for (int j = 0, cj = flavors.length; j < cj; j++) {
-                    ImageFlavor flavor = flavors[j];
-
-                    List factoryList = (List)flavorMap.get(flavor);
+                for (ImageFlavor flavor : flavors) {
+                    List factoryList = (List) flavorMap.get(flavor);
                     if (factoryList == null) {
-                        factoryList = new java.util.ArrayList();
+                        factoryList = new ArrayList();
                         flavorMap.put(flavor, factoryList);
                     }
                     factoryList.add(loaderFactory);
@@ -332,9 +330,8 @@ public class ImageImplRegistry {
                 if (checkFlavor.isCompatible(flavor)) {
                     List factoryList = (List)e.getValue();
                     if (factoryList != null && factoryList.size() > 0) {
-                        Iterator factoryIter = factoryList.iterator();
-                        while (factoryIter.hasNext()) {
-                            ImageLoaderFactory factory = (ImageLoaderFactory)factoryIter.next();
+                        for (Object aFactoryList : factoryList) {
+                            ImageLoaderFactory factory = (ImageLoaderFactory) aFactoryList;
                             if (factory.isSupported(imageInfo)) {
                                 matches.add(factory);
                             }
@@ -387,9 +384,8 @@ public class ImageImplRegistry {
         Map flavorMap = (Map)loaders.get(mime);
         if (flavorMap != null) {
             Set factories = new java.util.HashSet();
-            Iterator iter = flavorMap.values().iterator();
-            while (iter.hasNext()) {
-                List factoryList = (List)iter.next();
+            for (Object o : flavorMap.values()) {
+                List factoryList = (List) o;
                 factories.addAll(factoryList);
             }
             int factoryCount = factories.size();

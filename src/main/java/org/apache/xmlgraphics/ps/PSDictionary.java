@@ -19,7 +19,7 @@
 
 package org.apache.xmlgraphics.ps;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -196,9 +196,9 @@ public class PSDictionary extends java.util.HashMap {
                 }
                 Token valueToken = nextToken(str, keyToken.endIndex + 1);
                 String[] braces = null;
-                for (int i = 0; i < BRACES.length; i++) {
-                    if (valueToken.value.startsWith(BRACES[i][OPENING])) {
-                        braces = BRACES[i];
+                for (String[] brace : BRACES) {
+                    if (valueToken.value.startsWith(brace[OPENING])) {
+                        braces = brace;
                         break;
                     }
                 }
@@ -276,8 +276,7 @@ public class PSDictionary extends java.util.HashMap {
     /** {@inheritDoc} */
     public int hashCode() {
         int hashCode = 7;
-        for (Iterator it = values().iterator(); it.hasNext();) {
-            Object value = it.next();
+        for (Object value : values()) {
             hashCode += value.hashCode();
         }
         return hashCode;
@@ -289,15 +288,14 @@ public class PSDictionary extends java.util.HashMap {
             return "";
         }
         StringBuffer sb = new StringBuffer("<<\n");
-        for (Iterator it = super.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Object o : super.keySet()) {
+            String key = (String) o;
             sb.append("  " + key + " ");
             Object obj = super.get(key);
-            if (obj instanceof java.util.ArrayList) {
-                List array = (List)obj;
+            if (obj instanceof ArrayList) {
+                List array = (List) obj;
                 StringBuilder str = new StringBuilder("[");
-                for (int i = 0; i < array.size(); i++) {
-                    Object element = array.get(i);
+                for (Object element : array) {
                     str.append(element + " ");
                 }
                 String str2 = str.toString().trim();

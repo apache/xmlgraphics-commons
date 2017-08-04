@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -250,9 +249,8 @@ public class DSCParser implements DSCParserConstants {
             this.filterListener.processEvent(this.currentEvent, this);
         }
         if (this.listeners != null) {
-            Iterator iter = this.listeners.iterator();
-            while (iter.hasNext()) {
-                ((DSCListener)iter.next()).processEvent(this.currentEvent, this);
+            for (Object listener : this.listeners) {
+                ((DSCListener) listener).processEvent(this.currentEvent, this);
             }
         }
     }
