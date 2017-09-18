@@ -19,9 +19,13 @@
 
 package org.apache.xmlgraphics.java2d.ps;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -396,7 +400,7 @@ public class PSTilingPattern {
             sb.append(width + " " + height + " 8 " + "matrix\n");   // width height bits/comp matrix
             int [] argb = new int[width * height];                  // datasrc0 datasrcncomp-1
             sb.append("{<");
-            texture.getImage().getRGB(0, 0, width, height, argb, 0, width);
+            getAsRGB().getRGB(0, 0, width, height, argb, 0, width);
             int count = 0;
             for (int i = 0; i < argb.length; i++) {
                 if ((i % width == 0) || (count > 249)) {
@@ -427,6 +431,21 @@ public class PSTilingPattern {
         sb.append("/" + patternName + " exch def\n");
 
         return sb.toString();
+    }
+
+    private BufferedImage getAsRGB() {
+        BufferedImage img = texture.getImage();
+        if (img.getType() != BufferedImage.TYPE_INT_RGB) {
+            BufferedImage buf = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = buf.createGraphics();
+            g.setComposite(AlphaComposite.SrcOver);
+            g.setBackground(Color.white);
+            g.fillRect(0, 0, img.getWidth(), img.getHeight());
+            g.drawImage(img, 0, 0, null);
+            g.dispose();
+            return buf;
+        }
+        return img;
     }
 
     /** {@inheritDoc} */
