@@ -71,6 +71,7 @@ public class PSGenerator implements PSCommandMap {
     private Log log = LogFactory.getLog(getClass());
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
+    private boolean acrobatDownsample;
     private boolean commentsEnabled = true;
     private boolean compactMode = true;
     private PSCommandMap commandMap = PSProcSets.STD_COMMAND_MAP;
@@ -164,6 +165,14 @@ public class PSGenerator implements PSCommandMap {
      */
     public void setPSLevel(int level) {
         this.psLevel = level;
+    }
+
+    public boolean isAcrobatDownsample() {
+        return acrobatDownsample;
+    }
+
+    public void setAcrobatDownsample(boolean b) {
+        acrobatDownsample = b;
     }
 
     /**

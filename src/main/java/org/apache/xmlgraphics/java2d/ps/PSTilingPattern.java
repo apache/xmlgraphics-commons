@@ -365,7 +365,7 @@ public class PSTilingPattern {
      *
      * @return The string which contains postscript code of pattern definition
      */
-    public String toString() {
+    public String toString(boolean acrobatDownsample) {
         StringBuffer sb = new StringBuffer("<<\n");
         sb.append("/PatternType " + this.patternType + "\n");
         sb.append("/PaintType " + paintType + "\n");
@@ -397,26 +397,18 @@ public class PSTilingPattern {
 
             // define color image: width height bits/comp matrix
             //                        datasrc0 datasrcncomp-1 multi ncomp colorimage
-            sb.append(width + " " + height + " 8 " + "matrix\n");   // width height bits/comp matrix
-            int [] argb = new int[width * height];                  // datasrc0 datasrcncomp-1
-            sb.append("{<");
-            getAsRGB().getRGB(0, 0, width, height, argb, 0, width);
-            int count = 0;
-            for (int i = 0; i < argb.length; i++) {
-                if ((i % width == 0) || (count > 249)) {
-                    sb.append("\n");
-                    count = 0;  // line should not be longer than 255 characters
-                }
-                // delete alpha canal and write to output
-                StringBuffer sRGB = new StringBuffer(Integer.toHexString(argb[i] & 0x00ffffff));
-                if (sRGB.length() != 6) {
-                    sRGB.insert(0, "000000");   // zero padding
-                    sRGB = new StringBuffer(sRGB.substring(sRGB.length() - 6));
-                }
-                sb.append(sRGB);
-                count += 6;
+            // width height bits/comp matrix
+            int bits = 8;
+            if (acrobatDownsample) {
+                bits = 4;
             }
-            sb.append("\n>} false 3 colorimage");                   //  multi ncomp colorimage
+            sb.append(width).append(" ").append(height).append(" ").append(bits).append(" ").append("matrix\n");
+            int [] argb = new int[width * height];                  // datasrc0 datasrcncomp-1
+            getAsRGB().getRGB(0, 0, width, height, argb, 0, width);
+
+            writeImage(sb, argb, width, bits);
+
+            sb.append(" false 3 colorimage");                   //  multi ncomp colorimage
         } else {
             sb.append(paintProc);
         }
@@ -431,6 +423,43 @@ public class PSTilingPattern {
         sb.append("/" + patternName + " exch def\n");
 
         return sb.toString();
+    }
+
+    private void writeImage(StringBuffer sb, int[] argb, int width, int bits) {
+        int count = 0;
+        sb.append("{<");
+        for (int i = 0; i < argb.length; i++) {
+            if ((i % width == 0) || (count > 249)) {
+                sb.append('\n');
+                count = 0;  // line should not be longer than 255 characters
+            }
+            if (bits == 4) {
+                Color c = new Color(argb[i]);
+                int v = c.getRed() / 16;
+                String s = Integer.toHexString(v);
+                sb.append(s);
+
+                v = c.getGreen() / 16;
+                s = Integer.toHexString(v);
+                sb.append(s);
+
+                v = c.getBlue() / 16;
+                s = Integer.toHexString(v);
+                sb.append(s);
+
+                count += 3;
+            } else {
+                // delete alpha canal and write to output
+                StringBuffer sRGB = new StringBuffer(Integer.toHexString(argb[i] & 0x00ffffff));
+                if (sRGB.length() != 6) {
+                    sRGB.insert(0, "000000");   // zero padding
+                    sRGB = new StringBuffer(sRGB.substring(sRGB.length() - 6));
+                }
+                sb.append(sRGB);
+                count += 6;
+            }
+        }
+        sb.append("\n>}");
     }
 
     private BufferedImage getAsRGB() {

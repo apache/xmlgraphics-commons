@@ -568,7 +568,7 @@ public class PSGraphics2D extends AbstractGraphics2D {
                     // create pattern with texture and use it for filling of a graphics object
                     PSTilingPattern psTilingPattern = new PSTilingPattern("Pattern1",
                             (TexturePaint)paint, 0, 0, 3, null);
-                    gen.write(psTilingPattern.toString());
+                    gen.write(psTilingPattern.toString(gen.isAcrobatDownsample()));
                     gen.writeln("/Pattern " + gen.mapCommand("setcolorspace"));
                     gen.writeln(psTilingPattern.getName() + " " + gen.mapCommand("setcolor"));
                 } catch (IOException ioe) {

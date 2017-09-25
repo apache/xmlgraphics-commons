@@ -142,4 +142,23 @@ public class PSGraphics2DTestCase {
 
         p.dispose();
     }
+
+    @Test
+    public void testAcrobatDownsample() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator gen = new PSGenerator(out);
+        PSGraphics2D p = new PSGraphics2D(false, gen);
+        p.setGraphicContext(new GraphicContext());
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        TexturePaint tp = new TexturePaint(img, new Rectangle());
+        p.setPaint(tp);
+        p.fill(new Rectangle());
+        assertTrue(out.toString().contains("1 1 8 matrix\n{<\nffffff\n>} false 3 colorimage"));
+        out.reset();
+
+        gen.setAcrobatDownsample(true);
+        p.fill(new Rectangle());
+        assertTrue(out.toString().contains("1 1 4 matrix\n{<\nfff\n>} false 3 colorimage"));
+        p.dispose();
+    }
 }
