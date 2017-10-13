@@ -25,4 +25,5 @@ import org.apache.xmlgraphics.ps.PSGenerator;
 
 public interface GeneralGraphics2DImagePainter extends Graphics2DImagePainter {
     Graphics2D getGraphics(boolean textAsShapes, PSGenerator gen);
+    void addFallbackFont(String name, Object font);
 }
