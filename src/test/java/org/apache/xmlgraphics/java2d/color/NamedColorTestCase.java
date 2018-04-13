@@ -21,18 +21,22 @@ package org.apache.xmlgraphics.java2d.color;
 
 import java.awt.Color;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests named color spaces (and the CIE Lab color space implementation).
  */
-public class NamedColorTest extends TestCase {
+public class NamedColorTestCase {
 
     private static final float POSTGELB_X = 0.6763079f;
     private static final float POSTGELB_Y = 0.6263507f;
     private static final float POSTGELB_Z = 0.04217565f;
 
-    public void testNamedColorWithCIELab() throws Exception {
+    @Test
+    public void testNamedColorWithCIELab() {
         CIELabColorSpace lab = ColorSpaces.getCIELabColorSpaceD50();
 
         //CIE Lab definition of "Postgelb" (postal yellow) at D50 as defined by Swiss Post
@@ -63,7 +67,8 @@ public class NamedColorTest extends TestCase {
         assertEquals(0, c1.getBlue());
     }
 
-    public void testEquals() throws Exception {
+    @Test
+    public void testEquals() {
         NamedColorSpace ncs1 = new NamedColorSpace("Postgelb",
                 new float[] {POSTGELB_X, POSTGELB_Y, POSTGELB_Z});
 
