@@ -73,7 +73,7 @@ public class XMPSchemaAdapter {
      */
     private void addStringToArray(String propName, String value, XMPArrayType arrayType) {
         if (value == null || value.length() == 0) {
-            throw new IllegalArgumentException("Value must not be empty");
+            throw new IllegalArgumentException("'" + propName + "' value must not be empty");
         }
         addObjectToArray(propName, value, arrayType);
     }
@@ -86,7 +86,7 @@ public class XMPSchemaAdapter {
      */
     protected void addObjectToArray(String propName, Object value, XMPArrayType arrayType) {
         if (value == null) {
-            throw new IllegalArgumentException("Value must not be null");
+            throw new IllegalArgumentException("'" + propName + "' value must not be null");
         }
         QName name = getQName(propName);
         XMPProperty prop = meta.getProperty(name);

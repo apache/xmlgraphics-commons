@@ -195,4 +195,23 @@ public class XMPPropertyTestCase {
         assertEquals(3, basic.getIdentifiers().length);
     }
 
+    @Test
+    public void testEmptyPropertyValue() {
+        Metadata xmp = new Metadata();
+        DublinCoreAdapter dc = DublinCoreSchema.getAdapter(xmp);
+        String ex = "";
+        try {
+            dc.addLanguage("");
+        } catch (IllegalArgumentException e) {
+            ex = e.getMessage();
+        }
+        assertEquals(ex, "'language' value must not be empty");
+
+        try {
+            dc.addSubject("");
+        } catch (IllegalArgumentException e) {
+            ex = e.getMessage();
+        }
+        assertEquals(ex, "'subject' value must not be empty");
+    }
 }
