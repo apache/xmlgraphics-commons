@@ -41,7 +41,7 @@ public class CorruptImagesTestCase {
         try {
             manager.preloadImage(uri, sessionContext);
             fail("Expected an ImageException!");
-        } catch (ImageException ie) {
+        } catch (Exception ie) {
             //Expected exception
             assertNotNull(ie.getMessage());
         }
