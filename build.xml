@@ -25,7 +25,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="year" value="1999-2017"/>
+  <property name="year" value="1999-2018"/>
 
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
@@ -555,28 +555,28 @@ NOTE:
     <!--property name="bin.suffix" value="bin-jdk${java.specification.version}"/-->
     <property name="bin.suffix" value="bin"/>
     <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
-    <antcall target="sha256">
+    <antcall target="sha512">
       <param name="sign.archive" value="${name}-${version}-src.zip"/>
     </antcall>
     <antcall target="sign-file">
       <param name="sign.archive" value="${name}-${version}-src.zip"/>
       <param name="pwd" value="${pwd}"/>
     </antcall>
-    <antcall target="sha256">
+    <antcall target="sha512">
       <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
     </antcall>
     <antcall target="sign-file">
       <param name="sign.archive" value="${name}-${version}-src.tar.gz"/>
       <param name="pwd" value="${pwd}"/>
     </antcall>
-    <antcall target="sha256">
+    <antcall target="sha512">
       <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
     </antcall>
     <antcall target="sign-file">
       <param name="sign.archive" value="${name}-${version}-${bin.suffix}.zip"/>
       <param name="pwd" value="${pwd}"/>
     </antcall>
-    <antcall target="sha256">
+    <antcall target="sha512">
       <param name="sign.archive" value="${name}-${version}-${bin.suffix}.tar.gz"/>
     </antcall>
     <antcall target="sign-file">
@@ -585,11 +585,11 @@ NOTE:
     </antcall>
   </target>
 
-  <target name="sha256">
-    <property name="sha256.exec" value="sha256sum"/>
-    <property name="sha256.options" value=""/>
-    <exec executable="${sha256.exec}" output="${sign.archive}.sha256">
-      <arg line="${sha256.options} ${sign.archive}"/>
+  <target name="sha512">
+    <property name="sha512.exec" value="sha512sum"/>
+    <property name="sha512.options" value=""/>
+    <exec executable="${sha512.exec}" output="${sign.archive}.sha512">
+      <arg line="${sha512.options} ${sign.archive}"/>
     </exec>
   </target>
 
@@ -619,7 +619,7 @@ NOTE:
       <include name="maven/pom.xml"/>
       </patternset>
     </fileset>
-    <checksum algorithm="sha-256" fileext=".sha256">
+    <checksum algorithm="sha-512" fileext=".sha512">
       <fileset refid="bundle-files"/>
     </checksum>
     <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
