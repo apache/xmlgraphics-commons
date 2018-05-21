@@ -7,6 +7,7 @@
   <version>2.3.0-SNAPSHOT</version>
   <name>${project.groupId}:${project.artifactId}</name>
   <description>XML Graphics Commons</description>
+  <url>http://xmlgraphics.apache.org/commons/</url>
 
   <properties>
     <checkstyle.version>2.15</checkstyle.version>
