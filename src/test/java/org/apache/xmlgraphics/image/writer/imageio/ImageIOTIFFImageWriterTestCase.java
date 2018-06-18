@@ -27,8 +27,13 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import org.w3c.dom.Node;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -126,7 +131,7 @@ public class ImageIOTIFFImageWriterTestCase {
         ByteArrayOutputStream getByteArrayOutput();
     }
 
-    private class TestImageWriter implements ImageWriterHelper {
+    private static class TestImageWriter implements ImageWriterHelper {
         private ImageWriter writer;
         private ByteArrayOutputStream baout;
 
@@ -149,7 +154,7 @@ public class ImageIOTIFFImageWriterTestCase {
         }
     }
 
-    private class TestMultiImageWriter implements ImageWriterHelper {
+    private static class TestMultiImageWriter implements ImageWriterHelper {
         private MultiImageWriter writer;
         private ByteArrayOutputStream baout;
 
@@ -176,4 +181,32 @@ public class ImageIOTIFFImageWriterTestCase {
         }
     }
 
+    @Test
+    public void testNewMetadataFormat() {
+        ImageWriterParams params = new ImageWriterParams();
+        params.setResolution(92);
+        MyIIOMetadata metadata = new MyIIOMetadata();
+        new ImageIOTIFFImageWriter().updateMetadata(null, metadata, params);
+        Assert.assertEquals(metadata.mergeNode, "javax_imageio_tiff_image_1.0");
+    }
+
+    static class MyIIOMetadata extends IIOMetadata {
+        String mergeNode;
+        MyIIOMetadata() {
+            super(true, "javax_imageio_tiff_image_1.0", null, null, null);
+        }
+        public boolean isReadOnly() {
+            return false;
+        }
+        public Node getAsTree(String formatName) {
+            IIOMetadataNode node = new IIOMetadataNode();
+            node.appendChild(new IIOMetadataNode("Dimension"));
+            return node;
+        }
+        public void mergeTree(String formatName, Node root) {
+            mergeNode = root.getNodeName();
+        }
+        public void reset() {
+        }
+    };
 }

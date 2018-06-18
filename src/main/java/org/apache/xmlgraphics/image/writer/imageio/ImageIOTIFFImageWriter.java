@@ -46,8 +46,12 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
 
     private static final String SUN_TIFF_NATIVE_FORMAT
             = "com_sun_media_imageio_plugins_tiff_image_1.0";
+    private static final String JAVA_TIFF_NATIVE_FORMAT
+            = "javax_imageio_tiff_image_1.0";
     private static final String SUN_TIFF_NATIVE_STREAM_FORMAT
             = "com_sun_media_imageio_plugins_tiff_stream_1.0";
+    private static final String JAVA_TIFF_NATIVE_STREAM_FORMAT
+            = "javax_imageio_tiff_stream_1.0";
 
     /**
      * Main constructor.
@@ -65,14 +69,12 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
         //it doesn't work properly through the standard metadata. Haven't figured out why
         //that happens.
         if (params.getResolution() != null) {
-            if (SUN_TIFF_NATIVE_FORMAT.equals(meta.getNativeMetadataFormatName())) {
-                //IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(SUN_TIFF_NATIVE_FORMAT);
-                IIOMetadataNode root = new IIOMetadataNode(SUN_TIFF_NATIVE_FORMAT);
+            if (SUN_TIFF_NATIVE_FORMAT.equals(meta.getNativeMetadataFormatName())
+                    || JAVA_TIFF_NATIVE_FORMAT.equals(meta.getNativeMetadataFormatName())) {
+                IIOMetadataNode root = new IIOMetadataNode(meta.getNativeMetadataFormatName());
                 IIOMetadataNode ifd = getChildNode(root, "TIFFIFD");
                 if (ifd == null) {
                     ifd = new IIOMetadataNode("TIFFIFD");
-                    ifd.setAttribute("tagSets",
-                                "com.sun.media.imageio.plugins.tiff.BaselineTIFFTagSet");
                     root.appendChild(ifd);
                 }
                 ifd.appendChild(createResolutionUnitField(params));
@@ -85,7 +87,7 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
                         "RowsPerStrip", Integer.toString(rows)));
 
                 try {
-                    meta.mergeTree(SUN_TIFF_NATIVE_FORMAT, root);
+                    meta.mergeTree(meta.getNativeMetadataFormatName(), root);
                 } catch (IIOInvalidTreeException e) {
                     throw new RuntimeException("Cannot update image metadata: "
                                 + e.getMessage(), e);
@@ -221,20 +223,27 @@ public class ImageIOTIFFImageWriter extends ImageIOImageWriter {
 
         //Try changing the Byte Order
         IIOMetadata streamMetadata = writer.getDefaultStreamMetadata(writeParam);
-        Set<String> names = new java.util.HashSet<String>(
-                Arrays.asList(streamMetadata.getMetadataFormatNames()));
-        if (names.contains(SUN_TIFF_NATIVE_STREAM_FORMAT)) {
-            Node root = streamMetadata.getAsTree(SUN_TIFF_NATIVE_STREAM_FORMAT);
+        if (streamMetadata != null) {
+            Set<String> names = new java.util.HashSet<String>(
+                    Arrays.asList(streamMetadata.getMetadataFormatNames()));
+            setFromTree(names, streamMetadata, endian, SUN_TIFF_NATIVE_STREAM_FORMAT);
+            setFromTree(names, streamMetadata, endian, JAVA_TIFF_NATIVE_STREAM_FORMAT);
+        }
+        return streamMetadata;
+    }
+
+    private void setFromTree(Set<String> names, IIOMetadata streamMetadata, Endianness endian, String format) {
+        if (names.contains(format)) {
+            Node root = streamMetadata.getAsTree(format);
             root.getFirstChild().getAttributes().item(0).setNodeValue(endian.toString());
             try {
-                streamMetadata.setFromTree(SUN_TIFF_NATIVE_STREAM_FORMAT, root);
+                streamMetadata.setFromTree(format, root);
             } catch (IIOInvalidTreeException e) {
                 //This should not happen since we check if the format is supported.
                 throw new IllegalStateException(
                         "Could not replace TIFF stream metadata: " + e.getMessage(), e);
             }
         }
-        return streamMetadata;
     }
 
 }
