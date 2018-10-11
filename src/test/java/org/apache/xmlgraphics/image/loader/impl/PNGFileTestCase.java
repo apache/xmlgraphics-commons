@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.ImageContext;
 import org.apache.xmlgraphics.image.loader.ImageException;
@@ -77,12 +76,13 @@ public class PNGFileTestCase implements PNGConstants {
         ImageSessionContext session = new MockImageSessionContext(context);
         ImageInfo info = new ImageInfo("corrupt-image.png", MimeConstants.MIME_PNG);
         ImageLoaderRawPNG ilrpng = new ImageLoaderRawPNG();
+        String exception = "";
         try {
-            ImageRawPNG irpng = (ImageRawPNG) ilrpng.loadImage(info, null, session);
-            fail("An exception should have been thrown above");
+            ilrpng.loadImage(info, null, session);
         } catch (Exception e) {
-            // do nothing; this was expected
+            exception = e.getCause().getMessage();
         }
+        assertEquals("PNG unknown critical chunk: IBLA", exception);
     }
 
     private void testColorTypePNG(String imageName, int colorType) throws ImageException, IOException {
@@ -115,5 +115,4 @@ public class PNGFileTestCase implements PNGConstants {
             assertTrue(irpng.isTransparent());
         }
     }
-
 }

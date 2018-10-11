@@ -70,7 +70,7 @@ public class ImageLoaderRawPNG extends AbstractImageLoader {
         // Remove streams as we do things with them at some later time.
         XmlSourceUtil.removeStreams(src);
         SeekableStream seekStream = new ImageInputStreamSeekableStreamAdapter(in);
-        PNGFile im = new PNGFile(seekStream);
+        PNGFile im = new PNGFile(seekStream, info.getOriginalURI());
         ImageRawPNG irpng = im.getImageRawPNG(info);
         return irpng;
     }

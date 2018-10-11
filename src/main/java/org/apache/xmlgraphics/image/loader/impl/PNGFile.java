@@ -69,7 +69,7 @@ class PNGFile implements PNGConstants {
     private boolean hasPalette;
     private boolean hasAlphaPalette;
 
-    public PNGFile(InputStream stream) throws IOException, ImageException {
+    public PNGFile(InputStream stream, String uri) throws IOException, ImageException {
         if (!stream.markSupported()) {
             stream = new BufferedInputStream(stream);
         }
@@ -107,12 +107,14 @@ class PNGFile implements PNGConstants {
                   chunk = PNGChunk.readChunk(distream);
                   parse_sRGB_chunk(chunk);
                 } else {
-                    // chunk = PNGChunk.readChunk(distream);
+                    if (Character.isUpperCase(chunkType.charAt(0))) {
+                        throw new ImageException("PNG unknown critical chunk: " + chunkType);
+                    }
                     PNGChunk.skipChunk(distream);
                 }
             } catch (Exception e) {
                 String msg = PropertyUtil.getString("PNGImageDecoder2");
-                throw new RuntimeException(msg, e);
+                throw new RuntimeException(msg + " " + uri, e);
             }
         } while (true);
     }
@@ -190,10 +192,6 @@ class PNGFile implements PNGConstants {
 
     private void parse_IHDR_chunk(PNGChunk chunk) {
         bitDepth = chunk.getInt1(8);
-        if (bitDepth != 8) {
-            // this is a limitation of the current implementation
-            throw new RuntimeException("Unsupported bit depth: " + bitDepth);
-        }
         colorType = chunk.getInt1(9);
         int compressionMethod = chunk.getInt1(10);
         if (compressionMethod != 0) {
