@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.java2d.ps;
 
+import java.awt.AlphaComposite;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.TexturePaint;
@@ -160,5 +161,19 @@ public class PSGraphics2DTestCase {
         p.fill(new Rectangle());
         assertTrue(out.toString().contains("1 1 4 matrix\n{<\nfff\n>} false 3 colorimage"));
         p.dispose();
+    }
+
+    @Test
+    public void testFillAlpha() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator gen = new PSGenerator(out);
+        PSGraphics2D p = new PSGraphics2D(false, gen);
+        p.setGraphicContext(new GraphicContext());
+        p.setComposite(AlphaComposite.getInstance(3, 0));
+        p.fill(new Rectangle());
+        assertEquals(out.toString(), "");
+        p.setComposite(AlphaComposite.getInstance(3, 0.5f));
+        p.fill(new Rectangle());
+        assertTrue(out.toString().contains("\nN\n"));
     }
 }

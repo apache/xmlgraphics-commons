@@ -23,6 +23,7 @@ package org.apache.xmlgraphics.java2d.ps;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -787,33 +788,40 @@ public class PSGraphics2D extends AbstractGraphics2D {
      * @see #setClip
      */
     public void fill(Shape s) {
-        preparePainting();
-        try {
-            gen.saveGraphicsState();
+        if (!hasAlpha()) {
+            preparePainting();
+            try {
+                gen.saveGraphicsState();
 
-            AffineTransform trans = getTransform();
-            boolean newTransform = !trans.isIdentity();
+                AffineTransform trans = getTransform();
+                boolean newTransform = !trans.isIdentity();
 
-            if (newTransform) {
-                gen.concatMatrix(trans);
-            }
-            Shape imclip = getClip();
-            if (shouldBeClipped(imclip, s)) {
-                writeClip(imclip);
-            }
+                if (newTransform) {
+                    gen.concatMatrix(trans);
+                }
+                Shape imclip = getClip();
+                if (shouldBeClipped(imclip, s)) {
+                    writeClip(imclip);
+                }
 
-            establishColor(getColor());
+                establishColor(getColor());
 
-            applyPaint(getPaint(), true);
+                applyPaint(getPaint(), true);
 
-            gen.writeln(gen.mapCommand("newpath"));
-            int windingRule = processShape(s, true);
-            doDrawing(true, false,
+                gen.writeln(gen.mapCommand("newpath"));
+                int windingRule = processShape(s, true);
+                doDrawing(true, false,
                     windingRule == PathIterator.WIND_EVEN_ODD);
-            gen.restoreGraphicsState();
-        } catch (IOException ioe) {
-            handleIOException(ioe);
+                gen.restoreGraphicsState();
+            } catch (IOException ioe) {
+                handleIOException(ioe);
+            }
         }
+    }
+
+    private boolean hasAlpha() {
+        Composite composite = getComposite();
+        return composite instanceof AlphaComposite && ((AlphaComposite) composite).getAlpha() == 0f;
     }
 
     /**
