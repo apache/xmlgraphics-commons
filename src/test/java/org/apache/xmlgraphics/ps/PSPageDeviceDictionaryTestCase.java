@@ -19,9 +19,8 @@ package org.apache.xmlgraphics.ps;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class PSPageDeviceDictionaryTestCase {
     @Test
