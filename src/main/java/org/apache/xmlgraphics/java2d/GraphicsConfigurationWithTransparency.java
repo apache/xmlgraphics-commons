@@ -73,7 +73,7 @@ public class GraphicsConfigurationWithTransparency extends AbstractGraphicsConfi
      * @return the bounds of the document page
      */
     public Rectangle getBounds() {
-        return null;
+        return new Rectangle();
     }
 
     /**

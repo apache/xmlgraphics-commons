@@ -84,6 +84,6 @@ public class GraphicsConfigurationWithoutTransparency extends AbstractGraphicsCo
 
     @Override
     public Rectangle getBounds() {
-        return null;
+        return new Rectangle();
     }
 }
