@@ -554,7 +554,9 @@ NOTE:
   <target name="release-dist" depends="dist" description="Generates the distribution package and signs the release">
     <!--property name="bin.suffix" value="bin-jdk${java.specification.version}"/-->
     <property name="bin.suffix" value="bin"/>
-    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <input message="Passphrase for your default private key" addproperty="pwd">
+        <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+    </input>
     <antcall target="sha512">
       <param name="sign.archive" value="${name}-${version}-src.zip"/>
     </antcall>
@@ -622,7 +624,9 @@ NOTE:
     <checksum algorithm="sha-512" fileext=".sha512">
       <fileset refid="bundle-files"/>
     </checksum>
-    <input message="Passphrase for your default private key (attention: passphrase will be echoed in clear text on the display!)" addproperty="pwd"/>
+    <input message="Passphrase for your default private key" addproperty="pwd">
+        <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+    </input>
     <antcall target="sign-file">
       <param name="sign.archive" value="${build.dir}/${name}-${version}.jar"/>
       <param name="pwd" value="${pwd}"/>
