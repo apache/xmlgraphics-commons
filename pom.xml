@@ -88,8 +88,6 @@
           <configuration>
             <source>${java.version}</source>
             <target>${java.version}</target>
-            <executable>${jdk.path}/bin/javac</executable>
-            <fork>true</fork>
           </configuration>
         </plugin>
         <plugin>
@@ -174,6 +172,33 @@
       </testResource>
     </testResources>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>custom-javac</id>
+      <activation>
+        <property>
+          <name>jdk.path</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <executable>${jdk.path}/bin/javac</executable>
+                <fork>true</fork>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>  
 
   <reporting>
     <plugins>
