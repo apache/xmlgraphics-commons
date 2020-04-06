@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.util.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +33,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * This test validates that the Base64 encoder/decoders work properly.
  *
@@ -39,7 +43,7 @@ import static org.junit.Assert.fail;
 public class Base64TestCase {
 
     private void innerBase64Test(String action, URL in, URL ref) throws Exception {
-        InputStream inIS = in.openStream();
+        InputStream inIS = dos2Unix(in);
 
         if (action.equals("ROUND")) {
             ref = in;
@@ -47,7 +51,7 @@ public class Base64TestCase {
             fail("Bad action string");
         }
 
-        InputStream refIS = ref.openStream();
+        InputStream refIS = dos2Unix(ref);
 
         if (action.equals("ENCODE") || action.equals("ROUND")) {
             // We need to encode the incomming data
@@ -72,6 +76,21 @@ public class Base64TestCase {
         if (mismatch != -1) {
             fail("Wrong result");
         }
+    }
+
+    private InputStream dos2Unix(URL url) throws IOException {
+        InputStream is = url.openStream();
+        byte[] data = IOUtils.toByteArray(is);
+        if (data.length > 1 && data[data.length - 1] == '\n') {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            for (byte b : data) {
+                if (b != '\r') {
+                    bos.write(b);
+                }
+            }
+            return new ByteArrayInputStream(bos.toByteArray());
+        }
+        return new ByteArrayInputStream(data);
     }
 
     private void innerBase64Test(String action, String in, String ref) throws Exception {
