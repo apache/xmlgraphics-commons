@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.xmp;
 
 import java.net.URL;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -54,6 +55,8 @@ public final class XMPParser {
      */
     public static Metadata parseXMP(Source src) throws TransformerException {
         TransformerFactory tFactory = TransformerFactory.newInstance();
+        tFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        tFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         Transformer transformer = tFactory.newTransformer();
         XMPHandler handler = createXMPHandler();
         SAXResult res = new SAXResult(handler);

@@ -19,16 +19,21 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.io.StringReader;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
@@ -189,4 +194,18 @@ public class XMPParserTestCase {
         assertNull(title); //Empty value treated same as not existant
     }
 
+    @Test
+    public void testExternalDTD() {
+        String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<!DOCTYPE root [\n<!ENTITY % remote SYSTEM \"http://127.0.0.1:9999/eval.xml\">\n%remote;]>\n"
+                + "<root></root>";
+        StreamSource streamSource = new StreamSource(new StringReader(payload));
+        String msg = "";
+        try {
+            XMPParser.parseXMP(streamSource);
+        } catch (TransformerException e) {
+            msg = e.getMessage();
+        }
+        assertTrue(msg, msg.contains("access is not allowed"));
+    }
 }
