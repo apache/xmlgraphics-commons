@@ -114,7 +114,7 @@ public class ImageFormGenerator extends FormGenerator {
             return "/ASCII85Decode filter " + implicitFilter + " filter";
         } else {
             if (gen.getPSLevel() >= 3) {
-                return "/ASCII85Decode filter /FlateDecode filter";
+                return "/ASCII85Decode filter";
             } else {
                 return "/ASCII85Decode filter /RunLengthDecode filter";
             }
@@ -133,6 +133,12 @@ public class ImageFormGenerator extends FormGenerator {
             dataSource = "{ " + getDataName() + " i get /i i 1 add store } bind";
         } else {
             dataSource = getDataName();
+            if (gen.getPSLevel() >= 3) {
+                String implicitFilter = encoder.getImplicitFilter();
+                if (implicitFilter == null) {
+                    dataSource += " /FlateDecode filter";
+                }
+            }
         }
         AffineTransform at = new AffineTransform();
         at.scale(getDimensions().getWidth(), getDimensions().getHeight());
