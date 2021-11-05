@@ -55,6 +55,8 @@ public class ImageFlavor {
     /** An image in form of a raw EPS (Encapsulated PostScript) file/stream */
     public static final ImageFlavor RAW_EPS = new MimeEnabledImageFlavor(RAW,
                                                         MimeConstants.MIME_EPS);
+    public static final ImageFlavor RAW_PDF = new MimeEnabledImageFlavor(RAW, MimeConstants.MIME_PDF);
+
     /** An image in form of a raw LZW file/stream */
     public static final ImageFlavor RAW_LZW = new ImageFlavor("RawLZW");
     /** An image in form of a raw CCITTFax stream */
