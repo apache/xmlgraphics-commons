@@ -29,6 +29,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -59,11 +61,16 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
     private static boolean noSourceReuse;
 
     static {
-        //TODO Temporary measure to track down a problem
-        //See: http://markmail.org/message/k6mno3jsxmovaz2e
-        String noSourceReuseString = System.getProperty(
-                         AbstractImageSessionContext.class.getName() + ".no-source-reuse");
-        noSourceReuse = Boolean.valueOf(noSourceReuseString);
+        noSourceReuse = AccessController.doPrivileged(
+            new PrivilegedAction<Boolean>() {
+                public Boolean run() {
+                    //See: http://markmail.org/message/k6mno3jsxmovaz2e
+                    String noSourceReuseString = System.getProperty(
+                            AbstractImageSessionContext.class.getName() + ".no-source-reuse");
+                    return Boolean.valueOf(noSourceReuseString);
+                }
+            }
+        );
     }
 
     private final FallbackResolver fallbackResolver;
