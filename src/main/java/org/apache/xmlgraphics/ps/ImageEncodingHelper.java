@@ -19,6 +19,8 @@
 
 package org.apache.xmlgraphics.ps;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -487,8 +489,18 @@ public class ImageEncodingHelper {
 
         private final RenderedImage img;
 
-        public RenderedImageEncoder(RenderedImage img) {
-            this.img = img;
+        public RenderedImageEncoder(RenderedImage ri) {
+            if (ri instanceof BufferedImage && ((BufferedImage) ri).getType() == BufferedImage.TYPE_4BYTE_ABGR) {
+                BufferedImage convertedImg =
+                        new BufferedImage(ri.getWidth(), ri.getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = (Graphics2D) convertedImg.getGraphics();
+                g.setBackground(Color.WHITE);
+                g.clearRect(0, 0, ri.getWidth(), ri.getHeight());
+                g.drawImage((BufferedImage)ri, 0, 0, null);
+                g.dispose();
+                ri = convertedImg;
+            }
+            img = ri;
         }
 
         public void writeTo(OutputStream out) throws IOException {

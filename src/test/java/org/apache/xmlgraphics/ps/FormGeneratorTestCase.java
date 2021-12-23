@@ -21,8 +21,8 @@ package org.apache.xmlgraphics.ps;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
-
 
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
@@ -99,5 +99,29 @@ public class FormGeneratorTestCase {
         Assert.assertTrue(test.contains("/ASCII85Decode filter\n"));
         //FlateDecode at DataSource so executed on page load rather than document load so viewer loads faster
         Assert.assertTrue(test.contains("/DataSource form:Data /FlateDecode filter\n"));
+    }
+
+    @Test
+    public void testAlphaImage() throws IOException {
+        Assert.assertEquals(buildPSImage(BufferedImage.TYPE_4BYTE_ABGR), buildPSImage(BufferedImage.TYPE_INT_RGB));
+    }
+
+    private String buildPSImage(int type) throws IOException {
+        Dimension2D dimension = new Dimension2DDouble(1, 1);
+        BufferedImage im = new BufferedImage(1, 1, type);
+        Graphics2D g = (Graphics2D) im.getGraphics();
+        if (type == BufferedImage.TYPE_4BYTE_ABGR) {
+            g.setBackground(new Color(0, 0, 0, 0));
+        } else {
+            g.setBackground(Color.white);
+        }
+        g.clearRect(0, 0, im.getWidth(), im.getHeight());
+        g.drawImage(im, 0, 0, null);
+        g.dispose();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageFormGenerator formImageGen = new  ImageFormGenerator("form", "title", dimension, im, false);
+        PSGenerator gen = new PSGenerator(out);
+        formImageGen.generate(gen);
+        return out.toString("utf-8");
     }
 }
