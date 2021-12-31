@@ -34,8 +34,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -140,7 +140,7 @@ public class ImageEncodingHelperTestCase {
                 return null;
             }
         };
-        when(raster.getDataElements(anyInt(), anyInt(), anyInt(), anyInt(), anyObject()))
+        when(raster.getDataElements(anyInt(), anyInt(), anyInt(), anyInt(), any()))
                 .thenAnswer(ans);
 
         ByteArrayOutputStream optimized = new ByteArrayOutputStream();
