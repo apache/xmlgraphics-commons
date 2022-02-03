@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -66,7 +67,7 @@ public class URIResolverAdapterTestCase {
 
     private void testInputStream(InputStream stream) throws IOException {
         StringWriter writer = new StringWriter();
-        IOUtils.copy(stream, writer);
+        IOUtils.copy(stream, writer, Charset.defaultCharset());
         assertEquals("This is a text file used to test the CatalogResolver\n", writer.toString());
     }
 

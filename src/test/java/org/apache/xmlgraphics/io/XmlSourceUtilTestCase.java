@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.parsers.DocumentBuilder;
@@ -91,7 +92,7 @@ public class XmlSourceUtilTestCase {
         domSource = new DOMSource(db.newDocument().createElement("test"));
         InputStream inStream = XmlSourceUtil.getInputStream(domSource);
         writer = new StringWriter();
-        IOUtils.copy(inStream, writer);
+        IOUtils.copy(inStream, writer, Charset.defaultCharset());
     }
 
     @Test
@@ -145,7 +146,7 @@ public class XmlSourceUtilTestCase {
     public void testNeedInputStreamFailureCaseDOMSource() throws IOException {
         InputStream inStream = needInputStream(new DOMSource());
         StringWriter writer = new StringWriter();
-        IOUtils.copy(inStream, writer);
+        IOUtils.copy(inStream, writer, Charset.defaultCharset());
         assertEquals("", writer.toString());
     }
 
