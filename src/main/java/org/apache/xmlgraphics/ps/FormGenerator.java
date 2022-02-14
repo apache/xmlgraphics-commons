@@ -129,10 +129,13 @@ public abstract class FormGenerator {
         gen.writeln("    grestore");
         gen.writeln("  } bind");
         gen.writeln(">> def");
-        generateAdditionalDataStream(gen);
-        gen.writeDSCComment(DSCConstants.END_RESOURCE);
         PSResource res = new PSResource(PSResource.TYPE_FORM, formName);
-        gen.getResourceTracker().registerSuppliedResource(res);
+        try {
+            generateAdditionalDataStream(gen);
+        } finally {
+            gen.writeDSCComment(DSCConstants.END_RESOURCE);
+            gen.getResourceTracker().registerSuppliedResource(res);
+        }
         return res;
     }
 }
