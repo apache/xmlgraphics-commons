@@ -206,6 +206,6 @@ public class XMPParserTestCase {
         } catch (TransformerException e) {
             msg = e.getMessage();
         }
-        assertTrue(msg, msg.contains("access is not allowed"));
+        assertTrue(msg, msg.contains("accessExternalDTD"));
     }
 }
