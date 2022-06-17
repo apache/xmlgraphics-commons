@@ -232,6 +232,7 @@
       <src path="${src.java.dir}"/>
       <patternset refid="compile-pattern"/>
       <classpath refid="libs-build-classpath"/>
+      <compilerarg value="-Xlint:cast"/>
     </javac>
   </target>
 
@@ -321,6 +322,7 @@
           <include name="${name}-${version}.jar"/>
         </fileset>
       </classpath>
+      <compilerarg value="-Xlint:cast"/>
     </javac>
     <copy todir="${build.dir}/test-classes" includeEmptyDirs="false">
       <fileset dir="${test.res.dir}"/>

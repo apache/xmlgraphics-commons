@@ -117,7 +117,7 @@ public class PipelineFactory {
         //Choose best pipeline
         if (candidates.length > 0) {
             Arrays.sort(candidates, new PipelineComparator());
-            ImageProviderPipeline pipeline = (ImageProviderPipeline)candidates[0];
+            ImageProviderPipeline pipeline = candidates[0];
             if (pipeline != null && log.isDebugEnabled()) {
                 log.debug("Pipeline: " + pipeline
                         + " with penalty " + pipeline.getConversionPenalty());
