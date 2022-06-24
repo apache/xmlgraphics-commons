@@ -287,7 +287,9 @@ public class XMPHandler extends DefaultHandler {
             if (prop.getName() == null) {
                 throw new IllegalStateException("No content in XMP property");
             }
-            assert getCurrentProperties() != null : "no current property";
+            if (getCurrentProperties() == null) {
+                startStructure();
+            }
             getCurrentProperties().setProperty(prop);
         }
 

@@ -30,6 +30,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Test;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -192,6 +195,30 @@ public class XMPParserTestCase {
 
         title = dc.getTitle("de");
         assertNull(title); //Empty value treated same as not existant
+    }
+
+    @Test
+    public void testSubproperty() throws Exception {
+        URL url = getClass().getResource("test-subproperty.xmp");
+        Metadata meta = XMPParser.parseXMP(url);
+        final StringBuilder sb = new StringBuilder();
+        meta.toSAX(new DefaultHandler() {
+            public void startElement(String uri, String localName, String qName, Attributes attributes) {
+                sb.append(qName).append("\n");
+            }
+        });
+        assertEquals("x:xmpmeta\n"
+                + "rdf:RDF\n"
+                + "rdf:Description\n"
+                + "pdfaExtension:schemas\n"
+                + "rdf:Bag\n"
+                + "rdf:li\n"
+                + "rdf:Description\n"
+                + "pdfaSchema:property\n"
+                + "rdf:Seq\n"
+                + "rdf:li\n"
+                + "rdf:Description\n"
+                + "pdfaProperty:name\n", sb.toString());
     }
 
     @Test
