@@ -176,4 +176,15 @@ public class PSGraphics2DTestCase {
         p.fill(new Rectangle());
         assertTrue(out.toString().contains("\nN\n"));
     }
+
+    @Test
+    public void testMask() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator generator = new PSGenerator(out);
+        PSGraphics2D graphics = new PSGraphics2D(false, generator);
+        graphics.setGraphicContext(new GraphicContext());
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        graphics.drawImage(image, 0, 0, null, null, image);
+        assertTrue(out.toString().contains("imagemask"));
+    }
 }

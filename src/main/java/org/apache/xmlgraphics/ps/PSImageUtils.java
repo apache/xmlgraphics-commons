@@ -146,7 +146,7 @@ public class PSImageUtils {
 
     public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
                                   Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen) throws IOException {
-        writeImage(encoder, imgDim, imgDescription, targetRect, colorModel, gen, null);
+        writeImage(encoder, imgDim, imgDescription, targetRect, colorModel, gen, null, false);
     }
 
     /**
@@ -160,7 +160,7 @@ public class PSImageUtils {
      * @throws IOException In case of an I/O exception
      */
     public static void writeImage(ImageEncoder encoder, Dimension imgDim, String imgDescription,
-            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen, RenderedImage ri)
+            Rectangle2D targetRect, ColorModel colorModel, PSGenerator gen, RenderedImage ri, boolean maskBitmap)
             throws IOException {
 
         gen.saveGraphicsState();
@@ -193,7 +193,7 @@ public class PSImageUtils {
                 imageDict.put("/BitsPerComponent", 8);
             }
         }
-        writeImageCommand(imageDict, colorModel, gen);
+        writeImageCommand(imageDict, colorModel, gen, maskBitmap);
 
         /*
          * the following two lines could be enabled if something still goes wrong
@@ -256,7 +256,7 @@ public class PSImageUtils {
                 imageDict.put("/BitsPerComponent", 8);
             }
         }
-        writeImageCommand(imageDict, colorModel, gen);
+        writeImageCommand(imageDict, colorModel, gen, false);
 
         /*
          * the following two lines could be enabled if something still goes wrong
@@ -411,14 +411,20 @@ public class PSImageUtils {
         Dimension imgDim = new Dimension(img.getWidth(), img.getHeight());
 
         populateImageDictionary(imgDim, cm, imageDict);
-        writeImageCommand(imageDict, cm, gen);
+        writeImageCommand(imageDict, cm, gen, false);
     }
 
-    static void writeImageCommand(PSDictionary imageDict, ColorModel cm, PSGenerator gen)
+    static void writeImageCommand(PSDictionary imageDict, ColorModel cm, PSGenerator gen, boolean maskBitmap)
                 throws IOException {
-        prepareColorSpace(gen, cm);
+        if (!maskBitmap) {
+            prepareColorSpace(gen, cm);
+        }
         gen.write(imageDict.toString());
-        gen.writeln(" image");
+        if (maskBitmap) {
+            gen.writeln(" imagemask");
+        } else {
+            gen.writeln(" image");
+        }
     }
 
     static void writeImageCommand(PSDictionary imageDict,
@@ -463,7 +469,7 @@ public class PSImageUtils {
      * @throws IOException In case of an I/O problem while rendering the image
      */
     public static void renderBitmapImage(RenderedImage img,
-                float x, float y, float w, float h, PSGenerator gen, Color mask)
+                float x, float y, float w, float h, PSGenerator gen, Color mask, boolean maskBitmap)
                     throws IOException {
         Rectangle2D targetRect = new Rectangle2D.Double(x, y, w, h);
         ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img);
@@ -473,7 +479,7 @@ public class PSImageUtils {
         ColorModel cm = helper.getEncodedColorModel();
 
         if (mask == null) {
-            writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img);
+            writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img, maskBitmap);
         } else {
             writeImage(encoder, imgDim, imgDescription, targetRect, cm, gen, img, mask);
         }
