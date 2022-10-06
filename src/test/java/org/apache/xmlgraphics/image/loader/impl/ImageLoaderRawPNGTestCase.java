@@ -48,7 +48,7 @@ public class ImageLoaderRawPNGTestCase {
 
     @Test
     public void testGetUsagePenalty() {
-        assertEquals(1000, ilrpng.getUsagePenalty());
+        assertEquals(0, ilrpng.getUsagePenalty());
     }
 
     @Test

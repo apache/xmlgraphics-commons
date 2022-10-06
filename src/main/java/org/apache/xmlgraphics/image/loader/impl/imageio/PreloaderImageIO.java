@@ -52,6 +52,7 @@ public class PreloaderImageIO extends AbstractImagePreloader {
             return null;
         }
         ImageInputStream in = ImageUtil.needImageInputStream(src);
+        long startPos = in.getStreamPosition();
         Iterator iter = ImageIO.getImageReaders(in);
         if (!iter.hasNext()) {
             return null;
@@ -85,15 +86,8 @@ public class PreloaderImageIO extends AbstractImagePreloader {
         }
 
         if (iiometa == null) {
-            if (firstIOException == null) {
-                throw new ImageException("Could not extract image metadata");
-            } else {
-                throw new ImageException("I/O error while extracting image metadata"
-                        + (firstIOException.getMessage() != null
-                            ? ": " + firstIOException.getMessage()
-                            : ""),
-                        firstIOException);
-            }
+            in.seek(startPos);
+            return null;
         }
 
         //Resolution (first a default, then try to read the metadata)

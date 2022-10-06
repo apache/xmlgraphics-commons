@@ -21,8 +21,7 @@ package org.apache.xmlgraphics.image.loader;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests for error behaviour with corrupt images.
@@ -38,13 +37,8 @@ public class CorruptImagesTestCase {
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
 
-        try {
-            manager.preloadImage(uri, sessionContext);
-            fail("Expected an ImageException!");
-        } catch (Exception ie) {
-            //Expected exception
-            assertNotNull(ie.getMessage());
-        }
+        ImageInfo imageInfo = manager.preloadImage(uri, sessionContext);
+        assertEquals(imageInfo.getMimeType(), "image/png");
     }
 
 }

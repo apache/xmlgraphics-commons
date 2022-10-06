@@ -19,8 +19,18 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.util.Map;
+
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
+import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
+import org.apache.xmlgraphics.image.loader.util.Penalty;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 /**
@@ -93,4 +103,34 @@ public class ImageLoaderFactoryRaw extends AbstractImageLoaderFactory {
         return true;
     }
 
+    @Override
+    public boolean isSupported(ImageInfo imageInfo) {
+        if ("image/png".equals(imageInfo.getMimeType())) {
+            Map additionalPenalties = (Map) imageInfo.getCustomObjects().get("additionalPenalties");
+            int penalty = 0;
+            Penalty penaltyObj = ((Penalty)additionalPenalties.get(ImageLoaderRawPNG.class.getName()));
+            if (penaltyObj != null) {
+                penalty = penaltyObj.getValue();
+            }
+            IIOMetadata metadata = (IIOMetadata) imageInfo.getCustomObjects().get(IIOMetadata.class);
+            if (metadata != null) {
+                IIOMetadataNode children = (IIOMetadataNode)metadata.getAsTree("javax_imageio_png_1.0").getChildNodes();
+                NamedNodeMap attr = children.getElementsByTagName("IHDR").item(0).getAttributes();
+                String bitDepth = attr.getNamedItem("bitDepth").getNodeValue();
+                String interlaceMethod = attr.getNamedItem("interlaceMethod").getNodeValue();
+                String colorType = attr.getNamedItem("colorType").getNodeValue();
+                if (!bitDepth.equals("8") || !interlaceMethod.equals("none")
+                        || ((colorType.equals("RGBAlpha") || colorType.equals("GrayAlpha")) && penalty >= 0)) {
+                    return false;
+                }
+                children = (IIOMetadataNode)metadata.getAsTree("javax_imageio_1.0").getChildNodes();
+                Node numChannels = children.getElementsByTagName("NumChannels").item(0);
+                String numChannelsStr = numChannels.getAttributes().getNamedItem("value").getNodeValue();
+                if ("4".equals(numChannelsStr) && "Palette".equals(colorType) && penalty >= 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

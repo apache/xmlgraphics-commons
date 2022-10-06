@@ -322,6 +322,7 @@ public class ImageImplRegistry {
     public ImageLoaderFactory[] getImageLoaderFactories(ImageInfo imageInfo, ImageFlavor flavor) {
         String mime = imageInfo.getMimeType();
         Collection matches = new java.util.TreeSet(new ImageLoaderFactoryComparator(flavor));
+        imageInfo.getCustomObjects().put("additionalPenalties", additionalPenalties);
         Map flavorMap = (Map) loaders.get(mime);
         if (flavorMap != null) {
             for (Object i : flavorMap.entrySet()) {

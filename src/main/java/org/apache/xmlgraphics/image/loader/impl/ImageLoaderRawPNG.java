@@ -74,13 +74,4 @@ public class ImageLoaderRawPNG extends AbstractImageLoader {
         ImageRawPNG irpng = im.getImageRawPNG(info);
         return irpng;
     }
-
-    /** {@inheritDoc} */
-    public int getUsagePenalty() {
-        // since this image loader does not handle all kinds of PNG images then we add some penalty to it
-        // so that it is not chosen by default; instead, users need to give it a negative penalty in
-        // fop.xconf so that it is used
-        return 1000;
-    }
-
 }
