@@ -36,9 +36,14 @@ public class CorruptImagesTestCase {
 
         ImageSessionContext sessionContext = imageContext.newSessionContext();
         ImageManager manager = imageContext.getImageManager();
-
-        ImageInfo imageInfo = manager.preloadImage(uri, sessionContext);
-        assertEquals(imageInfo.getMimeType(), "image/png");
+        try {
+            ImageInfo imageInfo = manager.preloadImage(uri, sessionContext);
+            //IOException should continue to raw png
+            assertEquals(imageInfo.getMimeType(), "image/png");
+        } catch (Exception e) {
+            //Otherwise should throw exception
+            assertEquals(e.getMessage(), "pos < flushedPos!");
+        }
     }
 
 }
