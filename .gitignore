@@ -1,0 +1,9 @@
+
+# maven artifacts
+target/
+
+# test artifacts
+build/
+
+# miscellaneous
+*~
