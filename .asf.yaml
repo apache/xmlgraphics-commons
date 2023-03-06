@@ -4,9 +4,20 @@ github:
   labels:
     - xgc
     - apache
+  enabled_merge_buttons:
+    squash:  true
+    merge:   true
+    rebase:  false
+  protected_branches:
+    main:
+      strict: true
+      required_linear_history: false
+  dependabot_alerts:  true
+  dependabot_updates: false
 
 notifications:
-  commits:      commits@xmlgraphics.apache.org
-  issues:       general@xmlgraphics.apache.org
+  commits: commits@xmlgraphics.apache.org
+  issues: general@xmlgraphics.apache.org
   pullrequests: general@xmlgraphics.apache.org
+  jobs: general@xmlgraphics.apache.org
   jira_options: link label
