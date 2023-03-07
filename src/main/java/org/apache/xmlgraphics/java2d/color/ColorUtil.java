@@ -49,9 +49,9 @@ public final class ColorUtil {
         float[] cols = new float[4];
         cols = col.getRGBComponents(cols);
         if (factor > 0) {
-            cols[0] += (1.0 - cols[0]) * factor;
-            cols[1] += (1.0 - cols[1]) * factor;
-            cols[2] += (1.0 - cols[2]) * factor;
+            cols[0] += (1.0f - cols[0]) * factor;
+            cols[1] += (1.0f - cols[1]) * factor;
+            cols[2] += (1.0f - cols[2]) * factor;
         } else {
             cols[0] -= cols[0] * -factor;
             cols[1] -= cols[1] * -factor;

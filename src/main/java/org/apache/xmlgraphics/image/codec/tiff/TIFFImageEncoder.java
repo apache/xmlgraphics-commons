@@ -625,7 +625,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                                  bpixels, outOffset,
                                                  (int) bytesPerRow);
                                 inOffset += lineStride;
-                                outOffset += bytesPerRow;
+                                outOffset += (int) bytesPerRow;
                             }
                         }
                     } else {
@@ -742,7 +742,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
                                                      bpixels, outOffset,
                                                      (int) bytesPerRow);
                                     inOffset += lineStride;
-                                    outOffset += bytesPerRow;
+                                    outOffset += (int) bytesPerRow;
                                 }
                             }
                         } else {
@@ -1299,7 +1299,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         for (int i = 0; i < numRows; i++) {
             outOffset = packBits(data, inOffset, (int) bytesPerRow,
                                  compData, outOffset);
-            inOffset += bytesPerRow;
+            inOffset += (int) bytesPerRow;
         }
 
         return outOffset;
