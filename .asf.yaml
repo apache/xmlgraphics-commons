@@ -5,9 +5,9 @@ github:
     - xgc
     - apache
   enabled_merge_buttons:
+    merge:   false      # disable non-squashing merge
     squash:  true
-    merge:   true
-    rebase:  false
+    rebase:  true
   protected_branches:
     main:
       strict: true
