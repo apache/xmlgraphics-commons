@@ -40,6 +40,7 @@ permissions:
 
 jobs:
   Analysis:
+    if: github.repository == 'apache/xmlgraphics-commons'
     runs-on: ubuntu-latest
 
     steps:
