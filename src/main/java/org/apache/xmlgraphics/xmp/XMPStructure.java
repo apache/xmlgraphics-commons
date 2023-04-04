@@ -33,7 +33,7 @@ import org.apache.xmlgraphics.util.QName;
  */
 public class XMPStructure extends XMPComplexValue implements PropertyAccess {
 
-    private Map properties = new java.util.HashMap();
+    protected Map properties = new java.util.HashMap();
 
     /**
      * Main constructor

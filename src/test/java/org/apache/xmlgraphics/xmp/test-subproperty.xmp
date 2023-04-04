@@ -1,5 +1,6 @@
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:abc="http://www.abc.de/abc/">
+        <rdf:Description rdf:about="" abc:xyz="rty"/>
         <rdf:Description xmlns:pdfaExtension="http://www.aiim.org/pdfa/ns/extension/"
                          xmlns:pdfaSchema="http://www.aiim.org/pdfa/ns/schema#"
                          xmlns:pdfaProperty="http://www.aiim.org/pdfa/ns/property#" rdf:about="">

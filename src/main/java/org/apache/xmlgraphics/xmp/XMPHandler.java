@@ -153,6 +153,7 @@ public class XMPHandler extends DefaultHandler {
                         String qn = attributes.getQName(i);
                         String v = attributes.getValue(i);
                         XMPProperty prop = new XMPProperty(new QName(ns, qn), v);
+                        prop.attribute = true;
                         getCurrentProperties().setProperty(prop);
                     }
                 }
@@ -204,6 +205,12 @@ public class XMPHandler extends DefaultHandler {
         this.nestingInfoStack.push("struct");
     }
 
+    private void startThinStructure() {
+        XMPThinStructure struct = new XMPThinStructure();
+        contextStack.push(struct);
+        nestingInfoStack.push("struct");
+    }
+
     /** {@inheritDoc} */
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Attributes atts = (Attributes)attributesStack.pop();
@@ -212,27 +219,24 @@ public class XMPHandler extends DefaultHandler {
         } else if (XMPConstants.RDF_NAMESPACE.equals(uri) && !"value".equals(localName)) {
             if ("li".equals(localName)) {
                 XMPStructure struct = getCurrentStructure();
+                String parseType = atts.getValue("rdf:parseType");
                 if (struct != null) {
                     //Pop the structure
                     this.contextStack.pop();
                     this.nestingInfoStack.pop();
-                    getCurrentArray(true).add(struct);
+                    getCurrentArray(true).add(struct, null, parseType);
                 } else {
                     String s = content.toString().trim();
                     if (s.length() > 0) {
                         String lang = atts.getValue(XMPConstants.XML_NS, "lang");
-                        if (lang != null) {
-                            getCurrentArray(true).add(s, lang);
-                        } else {
-                            getCurrentArray(true).add(s);
-                        }
+                        getCurrentArray(true).add(s, lang, parseType);
                     } else {
                         String res = atts.getValue(XMPConstants.RDF_NAMESPACE,
                                 "resource");
                         if (res != null) {
                             try {
                                 URI resource = new URI(res);
-                                getCurrentArray(true).add(resource);
+                                getCurrentArray(true).add(resource, null, parseType);
                             } catch (URISyntaxException e) {
                                 throw new SAXException("rdf:resource value is not a well-formed URI", e);
                             }
@@ -288,7 +292,7 @@ public class XMPHandler extends DefaultHandler {
                 throw new IllegalStateException("No content in XMP property");
             }
             if (getCurrentProperties() == null) {
-                startStructure();
+                startThinStructure();
             }
             getCurrentProperties().setProperty(prop);
         }

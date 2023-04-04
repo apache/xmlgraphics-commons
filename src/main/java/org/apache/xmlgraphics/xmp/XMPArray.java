@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.xmp;
 
 import java.net.URI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.xml.sax.ContentHandler;
@@ -36,6 +37,7 @@ public class XMPArray extends XMPComplexValue {
     private XMPArrayType type;
     private List values = new java.util.ArrayList();
     private List xmllang = new java.util.ArrayList();
+    private List<String> parseTypes = new ArrayList<>();
 
     /**
      * Main constructor
@@ -151,9 +153,23 @@ public class XMPArray extends XMPComplexValue {
      * Adds a new value to the array
      * @param value the value
      */
-    public void add(Object value) {
+    public void add(Object value, String lang, String parseType) {
         values.add(value);
-        xmllang.add(null);
+        xmllang.add(lang);
+        parseTypes.add(parseType);
+    }
+
+    /**
+     * Adds a language-dependent value to the array. Make sure not to add the same language twice.
+     * @param value the value
+     * @param lang the language ("x-default" for the default value)
+     */
+    public void add(Object value, String lang) {
+        add(value, lang, null);
+    }
+
+    public void add(Object value) {
+        add(value, null, null);
     }
 
     /**
@@ -166,20 +182,11 @@ public class XMPArray extends XMPComplexValue {
         if (idx >= 0) {
             values.remove(idx);
             xmllang.remove(idx);
+            parseTypes.remove(idx);
             return true;
         }
         return false;
 
-    }
-
-    /**
-     * Adds a language-dependent value to the array. Make sure not to add the same language twice.
-     * @param value the value
-     * @param lang the language ("x-default" for the default value)
-     */
-    public void add(String value, String lang) {
-        values.add(value);
-        xmllang.add(lang);
     }
 
     /**
@@ -225,6 +232,10 @@ public class XMPArray extends XMPComplexValue {
             if (v instanceof URI) {
                 atts.addAttribute(XMPConstants.RDF_NAMESPACE, "resource",
                         "rdf:resource", "CDATA", ((URI)v).toString());
+            }
+            String parseType = parseTypes.get(i);
+            if (parseType != null) {
+                atts.addAttribute(XMPConstants.RDF_NAMESPACE, "parseType", "rdf:parseType", "CDATA", parseType);
             }
             handler.startElement(XMPConstants.RDF_NAMESPACE,
                     "li", "rdf:li", atts);

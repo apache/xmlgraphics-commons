@@ -40,6 +40,7 @@ public class XMPProperty implements XMLizable {
     private Object value;
     private String xmllang;
     private Map qualifiers;
+    protected boolean attribute;
 
     /**
      * Creates a new XMP property.
@@ -186,6 +187,9 @@ public class XMPProperty implements XMLizable {
         String prefix = getName().getPrefix();
         if (prefix == null || "".equals(prefix)) {
             XMPSchema schema = XMPSchemaRegistry.getInstance().getSchema(getNamespace());
+            if (schema == null) {
+                return getName().getLocalName();
+            }
             prefix = schema.getPreferredPrefix();
         }
         return prefix + ":" + getName().getLocalName();

@@ -33,6 +33,9 @@ import org.junit.Test;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -204,21 +207,44 @@ public class XMPParserTestCase {
         final StringBuilder sb = new StringBuilder();
         meta.toSAX(new DefaultHandler() {
             public void startElement(String uri, String localName, String qName, Attributes attributes) {
-                sb.append(qName).append("\n");
+                sb.append("<").append(qName);
+                for (int i = 0; i < attributes.getLength(); i++) {
+                    sb.append(" ").append(attributes.getQName(i)).append("=").append(attributes.getValue(i));
+                }
+                sb.append(">\n");
             }
         });
-        assertEquals("x:xmpmeta\n"
-                + "rdf:RDF\n"
-                + "rdf:Description\n"
-                + "pdfaExtension:schemas\n"
-                + "rdf:Bag\n"
-                + "rdf:li\n"
-                + "rdf:Description\n"
-                + "pdfaSchema:property\n"
-                + "rdf:Seq\n"
-                + "rdf:li\n"
-                + "rdf:Description\n"
-                + "pdfaProperty:name\n", sb.toString());
+        assertEquals("<x:xmpmeta>\n"
+                + "<rdf:RDF>\n"
+                + "<rdf:Description abc:xyz=rty rdf:about=>\n"
+                + "<rdf:Description rdf:about=>\n"
+                + "<pdfaExtension:schemas>\n"
+                + "<rdf:Bag>\n"
+                + "<rdf:li rdf:parseType=Resource>\n"
+                + "<pdfaSchema:property>\n"
+                + "<rdf:Seq>\n"
+                + "<rdf:li rdf:parseType=Resource>\n"
+                + "<pdfaProperty:name>\n", sb.toString());
+    }
+
+    @Test
+    public void testNoNamespace() throws Exception {
+        URL url = getClass().getResource("test-no-namespace.xmp");
+        Metadata meta = XMPParser.parseXMP(url);
+        final StringBuilder sb = new StringBuilder();
+        meta.toSAX(new DefaultHandler() {
+            public void startElement(String uri, String localName, String qName, Attributes attributes) {
+                sb.append("<").append(qName);
+                for (int i = 0; i < attributes.getLength(); i++) {
+                    sb.append(" ").append(attributes.getQName(i)).append("=").append(attributes.getValue(i));
+                }
+                sb.append(">\n");
+            }
+        });
+        assertEquals("<x:xmpmeta>\n"
+                + "<rdf:RDF>\n"
+                + "<rdf:Description rdf:about=>\n"
+                + "<a>\n", sb.toString());
     }
 
     @Test
