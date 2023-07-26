@@ -75,7 +75,7 @@ public class ImageCacheStatistics implements ImageCacheListener {
         if (v == null) {
             v = 1;
         } else {
-            v++;
+            v += 1;
         }
         map.put(key, v);
     }
