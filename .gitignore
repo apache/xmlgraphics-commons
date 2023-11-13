@@ -8,3 +8,7 @@ build/
 # miscellaneous
 *~
 *.bak
+
+# Ignore Intellij IDE
+.idea
+*.iml
