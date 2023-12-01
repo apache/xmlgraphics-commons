@@ -6,7 +6,7 @@
   <suppress checks="ConstantName" files="Any2LsRGBRed.java"/>
   <suppress checks="(Constant|Method)Name" files="GraphicsUtil.java"/>
   <suppress checks="(Constant|Method)Name" files="PNGImageDecoder.java"/>
-  <suppress checks="(Constant|Method)Name" files="rendered/Any2sRGBRed.java"/>
+  <suppress checks="(Constant|Method)Name" files="Any2sRGBRed.java"/>
   <suppress checks="MethodName" files="PNGRed.java"/>
   <suppress checks="MethodName" files="PNGFile.java"/>
   <suppress checks="MethodName" files="ColorProfileUtil.java"/>
