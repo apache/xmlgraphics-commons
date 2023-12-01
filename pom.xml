@@ -113,12 +113,12 @@
         <configuration>
           <configLocation>${project.baseUri}src/tools/resources/checkstyle/checkstyle.xml</configLocation>
           <headerLocation>${project.baseUri}src/tools/resources/checkstyle/LICENSE.txt</headerLocation>
+          <suppressionsLocation>${project.baseUri}src/tools/resources/checkstyle/suppressions.xml</suppressionsLocation> 
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <includeResources>false</includeResources>
           <includeTestResources>false</includeTestResources>
-          <linkXRef>false</linkXRef>
-          <logViolationsToConsole>true</logViolationsToConsole>
-          <suppressionsLocation>${project.baseUri}src/tools/resources/checkstyle/suppressions.xml</suppressionsLocation>
           <violationSeverity>warning</violationSeverity>
+          <consoleOutput>true</consoleOutput>
         </configuration>
       </plugin>
       <plugin>
