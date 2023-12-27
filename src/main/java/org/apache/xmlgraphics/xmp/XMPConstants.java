@@ -71,4 +71,9 @@ public interface XMPConstants {
     /** QName for rdf:value */
     QName RDF_VALUE = new QName(RDF_NAMESPACE, "rdf", "value");
 
+    String PDF_A_SCHEMA = "http://www.aiim.org/pdfa/ns/schema#";
+
+    String PDF_A_PROPERTY = "http://www.aiim.org/pdfa/ns/property#";
+
+    String PDF_A_EXTENSION = "http://www.aiim.org/pdfa/ns/extension/";
 }

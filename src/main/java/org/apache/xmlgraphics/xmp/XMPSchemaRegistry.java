@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema;
 import org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema;
+import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAExtensionXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFUAXMPSchema;
 import org.apache.xmlgraphics.xmp.schemas.pdf.PDFVTXMPSchema;
@@ -57,6 +58,7 @@ public final class XMPSchemaRegistry {
         addSchema(new PDFVTXMPSchema());
         addSchema(new XAPMMXMPSchema());
         addSchema(new PDFUAXMPSchema());
+        addSchema(new PDFAExtensionXMPSchema());
     }
 
     /**

@@ -241,6 +241,14 @@ public class XMPArray extends XMPComplexValue {
                     "li", "rdf:li", atts);
             if (v instanceof XMPComplexValue) {
                 ((XMPComplexValue)v).toSAX(handler);
+            } else if (v instanceof XMPProperty) {
+                XMPProperty prop = (XMPProperty) v;
+                prop.toSAX(handler);
+            } else if (v instanceof List) {
+              List<XMPProperty> list = (List<XMPProperty>) v;
+              for (XMPProperty prop : list) {
+                  prop.toSAX(handler);
+              }
             } else if (!(v instanceof URI)) {
                 String value = (String)values.get(i);
                 char[] chars = value.toCharArray();

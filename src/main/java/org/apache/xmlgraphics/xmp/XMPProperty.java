@@ -207,6 +207,9 @@ public class XMPProperty implements XMLizable {
         if (value instanceof XMPComplexValue) {
             XMPComplexValue cv = ((XMPComplexValue)value);
             cv.toSAX(handler);
+        } else if (value instanceof XMPProperty) {
+            XMPProperty prop = (XMPProperty) value;
+            prop.toSAX(handler);
         } else if (!(value instanceof URI)) {
             char[] chars = value.toString().toCharArray();
             handler.characters(chars, 0, chars.length);

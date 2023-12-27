@@ -274,6 +274,23 @@ public class XMPSchemaAdapter {
         }
     }
 
+    protected void setProperty(String propName, XMPProperty subProp) {
+        QName name = getQName(propName);
+        XMPProperty prop = meta.getProperty(name);
+        if (subProp != null) {
+            if (prop != null) {
+                prop.setValue(subProp);
+            } else {
+                prop = new XMPProperty(name, subProp);
+                meta.setProperty(prop);
+            }
+        } else {
+            if (prop != null) {
+                meta.removeProperty(name);
+            }
+        }
+    }
+
     /**
      * Removes a language-dependent value from an alternative array.
      * @param lang the language ("x-default" for the default language)
