@@ -12,7 +12,7 @@
   <properties>
     <checkstyle.version>2.15</checkstyle.version>
     <exec.version>1.4.0</exec.version>
-    <findbugs.version>3.1.12.2</findbugs.version>
+    <findbugs.version>4.7.3.6</findbugs.version>
     <jacoco.version>0.8.7</jacoco.version>
     <java.version>1.8</java.version>
     <junit.version>4.13.2</junit.version>
