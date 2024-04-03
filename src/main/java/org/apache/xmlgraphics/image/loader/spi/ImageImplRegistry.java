@@ -69,9 +69,6 @@ public class ImageImplRegistry {
     private Map additionalPenalties = new java.util.HashMap(); //<String, Penalty>
     //Note: String as key chosen to avoid possible class-unloading leaks
 
-    /** Singleton instance */
-    private static ImageImplRegistry defaultInstance = new ImageImplRegistry();
-
     /**
      * Main constructor. This constructor allows to disable plug-in discovery for testing purposes.
      * @param discover true if implementation classes shall automatically be discovered.
@@ -93,8 +90,8 @@ public class ImageImplRegistry {
      * Returns the default instance of the Image implementation registry.
      * @return the default instance
      */
-    public static ImageImplRegistry getDefaultInstance() {
-        return defaultInstance;
+    public static ImageImplRegistry newInstance() {
+        return new ImageImplRegistry();
     }
 
     /**

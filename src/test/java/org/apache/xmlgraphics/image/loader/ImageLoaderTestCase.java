@@ -31,6 +31,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -192,7 +193,7 @@ public class ImageLoaderTestCase {
 
     private void runReaders(List<ICC_Profile> profiles, ImageSessionContext isc, String uri,
             String mime, ImageFlavor rawFlavor) throws Exception {
-        ImageLoaderFactory[] ilfs = ImageImplRegistry.getDefaultInstance()
+        ImageLoaderFactory[] ilfs = ImageImplRegistry.newInstance()
                 .getImageLoaderFactories(mime);
         if (ilfs != null) {
             for (int i = 0; i < ilfs.length; i++) {
@@ -246,6 +247,13 @@ public class ImageLoaderTestCase {
         assertEquals(300, imgRed.getRenderedImage().getHeight());
 
         sessionContext.checkAllStreamsClosed();
+    }
+
+    @Test
+    public void testRegistry() {
+        ImageManager im1 = new ImageManager(imageContext);
+        ImageManager im2 = new ImageManager(imageContext);
+        Assert.assertNotSame(im1.getRegistry(), im2.getRegistry());
     }
 
     private static class MyImageSessionContext extends MockImageSessionContext {

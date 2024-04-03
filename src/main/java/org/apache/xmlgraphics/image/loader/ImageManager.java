@@ -61,7 +61,7 @@ public class ImageManager {
      * @param context the session-independent context information
      */
     public ImageManager(ImageContext context) {
-        this(ImageImplRegistry.getDefaultInstance(), context);
+        this(ImageImplRegistry.newInstance(), context);
     }
 
     /**
