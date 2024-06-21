@@ -70,6 +70,15 @@
   <!-- .NET support (using IKVM) -->
   <property name="ikvm.dir" value="."/>
   <property name="ikvmc" value="${ikvm.dir}/bin/ikvmc.exe"/>
+  
+  <property name="copy.dependencies.arg" value=""/>
+  
+  <condition property="isWindows">
+    <os family="windows" />
+  </condition>
+  <condition property="isUnix">
+    <os family="unix" />
+  </condition>  
 
   <tstamp>
     <format property="ts" pattern="yyyyMMdd-HHmmss-z"/>
@@ -297,7 +306,35 @@
     </jar>
   </target>
 
-  <target name="package" depends="jar-main, package.NET" description="Generates the jar files"/>
+  <target name="package" depends="mvn-jars,jar-main, package.NET" description="Generates the jar files"/>
+  
+  <target name="mvn-jars" depends="mvn-jars-unix,mvn-jars-windows" unless="dev">
+    <delete failonerror="false">
+      <fileset dir="${basedir}/lib">
+        <include name="*.jar"/>
+        <exclude name="checkstyle*.jar"/>
+      </fileset>
+    </delete>
+    <copy todir="${basedir}/lib">
+      <fileset dir="${basedir}/target/dependency">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+  <target name="mvn-jars-unix" if="isUnix" unless="dev">
+    <exec executable="mvn" dir="${basedir}" failonerror="true">
+      <arg value="clean"/>
+      <arg line="${copy.dependencies.arg} dependency:copy-dependencies -DskipTests"/>
+    </exec>
+  </target>
+  <target name="mvn-jars-windows" if="isWindows" unless="dev">
+    <exec executable="cmd" dir="${basedir}" failonerror="true">
+	  <arg value="/c"/>
+	  <arg value="mvn"/>    
+      <arg value="clean"/>
+      <arg line="${copy.dependencies.arg} dependency:copy-dependencies -DskipTests"/>
+    </exec>
+  </target>   
 
   <!-- =================================================================== -->
   <!-- Testing                                                             -->
