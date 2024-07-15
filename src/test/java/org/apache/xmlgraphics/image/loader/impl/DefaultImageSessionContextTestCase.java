@@ -16,31 +16,23 @@
  */
 
 /* $Id$ */
+package org.apache.xmlgraphics.image.loader.impl;
 
-package org.apache.xmlgraphics.image.loader;
+import org.junit.Test;
 
-import java.io.File;
+import org.apache.xmlgraphics.image.loader.MockImageContext;
 
-import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Mock implementation for testing.
- */
-public class MockImageSessionContext extends DefaultImageSessionContext {
+public class DefaultImageSessionContextTestCase {
 
-    public static final File IMAGE_BASE_DIR = new File("./test/images/");
+    @Test
+    public void testDefaultResolution() {
+        MockImageContext mock = new MockImageContext(false);
+        DefaultImageSessionContext context = new DefaultImageSessionContext(mock, null);
 
-    public MockImageSessionContext(ImageContext context) {
-        super(context, IMAGE_BASE_DIR);
+        assertEquals("Resolution must come from the parent context",
+                (int) mock.getSourceResolution(), (int) context.getSourceResolution());
     }
-
-    /** {@inheritDoc} */
-    public float getTargetResolution() {
-        return 300;
-    }
-
-    public float getSourceResolution() {
-        return 300;
-    }
-
 }
+

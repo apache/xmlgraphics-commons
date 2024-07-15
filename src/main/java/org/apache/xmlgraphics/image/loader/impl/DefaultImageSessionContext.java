@@ -84,4 +84,8 @@ public class DefaultImageSessionContext extends AbstractImageSessionContext {
         return getParentContext().getSourceResolution(); //same as source resolution
     }
 
+    public float getSourceResolution() {
+        return getParentContext().getSourceResolution();
+    }
+
 }

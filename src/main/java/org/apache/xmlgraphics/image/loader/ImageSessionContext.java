@@ -45,6 +45,13 @@ public interface ImageSessionContext {
     float getTargetResolution();
 
     /**
+     * Returns the resolution (in dpi) of the source device used when painting images.
+     * @return the source resolution (in dpi)
+     */
+    float getSourceResolution();
+
+
+    /**
      * Attempts to create a Source object from the given URI. If possible this method returns
      * an ImageSource instance which provides the best possible method to access the image.
      * @param uri URI to access

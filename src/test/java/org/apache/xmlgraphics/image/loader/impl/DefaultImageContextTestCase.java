@@ -16,31 +16,31 @@
  */
 
 /* $Id$ */
+package org.apache.xmlgraphics.image.loader.impl;
 
-package org.apache.xmlgraphics.image.loader;
 
-import java.io.File;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 
-import org.apache.xmlgraphics.image.loader.impl.DefaultImageSessionContext;
+import org.junit.Test;
 
-/**
- * Mock implementation for testing.
- */
-public class MockImageSessionContext extends DefaultImageSessionContext {
+import org.apache.xmlgraphics.image.GraphicsConstants;
 
-    public static final File IMAGE_BASE_DIR = new File("./test/images/");
+import static org.junit.Assert.assertEquals;
 
-    public MockImageSessionContext(ImageContext context) {
-        super(context, IMAGE_BASE_DIR);
+public class DefaultImageContextTestCase {
+
+    @Test
+    public void testDefaultResolution() {
+        DefaultImageContext context = new DefaultImageContext();
+
+        if (GraphicsEnvironment.isHeadless()) {
+            //for linux based environemnts
+            assertEquals("Default value must be set", GraphicsConstants.DEFAULT_DPI,
+                    (int) context.getSourceResolution());
+        } else {
+            assertEquals("Default value must be set",
+                    Toolkit.getDefaultToolkit().getScreenResolution(), (int) context.getSourceResolution());
+        }
     }
-
-    /** {@inheritDoc} */
-    public float getTargetResolution() {
-        return 300;
-    }
-
-    public float getSourceResolution() {
-        return 300;
-    }
-
 }
