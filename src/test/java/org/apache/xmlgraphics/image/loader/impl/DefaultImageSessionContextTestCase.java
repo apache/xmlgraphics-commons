@@ -19,10 +19,9 @@
 package org.apache.xmlgraphics.image.loader.impl;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.xmlgraphics.image.loader.MockImageContext;
-
-import static org.junit.Assert.assertEquals;
 
 public class DefaultImageSessionContextTestCase {
 

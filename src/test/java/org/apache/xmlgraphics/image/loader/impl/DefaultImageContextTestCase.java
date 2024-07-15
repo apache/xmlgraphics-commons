@@ -23,10 +23,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.xmlgraphics.image.GraphicsConstants;
-
-import static org.junit.Assert.assertEquals;
 
 public class DefaultImageContextTestCase {
 
