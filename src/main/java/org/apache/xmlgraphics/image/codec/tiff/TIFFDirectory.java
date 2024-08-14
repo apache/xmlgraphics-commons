@@ -21,6 +21,7 @@ package org.apache.xmlgraphics.image.codec.tiff;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -267,7 +268,7 @@ public class TIFFDirectory implements Serializable {
 
                         // When we encountered zero, means one string has ended
                         v.add(new String(bvalues, prevIndex,
-                                         (index - prevIndex), "UTF-8"));
+                                         (index - prevIndex), StandardCharsets.UTF_8));
                         prevIndex = index;
                     }
 

@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.util.uri;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -68,18 +69,13 @@ public class DataURIResolver implements URIResolver {
         String header = href.substring(0, commaPos);
         String data = href.substring(commaPos + 1);
         if (header.endsWith(";base64")) {
-            byte[] bytes = new byte[0];
-            try {
-                bytes = data.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
             ByteArrayInputStream encodedStream = new ByteArrayInputStream(bytes);
             Base64DecodeStream decodedStream = new Base64DecodeStream(
                     encodedStream);
             return new StreamSource(decodedStream, href);
         } else {
-            String encoding = "UTF-8";
+            String encoding = StandardCharsets.UTF_8.name();
             final int charsetpos = header.indexOf(";charset=");
             if (charsetpos > 0) {
                 encoding = header.substring(charsetpos + 9);

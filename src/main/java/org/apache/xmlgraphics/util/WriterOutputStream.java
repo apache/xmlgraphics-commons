@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.util;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * An OutputStream wrapper for a Writer.
@@ -70,7 +71,7 @@ public class WriterOutputStream extends OutputStream {
         if (encoding != null) {
             writer.write(new String(buf, offset, length, encoding));
         } else {
-            writer.write(new String(buf, offset, length, "UTF-8"));
+            writer.write(new String(buf, offset, length, StandardCharsets.UTF_8));
         }
     }
 

@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.xmp;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -39,7 +40,7 @@ public final class XMPSerializer {
     private XMPSerializer() {
     }
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String DEFAULT_ENCODING = StandardCharsets.UTF_8.name();
 
     /**
      * Writes the in-memory representation of the XMP metadata to a JAXP Result.

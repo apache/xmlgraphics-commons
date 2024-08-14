@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 // CSOFF: ConstantName
 // CSOFF: InnerAssignment
@@ -69,7 +70,7 @@ public class Base64EncodeStream extends OutputStream {
 
     public Base64EncodeStream(OutputStream out) {
         try {
-            this.out = new PrintStream(out, false, "UTF-8");
+            this.out = new PrintStream(out, false, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -78,7 +79,7 @@ public class Base64EncodeStream extends OutputStream {
 
     public Base64EncodeStream(OutputStream out, boolean closeOutOnClose) {
         try {
-            this.out = new PrintStream(out, false, "UTF-8");
+            this.out = new PrintStream(out, false, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

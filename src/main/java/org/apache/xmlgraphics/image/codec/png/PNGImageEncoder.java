@@ -31,6 +31,7 @@ import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -806,8 +807,8 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             String[] text = param.getText();
 
             for (int i = 0; i < text.length / 2; i++) {
-                byte[] keyword = text[2 * i].getBytes("UTF-8");
-                byte[] value = text[2 * i + 1].getBytes("UTF-8");
+                byte[] keyword = text[2 * i].getBytes(StandardCharsets.UTF_8);
+                byte[] value = text[2 * i + 1].getBytes(StandardCharsets.UTF_8);
 
                 ChunkStream cs = new ChunkStream("tEXt");
                 try {
@@ -828,8 +829,8 @@ public class PNGImageEncoder extends ImageEncoderImpl {
             String[] text = param.getCompressedText();
 
             for (int i = 0; i < text.length / 2; i++) {
-                byte[] keyword = text[2 * i].getBytes("UTF-8");
-                byte[] value = text[2 * i + 1].getBytes("UTF-8");
+                byte[] keyword = text[2 * i].getBytes(StandardCharsets.UTF_8);
+                byte[] value = text[2 * i + 1].getBytes(StandardCharsets.UTF_8);
 
                 ChunkStream cs = new ChunkStream("zTXt");
                 try {

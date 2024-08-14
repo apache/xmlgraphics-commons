@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -172,7 +173,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                             + url.getHost();
                 }
                 filename += url.getFile().replace('/', File.separatorChar);
-                filename = java.net.URLDecoder.decode(filename, "UTF-8");
+                filename = java.net.URLDecoder.decode(filename, StandardCharsets.UTF_8.name());
                 final File f = new File(filename);
                 if (!f.isFile()) {
                     return null;

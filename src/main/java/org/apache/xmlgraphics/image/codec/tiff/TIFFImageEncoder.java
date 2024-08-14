@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -1094,7 +1095,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
         int valueSize = 0;
         if (type == TIFFField.TIFF_ASCII) {
             for (int i = 0; i < count; i++) {
-                byte[] stringBytes = field.getAsString(i).getBytes("UTF-8");   // note: default encoding @work here!
+                byte[] stringBytes = field.getAsString(i).getBytes(StandardCharsets.UTF_8);
                 valueSize += stringBytes.length;
                 if (stringBytes[stringBytes.length - 1] != 0) {
                     valueSize++;
@@ -1239,7 +1240,7 @@ public class TIFFImageEncoder extends ImageEncoderImpl {
 
         case TIFFField.TIFF_ASCII:
             for (int i = 0; i < count; i++) {
-                byte[] stringBytes = field.getAsString(i).getBytes("UTF-8");
+                byte[] stringBytes = field.getAsString(i).getBytes(StandardCharsets.UTF_8);
                 output.write(stringBytes);
                 if (stringBytes[stringBytes.length - 1] != (byte)0) {
                     output.write((byte)0);

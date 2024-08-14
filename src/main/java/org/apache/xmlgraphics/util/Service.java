@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -161,7 +162,7 @@ public final class Service {
                 URL u = e.nextElement();
 
                 InputStream    is = u.openStream();
-                Reader         r  = new InputStreamReader(is, "UTF-8");
+                Reader         r  = new InputStreamReader(is, StandardCharsets.UTF_8);
                 BufferedReader br = new BufferedReader(r);
                 try {
                     for (String line = br.readLine(); line != null; line = br.readLine()) {

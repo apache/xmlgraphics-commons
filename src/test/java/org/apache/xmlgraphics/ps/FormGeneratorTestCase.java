@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class FormGeneratorTestCase {
         ImageFormGenerator formImageGen = new  ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
         formImageGen.generatePaintProc(gen);
-        String test = out.toString("UTF-8");
+        String test = out.toString(StandardCharsets.UTF_8.name());
 
         String  expected = "    form:Data 0 setfileposition\n"
         + "[300 0 0 500 0 0] CT\n"
@@ -71,7 +72,7 @@ public class FormGeneratorTestCase {
         gen = new PSGenerator(out);
         gen.setPSLevel(2);
         formImageGen.generatePaintProc(gen);
-        test = out.toString("UTF-8");
+        test = out.toString(StandardCharsets.UTF_8.name());
         expected = "    userdict /i 0 put\n"
             + "[300 0 0 500 0 0] CT\n"
             + "/DeviceGray setcolorspace\n"
@@ -95,7 +96,7 @@ public class FormGeneratorTestCase {
         ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
         formImageGen.generate(gen);
-        String test = out.toString("UTF-8");
+        String test = out.toString(StandardCharsets.UTF_8.name());
         Assert.assertTrue(test.contains("/ASCII85Decode filter\n"));
         //FlateDecode at DataSource so executed on page load rather than document load so viewer loads faster
         Assert.assertTrue(test.contains("/DataSource form:Data /FlateDecode filter\n"));
@@ -122,6 +123,6 @@ public class FormGeneratorTestCase {
         ImageFormGenerator formImageGen = new  ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
         formImageGen.generate(gen);
-        return out.toString("utf-8");
+        return out.toString(StandardCharsets.UTF_8.name());
     }
 }
