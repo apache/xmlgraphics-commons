@@ -116,6 +116,9 @@
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
             <manifestEntries>
               <Automatic-Module-Name>org.apache.xmlgraphics.commons</Automatic-Module-Name>
             </manifestEntries>
