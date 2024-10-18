@@ -21,7 +21,7 @@
     <release.version>2.5.2</release.version>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>apache</sonar.organization>
-    <surefire.version>2.18.1</surefire.version>
+    <surefire.version>3.5.1</surefire.version>
     <jdk.path>${env.JAVA_HOME}</jdk.path>
   </properties>
 
@@ -88,6 +88,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
           <configuration>
             <source>${java.version}</source>
             <target>${java.version}</target>
