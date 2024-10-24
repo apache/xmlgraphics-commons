@@ -25,8 +25,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -267,33 +265,24 @@ public final class ImageUtil {
         if (uri.indexOf('#') < 0) {
             return null;
         }
-        try {
-            URI u = new URI(uri);
-            String fragment = u.getFragment();
-            if (fragment != null) {
-                int pos = fragment.indexOf(PAGE_INDICATOR);
-                if (pos >= 0) {
-                    pos += PAGE_INDICATOR.length();
-                    StringBuffer sb = new StringBuffer();
-                    while (pos < fragment.length()) {
-                        char c = fragment.charAt(pos);
-                        if (c >= '0' && c <= '9') {
-                            sb.append(c);
-                        } else {
-                            break;
-                        }
-                        pos++;
-                    }
-                    if (sb.length() > 0) {
-                        int pageIndex = Integer.parseInt(sb.toString()) - 1;
-                        pageIndex = Math.max(0, pageIndex);
-                        return pageIndex;
-                    }
+        int pos = uri.indexOf(PAGE_INDICATOR);
+        if (pos >= 0) {
+            pos += PAGE_INDICATOR.length();
+            StringBuilder sb = new StringBuilder();
+            while (pos < uri.length()) {
+                char c = uri.charAt(pos);
+                if (c >= '0' && c <= '9') {
+                    sb.append(c);
+                } else {
+                    break;
                 }
+                pos++;
             }
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("URI is invalid: "
-                    + e.getLocalizedMessage());
+            if (sb.length() > 0) {
+                int pageIndex = Integer.parseInt(sb.toString()) - 1;
+                pageIndex = Math.max(0, pageIndex);
+                return pageIndex;
+            }
         }
         return null;
     }

@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 
@@ -34,10 +33,9 @@ public class ImageUtilTestCase {
 
     /**
      * Tests {@link ImageUtil.needPageIndexFromURI(String)}.
-     * @throws Exception if an error occurs
      */
     @Test
-    public void testNeedPageIndex() throws Exception {
+    public void testNeedPageIndex() {
         int pageIndex;
 
         pageIndex = ImageUtil.needPageIndexFromURI("http://localhost/images/scan1.tif");
@@ -56,23 +54,23 @@ public class ImageUtilTestCase {
         assertEquals(1, pageIndex);
 
         //Not a valid URI
-        try {
-            pageIndex = ImageUtil.needPageIndexFromURI("C:\\images\\scan1.tif#page=44");
-            fail("Invalid URI. Method must fail.");
-        } catch (IllegalArgumentException e) {
-            //expected
-        }
+        pageIndex = ImageUtil.needPageIndexFromURI("C:\\images\\scan1.tif#page=44");
+        assertEquals(43, pageIndex);
+
         //Valid URI
         pageIndex = ImageUtil.needPageIndexFromURI("file:///C:/images/scan1.tif#page=44");
         assertEquals(43, pageIndex);
+
+        pageIndex = ImageUtil.needPageIndexFromURI(
+                "Balesetbiztosítás_ kötvénycsomag - e-mail_3000000637_Biztosítási kötvény melléklettel.pdf#page=1");
+        assertEquals(0, pageIndex);
     }
 
     /**
      * Tests {@link ImageUtil.getPageIndexFromURI(String)}.
-     * @throws Exception if an error occurs
      */
     @Test
-    public void testGetPageIndex() throws Exception {
+    public void testGetPageIndex() {
         Integer pageIndex;
 
         pageIndex = ImageUtil.getPageIndexFromURI("http://localhost/images/scan1.tif");
