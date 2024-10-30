@@ -71,7 +71,7 @@ public class ImageLoaderRawCCITTFax extends AbstractImageLoader implements JPEGC
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
                 throws ImageException, IOException {
         if (!MimeConstants.MIME_TIFF.equals(info.getMimeType())) {
             throw new IllegalArgumentException("ImageInfo must be from a image with MIME type: "

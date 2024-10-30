@@ -48,7 +48,7 @@ public interface ImageConverter {
      * @throws ImageException if an error occurs while converting the image
      * @throws IOException if an I/O error occurs while converting the image
      */
-    Image convert(Image src, Map hints) throws ImageException, IOException;
+    Image convert(Image src, Map<String, Object> hints) throws ImageException, IOException;
 
     /**
      * Returns the flavor that this converter converts images into.

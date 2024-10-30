@@ -103,7 +103,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
             throws ImageException, IOException {
         RenderedImage imageData = null;
         IIOException firstException = null;
@@ -253,7 +253,7 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         }
     }
 
-    private ImageReadParam getParam(ImageReader reader, Map hints) throws IOException {
+    private ImageReadParam getParam(ImageReader reader, Map<String, Object> hints) throws IOException {
         if (hints != null && Boolean.TRUE.equals(hints.get("CMYK"))) {
             Iterator<ImageTypeSpecifier> types = reader.getImageTypes(0);
             while (types.hasNext()) {

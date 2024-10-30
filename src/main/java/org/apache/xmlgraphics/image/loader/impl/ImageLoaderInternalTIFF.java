@@ -58,7 +58,7 @@ public class ImageLoaderInternalTIFF extends AbstractImageLoader {
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
             throws ImageException, IOException {
 
         Source src = session.needSource(info.getOriginalURI());

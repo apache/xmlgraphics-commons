@@ -39,7 +39,7 @@ public class ImageConverterG2D2BitmapTestCase {
         ImageSize imageSize = new ImageSize(100, 100, 72);
         imageSize.calcSizeFromPixels();
         info.setSize(imageSize);
-        HashMap hints = new HashMap();
+        HashMap<String, Object> hints = new HashMap<>();
         hints.put(ImageProcessingHints.TRANSPARENCY_INTENT, ImageProcessingHints.TRANSPARENCY_INTENT_IGNORE);
         hints.put("CMYK", true);
         ImageBuffered image = (ImageBuffered) new ImageConverterG2D2Bitmap().convert(

@@ -65,7 +65,7 @@ public class ImageLoaderRawJPEG extends AbstractImageLoader implements JPEGConst
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
                 throws ImageException, IOException {
         if (!MimeConstants.MIME_JPEG.equals(info.getMimeType())) {
             throw new IllegalArgumentException("ImageInfo must be from a image with MIME type: "

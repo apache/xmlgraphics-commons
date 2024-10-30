@@ -49,7 +49,7 @@ import org.apache.xmlgraphics.util.UnitConv;
 public class ImageConverterG2D2Bitmap extends AbstractImageConverter {
 
     /** {@inheritDoc} */
-    public Image convert(Image src, Map hints) {
+    public Image convert(Image src, Map<String, Object> hints) {
         checkSourceFlavor(src);
         assert src instanceof ImageGraphics2D;
         ImageGraphics2D g2dImage = (ImageGraphics2D)src;

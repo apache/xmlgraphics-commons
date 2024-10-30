@@ -182,8 +182,8 @@ public class ImageManager {
                 + uri);
     }
 
-    private Map prepareHints(Map hints, ImageSessionContext sessionContext) {
-        Map newHints = new java.util.HashMap();
+    private Map<String, Object> prepareHints(Map<String, Object> hints, ImageSessionContext sessionContext) {
+        Map<String, Object> newHints = new java.util.HashMap<>();
         if (hints != null) {
             newHints.putAll(hints); //Copy in case an unmodifiable map is passed in
         }
@@ -216,7 +216,7 @@ public class ImageManager {
      *                  the request or if an error occurred while loading the image.
      * @throws IOException If an I/O error occurs
      */
-    public Image getImage(ImageInfo info, ImageFlavor flavor, Map hints,
+    public Image getImage(ImageInfo info, ImageFlavor flavor, Map<String, Object> hints,
                 ImageSessionContext session)
             throws ImageException, IOException {
         hints = prepareHints(hints, session);
@@ -255,7 +255,7 @@ public class ImageManager {
      *                  the request or if an error occurred while loading the image.
      * @throws IOException If an I/O error occurs
      */
-    public Image getImage(ImageInfo info, ImageFlavor[] flavors, Map hints,
+    public Image getImage(ImageInfo info, ImageFlavor[] flavors, Map<String, Object> hints,
                         ImageSessionContext session)
                 throws ImageException, IOException {
         hints = prepareHints(hints, session);
@@ -342,7 +342,7 @@ public class ImageManager {
      *                  the request or if an error occurred while loading the image.
      * @throws IOException If an I/O error occurs
      */
-    public Image convertImage(Image image, ImageFlavor[] flavors, Map hints)
+    public Image convertImage(Image image, ImageFlavor[] flavors, Map<String, Object> hints)
                 throws ImageException, IOException {
         hints = prepareHints(hints, null);
         ImageInfo info = image.getInfo();

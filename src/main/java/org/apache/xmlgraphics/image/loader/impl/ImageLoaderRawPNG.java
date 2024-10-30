@@ -58,8 +58,8 @@ public class ImageLoaderRawPNG extends AbstractImageLoader {
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session) throws ImageException,
-            IOException {
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
+            throws ImageException, IOException {
         if (!MimeConstants.MIME_PNG.equals(info.getMimeType())) {
             throw new IllegalArgumentException("ImageInfo must be from a image with MIME type: "
                     + MimeConstants.MIME_PNG);

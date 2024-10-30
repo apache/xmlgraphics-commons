@@ -38,7 +38,7 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class ImageConverterRendered2PNG extends AbstractImageConverter {
 
     /** {@inheritDoc} */
-    public Image convert(Image src, Map hints) throws ImageException, IOException {
+    public Image convert(Image src, Map<String, Object> hints) throws ImageException, IOException {
         checkSourceFlavor(src);
         assert src instanceof ImageRendered;
         ImageRendered rendered = (ImageRendered)src;

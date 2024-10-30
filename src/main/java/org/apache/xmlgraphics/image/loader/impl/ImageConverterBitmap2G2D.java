@@ -36,7 +36,7 @@ import org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
 public class ImageConverterBitmap2G2D extends AbstractImageConverter {
 
     /** {@inheritDoc} */
-    public Image convert(Image src, Map hints) {
+    public Image convert(Image src, Map<String, Object> hints) {
         checkSourceFlavor(src);
         assert src instanceof ImageRendered;
         final ImageRendered rendImage = (ImageRendered)src;

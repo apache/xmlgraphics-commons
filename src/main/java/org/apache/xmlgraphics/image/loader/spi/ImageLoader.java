@@ -49,7 +49,7 @@ public interface ImageLoader {
      * @throws ImageException if an error occurs while loading the image
      * @throws IOException if an I/O error occurs while loading the image
      */
-    Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
             throws ImageException, IOException;
 
     /**

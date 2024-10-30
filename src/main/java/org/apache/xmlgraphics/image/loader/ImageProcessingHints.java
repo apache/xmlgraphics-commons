@@ -27,9 +27,9 @@ package org.apache.xmlgraphics.image.loader;
 public interface ImageProcessingHints {
 
     /** Used to send a hint about the source resolution for pixel to unit conversions. */
-    Object SOURCE_RESOLUTION = "SOURCE_RESOLUTION"; //Value: Number (unit dpi)
+    String SOURCE_RESOLUTION = "SOURCE_RESOLUTION"; //Value: Number (unit dpi)
     /** Used to send a hint about the target resolution (of the final output format). */
-    Object TARGET_RESOLUTION = "TARGET_RESOLUTION"; //Value: Number (unit dpi)
+    String TARGET_RESOLUTION = "TARGET_RESOLUTION"; //Value: Number (unit dpi)
 
     /**
      * Used to pass in the {@link ImageSessionContext}. A consumer can use this to load embedded
@@ -37,7 +37,7 @@ public interface ImageProcessingHints {
      * SVG image).
      * @since 1.4
      */
-    Object IMAGE_SESSION_CONTEXT = "IMAGE_SESSION_CONTEXT"; //Value: ImageSessionContext instance
+    String IMAGE_SESSION_CONTEXT = "IMAGE_SESSION_CONTEXT"; //Value: ImageSessionContext instance
 
     /**
      * Used to pass in the {@link ImageManager}. A consumer can use this to load embedded
@@ -45,13 +45,13 @@ public interface ImageProcessingHints {
      * SVG image).
      * @since 1.4
      */
-    Object IMAGE_MANAGER = "IMAGE_MANAGER"; //Value: ImageManager instance
+    String IMAGE_MANAGER = "IMAGE_MANAGER"; //Value: ImageManager instance
 
     /** Used to tell the image loader to ignore any color profile in the image. */
-    Object IGNORE_COLOR_PROFILE = "IGNORE_COLOR_PROFILE"; //Value: Boolean
+    String IGNORE_COLOR_PROFILE = "IGNORE_COLOR_PROFILE"; //Value: Boolean
 
     /** Used to tell a bitmap producer to generate a certain type of bitmap. */
-    Object BITMAP_TYPE_INTENT = "BITMAP_TYPE_INTENT";
+    String BITMAP_TYPE_INTENT = "BITMAP_TYPE_INTENT";
 
     /**
      * Used with BITMAP_TYPE_INTENT to indicate that the generated bitmap should be a
@@ -68,7 +68,7 @@ public interface ImageProcessingHints {
     /**
      * Used to indicate how existing transparency information (for example, an alpha channel)
      * shall be treated. */
-    Object TRANSPARENCY_INTENT = "TRANSPARENCY_INTENT";
+    String TRANSPARENCY_INTENT = "TRANSPARENCY_INTENT";
 
     /**
      * Used with TRANSPARENCY_INTENT to indicate that any transparency information shall be

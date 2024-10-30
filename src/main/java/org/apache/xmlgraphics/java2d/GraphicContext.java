@@ -491,7 +491,7 @@ public class GraphicContext implements Cloneable {
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void setRenderingHints(Map hints) {
+    public void setRenderingHints(Map<RenderingHints.Key, Object> hints) {
         this.hints = new RenderingHints(hints);
     }
 
@@ -510,7 +510,7 @@ public class GraphicContext implements Cloneable {
      * @param hints the rendering hints to be set
      * @see RenderingHints
      */
-    public void addRenderingHints(Map hints) {
+    public void addRenderingHints(Map<String, Object> hints) {
         this.hints.putAll(hints);
     }
 

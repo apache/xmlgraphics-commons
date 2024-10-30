@@ -236,7 +236,7 @@ public final class ImageUtil {
      * @return a Map of hints
      */
     public static Map getDefaultHints(ImageSessionContext session) {
-        java.util.Map hints = new java.util.HashMap();
+        java.util.Map<String, Object> hints = new java.util.HashMap<>();
         hints.put(ImageProcessingHints.SOURCE_RESOLUTION,
                 session.getParentContext().getSourceResolution());
         hints.put(ImageProcessingHints.TARGET_RESOLUTION,

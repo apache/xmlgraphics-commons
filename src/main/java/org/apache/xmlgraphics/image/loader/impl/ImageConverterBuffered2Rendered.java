@@ -31,7 +31,7 @@ import org.apache.xmlgraphics.image.loader.ImageFlavor;
 public class ImageConverterBuffered2Rendered extends AbstractImageConverter {
 
     /** {@inheritDoc} */
-    public Image convert(Image src, Map hints) {
+    public Image convert(Image src, Map<String, Object> hints) {
         checkSourceFlavor(src);
         assert src instanceof ImageBuffered;
         ImageBuffered buffered = (ImageBuffered)src;

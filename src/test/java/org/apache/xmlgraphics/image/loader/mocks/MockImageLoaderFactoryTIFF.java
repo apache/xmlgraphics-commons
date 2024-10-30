@@ -93,7 +93,7 @@ public class MockImageLoaderFactoryTIFF extends AbstractImageLoaderFactory {
             return 0;
         }
 
-        public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+        public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
                 throws ImageException, IOException {
             throw new UnsupportedOperationException("not implemented");
         }

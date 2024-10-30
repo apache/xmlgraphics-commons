@@ -93,7 +93,7 @@ public class ImageProviderPipeline {
      * @throws ImageException if an error occurs while loader or converting the image
      * @throws IOException if an I/O error occurs
      */
-    public Image execute(ImageInfo info, Map hints, ImageSessionContext context)
+    public Image execute(ImageInfo info, Map<String, Object> hints, ImageSessionContext context)
                 throws ImageException, IOException {
         return execute(info, null, hints, context);
     }
@@ -113,7 +113,7 @@ public class ImageProviderPipeline {
      * @throws IOException if an I/O error occurs
      */
     public Image execute(ImageInfo info, Image originalImage,
-            Map hints, ImageSessionContext context) throws ImageException, IOException {
+            Map<String, Object> hints, ImageSessionContext context) throws ImageException, IOException {
         if (hints == null) {
             hints = Collections.EMPTY_MAP;
         }

@@ -54,7 +54,7 @@ public class ImageLoaderRaw extends AbstractImageLoader {
     }
 
     /** {@inheritDoc} */
-    public Image loadImage(ImageInfo info, Map hints, ImageSessionContext session)
+    public Image loadImage(ImageInfo info, Map<String, Object> hints, ImageSessionContext session)
                 throws ImageException, IOException {
         if (!this.mime.equals(info.getMimeType())) {
             throw new IllegalArgumentException(

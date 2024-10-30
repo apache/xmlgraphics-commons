@@ -51,7 +51,7 @@ public abstract class AbstractImageLoader implements ImageLoader {
      *                  process (may be null).
      * @return true if any color profile should be ignored
      */
-    protected boolean ignoreColorProfile(Map hints) {
+    protected boolean ignoreColorProfile(Map<String, Object> hints) {
         if (hints == null) {
             return false;
         }
