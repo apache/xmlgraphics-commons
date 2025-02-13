@@ -39,6 +39,8 @@ public class XMPPropertyTest {
                 + "rdf:http://www.w3.org/1999/02/22-rdf-syntax-ns#\n"
                 + "<rdf:RDF>\n"
                 + "pdfaExtension:http://www.aiim.org/pdfa/ns/extension/\n"
+                + "pdfaProperty:http://www.aiim.org/pdfa/ns/property#\n"
+                + "pdfaSchema:http://www.aiim.org/pdfa/ns/schema#\n"
                 + "<rdf:Description rdf:about=\"\">\n"
                 + "<xmlns:http://www.aiim.org/pdfa/ns/property#>\n"
                 + "<prefix1:name1>\n"

@@ -22,6 +22,8 @@ package org.apache.xmlgraphics.xmp.schemas.pdf;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.xmlgraphics.xmp.XMPConstants;
 
@@ -33,6 +35,15 @@ public class PDFAExtensionXMPSchemaTest {
 
         assertEquals("pdfaExtension", schema.getPreferredPrefix());
         assertEquals(XMPConstants.PDF_A_EXTENSION, schema.getNamespace());
+        assertFalse("Must have the namespaces of child properties", schema.getExtraNamespaces().isEmpty());
 
+        assertTrue("The prefix must be the key", schema.getExtraNamespaces().containsKey("pdfaSchema"));
+        assertTrue("The prefix must be the key", schema.getExtraNamespaces().containsKey("pdfaProperty"));
+
+
+        assertEquals("Namespace must match the correct prefix`", XMPConstants.PDF_A_SCHEMA,
+                schema.getExtraNamespaces().get("pdfaSchema"));
+        assertEquals("Namespace must match the correct prefix`", XMPConstants.PDF_A_PROPERTY,
+                schema.getExtraNamespaces().get("pdfaProperty"));
     }
 }
