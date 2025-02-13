@@ -31,6 +31,9 @@ public class PDFAExtensionXMPSchema extends XMPSchema {
     /** Creates a new schema instance for Dublin Core. */
     public PDFAExtensionXMPSchema() {
         super(XMPConstants.PDF_A_EXTENSION, "pdfaExtension");
+
+        addExtraNamespace("pdfaSchema", XMPConstants.PDF_A_SCHEMA);
+        addExtraNamespace("pdfaProperty", XMPConstants.PDF_A_PROPERTY);
     }
 
     /**

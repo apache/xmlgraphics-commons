@@ -134,6 +134,13 @@ public class Metadata implements XMLizable, PropertyAccess {
                         if (prefix != null) {
                             handler.startPrefixMapping(prefix, ns);
                         }
+
+                        if (schema != null) {
+                            for (Map.Entry<String, String> entry : schema.getExtraNamespaces().entrySet()) {
+                                handler.startPrefixMapping(entry.getKey(), entry.getValue());
+                            }
+                        }
+
                         handler.startElement(XMPConstants.RDF_NAMESPACE,
                                 "Description", "rdf:Description", atts);
                         empty = false;
@@ -146,6 +153,12 @@ public class Metadata implements XMLizable, PropertyAccess {
                 handler.endElement(XMPConstants.RDF_NAMESPACE, "Description", "rdf:Description");
                 if (prefix != null) {
                     handler.endPrefixMapping(prefix);
+                }
+
+                if (schema != null) {
+                    for (String extraPrefix : schema.getExtraNamespaces().keySet()) {
+                        handler.endPrefixMapping(extraPrefix);
+                    }
                 }
             }
         }

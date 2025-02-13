@@ -19,6 +19,9 @@
 
 package org.apache.xmlgraphics.xmp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
 
@@ -31,6 +34,7 @@ public class XMPSchema {
 
     private String namespace;
     private String prefix;
+    private Map<String, String> extraNamespaces = new HashMap<>();
 
     /**
      * Constructs a new XMP schema object.
@@ -64,5 +68,14 @@ public class XMPSchema {
     /** @return the default merge rule set for this XMP schema. */
     public MergeRuleSet getDefaultMergeRuleSet() {
         return defaultMergeRuleSet;
+    }
+
+    /** Returns the map of extra namespaces to by used by child properties */
+    public Map<String, String> getExtraNamespaces() {
+        return extraNamespaces;
+    }
+
+    public void addExtraNamespace(String prefix, String namespace) {
+        this.extraNamespaces.put(prefix, namespace);
     }
 }
