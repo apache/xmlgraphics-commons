@@ -20,9 +20,12 @@
 package org.apache.xmlgraphics.image.loader.impl.imageio;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
 import java.awt.image.IndexColorModel;
@@ -30,6 +33,7 @@ import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -57,6 +61,7 @@ import org.w3c.dom.Element;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.xmlgraphics.image.codec.util.ImageInputStreamSeekableStreamAdapter;
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
@@ -80,8 +85,8 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
     private ImageFlavor targetFlavor;
 
     private static final String PNG_METADATA_NODE = "javax_imageio_png_1.0";
-
     private static final String JPEG_METADATA_NODE = "javax_imageio_jpeg_image_1.0";
+    public static final String ICC_CONVERTER = "icc-converter";
 
     private static final Set PROVIDERS_IGNORING_ICC = new HashSet();
 
@@ -247,10 +252,42 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
         }
 
         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
+            imageData = rgbToCmyk((BufferedImage) imageData, info, session);
             return new ImageBuffered(info, (BufferedImage)imageData, transparentColor);
         } else {
             return new ImageRendered(info, imageData, transparentColor);
         }
+    }
+
+    /**
+     * Convert RGB to CMYK using ICC file passed via fop.xconf
+     */
+    private BufferedImage rgbToCmyk(BufferedImage image, ImageInfo info, ImageSessionContext session)
+        throws IOException {
+        String iccUri = (String) info.getCustomObjects().get(ICC_CONVERTER);
+        if (iccUri != null && image.getColorModel().getNumColorComponents() < 4) {
+            if (image.getType() != BufferedImage.TYPE_INT_RGB) {
+                BufferedImage rgbImage =
+                        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = (Graphics2D) rgbImage.getGraphics();
+                g.setBackground(Color.WHITE);
+                g.clearRect(0, 0, image.getWidth(), image.getHeight());
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+                image = rgbImage;
+            }
+            try {
+                Source src = session.needSource(iccUri);
+                ImageInputStream iccStream = ImageUtil.needImageInputStream(src);
+                ColorSpace colorSpace = new ICC_ColorSpace(ICC_Profile.getInstance(
+                        new ImageInputStreamSeekableStreamAdapter(iccStream)));
+                ColorConvertOp convertOp = new ColorConvertOp(image.getColorModel().getColorSpace(), colorSpace, null);
+                return convertOp.filter(image, null);
+            } catch (FileNotFoundException e) {
+                throw new IOException(e);
+            }
+        }
+        return image;
     }
 
     private ImageReadParam getParam(ImageReader reader, Map<String, Object> hints) throws IOException {

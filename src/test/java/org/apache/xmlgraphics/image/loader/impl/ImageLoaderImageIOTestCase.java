@@ -19,8 +19,11 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URL;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -60,4 +63,15 @@ public class ImageLoaderImageIOTestCase {
         assertTrue(im instanceof ImageRendered);
     }
 
+    @Test
+    public void testRGBToCMYK() throws Exception {
+        File file = new File("test/images/bgimg300dpi.jpg");
+        ImageInfo info = new ImageInfo(file.toURI().toASCIIString(), "");
+        String icc = new File("test/images/ISOcoated_v2_300_bas.icc").toURI().toASCIIString();
+        info.getCustomObjects().put(ImageLoaderImageIO.ICC_CONVERTER, icc);
+        ImageBuffered image = (ImageBuffered) new ImageLoaderImageIO(ImageFlavor.BUFFERED_IMAGE)
+                .loadImage(info, null, new MockImageSessionContext(MockImageContext.newSafeInstance()));
+        Assert.assertEquals(image.getBufferedImage().getType(), BufferedImage.TYPE_CUSTOM);
+        Assert.assertEquals(image.getBufferedImage().getColorModel().getNumColorComponents(), 4);
+    }
 }

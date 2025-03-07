@@ -69,6 +69,8 @@ public class ImageImplRegistry {
     private Map additionalPenalties = new java.util.HashMap(); //<String, Penalty>
     //Note: String as key chosen to avoid possible class-unloading leaks
 
+    private String iccConverter;
+
     /**
      * Main constructor. This constructor allows to disable plug-in discovery for testing purposes.
      * @param discover true if implementation classes shall automatically be discovered.
@@ -422,4 +424,11 @@ public class ImageImplRegistry {
         return (p != null ? p : Penalty.ZERO_PENALTY);
     }
 
+    public void setICCConverter(String iccConverter) {
+        this.iccConverter = iccConverter;
+    }
+
+    public String getIccConverter() {
+        return iccConverter;
+    }
 }
