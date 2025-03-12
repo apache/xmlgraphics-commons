@@ -31,8 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-
 /**
  * This class handles looking up service providers on the class path.
  * It implements the system described in:
@@ -161,10 +159,9 @@ public final class Service {
             try {
                 URL u = e.nextElement();
 
-                InputStream    is = u.openStream();
-                Reader         r  = new InputStreamReader(is, StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(r);
-                try {
+                try (InputStream    is = u.openStream();
+                     Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
+                     BufferedReader br = new BufferedReader(r)) {
                     for (String line = br.readLine(); line != null; line = br.readLine()) {
                         // First strip any comment...
                         int idx = line.indexOf('#');
@@ -179,9 +176,6 @@ public final class Service {
                             l.add(line);
                         }
                     }
-                } finally {
-                    IOUtils.closeQuietly(br);
-                    IOUtils.closeQuietly(is);
                 }
             } catch (Exception ex) {
                 // Just try the next file...
