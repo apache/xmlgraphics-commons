@@ -25,7 +25,7 @@
 
   <property name="Name" value="Apache XML Graphics Commons"/>
   <property name="name" value="xmlgraphics-commons"/>
-  <property name="year" value="1999-2024"/>
+  <property name="year" value="1999-2025"/>
 
   <property name="javac.debug" value="on"/>
   <property name="javac.optimize" value="off"/>
