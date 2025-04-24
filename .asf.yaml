@@ -10,7 +10,6 @@ github:
     rebase:  true
   protected_branches:
     main:
-      strict: true
       required_linear_history: true
       required_signatures: true
   dependabot_alerts:  true
