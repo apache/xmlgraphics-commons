@@ -11,7 +11,7 @@ github:
   protected_branches:
     main:
       required_linear_history: true
-      required_signatures: true
+      required_signatures: false
   dependabot_alerts:  true
   dependabot_updates: false
 
