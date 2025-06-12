@@ -32,6 +32,7 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,15 +46,19 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import javax.imageio.IIOException;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataFormatImpl;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.spi.IIOServiceProvider;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import javax.xml.transform.Source;
 
 import org.w3c.dom.Element;
@@ -69,8 +74,10 @@ import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader;
 import org.apache.xmlgraphics.image.loader.impl.ImageBuffered;
+import org.apache.xmlgraphics.image.loader.impl.ImageRawJPEG;
 import org.apache.xmlgraphics.image.loader.impl.ImageRendered;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+
 import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.java2d.color.profile.ColorProfileUtil;
 
@@ -251,12 +258,31 @@ public class ImageLoaderImageIO extends AbstractImageLoader {
             }
         }
 
+        if ("image/webp".equals(info.getMimeType()) && !hints.containsKey("CMYK")) {
+            //skip for AFP by checking hints map
+            return convertToJPEG(info, imageData);
+        }
         if (ImageFlavor.BUFFERED_IMAGE.equals(this.targetFlavor)) {
             imageData = rgbToCmyk((BufferedImage) imageData, info, session);
             return new ImageBuffered(info, (BufferedImage)imageData, transparentColor);
         } else {
             return new ImageRendered(info, imageData, transparentColor);
         }
+    }
+
+    private ImageRawJPEG convertToJPEG(ImageInfo info, RenderedImage imageData) throws IOException {
+        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+        ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
+        jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        jpgWriteParam.setCompressionQuality(0.8f);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageOutputStream outputStream = ImageIO.createImageOutputStream(bos);
+        jpgWriter.setOutput(outputStream);
+        IIOImage outputImage = new IIOImage(imageData, null, null);
+        jpgWriter.write(null, outputImage, jpgWriteParam);
+        jpgWriter.dispose();
+        return new ImageRawJPEG(info, new ByteArrayInputStream(bos.toByteArray()), 0,
+                imageData.getColorModel().getColorSpace(), null, false);
     }
 
     /**

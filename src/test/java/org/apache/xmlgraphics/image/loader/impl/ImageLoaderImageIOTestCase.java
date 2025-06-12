@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.image.loader.impl;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -73,5 +74,15 @@ public class ImageLoaderImageIOTestCase {
                 .loadImage(info, null, new MockImageSessionContext(MockImageContext.newSafeInstance()));
         Assert.assertEquals(image.getBufferedImage().getType(), BufferedImage.TYPE_CUSTOM);
         Assert.assertEquals(image.getBufferedImage().getColorModel().getNumColorComponents(), 4);
+    }
+
+    @Test
+    public void testWebP() throws Exception {
+        //Use jpg file to avoid need for TwelveMonkeys jars
+        File file = new File("test/images/bgimg300dpi.jpg");
+        ImageInfo info = new ImageInfo(file.toURI().toASCIIString(), "image/webp");
+        Image image = new ImageLoaderImageIO(ImageFlavor.BUFFERED_IMAGE)
+                .loadImage(info, new HashMap<>(), new MockImageSessionContext(MockImageContext.newSafeInstance()));
+        Assert.assertTrue(image instanceof ImageRawJPEG);
     }
 }
