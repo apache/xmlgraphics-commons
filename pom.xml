@@ -44,13 +44,6 @@
     <url>http://www.apache.org/</url>
   </organization>
 
-  <distributionManagement>
-    <site>
-      <id>${project.artifactId}-site</id>
-      <url>${project.baseUri}</url>
-    </site>
-  </distributionManagement>
-
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
