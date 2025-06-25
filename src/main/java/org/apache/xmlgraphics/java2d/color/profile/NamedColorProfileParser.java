@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.xmlgraphics.java2d.color.CIELabColorSpace;
 import org.apache.xmlgraphics.java2d.color.ColorSpaces;
@@ -181,7 +182,7 @@ public class NamedColorProfileParser {
         din.skipBytes(firstOffset - offset);
         byte[] utf16 = new byte[firstLength];
         din.readFully(utf16);
-        return new String(utf16, "UTF-16BE");
+        return new String(utf16, StandardCharsets.UTF_16BE);
     }
 
     private String toSignatureString(int sig) {
