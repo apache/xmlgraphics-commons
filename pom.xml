@@ -240,6 +240,15 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>spotbugs-java11</id>
+      <activation>
+        <jdk>[11,)</jdk>
+      </activation>
+      <properties>
+        <findbugs.version>4.8.6.7</findbugs.version>
+      </properties>
+    </profile>
   </profiles>  
 
   <reporting>
