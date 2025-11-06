@@ -23,8 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.EndianUtils;
-
 import org.apache.xmlgraphics.fonts.Glyphs;
 import org.apache.xmlgraphics.util.io.ASCIIHexOutputStream;
 import org.apache.xmlgraphics.util.io.IOUtils;
@@ -64,7 +62,7 @@ public class PSFontUtils {
             int dataSegLen = 0;
             switch (segType) {
                 case 1: //ASCII
-                    dataSegLen = EndianUtils.readSwappedInteger(in);
+                    dataSegLen = readLittleEndianInt(in);
 
                     BufferedReader reader = new BufferedReader(
                             new java.io.InputStreamReader(
@@ -75,7 +73,7 @@ public class PSFontUtils {
                         }
                     break;
                 case 2: //binary
-                    dataSegLen = EndianUtils.readSwappedInteger(in);
+                    dataSegLen = readLittleEndianInt(in);
 
                     SubInputStream sin = new SubInputStream(in, dataSegLen);
                     ASCIIHexOutputStream hexOut = new ASCIIHexOutputStream(gen.getOutputStream());
@@ -88,6 +86,17 @@ public class PSFontUtils {
                 default: throw new IOException("Unsupported segment type: " + segType);
             }
         }
+    }
+
+    private static int readLittleEndianInt(InputStream in) throws IOException {
+        int ch1 = in.read();
+        int ch2 = in.read();
+        int ch3 = in.read();
+        int ch4 = in.read();
+        if ((ch1 | ch2 | ch3 | ch4) < 0) {
+            throw new IOException("Unexpected end of stream while reading integer");
+        }
+        return (ch4 << 24) | (ch3 << 16) | (ch2 << 8) | ch1;
     }
 
     /** the PSResource representing the WinAnsiEncoding. */
