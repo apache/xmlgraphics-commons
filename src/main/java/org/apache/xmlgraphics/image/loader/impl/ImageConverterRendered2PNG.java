@@ -19,10 +19,9 @@
 
 package org.apache.xmlgraphics.image.loader.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.apache.xmlgraphics.image.loader.Image;
 import org.apache.xmlgraphics.image.loader.ImageException;

@@ -22,6 +22,7 @@ package org.apache.xmlgraphics.image.loader.impl;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -29,7 +30,6 @@ import java.util.Map;
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.transform.Source;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

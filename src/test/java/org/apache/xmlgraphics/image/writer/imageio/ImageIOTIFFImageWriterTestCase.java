@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.metadata.IIOMetadata;
@@ -34,8 +35,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import org.w3c.dom.Node;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.apache.xmlgraphics.image.writer.Endianness;

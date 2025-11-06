@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.xmp;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,8 +28,6 @@ import java.io.UnsupportedEncodingException;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
  * This class is a parser for XMP packets. By default, it tries to locate the first XMP packet

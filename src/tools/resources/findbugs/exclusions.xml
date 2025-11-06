@@ -196,6 +196,9 @@
    <Match>
      <Class name="org.apache.xmlgraphics.image.codec.tiff.ImageInfo"/>
      <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
-   </Match>   
-   
+   </Match>
+   <Match>
+     <Class name="org.apache.xmlgraphics.util.io.IOUtils"/>
+     <Bug pattern="DE_MIGHT_IGNORE"/>
+   </Match>
 </FindBugsFilter>
