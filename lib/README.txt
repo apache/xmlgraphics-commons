@@ -11,15 +11,6 @@ http://www.apache.org/licenses/
 Normal Dependencies
 ----------------------
 
-- Apache Commons IO
-
-    commons-io-*.jar
-    http://jakarta.apache.org/commons/io/
-    (I/O routines)
-    
-    Apache License v2.0
-
-
 - Apache Commons Logging
 
     commons-logging-*.jar
