@@ -20,6 +20,8 @@
 package org.apache.xmlgraphics.util.uri;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.Reader;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
@@ -130,20 +132,30 @@ public class DataURIResolverTestCase {
         streamSource = (StreamSource) src;
         assertNull(streamSource.getInputStream());
         assertNotNull(streamSource.getReader());
-        String text = IOUtils.toString(streamSource.getReader());
+        String text = toString(streamSource.getReader());
         assertEquals("FOP", text);
 
         src = resolver.resolve("data:,A%20brief%20note", null);
         assertNotNull(src);
         streamSource = (StreamSource) src;
-        text = IOUtils.toString(streamSource.getReader());
+        text = toString(streamSource.getReader());
         assertEquals("A brief note", text);
 
         src = resolver.resolve("data:text/plain;charset=iso-8859-7,%be%f9%be", null);
         assertNotNull(src);
         streamSource = (StreamSource) src;
-        text = IOUtils.toString(streamSource.getReader());
+        text = toString(streamSource.getReader());
         assertEquals("\u038e\u03c9\u038e", text);
+    }
+
+    private static String toString(Reader reader) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        char [] buf = new char[128];
+        int n;
+        while ((n = reader.read(buf)) > 0) {
+            sb.append(buf, 0, n);
+        }
+        return sb.toString();
     }
 
     /**
