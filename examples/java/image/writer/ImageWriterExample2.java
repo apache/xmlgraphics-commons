@@ -67,9 +67,8 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
         //String compression = "CCITT T.6";
         String compression = "PackBits";
 
-        OutputStream out = new java.io.FileOutputStream(outputFile);
-        out = new java.io.BufferedOutputStream(out);
-        try {
+        try (OutputStream fout = new java.io.FileOutputStream(outputFile);
+             OutputStream out = new java.io.BufferedOutputStream(fout)) {
 
             ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(format);
             ImageWriterParams params = new ImageWriterParams();
@@ -86,8 +85,6 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
                         + format);
             }
 
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

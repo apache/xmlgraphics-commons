@@ -841,11 +841,8 @@ public class PSGenerator implements PSCommandMap {
         } else {
             resTracker.registerNeededResource(getProcsetCIDInitResource());
             writeDSCComment(DSCConstants.BEGIN_DOCUMENT, IDENTITY_H);
-            InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H);
-            try {
+            try (InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H)) {
                 IOUtils.copyLarge(cmap, out);
-            } finally {
-                IOUtils.closeQuietly(cmap);
             }
             writeDSCComment(DSCConstants.END_DOCUMENT);
             resTracker.registerSuppliedResource(getIdentityHCMapResource());

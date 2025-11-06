@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.java2d.ps.EPSDocumentGraphics2D;
 
 /**
@@ -42,9 +41,8 @@ public class EPSExample1 {
      * @throws IOException In case of an I/O error
      */
     public static void generateEPSusingJava2D(File outputFile) throws IOException {
-        OutputStream out = new java.io.FileOutputStream(outputFile);
-        out = new java.io.BufferedOutputStream(out);
-        try {
+        try (OutputStream fout = new java.io.FileOutputStream(outputFile);
+             OutputStream out = new java.io.BufferedOutputStream(fout)) {
             //Instantiate the EPSDocumentGraphics2D instance
             EPSDocumentGraphics2D g2d = new EPSDocumentGraphics2D(false);
             g2d.setGraphicContext(new org.apache.xmlgraphics.java2d.GraphicContext());
@@ -78,8 +76,6 @@ public class EPSExample1 {
 
             //Cleanup
             g2d.finish();
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

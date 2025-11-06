@@ -111,11 +111,8 @@ public class ImageRawStream extends AbstractImage {
      * @throws IOException if an I/O error occurs
      */
     public void writeTo(OutputStream out) throws IOException {
-        InputStream in = createInputStream();
-        try {
+        try (InputStream in = createInputStream()) {
             IOUtils.copy(in, out);
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 
@@ -166,7 +163,14 @@ public class ImageRawStream extends AbstractImage {
         }
 
         public synchronized void close() {
-            IOUtils.closeQuietly(this.in);
+            InputStream in = this.in;
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ignore) {
+                    // ignore
+                }
+            }
             this.in = null;
         }
 

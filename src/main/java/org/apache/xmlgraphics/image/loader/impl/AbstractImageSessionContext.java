@@ -40,7 +40,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -133,7 +132,14 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                     try {
                         return method.invoke(iin, args);
                     } finally {
-                        IOUtils.closeQuietly(this.in);
+                        InputStream in = this.in;
+                        if (in != null) {
+                            try {
+                                in.close();
+                            } catch (IOException ignore) {
+                                // ignore
+                            }
+                        }
                         this.in = null;
                     }
                 } else {
@@ -330,7 +336,11 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
                 if (directFileAccess) {
                     //Close as the file is reopened in a more optimal way
-                    IOUtils.closeQuietly(in);
+                    try {
+                        in.close();
+                    } catch (IOException ignore) {
+                        // ignore
+                    }
                     try {
                         // We let the OS' file system cache do the caching for us
                         // --> lower Java memory consumption, probably no speed loss

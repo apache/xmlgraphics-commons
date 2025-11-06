@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.AttributedString;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.image.writer.ImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.ImageWriterRegistry;
@@ -106,9 +105,8 @@ public class ImageWriterExample1 {
         //Paint something
         paintSome(g2d, 1);
 
-        OutputStream out = new java.io.FileOutputStream(outputFile);
-        out = new java.io.BufferedOutputStream(out);
-        try {
+        try (OutputStream fout = new java.io.FileOutputStream(outputFile);
+             OutputStream out = new java.io.BufferedOutputStream(fout)) {
 
             ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(format);
             ImageWriterParams params = new ImageWriterParams();
@@ -116,8 +114,6 @@ public class ImageWriterExample1 {
             params.setResolution(72);
             writer.writeImage(bimg, out, params);
 
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

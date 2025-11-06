@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.io.IOUtils;
-
 /**
  * This class provides a number of constants for glyph management.
  */
@@ -651,12 +649,11 @@ public final class Glyphs {
 
     private static String[] loadGlyphList(String filename, Map charNameToUnicodeMap) {
         List lines = new java.util.ArrayList();
-        InputStream in = Glyphs.class.getResourceAsStream(filename);
-        if (in == null) {
-            throw new RuntimeException("Cannot load " + filename
-                    + ". The Glyphs class cannot properly be initialized!");
-        }
-        try {
+        try (InputStream in = Glyphs.class.getResourceAsStream(filename)) {
+            if (in == null) {
+                throw new RuntimeException("Cannot load " + filename
+                        + ". The Glyphs class cannot properly be initialized!");
+            }
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
             String line;
             try {
@@ -674,8 +671,6 @@ public final class Glyphs {
         } catch (IOException ioe) {
             throw new RuntimeException("I/O error while loading " + filename
                     + ". The Glyphs class cannot properly be initialized!");
-        } finally {
-            IOUtils.closeQuietly(in);
         }
         String[] arr = new String[lines.size() * 2];
         int pos = 0;

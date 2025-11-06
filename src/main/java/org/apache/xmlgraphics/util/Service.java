@@ -19,6 +19,7 @@
 
 package org.apache.xmlgraphics.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +31,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * This class handles looking up service providers on the class path.
@@ -161,10 +160,10 @@ public final class Service {
             try {
                 URL u = e.nextElement();
 
-                InputStream    is = u.openStream();
-                Reader         r  = new InputStreamReader(is, StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(r);
-                try {
+                try (InputStream    is = u.openStream();
+                     BufferedInputStream bis = new BufferedInputStream(is);
+                     Reader         r  = new InputStreamReader(bis, StandardCharsets.UTF_8);
+                     BufferedReader br = new BufferedReader(r)) {
                     for (String line = br.readLine(); line != null; line = br.readLine()) {
                         // First strip any comment...
                         int idx = line.indexOf('#');
@@ -179,9 +178,6 @@ public final class Service {
                             l.add(line);
                         }
                     }
-                } finally {
-                    IOUtils.closeQuietly(br);
-                    IOUtils.closeQuietly(is);
                 }
             } catch (Exception ex) {
                 // Just try the next file...

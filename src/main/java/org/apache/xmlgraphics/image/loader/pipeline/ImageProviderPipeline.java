@@ -225,11 +225,8 @@ public class ImageProviderPipeline {
 
             //Read the whole stream and hold it in memory so the image can be cached
             ByteArrayOutputStream baout = new ByteArrayOutputStream();
-            InputStream in = raw.createInputStream();
-            try {
+            try (InputStream in = raw.createInputStream()) {
                 IOUtils.copy(in, baout);
-            } finally {
-                IOUtils.closeQuietly(in);
             }
             final byte[] data = baout.toByteArray();
             raw.setInputStreamFactory(new ImageRawStream.ByteArrayStreamFactory(data));

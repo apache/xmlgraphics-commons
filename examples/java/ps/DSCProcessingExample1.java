@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.ps.dsc.DSCException;
 import org.apache.xmlgraphics.ps.dsc.tools.PageExtractor;
 
@@ -44,20 +43,13 @@ public class DSCProcessingExample1 {
      * @throws IOException In case of an I/O error
      */
     public void extractPages(File srcFile, File tgtFile, int from, int to) throws IOException {
-        InputStream in = new java.io.FileInputStream(srcFile);
-        in = new java.io.BufferedInputStream(in);
-        try {
-            OutputStream out = new java.io.FileOutputStream(tgtFile);
-            out = new java.io.BufferedOutputStream(out);
-            try {
-                PageExtractor.extractPages(in, out, from, to);
-            } catch (DSCException e) {
-                throw new RuntimeException(e.getMessage());
-            } finally {
-                IOUtils.closeQuietly(out);
-            }
-        } finally {
-            IOUtils.closeQuietly(in);
+        try (InputStream fin = new java.io.FileInputStream(srcFile);
+             InputStream in = new java.io.BufferedInputStream(fin);
+             OutputStream fout = new java.io.FileOutputStream(tgtFile);
+             OutputStream out = new java.io.BufferedOutputStream(fout)) {
+            PageExtractor.extractPages(in, out, from, to);
+        } catch (DSCException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

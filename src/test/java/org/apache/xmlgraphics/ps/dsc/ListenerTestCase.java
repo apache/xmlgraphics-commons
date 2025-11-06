@@ -28,8 +28,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.ps.DSCConstants;
 import org.apache.xmlgraphics.ps.dsc.events.DSCComment;
 import org.apache.xmlgraphics.ps.dsc.events.DSCCommentLanguageLevel;
@@ -46,8 +44,7 @@ public class ListenerTestCase {
      */
     @Test
     public void testFilter() throws Exception {
-        InputStream in = getClass().getResourceAsStream("test1.txt");
-        try {
+        try (InputStream in = getClass().getResourceAsStream("test1.txt")) {
             DSCParser parser = new DSCParser(in);
             parser.setFilter(new DSCFilter() {
 
@@ -64,8 +61,6 @@ public class ListenerTestCase {
                     fail("Filter failed. Comment found.");
                 }
             }
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 
@@ -75,8 +70,7 @@ public class ListenerTestCase {
      */
     @Test
     public void testListeners() throws Exception {
-        InputStream in = getClass().getResourceAsStream("test1.txt");
-        try {
+        try (InputStream in = getClass().getResourceAsStream("test1.txt")) {
             final Map results = new java.util.HashMap();
             DSCParser parser = new DSCParser(in);
 
@@ -122,8 +116,6 @@ public class ListenerTestCase {
             }
             assertEquals(12, count);
             assertEquals(1, results.get("level"));
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 

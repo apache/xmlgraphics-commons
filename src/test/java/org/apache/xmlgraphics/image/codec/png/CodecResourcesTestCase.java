@@ -20,12 +20,12 @@
 package org.apache.xmlgraphics.image.codec.png;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
-
-import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.image.codec.util.MemoryCacheSeekableStream;
 import org.apache.xmlgraphics.image.codec.util.SeekableStream;
@@ -38,9 +38,8 @@ public class CodecResourcesTestCase {
     @Test
     public void testResources() throws Exception {
 
-        InputStream in = new java.io.FileInputStream("test/images/barcode.eps");
-        SeekableStream seekStream = new MemoryCacheSeekableStream(in);
-        try {
+        try (InputStream in = Files.newInputStream(Paths.get("test/images/barcode.eps"));
+             SeekableStream seekStream = new MemoryCacheSeekableStream(in)) {
             new PNGImage(seekStream, null);
             fail("Exception expected");
         } catch (RuntimeException re) {
@@ -51,9 +50,6 @@ public class CodecResourcesTestCase {
             } else if (msg.toLowerCase().indexOf("magic") < 0) {
                 fail("Message not as expected! Message is: " + msg);
             }
-        } finally {
-            IOUtils.closeQuietly(seekStream);
-            IOUtils.closeQuietly(in);
         }
     }
 }

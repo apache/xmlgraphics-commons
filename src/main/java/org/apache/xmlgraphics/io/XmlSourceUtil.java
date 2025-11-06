@@ -19,6 +19,7 @@ package org.apache.xmlgraphics.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -31,8 +32,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.InputSource;
-
-import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageInputStreamAdapter;
@@ -137,7 +136,7 @@ public final class XmlSourceUtil {
     public static void closeQuietly(Source src) {
         if (src instanceof StreamSource) {
             StreamSource streamSource = (StreamSource) src;
-            IOUtils.closeQuietly(streamSource.getReader());
+            closeQuietly(streamSource.getReader());
         } else if (src instanceof ImageSource) {
             if (ImageUtil.getImageInputStream(src) != null) {
                 try {
@@ -149,11 +148,22 @@ public final class XmlSourceUtil {
         } else if (src instanceof SAXSource) {
             InputSource is = ((SAXSource) src).getInputSource();
             if (is != null) {
-                IOUtils.closeQuietly(is.getByteStream());
-                IOUtils.closeQuietly(is.getCharacterStream());
+                closeQuietly(is.getByteStream());
+                closeQuietly(is.getCharacterStream());
             }
         }
         removeStreams(src);
+    }
+
+    private static void closeQuietly(Closeable in) {
+        if (in == null) {
+            return;
+        }
+        try {
+            in.close();
+        } catch (IOException ignore) {
+            // ignore
+        }
     }
 
     /**
