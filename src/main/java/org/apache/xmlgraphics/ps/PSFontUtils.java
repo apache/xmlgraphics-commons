@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.EndianUtils;
-import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.fonts.Glyphs;
 import org.apache.xmlgraphics.util.io.ASCIIHexOutputStream;
+import org.apache.xmlgraphics.util.io.IOUtils;
 import org.apache.xmlgraphics.util.io.SubInputStream;
 
 // CSOFF: HideUtilityClassConstructor

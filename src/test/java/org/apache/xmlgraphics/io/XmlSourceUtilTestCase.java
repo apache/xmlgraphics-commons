@@ -19,9 +19,8 @@ package org.apache.xmlgraphics.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.xml.parsers.DocumentBuilder;
@@ -44,9 +43,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.loader.ImageSource;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 import static org.apache.xmlgraphics.io.XmlSourceUtil.closeQuietly;
 import static org.apache.xmlgraphics.io.XmlSourceUtil.getInputStream;
@@ -63,7 +61,7 @@ public class XmlSourceUtilTestCase {
     private ImageSource imgSource;
     private ImageInputStream imgInStream;
     private DOMSource domSource;
-    private StringWriter writer;
+    private String result;
     private InputStream testStream;
     private Reader reader;
 
@@ -91,8 +89,7 @@ public class XmlSourceUtilTestCase {
         DocumentBuilder db = dbf.newDocumentBuilder();
         domSource = new DOMSource(db.newDocument().createElement("test"));
         InputStream inStream = XmlSourceUtil.getInputStream(domSource);
-        writer = new StringWriter();
-        IOUtils.copy(inStream, writer, Charset.defaultCharset());
+        result = IOUtils.toString(new InputStreamReader(inStream));
     }
 
     @Test
@@ -106,7 +103,7 @@ public class XmlSourceUtilTestCase {
         getInputStream(imgSource);
         verify(imgSource).getImageInputStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><test/>", writer.toString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><test/>", result);
 
         // Test negative case
         Source src = mock(Source.class);
@@ -124,7 +121,7 @@ public class XmlSourceUtilTestCase {
         needInputStream(imgSource);
         verify(imgSource).getImageInputStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><test/>", writer.toString());
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><test/>", result);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -145,9 +142,8 @@ public class XmlSourceUtilTestCase {
 
     public void testNeedInputStreamFailureCaseDOMSource() throws IOException {
         InputStream inStream = needInputStream(new DOMSource());
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(inStream, writer, Charset.defaultCharset());
-        assertEquals("", writer.toString());
+        String result = IOUtils.toString(new InputStreamReader(inStream));
+        assertEquals("", result);
     }
 
     @Test(expected = AssertionError.class)

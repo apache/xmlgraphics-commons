@@ -35,11 +35,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.util.io.ASCII85OutputStream;
 import org.apache.xmlgraphics.util.io.Finalizable;
 import org.apache.xmlgraphics.util.io.FlateEncodeOutputStream;
+import org.apache.xmlgraphics.util.io.IOUtils;
 import org.apache.xmlgraphics.util.io.RunLengthEncodeOutputStream;
 
 // CSOFF: HideUtilityClassConstructor

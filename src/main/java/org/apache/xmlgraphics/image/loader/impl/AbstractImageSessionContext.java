@@ -48,6 +48,7 @@ import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
 import org.apache.xmlgraphics.io.XmlSourceUtil;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * Abstract base class for classes implementing ImageSessionContext. This class provides all the
@@ -132,14 +133,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
                     try {
                         return method.invoke(iin, args);
                     } finally {
-                        InputStream in = this.in;
-                        if (in != null) {
-                            try {
-                                in.close();
-                            } catch (IOException ignore) {
-                                // ignore
-                            }
-                        }
+                        IOUtils.closeQuietly(this.in);
                         this.in = null;
                     }
                 } else {
@@ -336,11 +330,7 @@ public abstract class AbstractImageSessionContext implements ImageSessionContext
 
                 if (directFileAccess) {
                     //Close as the file is reopened in a more optimal way
-                    try {
-                        in.close();
-                    } catch (IOException ignore) {
-                        // ignore
-                    }
+                    IOUtils.closeQuietly(in);
                     try {
                         // We let the OS' file system cache do the caching for us
                         // --> lower Java memory consumption, probably no speed loss

@@ -24,10 +24,9 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.util.WriterOutputStream;
 import org.apache.xmlgraphics.util.io.Base64EncodeStream;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * Utility classes for generating RFC 2397 data URLs.
@@ -64,9 +63,9 @@ public final class DataURLUtil {
             writer.write(mediatype);
         }
         writer.write(";base64,");
-        Base64EncodeStream out = new Base64EncodeStream(
-                new WriterOutputStream(writer, "US-ASCII"), false);
-        IOUtils.copy(in, out);
-        out.close();
+        try (Base64EncodeStream out = new Base64EncodeStream(
+                new WriterOutputStream(writer, "US-ASCII"), false)) {
+            IOUtils.copy(in, out);
+        }
     }
 }

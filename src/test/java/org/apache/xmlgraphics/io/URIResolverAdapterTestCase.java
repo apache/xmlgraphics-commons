@@ -19,10 +19,9 @@ package org.apache.xmlgraphics.io;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -34,8 +33,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xml.resolver.tools.CatalogResolver;
+
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 public class URIResolverAdapterTestCase {
 
@@ -66,9 +66,8 @@ public class URIResolverAdapterTestCase {
     }
 
     private void testInputStream(InputStream stream) throws IOException {
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(stream, writer, Charset.defaultCharset());
-        assertEquals("This is a text file used to test the CatalogResolver\n", writer.toString());
+        String result = IOUtils.toString(new InputStreamReader(stream));
+        assertEquals("This is a text file used to test the CatalogResolver\n", result);
     }
 
     @Test
