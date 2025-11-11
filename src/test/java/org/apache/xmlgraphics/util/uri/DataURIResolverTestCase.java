@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * Test case for the RFC 2397 data URL/URI resolver.
@@ -145,6 +145,7 @@ public class DataURIResolverTestCase {
         text = IOUtils.toString(streamSource.getReader());
         assertEquals("\u038e\u03c9\u038e", text);
     }
+
 
     /**
      * Test that the system Id is not null for the resulting stream objects

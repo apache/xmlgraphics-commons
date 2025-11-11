@@ -26,11 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.xmlgraphics.image.writer.ImageWriter;
 import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 import org.apache.xmlgraphics.image.writer.ImageWriterRegistry;
 import org.apache.xmlgraphics.image.writer.MultiImageWriter;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 public class ImageWriterExample2 extends ImageWriterExample1 {
 
@@ -67,9 +67,8 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
         //String compression = "CCITT T.6";
         String compression = "PackBits";
 
-        OutputStream out = new java.io.FileOutputStream(outputFile);
-        out = new java.io.BufferedOutputStream(out);
-        try {
+        try (OutputStream fout = new java.io.FileOutputStream(outputFile);
+             OutputStream out = new java.io.BufferedOutputStream(fout)) {
 
             ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(format);
             ImageWriterParams params = new ImageWriterParams();
@@ -86,8 +85,6 @@ public class ImageWriterExample2 extends ImageWriterExample1 {
                         + format);
             }
 
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

@@ -32,8 +32,6 @@ import java.util.Stack;
 
 import javax.xml.transform.Source;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,6 +39,7 @@ import org.apache.xmlgraphics.java2d.color.ColorUtil;
 import org.apache.xmlgraphics.java2d.color.ColorWithAlternatives;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 import org.apache.xmlgraphics.util.DoubleFormatUtil;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * This class is used to output PostScript code to an OutputStream. This class assumes that
@@ -841,11 +840,8 @@ public class PSGenerator implements PSCommandMap {
         } else {
             resTracker.registerNeededResource(getProcsetCIDInitResource());
             writeDSCComment(DSCConstants.BEGIN_DOCUMENT, IDENTITY_H);
-            InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H);
-            try {
-                IOUtils.copyLarge(cmap, out);
-            } finally {
-                IOUtils.closeQuietly(cmap);
+            try (InputStream cmap = PSGenerator.class.getResourceAsStream(IDENTITY_H)) {
+                IOUtils.copy(cmap, out);
             }
             writeDSCComment(DSCConstants.END_DOCUMENT);
             resTracker.registerSuppliedResource(getIdentityHCMapResource());

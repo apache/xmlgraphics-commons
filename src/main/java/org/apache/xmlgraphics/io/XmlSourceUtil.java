@@ -32,11 +32,10 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.InputSource;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageInputStreamAdapter;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * A utility class for handling {@link Source} objects, more specficially the streams that back

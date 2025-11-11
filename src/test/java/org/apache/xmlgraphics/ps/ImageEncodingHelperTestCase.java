@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -33,13 +34,12 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class ImageEncodingHelperTestCase {
 
@@ -79,7 +79,7 @@ public class ImageEncodingHelperTestCase {
         ByteArrayOutputStream nonoptimized = new ByteArrayOutputStream();
         ImageEncodingHelper.encodeRenderedImageAsRGB(image, nonoptimized);
 
-        assertTrue(Arrays.equals(nonoptimized.toByteArray(), optimized.toByteArray()));
+        assertArrayEquals(nonoptimized.toByteArray(), optimized.toByteArray());
 
     }
 
@@ -148,6 +148,6 @@ public class ImageEncodingHelperTestCase {
 
         byte[] expectedByteArray = new byte[27];
         Arrays.fill(expectedByteArray, (byte) expectedValue);
-        assertTrue(Arrays.equals(expectedByteArray, optimized.toByteArray()));
+        assertArrayEquals(expectedByteArray, optimized.toByteArray());
     }
 }

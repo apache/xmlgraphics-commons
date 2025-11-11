@@ -40,7 +40,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -49,6 +48,7 @@ import org.apache.xmlgraphics.image.loader.ImageSource;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.image.loader.util.SoftMapCache;
 import org.apache.xmlgraphics.io.XmlSourceUtil;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * Abstract base class for classes implementing ImageSessionContext. This class provides all the

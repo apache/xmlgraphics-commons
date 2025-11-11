@@ -38,8 +38,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.loader.impl.ImageLoaderPNG;
 import org.apache.xmlgraphics.image.loader.impl.ImageLoaderRawPNG;
 import org.apache.xmlgraphics.image.loader.impl.ImageRawStream;
@@ -121,8 +119,7 @@ public class ImageLoaderTestCase {
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
         ImageRawStream imgEPS = (ImageRawStream) img;
-        InputStream in = imgEPS.createInputStream();
-        try {
+        try (InputStream in = imgEPS.createInputStream()) {
             assertNotNull(in);
             Reader reader = new InputStreamReader(in, "US-ASCII");
             char[] c = new char[4];
@@ -130,8 +127,6 @@ public class ImageLoaderTestCase {
             if (!("%!PS".equals(new String(c)))) {
                 fail("EPS header expected");
             }
-        } finally {
-            IOUtils.closeQuietly(in);
         }
 
         sessionContext.checkAllStreamsClosed();
@@ -151,8 +146,7 @@ public class ImageLoaderTestCase {
         assertNotNull("Image must not be null", img);
         assertEquals(ImageFlavor.RAW_EPS, img.getFlavor());
         ImageRawStream imgEPS = (ImageRawStream) img;
-        InputStream in = imgEPS.createInputStream();
-        try {
+        try (InputStream in = imgEPS.createInputStream()) {
             assertNotNull(in);
             Reader reader = new InputStreamReader(in, "US-ASCII");
             char[] c = new char[4];
@@ -160,8 +154,6 @@ public class ImageLoaderTestCase {
             if (!("%!PS".equals(new String(c)))) {
                 fail("EPS header expected");
             }
-        } finally {
-            IOUtils.closeQuietly(in);
         }
 
         sessionContext.checkAllStreamsClosed();

@@ -23,8 +23,7 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.commons.io.IOUtils;
+import java.nio.file.Files;
 
 /**
  * Convenience methods around ImageWriter for the most important tasks.
@@ -68,14 +67,11 @@ public final class ImageWriterUtil {
     public static void saveAsFile(RenderedImage bitmap,
             int resolution, File outputFile, String mime)
                 throws IOException {
-        OutputStream out = new java.io.FileOutputStream(outputFile);
-        try {
+        try (OutputStream out = Files.newOutputStream(outputFile.toPath())) {
             ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(mime);
             ImageWriterParams params = new ImageWriterParams();
             params.setResolution(resolution);
             writer.writeImage(bitmap, out, params);
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

@@ -24,11 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.image.loader.ImageFlavor;
 import org.apache.xmlgraphics.image.loader.ImageInfo;
 import org.apache.xmlgraphics.image.loader.MimeEnabledImageFlavor;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * This class is an implementation of the Image interface exposing an InputStream for loading the
@@ -111,11 +110,8 @@ public class ImageRawStream extends AbstractImage {
      * @throws IOException if an I/O error occurs
      */
     public void writeTo(OutputStream out) throws IOException {
-        InputStream in = createInputStream();
-        try {
+        try (InputStream in = createInputStream()) {
             IOUtils.copy(in, out);
-        } finally {
-            IOUtils.closeQuietly(in);
         }
     }
 

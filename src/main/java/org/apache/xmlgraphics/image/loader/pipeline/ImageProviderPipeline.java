@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,6 +40,7 @@ import org.apache.xmlgraphics.image.loader.spi.ImageConverter;
 import org.apache.xmlgraphics.image.loader.spi.ImageImplRegistry;
 import org.apache.xmlgraphics.image.loader.spi.ImageLoader;
 import org.apache.xmlgraphics.image.loader.util.Penalty;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
  * Represents a pipeline of ImageConverters with an ImageLoader at the beginning of the
@@ -225,11 +225,8 @@ public class ImageProviderPipeline {
 
             //Read the whole stream and hold it in memory so the image can be cached
             ByteArrayOutputStream baout = new ByteArrayOutputStream();
-            InputStream in = raw.createInputStream();
-            try {
+            try (InputStream in = raw.createInputStream()) {
                 IOUtils.copy(in, baout);
-            } finally {
-                IOUtils.closeQuietly(in);
             }
             final byte[] data = baout.toByteArray();
             raw.setInputStreamFactory(new ImageRawStream.ByteArrayStreamFactory(data));

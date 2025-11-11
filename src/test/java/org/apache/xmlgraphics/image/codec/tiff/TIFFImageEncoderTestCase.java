@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 public class TIFFImageEncoderTestCase {
 

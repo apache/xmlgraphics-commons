@@ -20,6 +20,7 @@
 package org.apache.xmlgraphics.util.io;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,9 +28,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.apache.xmlgraphics.util.HexUtil;
 
@@ -62,7 +60,7 @@ public class ASCII85InputStreamTestCase {
         java.io.OutputStream out = new ASCII85OutputStream(baout);
         out.write(data, 0, len);
         out.close();
-        return new String(baout.toByteArray(), "US-ASCII");
+        return baout.toString("US-ASCII");
     }
 
 

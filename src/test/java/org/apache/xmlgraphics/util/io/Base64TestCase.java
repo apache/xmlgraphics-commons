@@ -33,8 +33,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
-import org.apache.commons.io.IOUtils;
-
 /**
  * This test validates that the Base64 encoder/decoders work properly.
  *

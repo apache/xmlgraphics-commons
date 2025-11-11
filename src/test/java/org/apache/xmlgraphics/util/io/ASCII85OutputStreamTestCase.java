@@ -19,13 +19,12 @@
 
 package org.apache.xmlgraphics.util.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
  * Test case for ASCII85OutputStream
@@ -51,7 +50,7 @@ public class ASCII85OutputStreamTestCase {
         OutputStream out = new ASCII85OutputStream(baout);
         out.write(data, 0, len);
         out.close();
-        return new String(baout.toByteArray(), "US-ASCII");
+        return baout.toString("US-ASCII");
     }
 
     /**

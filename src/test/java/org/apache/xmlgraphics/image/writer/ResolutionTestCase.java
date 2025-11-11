@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -42,8 +43,6 @@ import org.w3c.dom.NodeList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import org.apache.commons.io.IOUtils;
 
 import org.apache.xmlgraphics.util.UnitConv;
 
@@ -86,11 +85,8 @@ public class ResolutionTestCase {
         BufferedImage img = createTestImage();
         ImageWriter writer = ImageWriterRegistry.getInstance().getWriterFor(mime);
         assertNotNull(writer);
-        OutputStream out = new java.io.FileOutputStream(testFile);
-        try {
+        try (OutputStream out = Files.newOutputStream(testFile.toPath())) {
             writer.writeImage(img, out, params);
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

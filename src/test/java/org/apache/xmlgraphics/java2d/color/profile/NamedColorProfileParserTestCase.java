@@ -27,8 +27,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.apache.commons.io.IOUtils;
-
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
 import org.apache.xmlgraphics.java2d.color.RenderingIntent;
 
@@ -41,13 +39,10 @@ public class NamedColorProfileParserTestCase {
 
     @Test
     public void testParser() throws Exception {
-        InputStream in = getClass().getResourceAsStream(NCP_EXAMPLE_FILE);
-        assertNotNull(NCP_EXAMPLE_FILE + " is missing!", in);
         ICC_Profile iccProfile;
-        try {
+        try (InputStream in = getClass().getResourceAsStream(NCP_EXAMPLE_FILE)) {
+            assertNotNull(NCP_EXAMPLE_FILE + " is missing!", in);
             iccProfile = ICC_Profile.getInstance(in);
-        } finally {
-            IOUtils.closeQuietly(in);
         }
         NamedColorProfileParser parser = new NamedColorProfileParser();
         NamedColorProfile ncp = parser.parseProfile(iccProfile);
