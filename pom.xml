@@ -35,7 +35,7 @@
 
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/xmlgraphics-commons.git</connection>
-    <url>scm:git:https://gitbox.apache.org/repos/asf/xmlgraphics-commons.git</url>
+    <url>https://gitbox.apache.org/repos/asf/xmlgraphics-commons.git</url>
     <developerConnection></developerConnection>
   </scm>
 
