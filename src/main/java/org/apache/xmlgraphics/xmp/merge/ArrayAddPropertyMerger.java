@@ -48,9 +48,8 @@ public class ArrayAddPropertyMerger implements PropertyMerger {
                     array.add(sourceProp.getValue());
                 }
             } else {
-                //TODO should be refined (xml:lang etc.)
                 for (int i = 0, c = otherArray.getSize(); i < c; i++) {
-                    array.add(otherArray.getValue(i));
+                    array.add(otherArray.getValue(i), otherArray.getXMLLang(i), otherArray.getParseType(i));
                 }
             }
         }

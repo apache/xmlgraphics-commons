@@ -24,8 +24,11 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.xmp.Metadata;
+import org.apache.xmlgraphics.xmp.XMPConstants;
 import org.apache.xmlgraphics.xmp.XMPUtil;
 
 public class PDFAExtensionAdapterTest {
@@ -80,5 +83,15 @@ public class PDFAExtensionAdapterTest {
                 + "</rdf:Description>\n"
                 + "</rdf:RDF>\n"
                 + "</x:xmpmeta>\n", XMPUtil.toSax(meta));
+    }
+
+    @Test
+    public void testPropNamespace() {
+        Metadata meta = new Metadata();
+
+        PDFAExtensionXMPSchema.getAdapter(meta);
+
+        QName name = new QName(XMPConstants.PDF_A_EXTENSION, "pdfaExtension", "schemas");
+        assertNotNull("Parent property must have the namespace", meta.getProperty(name));
     }
 }

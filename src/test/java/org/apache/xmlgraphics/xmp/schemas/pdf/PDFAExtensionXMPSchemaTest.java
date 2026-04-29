@@ -23,9 +23,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.xmlgraphics.xmp.XMPArray;
+import org.apache.xmlgraphics.xmp.XMPArrayType;
 import org.apache.xmlgraphics.xmp.XMPConstants;
+import org.apache.xmlgraphics.xmp.XMPProperty;
+import org.apache.xmlgraphics.xmp.XMPUtil;
+import org.apache.xmlgraphics.xmp.merge.PropertyMerger;
 
 public class PDFAExtensionXMPSchemaTest {
 
@@ -45,5 +51,15 @@ public class PDFAExtensionXMPSchemaTest {
                 schema.getExtraNamespaces().get("pdfaSchema"));
         assertEquals("Namespace must match the correct prefix`", XMPConstants.PDF_A_PROPERTY,
                 schema.getExtraNamespaces().get("pdfaProperty"));
+    }
+
+    @Test
+    public void testMergerForPDFAExtensionSchemas() {
+        XMPProperty prop = XMPUtil.createProperty("pdfaExtension", "schemas", new XMPArray(XMPArrayType.BAG));
+
+        PropertyMerger merger = new PDFAExtensionXMPSchema().getDefaultMergeRuleSet().getPropertyMergerFor(prop);
+        assertNotNull("Each property must have a merger associated with it, or a default merger", merger);
+        assertEquals("The default merge rule for the schemas property must be the ArrayAddPropertyMerger",
+                "ArrayAddPropertyMerger", merger.getClass().getSimpleName());
     }
 }

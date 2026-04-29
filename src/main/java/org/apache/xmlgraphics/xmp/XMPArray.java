@@ -266,4 +266,10 @@ public class XMPArray extends XMPComplexValue {
         return "XMP array: " + type + ", " + getSize();
     }
 
+    public String getXMLLang(int idx) {
+        return (String)this.xmllang.get(idx);
+    }
+    public String getParseType(int idx) {
+        return this.parseTypes.get(idx);
+    }
 }

@@ -19,9 +19,11 @@
 
 package org.apache.xmlgraphics.xmp.schemas.pdf;
 
+import org.apache.xmlgraphics.util.QName;
 import org.apache.xmlgraphics.xmp.Metadata;
 import org.apache.xmlgraphics.xmp.XMPConstants;
 import org.apache.xmlgraphics.xmp.XMPSchema;
+import org.apache.xmlgraphics.xmp.merge.ArrayAddPropertyMerger;
 import org.apache.xmlgraphics.xmp.merge.MergeRuleSet;
 
 public class PDFAExtensionXMPSchema extends XMPSchema {
@@ -31,9 +33,11 @@ public class PDFAExtensionXMPSchema extends XMPSchema {
     /** Creates a new schema instance for Dublin Core. */
     public PDFAExtensionXMPSchema() {
         super(XMPConstants.PDF_A_EXTENSION, "pdfaExtension");
-
         addExtraNamespace("pdfaSchema", XMPConstants.PDF_A_SCHEMA);
         addExtraNamespace("pdfaProperty", XMPConstants.PDF_A_PROPERTY);
+
+        mergeRuleSet.addRule(new QName(XMPConstants.PDF_A_EXTENSION, "pdfaExtension", "schemas"),
+                new ArrayAddPropertyMerger());
     }
 
     /**
@@ -42,7 +46,7 @@ public class PDFAExtensionXMPSchema extends XMPSchema {
      * @return the newly instantiated adapter
      */
     public static PDFAExtensionAdapter getAdapter(Metadata meta) {
-        return new PDFAExtensionAdapter(meta, XMPConstants.PDF_A_EXTENSION);
+        return new PDFAExtensionAdapter(meta, XMPConstants.PDF_A_EXTENSION, "pdfaExtension");
     }
 
     /** @see XMPSchema#getDefaultMergeRuleSet() */

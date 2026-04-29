@@ -46,7 +46,7 @@ public class PDFAExtensionAdapter extends XMPSchemaAdapter {
      * @param namespace the namespace to access the schema (must be one of the PDF/A schema
      *                  namespaces)
      */
-    public PDFAExtensionAdapter(Metadata meta, String namespace) {
+    public PDFAExtensionAdapter(Metadata meta, String namespace, String preferredPrefix) {
         super(meta, XMPSchemaRegistry.getInstance().getSchema(namespace));
 
         QName schema = new QName(XMPConstants.PDF_A_SCHEMA, PDFA_SCHEMA, "schema");
@@ -78,7 +78,7 @@ public class PDFAExtensionAdapter extends XMPSchemaAdapter {
         XMPArray array = new XMPArray(XMPArrayType.BAG);
         array.add(propertyList, null, "Resource");
 
-        XMPProperty prop = new XMPProperty(new QName(namespace, SCHEMAS), array);
+        XMPProperty prop = new XMPProperty(new QName(namespace, preferredPrefix, SCHEMAS), array);
 
         meta.setProperty(prop);
     }

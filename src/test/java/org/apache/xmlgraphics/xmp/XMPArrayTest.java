@@ -108,4 +108,13 @@ public class XMPArrayTest {
                 + "</x:xmpmeta>\n",
                 XMPUtil.toSax(meta));
     }
+
+    @Test
+    public void testXMPArrayMethods() {
+        XMPArray array = new XMPArray(XMPArrayType.BAG);
+        array.add(XMPUtil.createProperty("xmlns", "prefix", "value1"), "en", "parseType");
+
+        assertEquals("Must return the lang value", "en", array.getXMLLang(0));
+        assertEquals("Must return the parseType valud", "parseType", array.getParseType(0));
+    }
 }
