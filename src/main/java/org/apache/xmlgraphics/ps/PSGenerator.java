@@ -71,6 +71,7 @@ public class PSGenerator implements PSCommandMap {
     private OutputStream out;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean acrobatDownsample;
+    private String jpegCompressionRatio;
     private boolean commentsEnabled = true;
     private boolean compactMode = true;
     private PSCommandMap commandMap = PSProcSets.STD_COMMAND_MAP;
@@ -172,6 +173,14 @@ public class PSGenerator implements PSCommandMap {
 
     public void setAcrobatDownsample(boolean b) {
         acrobatDownsample = b;
+    }
+
+    public void setJPEGCompressionRatio(String b) {
+        jpegCompressionRatio = b;
+    }
+
+    public String getJPEGCompressionRatio() {
+        return jpegCompressionRatio;
     }
 
     /**

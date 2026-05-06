@@ -81,6 +81,10 @@ public class PSImageUtils {
                     return null;
                 }
             }
+
+            public String getAdditionalFilter() {
+                return "";
+            }
         };
         writeImage(encoder, imgDim, imgDescription, targetRect, colorSpace, 8, false, gen);
     }
@@ -118,10 +122,10 @@ public class PSImageUtils {
         } else {
             if (gen.getPSLevel() >= 3) {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /FlateDecode filter def");
+                gen.writeln("/Data RawData /FlateDecode filter" + encoder.getAdditionalFilter() + " def");
             } else {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /RunLengthDecode filter def");
+                gen.writeln("/Data RawData /RunLengthDecode filter" + encoder.getAdditionalFilter() + " def");
             }
         }
         PSDictionary imageDict = new PSDictionary();
@@ -174,10 +178,10 @@ public class PSImageUtils {
         } else {
             if (gen.getPSLevel() >= 3) {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /FlateDecode filter def");
+                gen.writeln("/Data RawData /FlateDecode filter" + encoder.getAdditionalFilter() + " def");
             } else {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /RunLengthDecode filter def");
+                gen.writeln("/Data RawData /RunLengthDecode filter" + encoder.getAdditionalFilter() + " def");
             }
         }
 
@@ -237,10 +241,10 @@ public class PSImageUtils {
         } else {
             if (gen.getPSLevel() >= 3) {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /FlateDecode filter def");
+                gen.writeln("/Data RawData /FlateDecode filter" + encoder.getAdditionalFilter() + " def");
             } else {
                 gen.writeln("/RawData currentfile /ASCII85Decode filter def");
-                gen.writeln("/Data RawData /RunLengthDecode filter def");
+                gen.writeln("/Data RawData /RunLengthDecode filter" + encoder.getAdditionalFilter() + " def");
             }
         }
 
@@ -471,7 +475,7 @@ public class PSImageUtils {
                 float x, float y, float w, float h, PSGenerator gen, Color mask, boolean maskBitmap)
                     throws IOException {
         Rectangle2D targetRect = new Rectangle2D.Double(x, y, w, h);
-        ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img);
+        ImageEncoder encoder = ImageEncodingHelper.createRenderedImageEncoder(img, gen.getJPEGCompressionRatio());
         Dimension imgDim = new Dimension(img.getWidth(), img.getHeight());
         String imgDescription = img.getClass().getName();
         ImageEncodingHelper helper = new ImageEncodingHelper(img);
@@ -513,6 +517,10 @@ public class PSImageUtils {
                 } else {
                     return null;
                 }
+            }
+
+            public String getAdditionalFilter() {
+                return "";
             }
         };
         return writeReusableImage(encoder, imgDim, formName,
@@ -558,6 +566,7 @@ public class PSImageUtils {
             } else {
                 additionalFilters = "/ASCII85Decode filter /RunLengthDecode filter";
             }
+            additionalFilters += encoder.getAdditionalFilter();
         }
 
         gen.writeln("/" + formName);

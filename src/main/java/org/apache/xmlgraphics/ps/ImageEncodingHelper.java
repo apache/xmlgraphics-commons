@@ -37,6 +37,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+
 import org.apache.xmlgraphics.image.GraphicsUtil;
 
 /**
@@ -478,37 +484,69 @@ public class ImageEncodingHelper {
      * @param img the image
      * @return the requested ImageEncoder
      */
-    public static ImageEncoder createRenderedImageEncoder(RenderedImage img) {
-        return new RenderedImageEncoder(img);
+    public static ImageEncoder createRenderedImageEncoder(RenderedImage img, String jpegCompressionRatio) {
+        return new RenderedImageEncoder(img, jpegCompressionRatio);
     }
 
     /**
      * ImageEncoder implementation for RenderedImage instances.
      */
     private static class RenderedImageEncoder implements ImageEncoder {
+        private RenderedImage img;
+        private final String jpegCompressionRatio;
 
-        private final RenderedImage img;
-
-        public RenderedImageEncoder(RenderedImage ri) {
+        public RenderedImageEncoder(RenderedImage ri, String jpegCompressionRatio) {
+            img = ri;
+            this.jpegCompressionRatio = jpegCompressionRatio;
             if (ri instanceof BufferedImage && ((BufferedImage) ri).getType() == BufferedImage.TYPE_4BYTE_ABGR) {
+                toRGB();
+            }
+        }
+
+        private void toRGB() {
+            if (img instanceof BufferedImage && ((BufferedImage) img).getType() != BufferedImage.TYPE_INT_RGB) {
                 BufferedImage convertedImg =
-                        new BufferedImage(ri.getWidth(), ri.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
                 Graphics2D g = (Graphics2D) convertedImg.getGraphics();
                 g.setBackground(Color.WHITE);
-                g.clearRect(0, 0, ri.getWidth(), ri.getHeight());
-                g.drawImage((BufferedImage)ri, 0, 0, null);
+                g.clearRect(0, 0, img.getWidth(), img.getHeight());
+                g.drawImage((BufferedImage) img, 0, 0, null);
                 g.dispose();
-                ri = convertedImg;
+                img = convertedImg;
             }
-            img = ri;
         }
 
         public void writeTo(OutputStream out) throws IOException {
+            if (jpegCompressionRatio != null) {
+                toRGB();
+                ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+                ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
+                jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                try {
+                    jpgWriteParam.setCompressionQuality(Float.parseFloat(jpegCompressionRatio));
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Invalid param for jpeg-compression: " + e);
+                }
+                try (ImageOutputStream outputStream = ImageIO.createImageOutputStream(out)) {
+                    jpgWriter.setOutput(outputStream);
+                    IIOImage outputImage = new IIOImage(img, null, null);
+                    jpgWriter.write(null, outputImage, jpgWriteParam);
+                    jpgWriter.dispose();
+                }
+                return;
+            }
             ImageEncodingHelper.encodePackedColorComponents(img, out);
         }
 
         public String getImplicitFilter() {
             return null; //No implicit filters with RenderedImage instances
+        }
+
+        public String getAdditionalFilter() {
+            if (jpegCompressionRatio != null) {
+                return " /DCTDecode filter";
+            }
+            return "";
         }
     }
 

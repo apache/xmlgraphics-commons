@@ -44,8 +44,8 @@ public class FormGeneratorTestCase {
         Dimension2D dimension = new Dimension2DDouble(300, 500);
         BufferedImage im = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageFormGenerator formImageGen = new  ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
+        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
         formImageGen.generatePaintProc(gen);
         String test = out.toString(StandardCharsets.UTF_8.name());
 
@@ -66,9 +66,9 @@ public class FormGeneratorTestCase {
 
         Color c = Color.BLUE;
         Dimension dimensionPX = new Dimension(200, 400);
-        ImageEncoder enco = ImageEncodingHelper.createRenderedImageEncoder(im);
+        ImageEncoder enco = ImageEncodingHelper.createRenderedImageEncoder(im, null);
         ColorSpace cs = new NamedColorSpace("myColor", c);
-        formImageGen = new  ImageFormGenerator("form", "title", dimension, dimensionPX, enco, cs, false);
+        formImageGen = new ImageFormGenerator("form", "title", dimension, dimensionPX, enco, cs, false);
         gen = new PSGenerator(out);
         gen.setPSLevel(2);
         formImageGen.generatePaintProc(gen);
@@ -93,13 +93,27 @@ public class FormGeneratorTestCase {
         Dimension2D dimension = new Dimension2DDouble(300, 500);
         BufferedImage im = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
+        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
         formImageGen.generate(gen);
         String test = out.toString(StandardCharsets.UTF_8.name());
         Assert.assertTrue(test.contains("/ASCII85Decode filter\n"));
         //FlateDecode at DataSource so executed on page load rather than document load so viewer loads faster
         Assert.assertTrue(test.contains("/DataSource form:Data /FlateDecode filter\n"));
+    }
+
+    @Test
+    public void testDCTDecodeCommand() throws IOException {
+        Dimension2D dimension = new Dimension2DDouble(300, 500);
+        BufferedImage im = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator gen = new PSGenerator(out);
+        gen.setJPEGCompressionRatio("0.9");
+        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
+        formImageGen.generate(gen);
+        String test = out.toString(StandardCharsets.UTF_8.name());
+        Assert.assertTrue(test.contains("/ASCII85Decode filter\n"));
+        Assert.assertTrue(test.contains("/DataSource form:Data /FlateDecode filter /DCTDecode filter\n"));
     }
 
     @Test
@@ -120,8 +134,8 @@ public class FormGeneratorTestCase {
         g.drawImage(im, 0, 0, null);
         g.dispose();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ImageFormGenerator formImageGen = new  ImageFormGenerator("form", "title", dimension, im, false);
         PSGenerator gen = new PSGenerator(out);
+        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
         formImageGen.generate(gen);
         return out.toString(StandardCharsets.UTF_8.name());
     }

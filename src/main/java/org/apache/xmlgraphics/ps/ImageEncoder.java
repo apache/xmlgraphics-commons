@@ -38,4 +38,5 @@ public interface ImageEncoder {
 
     String getImplicitFilter();
 
+    String getAdditionalFilter();
 }

@@ -52,10 +52,10 @@ public class ImageFormGenerator extends FormGenerator {
      */
     public ImageFormGenerator(String formName, String title,
             Dimension2D dimensions,
-            RenderedImage image, boolean invertImage) {
+            RenderedImage image, boolean invertImage, PSGenerator gen) {
         super(formName, title, dimensions);
         this.image = image;
-        this.encoder = ImageEncodingHelper.createRenderedImageEncoder(image);
+        this.encoder = ImageEncodingHelper.createRenderedImageEncoder(image, gen.getJPEGCompressionRatio());
         this.invertImage = invertImage;
         this.pixelDimensions = new Dimension(image.getWidth(), image.getHeight());
     }
@@ -140,6 +140,7 @@ public class ImageFormGenerator extends FormGenerator {
                 }
             }
         }
+        dataSource += encoder.getAdditionalFilter();
         AffineTransform at = new AffineTransform();
         at.scale(getDimensions().getWidth(), getDimensions().getHeight());
         gen.concatMatrix(at);
