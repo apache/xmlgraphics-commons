@@ -8,10 +8,17 @@ github:
     merge:   false      # disable non-squashing merge
     squash:  true
     rebase:  true
-  protected_branches:
-    main:
+  rulesets:
+    - name: "Branch Protection"
+      type: branch
+      branches:
+        includes:
+          - "main"
+          - "commons*"
+          - "release*"
+      restrict_deletion: true
+      restrict_force_push: true
       required_linear_history: true
-      required_signatures: false
   dependabot_alerts:  true
   dependabot_updates: false
 
