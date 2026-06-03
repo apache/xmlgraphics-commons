@@ -195,6 +195,9 @@ public class PSDictionary extends java.util.HashMap {
                     throw new PSDictionaryFormatException("Failed to parse object key");
                 }
                 Token valueToken = nextToken(str, keyToken.endIndex + 1);
+                if (valueToken == null) {
+                    throw new PSDictionaryFormatException("Failed to parse object value");
+                }
                 String[] braces = null;
                 for (String[] brace : BRACES) {
                     if (valueToken.value.startsWith(brace[OPENING])) {
