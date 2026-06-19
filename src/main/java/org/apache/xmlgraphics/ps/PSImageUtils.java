@@ -30,6 +30,8 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -678,23 +680,27 @@ public class PSImageUtils {
     static void compressAndWriteBitmap(ImageEncoder encoder, PSGenerator gen)
                 throws IOException {
         OutputStream out = gen.getOutputStream();
-        out = new ASCII85OutputStream(out);
         String implicitFilter = encoder.getImplicitFilter();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        FilterOutputStream fos = new FilterOutputStream(baos);
+        fos = new ASCII85OutputStream(fos);
         if (implicitFilter != null) {
-            //nop
+            // nop
         } else {
             if (gen.getPSLevel() >= 3) {
-                out = new FlateEncodeOutputStream(out);
+                fos = new FlateEncodeOutputStream(fos);
             } else {
-                out = new RunLengthEncodeOutputStream(out);
+                fos = new RunLengthEncodeOutputStream(fos);
             }
         }
-        encoder.writeTo(out);
-        if (out instanceof Finalizable) {
-            ((Finalizable)out).finalizeStream();
+        encoder.writeTo(fos);
+        if (fos instanceof Finalizable) {
+            ((Finalizable) fos).finalizeStream();
         } else {
-            out.flush();
+            fos.flush();
         }
+        byte[] bytes = baos.toByteArray();
+        out.write(bytes);
         gen.newLine(); //Just to be sure
     }
 

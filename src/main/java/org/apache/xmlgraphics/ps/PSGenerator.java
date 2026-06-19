@@ -39,6 +39,8 @@ import org.apache.xmlgraphics.java2d.color.ColorUtil;
 import org.apache.xmlgraphics.java2d.color.ColorWithAlternatives;
 import org.apache.xmlgraphics.ps.dsc.ResourceTracker;
 import org.apache.xmlgraphics.util.DoubleFormatUtil;
+import org.apache.xmlgraphics.util.io.ASCII85OutputStream;
+import org.apache.xmlgraphics.util.io.FlateEncodeOutputStream;
 import org.apache.xmlgraphics.util.io.IOUtils;
 
 /**
@@ -69,8 +71,10 @@ public class PSGenerator implements PSCommandMap {
 
     private Log log = LogFactory.getLog(getClass());
     private OutputStream out;
+    private OutputStream outBackup;
     private int psLevel = DEFAULT_LANGUAGE_LEVEL;
     private boolean acrobatDownsample;
+    private boolean compressStreams;
     private String jpegCompressionRatio;
     private boolean commentsEnabled = true;
     private boolean compactMode = true;
@@ -96,6 +100,23 @@ public class PSGenerator implements PSCommandMap {
     public PSGenerator(OutputStream out) {
         this.out = out;
         resetGraphicsState();
+    }
+
+    public void startContent() throws IOException {
+        if (compressStreams) {
+            writeln("currentfile /ASCII85Decode filter /FlateDecode filter");
+            writeln("cvx exec");
+            outBackup = out;
+            out = new FlateEncodeOutputStream(new ASCII85OutputStream(outBackup));
+        }
+    }
+
+    public void endContent() throws IOException {
+        if (compressStreams) {
+            ((FlateEncodeOutputStream)out).finalizeStream();
+            out = outBackup;
+            newLine();
+        }
     }
 
     /**
@@ -181,6 +202,10 @@ public class PSGenerator implements PSCommandMap {
 
     public String getJPEGCompressionRatio() {
         return jpegCompressionRatio;
+    }
+
+    public void setCompressStreams(boolean b) {
+        compressStreams = b;
     }
 
     /**

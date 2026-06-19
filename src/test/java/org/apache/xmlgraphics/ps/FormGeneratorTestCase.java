@@ -103,6 +103,28 @@ public class FormGeneratorTestCase {
     }
 
     @Test
+    public void testCompressStreams() throws IOException {
+        Dimension2D dimension = new Dimension2DDouble(300, 500);
+        BufferedImage im = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PSGenerator gen = new PSGenerator(out);
+        gen.setCompressStreams(true);
+        gen.startContent();
+        ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
+        formImageGen.generate(gen);
+        gen.endContent();
+        String test = out.toString(StandardCharsets.UTF_8.name());
+        Assert.assertEquals("currentfile /ASCII85Decode filter /FlateDecode filter\n"
+                + "cvx exec\n"
+                + "Gaqcs?#,'H'Sc)J.uo>=lpbQMQECM$?gC-HWj%CZ[]$)^TLNBop;-IWQc-%2'loK3jQ(`0#c/-!]\\-aA\n"
+                + ":,9jE*/(E\\5U]@;WjJQq+KcG,'6':aP.nC24ooVt8A)da!tXf_%g()3)g0&_jBD;oAF+\"&R.3Yb;WR>H\n"
+                + "QN4.$D(Ibl7QWCaj#L%3f6!r$]Y[]k>]J/QSZskud)S;n;W?!lb]DRB,-sKMQ&o:pEn%21EF#m`s)@.g\n"
+                + "MZO?lIf]-mQuPf9&,m0NbDIa]P\\:\\`dd2BK?60giKBr?blX'@@_=bgo]MM,F$/7#6\\esO&e?*Dg;(s2&\n"
+                + "#i$EI[m=K$KJ\\T?aEUXNFFf4]q`Ro-P#@X8`Xm?_bgu)WE/Wptn^OhF_F-t+oke`7%D54\"ojsLM6+3HH\n"
+                + "9c9hm@N_]^rAb@I\\T9]XfK5;cO;MV&(JXGs50+934/KR~>\n", test);
+    }
+
+    @Test
     public void testDCTDecodeCommand() throws IOException {
         Dimension2D dimension = new Dimension2DDouble(300, 500);
         BufferedImage im = new BufferedImage(100, 75, BufferedImage.TYPE_INT_ARGB);
