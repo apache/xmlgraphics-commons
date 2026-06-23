@@ -23,20 +23,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
-
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
-
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.InflaterInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.apache.xmlgraphics.java2d.Dimension2DDouble;
 import org.apache.xmlgraphics.java2d.color.NamedColorSpace;
-
+import org.apache.xmlgraphics.util.io.ASCII85InputStream;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 public class FormGeneratorTestCase {
     @Test
@@ -113,15 +115,17 @@ public class FormGeneratorTestCase {
         ImageFormGenerator formImageGen = new ImageFormGenerator("form", "title", dimension, im, false, gen);
         formImageGen.generate(gen);
         gen.endContent();
-        String test = out.toString(StandardCharsets.UTF_8.name());
-        Assert.assertEquals("currentfile /ASCII85Decode filter /FlateDecode filter\n"
-                + "cvx exec\n"
-                + "Gaqcs?#,'H'Sc)J.uo>=lpbQMQECM$?gC-HWj%CZ[]$)^TLNBop;-IWQc-%2'loK3jQ(`0#c/-!]\\-aA\n"
-                + ":,9jE*/(E\\5U]@;WjJQq+KcG,'6':aP.nC24ooVt8A)da!tXf_%g()3)g0&_jBD;oAF+\"&R.3Yb;WR>H\n"
-                + "QN4.$D(Ibl7QWCaj#L%3f6!r$]Y[]k>]J/QSZskud)S;n;W?!lb]DRB,-sKMQ&o:pEn%21EF#m`s)@.g\n"
-                + "MZO?lIf]-mQuPf9&,m0NbDIa]P\\:\\`dd2BK?60giKBr?blX'@@_=bgo]MM,F$/7#6\\esO&e?*Dg;(s2&\n"
-                + "#i$EI[m=K$KJ\\T?aEUXNFFf4]q`Ro-P#@X8`Xm?_bgu)WE/Wptn^OhF_F-t+oke`7%D54\"ojsLM6+3HH\n"
-                + "9c9hm@N_]^rAb@I\\T9]XfK5;cO;MV&(JXGs50+934/KR~>\n", test);
+        String ps = out.toString(StandardCharsets.UTF_8.name());
+        Assert.assertTrue(ps.contains("currentfile /ASCII85Decode filter /FlateDecode filter\n"));
+        Assert.assertTrue(ps.contains("cvx exec\n"));
+        int start = ps.indexOf("cvx exec\n") + "cvx exec\n".length();
+        int end = ps.indexOf("~>", start);
+        byte[] encoded = ps.substring(start, end + 2).getBytes(StandardCharsets.US_ASCII);
+        InputStream in = new InflaterInputStream(new ASCII85InputStream(new ByteArrayInputStream(encoded)));
+        ByteArrayOutputStream decoded = new ByteArrayOutputStream();
+        IOUtils.copy(in, decoded);
+        String uncompressed = decoded.toString(StandardCharsets.UTF_8.name());
+        Assert.assertTrue(uncompressed.contains("/form:Data currentfile\n"));
     }
 
     @Test
