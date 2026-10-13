@@ -9,16 +9,23 @@ github:
     squash:  true
     rebase:  true
   rulesets:
-    - name: "Branch Protection"
+    - name: "Branch Protection Main"
       type: branch
       branches:
         includes:
           - "main"
+      restrict_deletion: true
+      restrict_force_push: true
+      required_linear_history: true
+    - name: "Branch Protection"
+      type: branch
+      branches:
+        includes:
           - "commons*"
           - "release*"
       restrict_deletion: true
       restrict_force_push: true
-      required_linear_history: true
+      required_linear_history: false
   dependabot_alerts:  true
   dependabot_updates: false
 
