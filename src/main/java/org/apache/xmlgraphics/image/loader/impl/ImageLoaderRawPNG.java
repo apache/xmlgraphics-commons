@@ -40,6 +40,7 @@ import org.apache.xmlgraphics.image.loader.ImageSessionContext;
 import org.apache.xmlgraphics.image.loader.util.ImageUtil;
 import org.apache.xmlgraphics.io.XmlSourceUtil;
 import org.apache.xmlgraphics.util.MimeConstants;
+import org.apache.xmlgraphics.util.io.IOUtils;
 
 public class ImageLoaderRawPNG extends AbstractImageLoader {
 
@@ -67,11 +68,14 @@ public class ImageLoaderRawPNG extends AbstractImageLoader {
 
         Source src = session.needSource(info.getOriginalURI());
         ImageInputStream in = ImageUtil.needImageInputStream(src);
-        // Remove streams as we do things with them at some later time.
         XmlSourceUtil.removeStreams(src);
-        SeekableStream seekStream = new ImageInputStreamSeekableStreamAdapter(in);
-        PNGFile im = new PNGFile(seekStream, info.getOriginalURI());
-        ImageRawPNG irpng = im.getImageRawPNG(info);
-        return irpng;
+        try {
+            SeekableStream seekStream = new ImageInputStreamSeekableStreamAdapter(in);
+            // PNGFile reads the chunks it needs into memory, so the stream is done with after this
+            PNGFile im = new PNGFile(seekStream, info.getOriginalURI());
+            return im.getImageRawPNG(info);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
     }
 }
