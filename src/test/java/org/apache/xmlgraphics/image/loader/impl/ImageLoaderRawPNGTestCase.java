@@ -24,6 +24,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.MemoryCacheImageInputStream;
+import javax.xml.transform.Source;
 
 import org.junit.Test;
 
@@ -76,6 +78,34 @@ public class ImageLoaderRawPNGTestCase {
         ImageInfo info = new ImageInfo("basn2c08.png", MimeConstants.MIME_PNG);
         Image im = ilrpng.loadImage(info, null, session);
         assertTrue(im instanceof ImageRawPNG);
+    }
+
+    @Test
+    public void testLoadImageClosesStream() throws ImageException, IOException {
+        ImageContext context = MockImageContext.newSafeInstance();
+        final boolean[] closed = new boolean[1];
+        FileInputStream png = new FileInputStream("test/images/basn2c08.png");
+        try {
+            final ImageInputStream in = new MemoryCacheImageInputStream(png) {
+                public void close() throws IOException {
+                    closed[0] = true;
+                    super.close();
+                }
+            };
+            ImageSessionContext session = new MockImageSessionContext(context) {
+                public Source needSource(String uri) {
+                    return new ImageSource(in, uri, true);
+                }
+            };
+            ImageInfo info = new ImageInfo("basn2c08.png", MimeConstants.MIME_PNG);
+            ImageRawPNG irpng = (ImageRawPNG) ilrpng.loadImage(info, null, session);
+            // left open, the stream holds the image's file open until garbage collection
+            assertTrue("the stream was left open", closed[0]);
+            // the image data was read before the stream was closed
+            assertTrue(irpng.createInputStream().read() != -1);
+        } finally {
+            png.close();
+        }
     }
 
     @Test
