@@ -35,7 +35,7 @@ public interface ResourceResolver {
      *
      * @param uri the resource URI
      * @return the resource
-     * @throws IOException if an I/O error occured during resource acquisition
+     * @throws IOException if an I/O error occurred during resource acquisition
      */
     Resource getResource(URI uri) throws IOException;
 
@@ -44,7 +44,7 @@ public interface ResourceResolver {
      *
      * @param uri the output stream URI
      * @return the output stream
-     * @throws IOException if an I/O error occured while creating an output stream
+     * @throws IOException if an I/O error occurred while creating an output stream
      */
     OutputStream getOutputStream(URI uri) throws IOException;
 

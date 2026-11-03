@@ -1312,7 +1312,7 @@ class TIFFFaxDecoder {
         int ces = this.changingElemSize;
 
         // If the previous match was at an odd element, we still
-        // have to search the preceeding element.
+        // have to search the preceding element.
         // int start = lastChangingElement & ~0x1;
         int start = lastChangingElement > 0 ? lastChangingElement - 1 : 0;
         if (isWhite) {
