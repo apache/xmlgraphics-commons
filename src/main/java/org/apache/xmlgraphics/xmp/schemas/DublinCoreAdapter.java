@@ -180,7 +180,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     }
 
     /**
-     * Returns the description of the content of the resource in a language-dependant way.
+     * Returns the description of the content of the resource in a language-dependent way.
      * @param lang the language ("x-default" or null for the default language)
      * @return the language-dependent value (or null if not set)
      */
@@ -288,7 +288,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     }
 
     /**
-     * Returns the informal rights statement in a language-dependant way.
+     * Returns the informal rights statement in a language-dependent way.
      * @param lang the language ("x-default" or null for the default language)
      * @return the language-dependent value (or null if not set)
      */
@@ -355,7 +355,7 @@ public class DublinCoreAdapter extends XMPSchemaAdapter {
     }
 
     /**
-     * Returns the title of the resource in a language-dependant way.
+     * Returns the title of the resource in a language-dependent way.
      * @param lang the language ("x-default" or null for the default language)
      * @return the language-dependent value (or null if not set)
      */

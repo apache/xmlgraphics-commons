@@ -58,7 +58,7 @@ public class GraphicsConfigurationWithoutTransparencyTestCase {
         testImage(1, 2, false, sut.createCompatibleImage(1, 2, Transparency.OPAQUE));
         testImage(1010, 2020, false, sut.createCompatibleImage(1010, 2020, Transparency.OPAQUE));
 
-        // test the 2 argument overriden method
+        // test the 2 argument overridden method
         testImage(1, 2, false, sut.createCompatibleImage(1, 2));
         testImage(1010, 2020, false, sut.createCompatibleImage(1010, 2020));
     }

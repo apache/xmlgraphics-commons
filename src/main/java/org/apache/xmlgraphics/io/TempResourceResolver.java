@@ -33,7 +33,7 @@ public interface TempResourceResolver {
      *
      * @param id the resource identifier
      * @return the resource
-     * @throws IOException if an I/O error occured during resource acquisition
+     * @throws IOException if an I/O error occurred during resource acquisition
      */
     Resource getResource(String id) throws IOException;
 
@@ -42,7 +42,7 @@ public interface TempResourceResolver {
      *
      * @param id the output stream identifier
      * @return the output stream
-     * @throws IOException if an I/O error occured while creating an output stream
+     * @throws IOException if an I/O error occurred while creating an output stream
      */
     OutputStream getOutputStream(String id) throws IOException;
 }

@@ -56,7 +56,7 @@ public class Base64TestCase {
             PipedOutputStream pos = new PipedOutputStream();
             OutputStream os = new Base64EncodeStream(pos);
 
-            // Copy the input to the Base64 Encoder (in a seperate thread).
+            // Copy the input to the Base64 Encoder (in a separate thread).
             Thread t = new StreamCopier(inIS, os);
 
             // Read that from the piped output stream.
