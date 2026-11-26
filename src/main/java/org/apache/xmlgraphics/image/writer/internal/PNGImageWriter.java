@@ -29,7 +29,7 @@ import org.apache.xmlgraphics.image.writer.ImageWriterParams;
 
 /**
  * ImageWriter implementation that uses the internal PNG codec to
- * write PNG files.
+ * write PNG files. Images with a common layout are written with {@link DirectPNGEncoder}.
  *
  * @version $Id$
  */
@@ -44,6 +44,10 @@ public class PNGImageWriter extends AbstractImageWriter {
     /** {@inheritDoc} */
     public void writeImage(RenderedImage image, OutputStream out,
             ImageWriterParams params) throws IOException {
+        if (DirectPNGEncoder.canEncode(image)) {
+            DirectPNGEncoder.encode(image, out, params);
+            return;
+        }
         PNGImageEncoder encoder = new PNGImageEncoder(out, null);
         encoder.encode(image);
     }

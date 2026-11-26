@@ -19,8 +19,19 @@
 
 package org.apache.xmlgraphics.image.writer.imageio;
 
+import java.awt.image.RenderedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.imageio.ImageWriteParam;
+
+import org.apache.xmlgraphics.image.writer.ImageWriterParams;
+import org.apache.xmlgraphics.image.writer.internal.DirectPNGEncoder;
+
 /**
- * ImageWriter that encodes PNG images using Image I/O.
+ * ImageWriter that encodes PNG images. Images with a common layout (see
+ * {@link DirectPNGEncoder#canEncode(RenderedImage)}) are written directly, which is faster and
+ * gives smaller files than the Image I/O PNG writer; all other images are written using Image I/O.
  *
  * @version $Id$
  */
@@ -31,6 +42,30 @@ public class ImageIOPNGImageWriter extends ImageIOImageWriter {
      */
     public ImageIOPNGImageWriter() {
         super("image/png");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void writeImage(RenderedImage image, OutputStream out, ImageWriterParams params)
+            throws IOException {
+        if (DirectPNGEncoder.canEncode(image)) {
+            DirectPNGEncoder.encode(image, out, params);
+        } else {
+            super.writeImage(image, out, params);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected ImageWriteParam getDefaultWriteParam(javax.imageio.ImageWriter iiowriter,
+            RenderedImage image, ImageWriterParams params) {
+        ImageWriteParam param = super.getDefaultWriteParam(iiowriter, image, params);
+        if (params != null && params.getCompressionLevel() != null && param.canWriteCompressed()) {
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            // the JDK PNG writer uses level 9 - round(9 * quality)
+            param.setCompressionQuality((9 - params.getCompressionLevel()) / 9f);
+        }
+        return param;
     }
 
 }
