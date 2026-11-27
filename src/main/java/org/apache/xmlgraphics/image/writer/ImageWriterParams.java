@@ -38,6 +38,9 @@ public class ImageWriterParams {
     private Float jpegQuality;
     private Boolean jpegForceBaseline;
     private String compressionMethod;
+    private Integer compressionLevel;
+    private PNGFilter pngFilter;
+    private boolean pngReduceColors = true;
     private ResolutionUnit resolutionUnit = ResolutionUnit.INCH;
     private int rowsPerStrip = ONE_ROW_PER_STRIP;
     private Endianness endianness = Endianness.DEFAULT;
@@ -110,6 +113,66 @@ public class ImageWriterParams {
      */
     public void setCompressionMethod(String method) {
         this.compressionMethod = method;
+    }
+
+    /**
+     * Returns the deflate level for formats compressed with deflate (such as PNG).
+     * @return the level, 0 (no compression) to 9 (smallest), or null if undefined
+     */
+    public Integer getCompressionLevel() {
+        return this.compressionLevel;
+    }
+
+    /**
+     * Sets the deflate level for formats compressed with deflate (such as PNG). Lower levels are
+     * faster, higher levels give smaller files.
+     * @param level the level, 0 (no compression) to 9 (smallest)
+     */
+    public void setCompressionLevel(int level) {
+        if (level < 0 || level > 9) {
+            throw new IllegalArgumentException("Compression level must be between 0 and 9: " + level);
+        }
+        this.compressionLevel = level;
+    }
+
+    /**
+     * Returns the row filter for PNG images.
+     * @return the filter, or null for the writer's default
+     */
+    public PNGFilter getPNGFilter() {
+        return this.pngFilter;
+    }
+
+    /**
+     * Sets the row filter for PNG images. By default PNG writers use {@link PNGFilter#NONE}; a
+     * filter set here is used for all images.
+     * @param filter the filter, or null for the writer's default
+     */
+    public void setPNGFilter(PNGFilter filter) {
+        this.pngFilter = filter;
+    }
+
+    /**
+     * Tells whether PNG writers may store images with fewer colors in a smaller form (on by default).
+     * @return true if colors may be reduced
+     * @see #setPNGReduceColors(boolean)
+     */
+    public boolean isPNGReduceColors() {
+        return this.pngReduceColors;
+    }
+
+    /**
+     * Sets whether PNG writers may store an image in a smaller form when every decoder reads back
+     * the same colors: a truecolor image with at most 256 colors as a palette or low bit gray
+     * image, a palette with few colors with fewer bits per pixel, an alpha channel that is opaque
+     * everywhere not at all. This makes files smaller and faster to write, but a decoder then
+     * returns an image of another type than the original, for example a palette image where the
+     * original was RGB. With false the PNG keeps the color type, bit depth and palette of the
+     * image (it is still written the fast way).
+     * @param reduce false to keep the color type, bit depth and palette of the image
+     */
+    public void setPNGReduceColors(boolean reduce) {
+        this.pngReduceColors = reduce;
     }
 
     /**
